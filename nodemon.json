@@ -1,0 +1,5 @@
+{
+  "watch": ["server"],
+  "exec": "cross-env NODE_ENV=development ts-node --compiler ttypescript --project tsconfig.server.json ./server/index.ts",
+  "ext": "js ts tsx"
+}

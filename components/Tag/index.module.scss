@@ -1,0 +1,44 @@
+.tagItem {
+  background-color: #eee;
+  overflow: hidden;
+  transition-property: background;
+  transition-duration: 0.2s;
+
+  &__left {
+    position: relative;
+    color: white;
+  }
+
+  &__left::before {
+    content: "";
+    position: absolute;
+    width: 60%;
+    height: 99%;
+    left: 41%;
+    background: inherit;
+    z-index: -1;
+  }
+
+  &__left::after {
+    content: "";
+    vertical-align: middle;
+    position: absolute;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    top: 0;
+    width: 10px;
+    height: 100%;
+    left: calc(100% - 0.22px);
+    background: inherit;
+  }
+
+  &__right {
+    padding-left: 14px;
+  }
+}
+
+.hoverItem {
+  cursor: pointer;
+  &:hover {
+    background-color: #ccc;
+  }
+}

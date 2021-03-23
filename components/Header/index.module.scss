@@ -1,0 +1,154 @@
+@import "../../styles/basic.module";
+
+.btn {
+  outline: none;
+  transition-property: box-shadow;
+  transition-duration: 0.2s;
+
+  &:hover {
+    box-shadow: 0px 0px 1px 2px rgba(100, 100, 100, 0.5);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.transHeight {
+  transition-property: height;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0.2, -0.2, 0.33, 1.2);
+  // transition-timing-function: cubic-bezier(0.07, 0.72, 0.7, 1.11);
+  // transition-timing-function: cubic-bezier(0.07, 0.72, 0.01, 1.21);
+  overflow: hidden;
+  @include desktop {
+    height: auto !important;
+  }
+}
+
+.nav_active {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.nav_hover {
+  border-radius: 6px;
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  color: rgba(255, 255, 255, 0.5);
+  &:hover {
+    color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(100, 100, 100, 0.5);
+  }
+
+  @include desktop {
+    margin: 0 5px;
+  }
+
+  @include mobile {
+    margin: 5px 0;
+    text-indent: 4px;
+  }
+}
+
+.icon {
+  font-size: 1em;
+  width: 1.2em;
+  margin-right: 0.4em;
+}
+
+.navShadow {
+  box-shadow: 0 1px 3px 1px rgba(100, 100, 100, 0.8);
+}
+
+.headUser {
+  & > .userPanel {
+    @include desktop {
+      padding: 4px 10px;
+      border-top-left-radius: 11px 20px;
+      border-top-right-radius: 11px 20px;
+      border-bottom-left-radius: 11px 20px;
+      border-bottom-right-radius: 11px 20px;
+    }
+    @include mobile {
+      & .username {
+        display: none;
+      }
+    }
+    cursor: pointer;
+    transition-property: background;
+    transition-duration: 0.3s;
+    &:hover {
+      background-color: rgba(100, 100, 100, 0.4) !important;
+    }
+  }
+  @include desktop {
+    position: relative;
+  }
+  @include mobile {
+    position: absolute;
+    right: 80px;
+    top: 11px;
+  }
+  & > .dropPanel {
+    z-index: 2;
+    filter: drop-shadow(0 0 5px rgba(100, 100, 100, 0.4));
+    & > .controlPanel {
+      text-align: center;
+      border-radius: 3px;
+      overflow: hidden;
+      left: 50%;
+      top: calc(100% + 14px);
+      transform: translateX(-50%);
+      background-color: #fff;
+      @include mobile {
+        flex-direction: column;
+      }
+      & > * {
+        margin: 6px;
+        padding: 8px;
+        border-radius: 3px;
+        box-sizing: content-box;
+        transition-duration: 0.2s;
+        transition-property: background, color;
+        @include mobile {
+          margin: 4px 6px;
+          padding: 5px 8px;
+        }
+        &:hover {
+          background-color: rgba(100, 100, 100, 0.12);
+        }
+      }
+    }
+    & > .hoverTriangle {
+      width: 20px;
+      height: 15px;
+      left: calc(50% - 10px);
+      bottom: calc(100% - 18px);
+      background-color: #fff;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+  }
+}
+
+.headUserActive {
+  & > .userPanel {
+    background-color: rgba(100, 100, 100, 0.4) !important;
+  }
+}
+
+.login {
+  text-decoration: none !important;
+  transition-property: color;
+  transition-duration: 0.3s;
+  @include desktop {
+    font-size: 15px;
+    position: relative;
+  }
+  @include mobile {
+    font-size: 13px;
+    z-index: 2;
+    position: absolute;
+    right: 80px;
+    top: 15px;
+  }
+}

@@ -1,0 +1,16 @@
+@import "../../styles/basic.module";
+
+.archivePoint {
+  font-size: 0.4em;
+}
+
+.archiveTitle {
+  @include desktop {
+    font-size: 18px;
+    max-width: 180px;
+  }
+  @include mobile {
+    font-size: 16px;
+    max-width: 120px;
+  }
+}

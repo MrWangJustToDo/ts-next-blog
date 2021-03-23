@@ -1,0 +1,27 @@
+.editor {
+  overflow: hidden;
+  font-family: consolas;
+  position: relative;
+}
+
+.btn {
+  right: 4px;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.imgContainer {
+  width: 400px;
+  padding-bottom: 56%;
+}
+
+.imgItem {
+  cursor: pointer;
+}
+
+.imgLoding {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,0 +1,27 @@
+.success {
+  position: absolute;
+  font-size: 12px;
+  color: green;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.fail {
+  position: absolute;
+  font-size: 12px;
+  color: red;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.loading {
+  position: absolute;
+  font-size: 12px;
+  right: 2px;
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}

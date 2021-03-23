@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "es2020",
+    "module": "commonjs",
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "declaration": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "utils/*": ["utils/*"],
+      "config/*": ["config/*"]
+    },
+    "typeRoots": ["global.d.ts", "next-env.d.ts", "types"],
+    "plugins": [{ "transform": "typescript-transform-paths" }]
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
+}

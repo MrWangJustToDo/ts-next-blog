@@ -1,0 +1,22 @@
+@import "../../styles/basic.module";
+
+.hoverTriangle {
+  width: 20px;
+  height: 15px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  left: 14px;
+  bottom: 2px;
+}
+
+.hoverHolder {
+  height: 15px;
+}
+
+.animatePanel {
+  display: block;
+  z-index: 100;
+  position: absolute;
+  left: -10px;
+  bottom: 100%;
+  filter: drop-shadow(0px 0px 8px rgba(180, 180, 180, 0.5));
+}

@@ -1,0 +1,14 @@
+@import "../../styles/basic.module";
+
+.autoHide {
+  @include mobile {
+    display: none;
+  }
+}
+
+.tagActive {
+  background-color: #ccc;
+  & * {
+    background-color: inherit;
+  }
+}

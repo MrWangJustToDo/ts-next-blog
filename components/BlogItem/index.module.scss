@@ -1,0 +1,31 @@
+.blogItem {
+  margin: 0;
+}
+
+.imgHover {
+  & img {
+    position: relative;
+    transition-property: transform;
+    transition-duration: 0.3s;
+  }
+  &:hover {
+    & img {
+      transform: scale(1.1, 1.1);
+    }
+  }
+}
+
+.ulStyle {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.iconTransform {
+  position: relative;
+  transition-duration: 0.3s;
+  transition-property: transform;
+  &:hover {
+    transform-origin: 50% 50%;
+    transform: scale(1.5, 1.5);
+  }
+}

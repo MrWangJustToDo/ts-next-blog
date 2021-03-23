@@ -1,0 +1,48 @@
+@import "../../styles/basic.module";
+
+.imgHover {
+  & img {
+    position: relative;
+    transition-property: transform;
+    transition-duration: 0.3s;
+  }
+  &:hover {
+    & img {
+      transform: scale(1.1, 1.1);
+    }
+  }
+}
+
+.loadMore {
+  font-size: 12px;
+}
+
+.footPage {
+  font-size: 12px;
+  & * {
+    font-size: inherit;
+  }
+}
+
+.imgCheck {
+  @include mobile {
+    width: 360px;
+  }
+}
+
+.replayModule {
+  @include mobile {
+    max-width: 400px;
+    font-size: 14px;
+  }
+}
+
+.checkcodeRow {
+  @include mobile {
+    font-size: 14px;
+    // height: 1.2em;
+    & > * {
+      height: 32px;
+    }
+  }
+}

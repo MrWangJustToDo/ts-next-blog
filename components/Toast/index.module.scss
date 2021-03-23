@@ -1,0 +1,10 @@
+.toast {
+  opacity: 1;
+  min-width: 180px;
+}
+
+.close {
+  outline: none !important;
+  transition-property: opacity;
+  transition-duration: 0.2s;
+}

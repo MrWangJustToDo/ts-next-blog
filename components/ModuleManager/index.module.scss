@@ -1,0 +1,7 @@
+.cover {
+  transition-property: background;
+  transition-duration: 0.2s;
+  &_active {
+    background-color: rgba(40, 40, 40, 0.6);
+  }
+}

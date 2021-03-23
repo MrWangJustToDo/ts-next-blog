@@ -1,0 +1,32 @@
+@import "../../styles/basic.module";
+
+.author {
+  background-color: rgba(200, 200, 200, 0.2);
+  display: inline-block;
+  max-width: 100px;
+}
+
+.messageOverflow {
+  position: relative;
+  padding-right: 8px;
+  &::after {
+    content: "...";
+    position: absolute;
+    background-color: #fff;
+    padding: 0 5px;
+    bottom: 2px;
+    right: 0px;
+  }
+}
+
+.replay {
+  @include desktop {
+    font-size: 14px;
+    padding: 4px;
+  }
+
+  @include mobile {
+    font-size: 12px;
+    padding: 2px;
+  }
+}

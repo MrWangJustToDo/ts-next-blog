@@ -1,0 +1,47 @@
+@import "../../styles/basic.module";
+
+.footFont {
+  @include mobile {
+    font-size: 0.95rem;
+  }
+}
+
+.fontInherit {
+  @include mobile {
+    font-size: inherit;
+  }
+}
+
+.hover {
+  border-radius: 2px;
+  transition-duration: 0.3s;
+  transition-property: background-color, color;
+  color: #6c757d;
+  &:hover {
+    color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(100, 100, 100, 0.5);
+  }
+}
+
+.autoHide {
+  @include mobile {
+    margin-top: 0.2em;
+    border-left: none !important;
+    overflow: hidden;
+  }
+}
+
+.img {
+  @include mobile {
+    height: 75px !important;
+    width: 75px !important;
+  }
+}
+
+.bquoteFont {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
+  @include mobile {
+    font-size: inherit;
+  }
+}
