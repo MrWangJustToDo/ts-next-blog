@@ -12,7 +12,9 @@ let Blog: BlogContentType;
 const BlogContentMessage = dynamic(() => import("./blogContentMessage"));
 
 Blog = (props) => {
+
   const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId } = props;
+  
   return (
     <div className="card user-select-none">
       <BlogHead {...props} />

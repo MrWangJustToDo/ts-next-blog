@@ -8,12 +8,16 @@ import PublishImage from "./publishImage";
 import PublishState from "./publishState";
 import PublishSubmit from "./publishSubmit";
 import { SimpleElement } from "types/components";
+import { useMemo } from "react";
 
 let Publish: SimpleElement;
 
 Publish = () => {
-  const request = createRequest({ method: "post", header: { apiToken: true } });
+
+  const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true } }), []);
+
   const [ref, submit] = usePublish({ request, id: editorId });
+  
   return (
     <div className="card mx-lg-4 border-0">
       <form ref={ref}>

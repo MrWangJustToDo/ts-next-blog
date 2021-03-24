@@ -17,7 +17,7 @@ BlogContentMessage = ({ blogId }) => {
           query={{ blogId }}
           requestData={{ blogId }}
           apiPath={apiName.primaryMessage}
-          loaded={(data) => <BlogContentPrimaryMessage messages={data} />}
+          loaded={(data) => (data.length ? <BlogContentPrimaryMessage messages={data} /> : <div>暂时没有评论</div>)}
         />
       </div>
     </li>

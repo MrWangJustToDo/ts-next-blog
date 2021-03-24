@@ -1,5 +1,5 @@
 import createSagaMiddleware, { Task } from "redux-saga";
-import { createStore, applyMiddleware, Store } from "redux";
+import { createStore, applyMiddleware, compose, Store } from "redux";
 import { MakeStore, createWrapper, Context } from "next-redux-wrapper";
 import rootReducer from "./reducer";
 import rootSaga from "./saga";
@@ -16,11 +16,18 @@ export interface SagaStore extends Store {
 }
 
 export const makeStore: MakeStore<State> = (context: Context) => {
+  const devtools =
+    typeof window !== "undefined" &&
+    typeof window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ === "function" &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionsBlacklist: [] });
+
+  const composeEnhancers = devtools || compose;
+
   // 1: Create the middleware
   const sagaMiddleware = createSagaMiddleware();
 
   // 2: Add an extra parameter for applying middleware:
-  const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+  const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware)));
 
   // 3: Run your sagas on server
   (store as SagaStore).sagaTask = sagaMiddleware.run(rootSaga);

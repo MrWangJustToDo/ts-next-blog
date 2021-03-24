@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ChildMessage } from "components/BlogMessage";
 import { useChildMessage, useMessageToReplayModule } from "hook/useMessage";
 import { apiName } from "config/api";
 import { getClass } from "utils/class";
 import { createRequest } from "utils/fetcher";
 import BlogContentReplayModule from "./blogContentReplayModule";
+import { AutoRequestType } from "types/utils";
 import { ChildMessageProps } from "types/components";
 import { BlogContentChildMessageType, BlogContentChildMessageWithReplayType } from "types/containers";
 
@@ -15,7 +16,9 @@ let BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType;
 let BlogContentChildMessage: BlogContentChildMessageType;
 
 BlogContentChildMessageWithReplay = ({ messages, replay }) => {
+
   const { messageProps, more, loadMore } = useChildMessage(messages);
+  
   return (
     <>
       {messageProps.map((item, index) => (
@@ -34,17 +37,25 @@ BlogContentChildMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentChildMessage = ({ messages }) => {
+
   const request = useMemo(() => createRequest({ method: "post", path: apiName.putChildMessage }), []);
-  const replay = useMessageToReplayModule<ChildMessageProps>({
-    body: (request) => (props) => (closeHandler) => (
+
+  const body = useCallback<(request: AutoRequestType) => (props: ChildMessageProps) => (closeHandler: () => void) => JSX.Element>(
+    (request) => (props) => (closeHandler) => (
       <>
         <ChildMessage {...props} withReplay={false} withChildren={false} />
         <BlogContentReplayModule request={request} closeHandler={closeHandler} />
       </>
     ),
+    []
+  );
+
+  const replay = useMessageToReplayModule<ChildMessageProps>({
+    body,
     className: style.replayModule,
     request,
   });
+
   return <BlogContentChildMessageWithReplay messages={messages} replay={replay} />;
 };
 

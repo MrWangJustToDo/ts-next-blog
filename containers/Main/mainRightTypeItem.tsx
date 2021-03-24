@@ -6,7 +6,9 @@ import { MainRightTypeItemType } from "types/containers";
 let MainRightTypeItem: MainRightTypeItemType;
 
 MainRightTypeItem = ({ typeName, typeCount, changeCurrentType }) => {
+
   const clickHandler = useCallback(() => changeCurrentType(typeName), [typeName]);
+  
   return (
     <Link href="/type">
       <a className={getClass(flexBetween, "small list-group-item list-group-item-action")} onClick={clickHandler}>

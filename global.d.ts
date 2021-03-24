@@ -15,3 +15,7 @@ declare module NodeJS {
     NEXT_PUBLIC_APITOKEN: string;
   }
 }
+
+interface Window {
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: Function;
+}

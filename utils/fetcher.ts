@@ -18,9 +18,9 @@ createRequest = (props: AutoRequestProps = {}) => {
     const newMethod = props.method ? props.method : method;
     const newPath = props.path ? props.path : path;
     const newApiPath = props.apiPath ? props.apiPath : apiPath;
-    const newQuery = assign(query, props.query);
-    const newData = assign(data, props.data);
-    const newHeader = assign(header, props.header);
+    const newQuery = props.query !== false ? assign(query, props.query) : undefined;
+    const newData = props.data !== false ? assign(data, props.data) : undefined;
+    const newHeader = props.header !== false ? assign(header, props.header) : undefined;
     return createRequest({
       method: newMethod,
       path: newPath,
@@ -35,18 +35,21 @@ createRequest = (props: AutoRequestProps = {}) => {
     if (!targetPath) {
       throw new Error("request path should not undefined!!");
     }
+
     const targetQuery = assign(query, currentQuery);
+
     const relativePath = targetPath.startsWith("http")
       ? transformPath({ path: targetPath, query: targetQuery })
       : transformPath({ apiPath: targetPath as apiName, query: targetQuery });
-    if ((process as any).browser) {
+
+    if ((process as any).browser && cacheApi.includes(targetPath as apiName)) {
       const target = cache.get(relativePath);
       if (target) {
         return Promise.resolve(<T>target);
       }
     }
     const currentMethod = method || "get";
-    const currentHeader = (process as any).browser ? getHeader(header) : header;
+    const currentHeader = header !== undefined && header !== false && (process as any).browser ? getHeader(header) : header;
     let requestPromise: Promise<AxiosResponse<T>>;
     requestPromise = instance({
       method: currentMethod,

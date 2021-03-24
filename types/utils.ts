@@ -96,9 +96,9 @@ interface AutoRequestProps {
   method?: Method;
   path?: string;
   apiPath?: apiName;
-  query?: QueryProps;
-  header?: HeaderProps;
-  data?: object;
+  query?: QueryProps | false;
+  header?: HeaderProps | false;
+  data?: object | false;
 }
 interface ApiRequestResult<T> {
   code: number;

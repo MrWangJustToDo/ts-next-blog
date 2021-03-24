@@ -3,7 +3,7 @@ import { PrimaryMessage } from "components/BlogMessage";
 import { WithReadBlogItem as TypeContentItem } from "components/BlogItem";
 import useType from "hook/useType";
 import { apiName } from "config/api";
-import { getClass } from "utils/class";
+import { animateFadein, getClass } from "utils/class";
 import { TypeContentType } from "types/containers";
 import { PrimaryMessageProps } from "types/components";
 
@@ -28,11 +28,11 @@ TypeContent = ({ blogs }) => {
               query={{ blogId: props.blogId! }}
               requestData={{ blogId: props.blogId }}
               loaded={(data) => (
-                <>
+                <div className={getClass(animateFadein)}>
                   {data.map((props) => (
                     <PrimaryMessage key={props.modifyDate} {...props} withReplay={false} withChildren={false} withHover={false} />
                   ))}
-                </>
+                </div>
               )}
             />
           </div>

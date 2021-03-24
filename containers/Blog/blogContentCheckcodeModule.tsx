@@ -10,7 +10,9 @@ let BlogContentCheckcodeModule: BlogContentCheckcodeModuleType;
 let BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImagType;
 
 BlogContentCheckcodeModuleWithImag = ({ request, closeHandler, imgRef }) => {
+
   const { ref, submit, canSubmit } = useCheckcodeModuleToSubmit<HTMLInputElement>({ request, closeHandler });
+
   return (
     <div className={getClass("row", flexCenter)}>
       <label htmlFor="putcheck" className="col-2 col-form-label text-center text-truncate" title="验证码">
@@ -26,7 +28,9 @@ BlogContentCheckcodeModuleWithImag = ({ request, closeHandler, imgRef }) => {
 };
 
 BlogContentCheckcodeModule = ({ request, closeHandler }) => {
+
   const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
+  
   return <BlogContentCheckcodeModuleWithImag request={request} closeHandler={closeHandler} imgRef={imgRef} />;
 };
 

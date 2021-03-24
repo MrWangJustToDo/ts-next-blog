@@ -48,7 +48,7 @@ actionReducerMap = {
     }),
   [serverAction.GETDATASUCESS(apiName.blog)]: (state, action) =>
     produce(state, (proxy) => {
-      proxy.data = action.data || {};
+      proxy.data = { ...proxy.data, ...action.data } || {};
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;

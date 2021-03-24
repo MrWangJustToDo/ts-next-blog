@@ -12,7 +12,9 @@ let BlogContentReplayModule: BlogContentReplayModuleType;
 let BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImagType;
 
 BlogContentReplayModuleWithImag = ({ request, closeHandler, imgRef }) => {
+
   const { input1, input2, submit, canSubmit } = useReplayModuleToSubmit<HTMLTextAreaElement, HTMLInputElement>({ request, closeHandler });
+  
   return (
     <>
       <textarea className="w-100 my-2 border rounded" placeholder="请输入留言" style={{ minHeight: "100px" }} ref={input1} />
@@ -29,7 +31,9 @@ BlogContentReplayModuleWithImag = ({ request, closeHandler, imgRef }) => {
 };
 
 BlogContentReplayModule = ({ request, closeHandler }) => {
+
   const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
+
   return <BlogContentReplayModuleWithImag request={request} closeHandler={closeHandler} imgRef={imgRef} />;
 };
 

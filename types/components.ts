@@ -370,7 +370,7 @@ interface LoadRenderProps<T> {
   needUpdate?: boolean;
   needinitialData?: boolean;
   fetcher?: (...args: any) => any;
-  loaded: (props: T) => JSX.Element;
+  loaded: (props: T) => JSX.Element | null;
   loading?: (props: LoadingProps) => JSX.Element;
   loadError?: (props: any) => JSX.Element;
   placeholder?: { [props: string]: string };

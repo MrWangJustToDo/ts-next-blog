@@ -10,8 +10,11 @@ import { MainRightTypeType } from "types/containers";
 let MainRightType: MainRightTypeType;
 
 MainRightType = ({ index }) => {
-  const { icon, content, hrefTo } = mainRightHeader[index];
+
   const { type, changeCurrentType } = useType();
+
+  const { icon, content, hrefTo } = mainRightHeader[index];
+
   return (
     <div className="card mt-4 mt-md-0">
       <MainRightHead icon={icon!} content={content!} hrefTo={hrefTo!} />

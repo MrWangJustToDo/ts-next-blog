@@ -16,6 +16,12 @@ actionHandler = (element, action, otherAction) => {
   }
 };
 
+const removeElements = (element: HTMLElement) => {
+  actionHandler<HTMLCollection, void, void>(element.parentElement?.children, (eles) => {
+    Array.from(eles).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove());
+  });
+};
+
 judgeAction = async <T extends HTMLElement>({
   element,
   judge,
@@ -26,12 +32,8 @@ judgeAction = async <T extends HTMLElement>({
   successCallback,
   failCallback,
 }: JudgeActioProps<T>) => {
-  // judge & action
   const judgeResult = typeof judge === "function" ? await judge() : judge;
-  // reset element
-  actionHandler<HTMLCollection, void, void>(element.parentElement?.children, (eles) => {
-    Array.from(eles).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove());
-  });
+  removeElements(element);
   const span = document.createElement("span");
   span.setAttribute("toast", "true");
   if (judgeResult) {
@@ -57,9 +59,7 @@ judgeAction = async <T extends HTMLElement>({
 };
 
 loadingAction = <T extends HTMLElement>({ element, loadingClassName }: LoadingActionProps<T>) => {
-  actionHandler<HTMLCollection, void, void>(element.parentElement?.children, (eles) => {
-    Array.from(eles).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove());
-  });
+  removeElements(element);
   const span = document.createElement("span");
   span.setAttribute("toast", "true");
   const loadingClassNameArr = loadingClassName.split(" ");

@@ -87,4 +87,22 @@ const getRandom = (start: number, end?: number): number => {
   return ((Math.random() * (end - start + 1)) | 0) + start;
 };
 
-export { autoTransformData, getCurrentAvatar, formSerialize, getRandom };
+const parseToString = (obj: { [props: string]: any } | Array<any> | string | number): string => {
+  let re = "";
+  if (Array.isArray(obj)) {
+    re = "[";
+    re += obj.map((it) => parseToString(it)).join(", \n");
+    re += "]";
+  } else if (typeof obj === "object") {
+    re = "{";
+    for (let key in obj) {
+      re += `${key}: ${parseToString(obj[key])},\n`;
+    }
+    re = re.slice(0, -1) + "}";
+  } else {
+    re = obj.toString() + "\n";
+  }
+  return re;
+};
+
+export { autoTransformData, getCurrentAvatar, formSerialize, getRandom, parseToString };

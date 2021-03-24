@@ -1,6 +1,5 @@
 import { wrapper } from "store";
 import { END } from "redux-saga";
-import isEqual from "lodash/isEqual";
 import Blog from "containers/Blog";
 import BlogUtils from "components/BlogUtils";
 import { apiName } from "config/api";
@@ -29,7 +28,7 @@ BlogContent = (props) => {
 BlogContent.title = "博客";
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  autoDispatchTockenHandler(async ({ store, req, res, ...etc }) => {
+  autoDispatchTockenHandler(async ({ store, ...etc }) => {
     // 获取当前需要加载的博客详细信息
     const {
       params: { id },
@@ -41,15 +40,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
     store.dispatch(END);
     // wait saga end
     await store.sagaTask?.toPromise();
-    if (!req.session[apiName.blog] || !req.session[apiName.blog]["data"] || !req.session[apiName.blog]["data"][id]) {
-      req.session[apiName.blog] = store.getState().server[apiName.blog];
-    }
-    // 将session中的数据加载到store中
-    if (!isEqual(store.getState().server[apiName.blog]["data"][id], req.session[apiName.blog]["data"][id])) {
-      req.session[apiName.blog] = store.getState().server[apiName.blog];
-      store.dispatch(getDataSucess_Server({ name: apiName.blog, data: { id: req.session[apiName.blog]["data"][id] } }));
-    }
-    return { props: req.session[apiName.blog]["data"][id] };
+    store.dispatch(getDataSucess_Server({ name: apiName.blog, data: { [id]: store.getState().server[apiName.blog]["data"][id] } }));
+    return { props: store.getState().server[apiName.blog]["data"][id] };
   })
 );
 

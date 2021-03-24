@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
@@ -35,19 +35,36 @@ LoadRender = <T>({
   revalidateOnMount = true,
 }: LoadRenderProps<T>) => {
   if (!path && !apiPath) throw new Error("loadrender error, path undefined!");
+
   const [loadingEle, setLoadingEle] = useState<JSX.Element | null>(null);
+
   const currentPath = apiPath ? apiPath : path;
+
   useEffect(() => {
     delay(delayTime, () => setLoadingEle(loading({ _style: placeholder })), currentPath);
     return () => cancel(currentPath!);
   }, [method, query, requestData, delayTime, currentPath]);
-  const currentFetcher = fetcher ? fetcher : createRequest({ method, data: requestData, header: { apiToken: token } }).run;
+
+  const defaultFetcher = useMemo(() => createRequest({ method, data: requestData, header: { apiToken: token } }).run, [method, requestData, token]);
+
+  const currentFetcher = fetcher ? fetcher : defaultFetcher;
+
   const { initialData: currentInitialData, dispatch } = getCurrentInitialData({ initialData, apiPath, needinitialData });
+
   const { data, error }: { data?: any; error?: any } = useSWR([currentPath, query], currentFetcher, { initialData: currentInitialData, revalidateOnMount });
+
   const currentData = data ? autoTransformData(data) : null;
+
   autoUpdateState<T>({ needUpdate, initialData: currentInitialData, apiPath, currentData, dispatch });
+
   if (error) return loadError(error.toString());
-  if (currentData) return loaded(currentData);
+
+  if (currentData) {
+    // make soure not flash if data loaded
+    cancel(currentPath!);
+    return loaded(currentData);
+  }
+
   return loadingEle;
 };
 

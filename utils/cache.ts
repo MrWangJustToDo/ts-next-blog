@@ -1,5 +1,6 @@
 import { log } from "./log";
 import { cancel, delay } from "./delay";
+import { parseToString } from "./data";
 
 const maxTimeStore = 1000 * 60 * 10;
 
@@ -11,8 +12,15 @@ class Cache<T, K> {
   }
 
   set = (key: T, value: K, time: number = this.maxTime) => {
+    if (value === undefined) {
+      log(`can not store undefined value! key: ${parseToString(key)}`, "error");
+      return;
+    }
     if (this.store.has(key)) {
-      log(`already cache, should not cache again! key: ${key} oldValue: ${this.store.get(key)} newValue: ${value}`, "warn");
+      log(
+        `already cache, now cache again! key: ${parseToString(key)} oldValue: ${parseToString(this.store.get(key)!)} newValue: ${parseToString(value)}`,
+        "warn"
+      );
       if (typeof key === "string") {
         log(`cancel auto delete, key：${key}`, "warn");
         cancel(key);
@@ -52,7 +60,7 @@ class Cache<T, K> {
         cancel(key.toString());
       }
       this.store.delete(key);
-      log(`force delete data from cache, updata data from database. key: ${key}`, "warn");
+      log(`force delete data from cache. key: ${key}`, "warn");
     } else {
       log(`error, nothing need to delete. key: ${key}`, "error");
     }

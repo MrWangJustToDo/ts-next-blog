@@ -9,8 +9,11 @@ import { MainRightTagType, TagProps } from "types/containers";
 let MainRightTag: MainRightTagType;
 
 MainRightTag = ({ index }) => {
-  const { icon, content, hrefTo } = mainRightHeader[index];
+  
   const { tag, changeCurrentTag } = useTag();
+
+  const { icon, content, hrefTo } = mainRightHeader[index];
+  
   return (
     <div className="card mt-4">
       <MainRightHead icon={icon!} content={content!} hrefTo={hrefTo!} />
