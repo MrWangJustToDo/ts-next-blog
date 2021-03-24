@@ -1,7 +1,6 @@
-import { SimpleElement } from "containers/Main/@type";
-
 import ManageSearch from "./manageSearch";
 import ManageResult from "./manageResult";
+import { SimpleElement } from "types/components";
 
 let ManageLeft: SimpleElement;
 

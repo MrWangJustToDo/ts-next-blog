@@ -87,20 +87,20 @@ const getRandom = (start: number, end?: number): number => {
   return ((Math.random() * (end - start + 1)) | 0) + start;
 };
 
-const parseToString = (obj: { [props: string]: any } | Array<any> | string | number): string => {
+const parseToString = (obj: { [props: string]: any } | Array<any> | string | number, indent: number = 0): string => {
   let re = "";
   if (Array.isArray(obj)) {
-    re = "[";
-    re += obj.map((it) => parseToString(it)).join(", \n");
-    re += "]";
+    re = "".padEnd(indent) + "[\n";
+    re += "".padEnd(indent + 2) + obj.map((it) => typeof it === 'object' ? parseToString(it, indent + 2) : it.toString()).join(",\n");
+    re += "".padEnd(indent) + "]\n";
   } else if (typeof obj === "object") {
-    re = "{";
+    re = "".padEnd(indent) + "{\n";
     for (let key in obj) {
-      re += `${key}: ${parseToString(obj[key])},\n`;
+      re += "".padEnd(indent + 2) + `${key}: ${typeof obj[key] === 'object' ? parseToString(obj[key], indent + 2) : obj[key].toString()},\n`;
     }
-    re = re.slice(0, -1) + "}";
+    re = "".padEnd(indent) + re.slice(0, -1) + "}\n";
   } else {
-    re = obj.toString() + "\n";
+    re = "".padEnd(indent) + obj.toString();
   }
   return re;
 };

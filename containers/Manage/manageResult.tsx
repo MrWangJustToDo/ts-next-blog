@@ -1,7 +1,7 @@
 import { useResult } from "hook/useManage";
 import CardPage from "components/PageFoot";
 import { WithWriteBlogItem as SearchResult } from "components/BlogItem";
-import { SimpleElement } from "containers/Main/@type";
+import { SimpleElement } from "types/components";
 
 let ManageResult: SimpleElement;
 

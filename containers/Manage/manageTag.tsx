@@ -1,8 +1,8 @@
 import { apiName } from "config/api";
 import LoadRender from "components/LoadRender";
 import DeleteTag from './manageDeleteTagItem';
-import { TagProps } from "containers/Publish/@type";
-import { SimpleElement } from "containers/Main/@type";
+import { SimpleElement } from "types/components";
+import { TagProps } from "types/containers";
 
 let ManageTag: SimpleElement;
 

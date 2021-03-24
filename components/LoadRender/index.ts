@@ -4,7 +4,7 @@ import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
 import loadingError from "./loadingError";
 import { cancel, delay } from "utils/delay";
-import { createRequest } from "utils/fetcher";
+import { SingleRequest } from "utils/fetcher";
 import { autoTransformData } from "utils/data";
 import { useCurrentState } from "hook/useBase";
 import { getDataSucess_Server } from "store/reducer/server/action";
@@ -45,7 +45,11 @@ LoadRender = <T>({
     return () => cancel(currentPath!);
   }, [method, query, requestData, delayTime, currentPath]);
 
-  const defaultFetcher = useMemo(() => createRequest({ method, data: requestData, header: { apiToken: token } }).run, [method, requestData, token]);
+  const defaultFetcher = useMemo(() => SingleRequest({ method, data: requestData ? requestData : false, header: token ? { apiToken: token } : false }).run, [
+    method,
+    requestData,
+    token,
+  ]);
 
   const currentFetcher = fetcher ? fetcher : defaultFetcher;
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Input from "components/Input";
 import Button from "components/Button";
 import { addModule } from "config/manage";
-import { ManageAddModuleType } from "./@type";
+import { ManageAddModuleType } from "types/containers";
 
 let ManageAddModule: ManageAddModuleType;
 

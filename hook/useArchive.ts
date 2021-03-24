@@ -22,7 +22,7 @@ useArchive = () => {
   const { state } = useCurrentState();
   const [page, setPage] = useState<number>(1);
   const [bool, setBool] = useState<boolean>(true);
-  const [value, setValue] = useState<ArchiveProps | null>(null);
+  const [value, setValue] = useState<ArchiveProps>({});
   // 获取所有的archive
   const archives = state.client[actionName.currentArchive]["data"];
   // 获取所有的长度

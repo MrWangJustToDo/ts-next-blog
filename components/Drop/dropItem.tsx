@@ -7,10 +7,10 @@ import style from "./index.module.scss";
 let DropItem: DropItemType;
 
 DropItem = ({ clickHandler, value, name, index, checkedIndex }) => {
-  const clickCallback = useCallback(() => clickHandler(index), [clickHandler]);
+  const clickCallback = useCallback(() => clickHandler!(index!), [clickHandler]);
   return (
     <div
-      className={getClass("text-center p-2 m-1 rounded small", style.dropItem, checkedIndex.includes(index) ? style.dropItem_checked : "")}
+      className={getClass("text-center p-2 m-1 rounded small", style.dropItem, checkedIndex!.includes(index!) ? style.dropItem_checked : "")}
       onClick={clickCallback}
     >
       {name ? name : value}

@@ -1,6 +1,6 @@
 import Button from "components/Button";
 import { useDeleteRequest } from "hook/useManage";
-import { ManageDeleteModuleType } from "./@type";
+import { ManageDeleteModuleType } from "types/containers";
 
 let ManageDeleteModule: ManageDeleteModuleType;
 

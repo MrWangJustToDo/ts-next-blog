@@ -15,7 +15,7 @@ const setUp = (expressApp: e.Express) => {
       resave: true,
       rolling: true,
       saveUninitialized: true,
-      cookie: { secure: true, maxAge: 600000 },
+      cookie: { maxAge: 600000 },
       name: "react-ssr",
     })
   );

@@ -20,10 +20,11 @@ TagContent = ({ blogs }) => {
           <div className="col-lg-8 px-0">
             <TagContentItem {...props} />
           </div>
-          <div className={getClass("col-lg-4 border-left py-2", style.autoHide)}>
+          <div className={getClass("col-lg-4 border-left border-bottom py-2", style.autoHide)}>
             <LoadRender<PrimaryMessageProps[]>
               method="post"
               apiPath={apiName.primaryMessage}
+              query={{ blogId: props.blogId! }}
               requestData={{ blogId: props.blogId }}
               loaded={(data) => (
                 <>

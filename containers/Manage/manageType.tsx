@@ -1,8 +1,8 @@
 import { Type } from "components/Type";
 import { apiName } from "config/api";
 import LoadRender from "components/LoadRender";
-import { TypeProps } from "hook/@type";
-import { SimpleElement } from "containers/Main/@type";
+import { SimpleElement } from "types/components";
+import { TypeProps } from "types/hook";
 
 let ManageType: SimpleElement;
 
@@ -18,7 +18,7 @@ ManageType = () => {
             <>
               {data.map(({ typeId, typeContent, typeCount }) => (
                 <div key={typeId} className="m-1">
-                  <Type {...{ typeCount, typeContent }} />
+                  <Type typeCount={typeCount!} typeContent={typeContent!} />
                 </div>
               ))}
             </>

@@ -3,6 +3,7 @@ import { apiName } from "config/api";
 import BlogContentPrimaryMessage from "./blogContentMessagePrimary";
 import { PrimaryMessageProps } from "types/components";
 import { BlogContentMessageType } from "types/containers";
+import { flexCenter, getClass } from "utils/class";
 
 let BlogContentMessage: BlogContentMessageType;
 
@@ -17,7 +18,9 @@ BlogContentMessage = ({ blogId }) => {
           query={{ blogId }}
           requestData={{ blogId }}
           apiPath={apiName.primaryMessage}
-          loaded={(data) => (data.length ? <BlogContentPrimaryMessage messages={data} /> : <div>暂时没有评论</div>)}
+          loaded={(data) =>
+            data.length ? <BlogContentPrimaryMessage messages={data} /> : <div className={getClass("p-2 text-danger", flexCenter)}>暂时没有评论</div>
+          }
         />
       </div>
     </li>

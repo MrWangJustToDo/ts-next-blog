@@ -1,20 +1,26 @@
+import { useCallback, useMemo } from "react";
 import ManageTag from "./manageTag";
 import ManageType from "./manageType";
 import ManageAddModule from "./manageAddModule";
-import { SimpleElement } from "containers/Main/@type";
 import { useManageToAddModule } from "hook/useManage";
-import { autoRequest } from "utils/fetcher";
+import { createRequest } from "utils/fetcher";
 import { apiName } from "config/api";
+import { SimpleElement } from "types/components";
+import { AutoRequestType } from "types/utils";
 
 let ManageRight: SimpleElement;
 
 ManageRight = () => {
-  const request = autoRequest({ method: "post", path: apiName.addTag });
+  const request = useMemo(() => createRequest({ method: "post", path: apiName.addTag }), []);
+  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => JSX.Element>(
+    (request) => (judgeApiName) => <ManageAddModule fieldname="tagContent" request={request} judgeApiName={judgeApiName} />,
+    []
+  );
   const click = useManageToAddModule({
     request,
     title: "添加标签",
     judgeApiName: apiName.checkTag,
-    body: (request) => (judgeApiName) => <ManageAddModule fieldname="tagContent" request={request} judgeApiName={judgeApiName} />,
+    body,
   });
   return (
     <div className="col-md-4">

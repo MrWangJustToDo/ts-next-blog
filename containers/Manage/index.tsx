@@ -1,6 +1,6 @@
 import ManageLeft from "./manageLeft";
 import ManageRight from "./manageRight";
-import { SimpleElement } from "containers/Main/@type";
+import { SimpleElement } from "types/components";
 
 let Manage: SimpleElement;
 
