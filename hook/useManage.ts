@@ -97,7 +97,7 @@ useJudgeInput = ({ option, judgeApiName, successClassName, failClassName, loadin
             () => <Promise<boolean>>actionHandler<apiName, Promise<boolean>, Promise<boolean>>(
                 judgeApiName,
                 (apiname) =>
-                  createRequest({ path: apiname, method: "post", data: { [ref.current!.name]: ref.current!.value } })
+                  createRequest({ apiPath: apiname, method: "post", data: { [ref.current!.name]: ref.current!.value } })
                     .run<ApiRequestResult<string>>()
                     .then(({ code, data }) => {
                       if (code === 0) {

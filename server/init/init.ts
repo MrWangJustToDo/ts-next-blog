@@ -1,8 +1,9 @@
 import * as sqlite from "sqlite";
 import sqlite3 from "sqlite3";
 import { log } from "utils/log";
-import { TransformHandlerType } from "types/server";
+import { getUserByUserId } from "server/database/get";
 import { catchHandler, fail, transformHandler } from "server/middleware/apiHandler";
+import { TransformHandlerType } from "types/server";
 
 let initDBConnect: TransformHandlerType;
 
@@ -62,6 +63,31 @@ serverLog = transformHandler(
     }
     next();
   })
+);
+
+initUser = transformHandler(
+  catchHandler(
+    async ({ req, next }) => {
+      // 从签名cookie中找出该用户的信息并挂在req对象上以供后续的中间件访问
+      if (req.signedCookies.id) {
+        // 从session中找登录信息
+        if (req.session.userCache) {
+          req.user = req.session.userCache;
+        }
+        if (!req.user) {
+          req.user = await getUserByUserId({
+            userId: req.signedCookies.id,
+            db: req.db!,
+          });
+          req.session.userCache = req.user;
+        }
+      } else {
+        req.session.userCache = null;
+      }
+      next();
+    },
+    ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "初始化用户信息失败", data: e.toString(), methodName: "initUser" } })
+  )
 );
 
 export { initDBConnect, initSession, initUser, decodeURI, serverLog };

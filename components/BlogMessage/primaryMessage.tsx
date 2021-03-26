@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import UserHover from "components/UserHover";
 import { momentTo } from "utils/time";
 import { getClass } from "utils/class";
@@ -25,15 +25,19 @@ PrimaryMessage = (props) => {
     withReplay = true,
     withChildren = true,
   } = props;
+
   const replayCallback = useCallback(() => replayHandler(props), [props]);
+
+  const src = useMemo(() => getCurrentAvatar(avatar, gender), [avatar, gender]);
+  
   return (
     <div className="media py-2">
       {withHover ? (
         <UserHover {...props}>
-          <Image src={getCurrentAvatar(avatar, gender)} className="rounded" alt="头像" width="38" height="38" />
+          <Image src={src} className="rounded" alt="头像" width="38" height="38" />
         </UserHover>
       ) : (
-        <Image src={getCurrentAvatar(avatar, gender)} className="rounded" alt="头像" width="38" height="38" />
+        <Image src={src} className="rounded" alt="头像" width="38" height="38" />
       )}
       <div className="media-body ml-2 ml-md-3">
         <h5 className="small">

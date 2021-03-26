@@ -27,7 +27,7 @@ FootContainerYiYan = () => {
         <i className="ri-pantone-line mr-2"></i>
         <div>一言</div>
       </h6>
-      <LoadRender path={process.env.NEXT_PUBLIC_ONESAY} loaded={Bquote} />
+      <LoadRender path={process.env.NEXT_PUBLIC_ONESAY} loaded={Bquote} revalidateOnFocus={false} />
     </div>
   );
 };

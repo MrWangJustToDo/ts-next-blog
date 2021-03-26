@@ -375,6 +375,7 @@ interface LoadRenderProps<T> {
   loadError?: (props: any) => JSX.Element;
   placeholder?: { [props: string]: string };
   revalidateOnMount?: boolean;
+  revalidateOnFocus?: boolean;
 }
 
 interface LoadRenderType {

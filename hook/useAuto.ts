@@ -197,7 +197,7 @@ useAutoLoadRandomImg = (apiName) => {
       () => {
         hide();
         const getImgUrl = () =>
-          createRequest({ path: apiName, header: { apiToken: true } })
+          createRequest({ apiPath: apiName, header: { apiToken: true } })
             .run<ApiRequestResult<string>>()
             .then(({ data }) => {
               if (Array.isArray(data)) {

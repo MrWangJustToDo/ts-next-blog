@@ -33,6 +33,7 @@ LoadRender = <T>({
   needinitialData = false,
   loadError = loadingError,
   revalidateOnMount = true,
+  revalidateOnFocus = true,
 }: LoadRenderProps<T>) => {
   if (!path && !apiPath) throw new Error("loadrender error, path undefined!");
 
@@ -55,7 +56,7 @@ LoadRender = <T>({
 
   const { initialData: currentInitialData, dispatch } = getCurrentInitialData({ initialData, apiPath, needinitialData });
 
-  const { data, error }: { data?: any; error?: any } = useSWR([currentPath, query], currentFetcher, { initialData: currentInitialData, revalidateOnMount });
+  const { data, error }: { data?: any; error?: any } = useSWR([currentPath, query], currentFetcher, { initialData: currentInitialData, revalidateOnMount, revalidateOnFocus });
 
   const currentData = data ? autoTransformData(data) : null;
 

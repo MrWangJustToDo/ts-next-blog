@@ -1,11 +1,15 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { flexBetween, getClass } from "utils/class";
 import { OverlayType } from "types/components";
+import { getScrollBarSize } from "utils/action";
 
 let Overlay: OverlayType;
 
 Overlay = ({ head, body, foot, closeHandler, showState, className = "" }) => {
+  
+  const [padding, setPadding] = useState<number>(0);
+
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: showState || false,
     key: "overlay",
@@ -22,9 +26,19 @@ Overlay = ({ head, body, foot, closeHandler, showState, className = "" }) => {
   }, [body]);
 
   useEffect(() => {
-    document.body.classList.add("overflow-hidden", "mr-3");
-    return () => document.body.classList.remove("overflow-hidden", "mr-3");
-  }, []);
+    if (padding === 0) {
+      setPadding(getScrollBarSize());
+    }
+  }, [padding]);
+
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    document.body.style.paddingRight = `${padding}px`;
+    return () => {
+      document.body.style.overflowY = "auto";
+      document.body.style.paddingRight = `0px`;
+    };
+  }, [padding]);
 
   return (
     <div ref={ref} className={getClass("card m-auto user-select-none", className)} style={{ display: "none" }}>
