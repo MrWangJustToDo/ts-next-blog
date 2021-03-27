@@ -3,7 +3,7 @@ import { RefObject } from "react";
 import { AnyAction } from "redux";
 import { apiName } from "config/api";
 import { InputProps } from "./config";
-import { AutoRequestType } from "./utils";
+import { AutoRequestProps, AutoRequestType } from "./utils";
 import { ChildMessageProps, LoadingBarProps, OverlayProps, PrimaryMessageProps, ToastProps } from "./components";
 
 interface UserProps {
@@ -247,16 +247,25 @@ interface UseResultType {
 }
 interface UseManageToAddModuleProps {
   title: string;
-  body: (request: AutoRequestType) => (judgeApiName: apiName) => JSX.Element;
+  body: (request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => JSX.Element;
   judgeApiName: apiName;
+  requestApiName: apiName;
   request: AutoRequestType;
   className?: string;
 }
 interface UseManageToAddModuleType {
   (props: UseManageToAddModuleProps): () => void;
 }
+interface UseAddRequestProps {
+  request: AutoRequestType;
+  successCallback: () => void;
+}
+interface UseAddRequestType {
+  (props: UseAddRequestProps): [ref: RefObject<HTMLInputElement>, request: () => Promise<void>];
+}
 interface UseJudgeInputProps {
   option: InputProps;
+  forWardRef?: RefObject<HTMLInputElement>;
   judgeApiName?: apiName;
   failClassName: string;
   successClassName: string;
@@ -284,7 +293,7 @@ interface UseDeleteRequestType {
   (props: UseDeleteRequestProps): () => Promise<void>;
 }
 
-export type { UseSearchType, UseResultType, UseManageToAddModuleType, UseJudgeInputType, UseManageToDeleteModuleType, UseDeleteRequestType };
+export type { UseSearchType, UseResultType, UseManageToAddModuleType, UseAddRequestType, UseJudgeInputType, UseManageToDeleteModuleType, UseDeleteRequestType };
 
 /* useMessage */
 interface UseChildMessageType {
@@ -444,5 +453,8 @@ interface UseLoginType {
 interface UseLogoutType {
   (): () => Promise<void>;
 }
+interface UseUserRequest {
+  (props?: AutoRequestProps): AutoRequestType;
+}
 
-export type { UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType };
+export type { UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType, UseUserRequest };

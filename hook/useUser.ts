@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/dist/client/router";
 import { apiName } from "config/api";
@@ -12,7 +12,7 @@ import { useCurrentState } from "./useBase";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSucessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
-import { UserProps, UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType } from "types/hook";
+import { UserProps, UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType, UseUserRequest } from "types/hook";
 
 let useAutoLogin: UseAutoLoginType;
 
@@ -22,12 +22,15 @@ let useLogin: UseLoginType;
 
 let useLogout: UseLogoutType;
 
+let useUserRequest: UseUserRequest;
+
 // 未登录时尝试自动登录
 useAutoLogin = () => {
   const { dispatch } = useCurrentState();
+  const loginRequest = useMemo(() => createRequest({ header: { apiToken: true } }), []);
   const autoLoginCallback = useCallback(
     () =>
-      createRequest({ header: { apiToken: true } })
+      loginRequest
         .run<ApiRequestResult<UserProps>>(apiName.autoLogin)
         .then(({ code, data }) => {
           if (code === 0 && !Array.isArray(data) && data.userId) {
@@ -87,10 +90,11 @@ useLogout = () => {
   const router = useRouter();
   const failToast = useFailToast();
   const successToast = useSucessToast();
+  const logoutRequest = useMemo(() => createRequest({ method: "post", header: { apiToken: true } }), []);
   const { state, dispatch } = useCurrentState();
   const user = state.client[actionName.currentUser]["data"] as UserProps;
   const logoutCallback = useCallback(() => {
-    return createRequest({ method: "post", header: { apiToken: true } })
+    return logoutRequest
       .run<ApiRequestResult<string>>(apiName.logout)
       .then(({ code, state }) => {
         if (code === 0) {
@@ -106,4 +110,11 @@ useLogout = () => {
   return logoutCallback;
 };
 
-export { useAutoLogin, useCurrentUser, useLogin, useLogout };
+// 自动绑定当前用户的request
+useUserRequest = (props = {}) => {
+  const { method, data, path, apiPath, header } = props;
+  const user = useCurrentUser();
+  return useMemo(() => createRequest({ method, data, path, apiPath, header, query: { userId: user.userId! } }), [user, data, path, apiPath, header, method]);
+};
+
+export { useAutoLogin, useCurrentUser, useLogin, useLogout, useUserRequest };

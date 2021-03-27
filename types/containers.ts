@@ -218,6 +218,7 @@ interface ManageAddModuleProps {
   fieldname: string;
   judgeApiName: apiName;
   request: AutoRequestType;
+  requestApiName: apiName;
 }
 
 interface ManageAddModuleType {

@@ -87,7 +87,7 @@ usePutToCheckcodeModule = <T extends MyInputELement>({ request, body, className 
         });
       }
     });
-  }, [open]);
+  }, [open, body, request]);
   const canSubmit = useJudgeInputValue<T>(ref);
   return { ref, submit, canSubmit };
 };
@@ -114,16 +114,19 @@ useCheckcodeModuleToSubmit = <T extends MyInputELement>({ request, closeHandler 
         return pushFail(`输入框没有内容？`);
       }
     });
-  }, [request, closeHandler, pushFail, pushSucess]);
+  }, [request, closeHandler]);
   const canSubmit = useJudgeInputValue<T>(ref);
   return { ref, submit, canSubmit };
 };
 
 useMessageToReplayModule = <T extends {}>({ request, body, className }: UseMessageToReplayModuleProps<T>) => {
   const open = useOverlayOpen();
-  const replay = useCallback<(props: T) => void>((props) => {
-    open({ head: "回复", body: body(request)(props), className });
-  }, []);
+  const replay = useCallback<(props: T) => void>(
+    (props) => {
+      open({ head: "回复", body: body(request)(props), className });
+    },
+    [body, request]
+  );
   return replay;
 };
 
@@ -145,7 +148,7 @@ useReplayModuleToSubmit = <T extends MyInputELement, F extends MyInputELement>({
           }
         })
         .catch((e) => pushFail(`发生错误: ${e.toString()}`)),
-    [pushFail, pushSucess, request, closeHandler]
+    [request, closeHandler]
   );
   const canSubmit1 = useJudgeInputValue(input1);
   const canSubmit2 = useJudgeInputValue(input2);

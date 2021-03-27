@@ -12,7 +12,9 @@ import style from "./index.module.scss";
 let TagContent: TagContentType;
 
 TagContent = ({ blogs }) => {
+
   const { currentPageBlogs } = useTag(blogs);
+  
   return (
     <ul className="p-0">
       {currentPageBlogs.map((props) => (

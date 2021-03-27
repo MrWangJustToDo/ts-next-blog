@@ -1,27 +1,33 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import ManageTag from "./manageTag";
 import ManageType from "./manageType";
 import ManageAddModule from "./manageAddModule";
 import { useManageToAddModule } from "hook/useManage";
-import { createRequest } from "utils/fetcher";
 import { apiName } from "config/api";
 import { SimpleElement } from "types/components";
 import { AutoRequestType } from "types/utils";
+import { useUserRequest } from "hook/useUser";
 
 let ManageRight: SimpleElement;
 
 ManageRight = () => {
-  const request = useMemo(() => createRequest({ method: "post", path: apiName.addTag }), []);
-  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => JSX.Element>(
-    (request) => (judgeApiName) => <ManageAddModule fieldname="tagContent" request={request} judgeApiName={judgeApiName} />,
+  const request = useUserRequest({ method: "post", apiPath: apiName.addTag });
+
+  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => JSX.Element>(
+    (request) => (judgeApiName) => (requestApiName) => (
+      <ManageAddModule requestApiName={requestApiName} fieldname="tagContent" request={request} judgeApiName={judgeApiName} />
+    ),
     []
   );
+
   const click = useManageToAddModule({
     request,
     title: "添加标签",
     judgeApiName: apiName.checkTag,
+    requestApiName: apiName.tag,
     body,
   });
+
   return (
     <div className="col-md-4">
       <div className="card mt-4 mt-md-0">

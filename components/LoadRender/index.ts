@@ -4,8 +4,8 @@ import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
 import loadingError from "./loadingError";
 import { cancel, delay } from "utils/delay";
-import { SingleRequest } from "utils/fetcher";
 import { autoTransformData } from "utils/data";
+import { cacheAllRequest } from "utils/fetcher";
 import { useCurrentState } from "hook/useBase";
 import { getDataSucess_Server } from "store/reducer/server/action";
 import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType } from "types/components";
@@ -46,17 +46,23 @@ LoadRender = <T>({
     return () => cancel(currentPath!);
   }, [method, query, requestData, delayTime, currentPath]);
 
-  const defaultFetcher = useMemo(() => SingleRequest({ method, data: requestData ? requestData : false, header: token ? { apiToken: token } : false }).run, [
+  const defaultFetcher = useMemo(() => cacheAllRequest({ method, data: requestData ? requestData : false, header: token ? { apiToken: token } : false }), [
     method,
     requestData,
     token,
   ]);
 
-  const currentFetcher = fetcher ? fetcher : defaultFetcher;
+  const currentFetcher = fetcher ? fetcher : defaultFetcher.run;
 
   const { initialData: currentInitialData, dispatch } = getCurrentInitialData({ initialData, apiPath, needinitialData });
 
-  const { data, error }: { data?: any; error?: any } = useSWR([currentPath, query], currentFetcher, { initialData: currentInitialData, revalidateOnMount, revalidateOnFocus });
+  const queryString = query ? JSON.stringify(query) : undefined;
+
+  const { data, error }: { data?: any; error?: any } = useSWR(queryString ? [currentPath, queryString] : currentPath!, currentFetcher, {
+    initialData: currentInitialData,
+    revalidateOnMount,
+    revalidateOnFocus,
+  });
 
   const currentData = data ? autoTransformData(data) : null;
 
@@ -67,6 +73,7 @@ LoadRender = <T>({
   if (currentData) {
     // make soure not flash if data loaded
     cancel(currentPath!);
+
     return loaded(currentData);
   }
 
@@ -75,8 +82,11 @@ LoadRender = <T>({
 
 getCurrentInitialData = ({ initialData, apiPath, needinitialData }) => {
   const { state, dispatch } = useCurrentState();
+
   if (initialData) return { initialData, dispatch };
+
   if (apiPath && needinitialData) return { initialData: state.server[apiPath]["data"], dispatch };
+
   return { dispatch };
 };
 

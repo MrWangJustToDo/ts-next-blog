@@ -14,16 +14,19 @@ useOverlayProps = () => {
   const [overlay, setReplay] = useState<OverlayProps | null>(null);
   const update = useCallback(() => setReplay((last) => ({ ...last! })), []);
   const clear = useCallback(() => setReplay(null), []);
-  const open = useCallback((props) => {
-    cancel("replayModule");
-    props.showState = true;
-    props.closeHandler = () => {
-      props.showState = false;
-      update();
-      delay(600, clear, "replayModule");
-    };
-    setReplay(props);
-  }, []);
+  const open = useCallback(
+    (props) => {
+      cancel("replayModule");
+      props.showState = true;
+      props.closeHandler = () => {
+        props.showState = false;
+        update();
+        delay(600, clear, "replayModule");
+      };
+      setReplay(props);
+    },
+    [update]
+  );
   return { overlay, open };
 };
 

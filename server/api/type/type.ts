@@ -1,7 +1,8 @@
 import { ServerError } from "server/utils/error";
 import { insertType } from "server/database/insert";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
-import { getType, getTypeByTypeContent, getTypeCount } from "server/database/get";
+import { getType, getTypeByTypeContent } from "server/database/get";
+import { getRandom } from "utils/data";
 
 // 获取type数据
 const getTypeAction = autoRequestHandler({
@@ -37,9 +38,9 @@ const addTypeAction = autoRequestHandler({
     if (!typeContent) {
       throw new ServerError("add type参数不正确", 400);
     }
-    const typeCount = await getTypeCount({ db: req.db! });
-    await insertType({ db: req.db!, typeId: typeCount + 1, typeContent, typeCount: 0 });
-    success({ res, resDate: { state: "新增type成功", data: `typeId: ${typeCount + 1}, typeContent: ${typeContent}` } });
+    const typeId = getRandom(10000).toString(16);
+    await insertType({ db: req.db!, typeId, typeContent, typeCount: 0 });
+    success({ res, resDate: { state: "新增type成功", data: `typeId: ${typeId}, typeContent: ${typeContent}` } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "添加type失败", data: e.toString(), methodName: "addTypeAction" } }),
   userConfig: { needCheck: true, checkStrict: true },

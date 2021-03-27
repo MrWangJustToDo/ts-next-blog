@@ -15,6 +15,7 @@ import { useFailToast, useSucessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
 import {
   BlogContentProps,
+  UseAddRequestType,
   UseDeleteRequestType,
   UseJudgeInputType,
   UseManageToAddModuleType,
@@ -28,6 +29,8 @@ let useSearch: UseSearchType;
 let useResult: UseResultType;
 
 let useManageToAddModule: UseManageToAddModuleType;
+
+let useAddRequest: UseAddRequestType;
 
 let useJudgeInput: UseJudgeInputType;
 
@@ -54,7 +57,7 @@ useSearch = ({ request }) => {
           })
           .catch((e) => fail(`搜索出错:${e.toString()}`));
       }),
-    []
+    [request]
   );
   return [ref, search];
 };
@@ -72,14 +75,37 @@ useResult = () => {
   return { currentResult, page, increaseAble, increasePage, decreaseAble, decreasePage };
 };
 
-useManageToAddModule = ({ title, body, request, className, judgeApiName }) => {
+useManageToAddModule = ({ title, body, request, className, judgeApiName, requestApiName }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body(request)(judgeApiName), className }), []);
+  const click = useCallback(() => open({ head: title, body: body(request)(judgeApiName)(requestApiName), className }), [request, judgeApiName, requestApiName]);
   return click;
 };
 
-useJudgeInput = ({ option, judgeApiName, successClassName, failClassName, loadingClassName }) => {
+useAddRequest = ({ request, successCallback }) => {
   const ref = useRef<HTMLInputElement>(null);
+  const fail = useFailToast();
+  const success = useSucessToast();
+  const doRequest = useCallback(
+    () =>
+      request({ data: { [ref.current!.name]: ref.current?.value } })
+        .run<ApiRequestResult<string>>()
+        .then(({ code, data }) => {
+          if (code === 0) {
+            successCallback();
+            return success(`添加tag成功，${data.toString()}`);
+          } else {
+            return fail(`添加tag失败，请稍候尝试`);
+          }
+        })
+        .catch((e) => fail(`添加tag出错，${e.toString()}`)),
+    [request, successCallback]
+  );
+  return [ref, doRequest];
+};
+
+useJudgeInput = ({ option, forWardRef, judgeApiName, successClassName, failClassName, loadingClassName }) => {
+  const ref = useRef<HTMLInputElement>(null);
+  const currentRef = forWardRef !== undefined ? forWardRef : ref;
   const fail = useRef<{ current: string }>({ current: option.fail });
   const success = useRef<string>(option.success);
   // 输入验证成败
@@ -91,13 +117,13 @@ useJudgeInput = ({ option, judgeApiName, successClassName, failClassName, loadin
       // 多次尝试的状态分离
       const current = fail.current;
       judgeAction<HTMLInputElement>({
-        element: ref.current!,
+        element: currentRef.current!,
         judge: () => <Promise<boolean>>actionHandler<boolean, Promise<boolean>, Promise<boolean>>(
-            option.regexp.test(ref.current!.value),
+            option.regexp.test(currentRef.current!.value),
             () => <Promise<boolean>>actionHandler<apiName, Promise<boolean>, Promise<boolean>>(
                 judgeApiName,
                 (apiname) =>
-                  createRequest({ apiPath: apiname, method: "post", data: { [ref.current!.name]: ref.current!.value } })
+                  createRequest({ apiPath: apiname, method: "post", data: { [currentRef.current!.name]: currentRef.current!.value } })
                     .run<ApiRequestResult<string>>()
                     .then(({ code, data }) => {
                       if (code === 0) {
@@ -129,32 +155,32 @@ useJudgeInput = ({ option, judgeApiName, successClassName, failClassName, loadin
         },
       });
     }, 800),
-    []
+    [option, judgeApiName]
   );
   const start = useCallback(() => {
     if (!loading) {
       setLoading(true);
       // 重新开始状态
       fail.current = { current: option.fail };
-      loadingAction({ element: ref.current!, loadingClassName });
+      loadingAction({ element: currentRef.current!, loadingClassName });
     }
   }, [loading]);
   const addListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<HTMLInputElement, void, void>(ref.current, (ele) => ele.addEventListener("input", action)),
+    (action) => actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.addEventListener("input", action)),
     []
   );
   const removeListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<HTMLInputElement, void, void>(ref.current, (ele) => ele.removeEventListener("input", action)),
+    (action) => actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.removeEventListener("input", action)),
     []
   );
   useAutoActionHandler({ action: start, addListener: addListenerCallback, removeListener: removeListenerCallback });
   useAutoActionHandler({ action: judge, addListener: addListenerCallback, removeListener: removeListenerCallback });
-  return [ref, bool];
+  return [currentRef, bool];
 };
 
 useManageToDeleteModule = ({ title, body, request, item, successCallback }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body(request)(item)(successCallback) }), [successCallback]);
+  const click = useCallback(() => open({ head: title, body: body(request)(item)(successCallback) }), [body, request, item, successCallback]);
   return click;
 };
 
@@ -177,9 +203,9 @@ useDeleteRequest = ({ request, close, successCallback }) => {
           }
         })
         .catch((e) => fail(`删除出错：${e.toString()}`)),
-    [close, successCallback]
+    [request, close, successCallback]
   );
   return doRequest;
 };
 
-export { useSearch, useResult, useManageToAddModule, useJudgeInput, useManageToDeleteModule, useDeleteRequest };
+export { useSearch, useResult, useManageToAddModule, useAddRequest, useJudgeInput, useManageToDeleteModule, useDeleteRequest };

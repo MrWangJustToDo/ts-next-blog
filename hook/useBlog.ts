@@ -203,7 +203,7 @@ useInputToImageModule = ({ body, className, appendHandler }) => {
   const open = useOverlayOpen();
   const select = useCallback<() => void>(() => {
     open({ head: "选择图片", body: body(appendHandler), className });
-  }, []);
+  }, [body]);
   return select;
 };
 

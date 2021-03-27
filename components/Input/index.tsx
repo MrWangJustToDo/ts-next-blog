@@ -11,6 +11,7 @@ Input = ({
   type,
   name,
   option,
+  forWardRef,
   placeHolder,
   changeState,
   judgeApiName,
@@ -22,6 +23,7 @@ Input = ({
 }) => {
   const [ref, bool] = useJudgeInput({
     option,
+    forWardRef,
     judgeApiName,
     successClassName: successCalsssName || style.success,
     failClassName: failClassName || style.fail,

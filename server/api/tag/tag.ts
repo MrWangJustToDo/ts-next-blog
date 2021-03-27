@@ -1,7 +1,10 @@
 import { ServerError } from "server/utils/error";
 import { insertTag } from "server/database/insert";
-import { getTag, getTagByTagContent, getTagCount } from "server/database/get";
+import { getTag, getTagByTagContent, getTagByTagId } from "server/database/get";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
+import { apiName } from "config/api";
+import { getRandom } from "utils/data";
+import { deleteTagByTagId } from "server/database/delete";
 
 // 获取tag数据
 const getTagAction = autoRequestHandler({
@@ -27,7 +30,7 @@ const checkTagAction = autoRequestHandler({
     success({ res, resDate: { state: "检测通过", data: `当前tag：${tagContent}可以使用` } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
-  userConfig: { needCheck: true, checkStrict: true },
+  userConfig: { needCheck: true },
 });
 
 // 新增tag
@@ -37,12 +40,33 @@ const addTagAction = autoRequestHandler({
     if (!tagContent) {
       throw new ServerError("add tag参数不正确", 400);
     }
-    const tagCount = await getTagCount({ db: req.db! });
-    await insertTag({ db: req.db!, tagId: tagCount + 1, tagContent, tagCount: 0 });
-    success({ res, resDate: { state: "新增tag成功", data: `tagId: ${tagCount + 1}, tagContent: ${tagContent}` } });
+    const tagId = getRandom(10000).toString(16);
+    await insertTag({ db: req.db!, tagId, tagState: 1, tagContent, tagCount: 0 });
+    success({ res, resDate: { state: "新增tag成功", data: `tagId: ${tagId}, tagContent: ${tagContent}` } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "添加tag失败", data: e.toString(), methodName: "addTagAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
+  cacheConfig: { needDelete: [apiName.tag] },
 });
 
-export { getTagAction, checkTagAction, addTagAction };
+// 删除tag
+const deleteTagAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    const { deleteTag } = req.body;
+    if (!deleteTag) {
+      throw new ServerError("delete tag 参数不正确", 400);
+    }
+    const tag = await getTagByTagId({ db: req.db!, tagId: deleteTag });
+    if (!tag) {
+      throw new ServerError(`需要删除的tag：${deleteTag}不存在`, 400);
+    }
+    await deleteTagByTagId({ db: req.db!, tagId: deleteTag });
+    success({ res, resDate: { state: "删除tag成功", data: `tagId: ${tag.tagId}, tagContent: ${tag.tagCotent}` } });
+  },
+  errorHandler: ({ res, e, code = 500 }) =>
+    fail({ res, statuCode: code, resDate: { state: "删除tag失败", data: e.toString(), methodName: "deleteTagAction" } }),
+  userConfig: { needCheck: true, checkStrict: true },
+  cacheConfig: { needDelete: [apiName.tag] },
+});
+
+export { getTagAction, checkTagAction, addTagAction, deleteTagAction };

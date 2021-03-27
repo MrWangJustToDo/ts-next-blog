@@ -7,11 +7,15 @@ import { SimpleElement } from "types/components";
 let ReLogin: SimpleElement;
 
 ReLogin = () => {
+
   const logout = useLogout();
+
   const router = useRouter();
+
   const reLogin = useCallback(() => {
     logout().then(router.reload).catch(router.reload);
   }, [router, logout]);
+  
   return (
     <div className="jumbotron my-5" style={{ minWidth: "600px" }}>
       <h1 className="display-4">访问错误！</h1>

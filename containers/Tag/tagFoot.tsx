@@ -5,7 +5,9 @@ import { TagContentType } from "types/containers";
 let TagFoot: TagContentType;
 
 TagFoot = ({ blogs }) => {
+
   let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage } = useTag(blogs);
+  
   return <PageFoot page={currentPage} increaseAble={increaseAble} decreaseAble={decreaseAble} increasePage={increasePage} decreasePage={decreasePage} />;
 };
 

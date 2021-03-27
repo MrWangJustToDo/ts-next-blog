@@ -10,7 +10,9 @@ import { SimpleElement } from "types/components";
 let Tag: SimpleElement;
 
 Tag = () => {
+
   const { blogs } = useHome();
+  
   return (
     <>
       <TagHead />

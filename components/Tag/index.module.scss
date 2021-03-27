@@ -3,10 +3,26 @@
   overflow: hidden;
   transition-property: background;
   transition-duration: 0.2s;
-
+  width: 130px;
   &__left {
+    width: 70%;
     position: relative;
     color: white;
+    flex-shrink: 0;
+
+    &__icon {
+      width: 40px;
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    &__text {
+      width: calc(100% - 40px);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      flex-shrink: 0;
+    }
   }
 
   &__left::before {
@@ -32,6 +48,7 @@
   }
 
   &__right {
+    width: 30%;
     padding-left: 14px;
   }
 }

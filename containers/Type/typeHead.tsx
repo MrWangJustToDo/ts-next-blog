@@ -6,7 +6,9 @@ import { SimpleElement } from "types/components";
 let TypeHead: SimpleElement;
 
 TypeHead = () => {
+
   const { type, currentType } = useType();
+  
   return (
     <div className="card mx-lg-4">
       <h5 className={getClass("card-header text-info user-select-none", flexBetween)}>

@@ -12,7 +12,7 @@ MainRightTagItem = ({ tagName, tagCount, changeCurrentTag }) => {
   return (
     <Link href="/tag">
       <a className="text-reset d-inline-block text-decoration-none" onClick={clickHandler}>
-        <Tag className="small" tagContent={tagName} tagCount={tagCount} />
+        <Tag className="small m-1" tagContent={tagName} tagCount={tagCount} />
       </a>
     </Link>
   );

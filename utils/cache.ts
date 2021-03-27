@@ -62,6 +62,21 @@ class Cache<T, K> {
       this.store.delete(key);
       log(`force delete data from cache. key: ${key}`, "warn");
     } else {
+      if (typeof key === "string") {
+        let newKey = "";
+        if (!key.startsWith("/")) {
+          newKey = "/" + key;
+        }
+        if (!newKey.startsWith("/api")) {
+          newKey = "/api" + newKey;
+        }
+        if (this.store.has(newKey as any)) {
+          cancel(newKey);
+          this.store.delete(newKey as any);
+          log(`force delete data from cache. key: ${newKey}`, "warn");
+          return;
+        }
+      }
       log(`error, nothing need to delete. key: ${key}`, "error");
     }
   };

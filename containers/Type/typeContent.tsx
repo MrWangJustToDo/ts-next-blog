@@ -13,6 +13,7 @@ let TypeContent: TypeContentType;
 
 TypeContent = ({ blogs }) => {
   const { currentPageBlogs } = useType(blogs);
+
   return (
     <ul className="p-0">
       {currentPageBlogs.map((props) => (

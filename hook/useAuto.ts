@@ -68,7 +68,7 @@ useAutoActionHandler = <T, K>(
         }
       }
     }
-  }, [delayTime, once, rightNow, addListener, removeListener, action, actionState, ...deps]);
+  }, [action, timmer, actionState, once, delayTime, rightNow, addListener, removeListener, ...deps]);
 };
 
 useAutoSetHeaderHeight = <T extends HTMLElement>(breakPoint: number = 1000) => {

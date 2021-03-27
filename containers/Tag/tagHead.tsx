@@ -8,7 +8,9 @@ import style from "./index.module.scss";
 let TagHead: SimpleElement;
 
 TagHead = () => {
+
   const { tag, currentTag } = useTag();
+  
   return (
     <div className="card mx-lg-4">
       <h5 className={getClass("card-header text-info user-select-none", flexBetween)}>

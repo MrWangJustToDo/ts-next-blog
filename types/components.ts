@@ -24,7 +24,7 @@ export type { BlogItemRightType };
 /* === BlogMessage */
 interface PrimaryMessageProps {
   blogId: string;
-  commentId: number;
+  commentId: string;
   userId?: string;
   ip: string;
   content: string;
@@ -55,8 +55,8 @@ interface PrimaryMessageType {
 }
 
 interface ChildMessageProps {
-  primaryCommentId: number;
-  commentId: number;
+  primaryCommentId: string;
+  commentId: string;
   fromIp: string;
   fromUserId: string;
   toIp: string;
@@ -298,6 +298,7 @@ interface InputEleProps {
   type?: string;
   name?: string;
   option: InputProps;
+  forWardRef?: RefObject<HTMLInputElement>;
   changeState?: (props: boolean) => void;
   placeHolder?: string;
   judgeApiName?: apiName;
@@ -462,6 +463,7 @@ export type { TagType };
 /* === Toast === */
 import { toastState } from "config/toast";
 import { InputProps } from "./config";
+import { RefObject } from "react";
 
 interface ToastProps {
   title: string;
