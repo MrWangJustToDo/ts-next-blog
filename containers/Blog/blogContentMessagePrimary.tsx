@@ -3,8 +3,10 @@ import PageFoot from "components/PageFoot";
 import LoadRender from "components/LoadRender";
 import { PrimaryMessage } from "components/BlogMessage";
 import { apiName } from "config/api";
+import { primaryMessageLength } from "config/message";
 import { createRequest } from "utils/fetcher";
-import { usePrimaryMessage, useMessageToReplayModule } from "hook/useMessage";
+import { useBasePage } from "hook/useBase";
+import { useMessageToReplayModule } from "hook/useMessage";
 import BlogContentChildMessage from "./blogContentMessageChild";
 import BlogContentReplayModule from "./blogContentReplayModule";
 import { AutoRequestType } from "types/utils";
@@ -18,13 +20,16 @@ let BlogContentPrimaryMessage: BlogContentPrimaryMessageType;
 let BlogContentPrimaryMessageWithReplay: BlogContentPrimaryMessageWithReplayType;
 
 BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
+  // const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentMessage } = usePrimaryMessage(messages);
+  const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageData } = useBasePage<PrimaryMessageProps>({
+    pageLength: primaryMessageLength,
+    data: messages,
+  });
 
-  const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentMessage } = usePrimaryMessage(messages);
-  
   return (
     <>
       <div className="card-body">
-        {currentMessage.map((item) => (
+        {currentPageData.map((item) => (
           <PrimaryMessage key={item.commentId} {...item} replayHandler={replay}>
             <LoadRender<ChildMessageProps[]>
               token
@@ -50,7 +55,6 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentPrimaryMessage = ({ messages }) => {
-
   const request = useMemo(() => createRequest({ method: "post", path: apiName.putPrimaryMessage }), []);
 
   const body = useCallback<(request: AutoRequestType) => (props: PrimaryMessageProps) => (closeHandler: () => void) => JSX.Element>(

@@ -4,7 +4,8 @@ import { AnyAction } from "redux";
 import { apiName } from "config/api";
 import { InputProps } from "./config";
 import { AutoRequestProps, AutoRequestType } from "./utils";
-import { ChildMessageProps, LoadingBarProps, OverlayProps, PrimaryMessageProps, ToastProps } from "./components";
+import { ChildMessageProps, LoadingBarProps, OverlayProps, ToastProps } from "./components";
+import { actionName } from "config/action";
 
 interface UserProps {
   ip?: string;
@@ -142,8 +143,26 @@ export type {
 interface UseCurrentStateType {
   (): { state: State; dispatch: (props: AnyAction) => void };
 }
+interface UseBasePageProps<T> {
+  stateSide?: "server" | "client";
+  pageLength?: number;
+  stateName?: apiName | actionName;
+  data?: Array<T>;
+}
+interface UseBasePageType {
+  <T>(props: UseBasePageProps<T>): {
+    allData: Array<T>;
+    allPage: number;
+    currentPage: number;
+    currentPageData: Array<T>;
+    increaseAble: boolean;
+    decreaseAble: boolean;
+    increasePage: () => void;
+    decreasePage: () => void;
+  };
+}
 
-export type { UseCurrentStateType };
+export type { UseCurrentStateType, UseBasePageProps, UseBasePageType };
 
 /* useBlog */
 interface UseBlogMenuType {
@@ -242,9 +261,6 @@ export type { UseLoadType };
 interface UseSearchType {
   (props: { request: AutoRequestType }): [RefObject<HTMLFormElement>, () => Promise<void>];
 }
-interface UseResultType {
-  (): { currentResult: BlogContentProps[]; page: number; increaseAble: boolean; increasePage: () => void; decreaseAble: boolean; decreasePage: () => void };
-}
 interface UseManageToAddModuleProps {
   title: string;
   body: (request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => JSX.Element;
@@ -293,22 +309,11 @@ interface UseDeleteRequestType {
   (props: UseDeleteRequestProps): () => Promise<void>;
 }
 
-export type { UseSearchType, UseResultType, UseManageToAddModuleType, UseAddRequestType, UseJudgeInputType, UseManageToDeleteModuleType, UseDeleteRequestType };
+export type { UseSearchType, UseManageToAddModuleType, UseAddRequestType, UseJudgeInputType, UseManageToDeleteModuleType, UseDeleteRequestType };
 
 /* useMessage */
 interface UseChildMessageType {
   (props: ChildMessageProps[]): { messageProps: ChildMessageProps[]; more: boolean; loadMore: () => void };
-}
-interface UsePrimaryMessageResult {
-  currentPage: number;
-  increasePage: () => void;
-  decreasePage: () => void;
-  increaseAble: boolean;
-  decreaseAble: boolean;
-  currentMessage: PrimaryMessageProps[];
-}
-interface UsePrimaryMessageType {
-  (props: PrimaryMessageProps[]): UsePrimaryMessageResult;
 }
 type MyInputELement = HTMLInputElement | HTMLTextAreaElement;
 interface UseJudgeInputValueType {
@@ -360,7 +365,6 @@ interface UseReplayModuleToSubmitType {
 
 export type {
   UseChildMessageType,
-  UsePrimaryMessageType,
   MyInputELement,
   UseJudgeInputValueType,
   UsePutToCheckcodeModuleProps,

@@ -11,7 +11,9 @@ let Drop: DropType;
 
 Drop = <T extends ValueType>({ data = [], className = "", placeHolder = "请选择", multiple = false, fieldName, maxHeight, style }: DropProps<T>) => {
   const [indexArr, _1, _2, onlyOne, switchItem] = useArray<number>([]);
+
   const { bool, switchBoolState } = useBool({ stateChangeTimeStep: 500 });
+
   return (
     <div
       onClick={switchBoolState}
@@ -23,13 +25,29 @@ Drop = <T extends ValueType>({ data = [], className = "", placeHolder = "请选�
         type="text"
         name={fieldName}
         style={{ display: "none" }}
-        value={multiple ? indexArr.map((idx) => String(data[idx].value)).toString() : indexArr.length ? data[indexArr[0]].value : ""}
+        value={
+          multiple
+            ? indexArr
+                .map((idx) => String(data[idx]?.value))
+                .filter(Boolean)
+                .join(",")
+            : indexArr.length
+            ? data[indexArr[0]]?.value || "null"
+            : ""
+        }
         data-show={bool}
       />
       <div>
         {indexArr.length ? (
           indexArr.map((index) => (
-            <DropSelectItem key={index} idx={index} name={data[index].name} value={data[index].value} multiple={multiple} cacel={switchItem} />
+            <DropSelectItem
+              key={index}
+              idx={index}
+              name={data[index]?.name || "null"}
+              value={data[index]?.value || undefined}
+              multiple={multiple}
+              cacel={switchItem}
+            />
           ))
         ) : (
           <div className="m-1">{placeHolder}</div>

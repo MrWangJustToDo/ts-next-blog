@@ -1,6 +1,6 @@
-import { Type } from "components/Type";
 import { apiName } from "config/api";
 import LoadRender from "components/LoadRender";
+import DeleteType from "./manageDeleteTypeItem";
 import { SimpleElement } from "types/components";
 import { TypeProps } from "types/hook";
 
@@ -17,8 +17,8 @@ ManageType = () => {
           return (
             <>
               {data.map(({ typeId, typeContent, typeCount }) => (
-                <div key={typeId} className="m-1">
-                  <Type typeCount={typeCount!} typeContent={typeContent!} />
+                <div key={typeId} className="d-inline-block">
+                  <DeleteType {...{ typeId, typeContent, typeCount }} />
                 </div>
               ))}
             </>

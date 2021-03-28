@@ -6,7 +6,7 @@ import { ButtonType } from "types/components";
 
 let Button: ButtonType;
 
-Button = ({ request, type = "button", disable = false, value = "确定", initState = true, className = "", style = {} }) => {
+Button = ({ request, type = "button", disable = false, value = "确定", initState = true, className = "", style = {}, loadingColor }) => {
   const { bool, show, hide } = useBool({ init: initState });
   const requestCallback = useCallback(() => {
     hide();
@@ -23,7 +23,7 @@ Button = ({ request, type = "button", disable = false, value = "确定", initSta
       data-enable={bool}
     >
       <span style={{ color: bool ? "inherit" : "transparent" }}>{value}</span>
-      {!bool && <Loading className="position-absolute" _style={{ width: "15px", height: "15px" }} />}
+      {!bool && <Loading className="position-absolute" _style={{ width: "15px", height: "15px" }} color={loadingColor} />}
     </button>
   );
 };

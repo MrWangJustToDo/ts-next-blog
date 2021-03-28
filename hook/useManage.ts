@@ -3,12 +3,10 @@ import { useDispatch } from "react-redux";
 import debounce from "lodash/debounce";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
-import { manageLength } from "config/manage";
 import { createRequest } from "utils/fetcher";
 import { formSerialize } from "utils/data";
 import { actionHandler, judgeAction, loadingAction } from "utils/action";
-import { setDataSucess_client } from "store/reducer/client/action";
-import { useCurrentState } from "./useBase";
+import { setDataFail_client, setDataLoading_client, setDataSucess_client } from "store/reducer/client/action";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSucessToast } from "./useToast";
@@ -20,13 +18,11 @@ import {
   UseJudgeInputType,
   UseManageToAddModuleType,
   UseManageToDeleteModuleType,
-  UseResultType,
   UseSearchType,
 } from "types/hook";
+import { delay } from "utils/delay";
 
 let useSearch: UseSearchType;
-
-let useResult: UseResultType;
 
 let useManageToAddModule: UseManageToAddModuleType;
 
@@ -40,39 +36,36 @@ let useDeleteRequest: UseDeleteRequestType;
 
 useSearch = ({ request }) => {
   const fail = useFailToast();
+  const success = useSucessToast();
   const dispatch = useDispatch();
   const ref = useRef<HTMLFormElement>(null);
   const search = useCallback(
     () =>
       actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
+        dispatch(setDataLoading_client({ name: actionName.currentResult }));
         return request({ data: formSerialize(ele) })
           .run<ApiRequestResult<BlogContentProps>>(apiName.search)
-          .then(({ code, data }) => {
-            if (code === 0) {
-              if (Array.isArray(data)) {
-                dispatch(setDataSucess_client({ name: actionName.currentResult, data }));
+          .then((data) => delay(10000, () => data))
+          .then((res) => {
+            if (res) {
+              const { code, data } = res;
+              dispatch(setDataSucess_client({ name: actionName.currentResult, data }));
+              if (code === 0) {
+                if (Array.isArray(data)) {
+                  return success(`搜索数据成功，一共${data.length}条数据`);
+                }
               }
             }
             return fail("搜索结果数据错误");
           })
-          .catch((e) => fail(`搜索出错:${e.toString()}`));
+          .catch((e) => {
+            dispatch(setDataFail_client({ name: actionName.currentResult, error: e }));
+            return fail(`搜索出错:${e.toString()}`);
+          });
       }),
     [request]
   );
   return [ref, search];
-};
-
-useResult = () => {
-  const [page, setPage] = useState<number>(1);
-  const { state } = useCurrentState();
-  const result = <BlogContentProps[]>state.client[actionName.currentResult]["data"];
-  const allPage = Math.ceil(result.length / manageLength);
-  const increasePage = useCallback(() => setPage((last) => last + 1), []);
-  const decreasePage = useCallback(() => setPage((last) => last - 1), []);
-  const increaseAble = page < allPage;
-  const decreaseAble = page > 1;
-  const currentResult = result.slice(page - 1 * manageLength, page * manageLength);
-  return { currentResult, page, increaseAble, increasePage, decreaseAble, decreasePage };
 };
 
 useManageToAddModule = ({ title, body, request, className, judgeApiName, requestApiName }) => {
@@ -208,4 +201,4 @@ useDeleteRequest = ({ request, close, successCallback }) => {
   return doRequest;
 };
 
-export { useSearch, useResult, useManageToAddModule, useAddRequest, useJudgeInput, useManageToDeleteModule, useDeleteRequest };
+export { useSearch, useManageToAddModule, useAddRequest, useJudgeInput, useManageToDeleteModule, useDeleteRequest };

@@ -13,11 +13,13 @@ let ManageSearch: SimpleElement;
 
 ManageSearch = () => {
   const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true } }), []);
+
   const [ref, search] = useSearch({ request });
+
   return (
     <div className="card">
       <form className="form-inline p-3" ref={ref}>
-        <input type="text" className="form-control m-2" placeholder="标题" name="title" />
+        <input type="text" className="form-control m-2" placeholder="标题" name="blogTitle" />
         <LoadRender<TypeProps[]>
           needUpdate
           needinitialData
@@ -36,7 +38,7 @@ ManageSearch = () => {
             return <Drop<string> fieldName="tagId" className="form-control m-2" placeHolder="选择标签" data={data} multiple />;
           }}
         />
-        <Button className="btn-primary m-2" request={search} value={"搜索"} />
+        <Button className="btn-primary m-2" request={search} value={"搜索"} loadingColor="red" />
       </form>
     </div>
   );

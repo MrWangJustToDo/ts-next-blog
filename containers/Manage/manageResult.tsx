@@ -1,26 +1,44 @@
-import { useResult } from "hook/useManage";
-import CardPage from "components/PageFoot";
-import { WithWriteBlogItem as SearchResult } from "components/BlogItem";
+import LoadRender from "components/LoadRender";
+import { apiName } from "config/api";
+import { actionName } from "config/action";
+import { animateFadein, getClass } from "utils/class";
+import ManageResultAll from "./manageResultAll";
+import ManageResultSearch from "./manageResultSearch";
+import { useBool } from "hook/useData";
+import { useCurrentState } from "hook/useBase";
+import { BlogContentProps } from "types/hook";
 import { SimpleElement } from "types/components";
+
+import style from "./index.module.scss";
 
 let ManageResult: SimpleElement;
 
 ManageResult = () => {
-  const { currentResult, page, increaseAble, decreaseAble, increasePage, decreasePage } = useResult();
+  const { bool, switchBoolState } = useBool();
+
+  const { state } = useCurrentState();
+
+  const data = state.client[actionName.currentResult]["data"];
+
+  const loading = state.client[actionName.currentResult]["loading"];
+
+  const allData = <LoadRender<BlogContentProps[]> needUpdate needinitialData apiPath={apiName.home} loaded={() => <ManageResultAll />} />;
+
+  const searchData = (
+    <div className={getClass(animateFadein)}>
+      <ManageResultSearch data={data} loading={loading} />
+    </div>
+  );
+
   return (
     <div className="card mt-4">
-      {currentResult.length ? (
-        <>
-          <div className="card-body">
-            {currentResult.map((props) => (
-              <SearchResult {...props} />
-            ))}
-          </div>
-          <CardPage {...{ page, increaseAble, decreaseAble, increasePage, decreasePage }} />
-        </>
-      ) : (
-        <div className="card-body text-danger">没有搜索结果！</div>
-      )}
+      <div className="card-header">
+        {!bool ? "所有数据" : "搜索结果"}
+        <a className={getClass("small text-info float-right", style.swatchLink)} onClick={switchBoolState}>
+          <span>{!bool ? "去到搜索" : "去到所有"}</span>
+        </a>
+      </div>
+      {!bool ? allData : searchData}
     </div>
   );
 };

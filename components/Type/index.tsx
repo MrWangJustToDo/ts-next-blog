@@ -7,9 +7,9 @@ let Type: TypeType;
 
 let WithChangeType: TypeType;
 
-Type = ({ typeCount, typeContent, className = "" }) => {
+Type = ({ typeCount, typeContent, className = "", hoverAble = true }) => {
   return (
-    <div className={getClass("btn btn-outline-info shadow-none btn-sm m-1", className)}>
+    <div className={getClass("btn btn-outline-info shadow-none btn-sm m-1", className, hoverAble ? "" : "active")}>
       <span className="mr-2">{typeContent}</span>
       <span className="badge badge-info badge-pill">{typeCount}</span>
     </div>

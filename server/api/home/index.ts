@@ -1,8 +1,9 @@
 import { apiName } from "config/api";
-import { getHomeAction } from "./home";
+import { getBlogsByParams, getHomeAction } from "./home";
 
 const homeHandler = {
   [apiName.home]: getHomeAction,
+  [apiName.search]: getBlogsByParams,
 };
 
 export { homeHandler };

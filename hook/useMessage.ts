@@ -1,5 +1,5 @@
 import { RefObject, useCallback, useMemo, useRef, useState } from "react";
-import { childMessageLength, primaryMessageLength } from "config/message";
+import { childMessageLength } from "config/message";
 import { actionHandler } from "utils/action";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
@@ -7,7 +7,6 @@ import { useFailToast, useSucessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
 import {
   UseChildMessageType,
-  UsePrimaryMessageType,
   MyInputELement,
   UseJudgeInputValueType,
   UsePutToCheckcodeModuleType,
@@ -21,8 +20,6 @@ import {
 } from "types/hook";
 
 let useChildMessage: UseChildMessageType;
-
-let usePrimaryMessage: UsePrimaryMessageType;
 
 let useJudgeInputValue: UseJudgeInputValueType;
 
@@ -39,17 +36,6 @@ useChildMessage = (props) => {
   const loadMore = useCallback(() => setMore(true), []);
   const messageProps = useMemo(() => (more ? props.slice(0, childMessageLength) : props), [more, props]);
   return { messageProps, more, loadMore };
-};
-
-usePrimaryMessage = (props) => {
-  const allPage = Math.ceil(props.length / primaryMessageLength);
-  const [currentPage, setCurrentPage] = useState(1);
-  const increasePage = useCallback(() => setCurrentPage((lastPage) => lastPage + 1), []);
-  const decreasePage = useCallback(() => setCurrentPage((lastPage) => lastPage - 1), []);
-  const increaseAble = currentPage < allPage;
-  const decreaseAble = currentPage > 1;
-  const currentMessage = props.slice(currentPage - 1 * primaryMessageLength, currentPage * primaryMessageLength);
-  return { currentPage, increasePage, decreasePage, increaseAble, decreaseAble, currentMessage };
 };
 
 useJudgeInputValue = <T extends MyInputELement>(ref: RefObject<T>) => {
@@ -155,4 +141,4 @@ useReplayModuleToSubmit = <T extends MyInputELement, F extends MyInputELement>({
   return { input1, input2, submit, canSubmit: canSubmit1 && canSubmit2 };
 };
 
-export { useChildMessage, usePrimaryMessage, usePutToCheckcodeModule, useCheckcodeModuleToSubmit, useMessageToReplayModule, useReplayModuleToSubmit };
+export { useChildMessage, usePutToCheckcodeModule, useCheckcodeModuleToSubmit, useMessageToReplayModule, useReplayModuleToSubmit };

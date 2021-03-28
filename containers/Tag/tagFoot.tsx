@@ -5,10 +5,11 @@ import { TagContentType } from "types/containers";
 let TagFoot: TagContentType;
 
 TagFoot = ({ blogs }) => {
+  let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageBlogs } = useTag(blogs);
 
-  let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage } = useTag(blogs);
-  
-  return <PageFoot page={currentPage} increaseAble={increaseAble} decreaseAble={decreaseAble} increasePage={increasePage} decreasePage={decreasePage} />;
+  return currentPageBlogs.length ? (
+    <PageFoot page={currentPage} increaseAble={increaseAble} decreaseAble={decreaseAble} increasePage={increasePage} decreasePage={decreasePage} />
+  ) : null;
 };
 
 export default TagFoot;

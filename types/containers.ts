@@ -1,7 +1,7 @@
 import { RefObject } from "react";
 import { mainRight } from "config/hoom";
 import { AutoRequestType } from "./utils";
-import { BlogContentProps } from "./hook";
+import { BlogContentProps, TypeProps } from "./hook";
 import { ChildMessageProps, PrimaryMessageProps } from "./components";
 import { apiName } from "config/api";
 
@@ -169,7 +169,7 @@ export type { MainRightTypeItemType };
 /* === Type === */
 /* typeContent */
 interface TypeContentType {
-  (props: { blogs: BlogContentProps[] }): JSX.Element;
+  (props: { blogs: BlogContentProps[] }): JSX.Element | null;
 }
 
 export type { TypeContentType };
@@ -177,7 +177,7 @@ export type { TypeContentType };
 /* === Tag === */
 /* tagContentType */
 interface TagContentType {
-  (props: { blogs: BlogContentProps[] }): JSX.Element;
+  (props: { blogs: BlogContentProps[] }): JSX.Element | null;
 }
 
 export type { TagContentType };
@@ -233,6 +233,13 @@ interface ManageDeleteTagItemType {
 }
 
 export type { ManageDeleteTagItemType };
+
+/* manageDeleteTypeItem */
+interface ManageDeleteTypeItemType {
+  (props: TypeProps): JSX.Element;
+}
+
+export type { ManageDeleteTypeItemType };
 
 /* manageDeleteModule */
 interface ManageDeleteModuleProps {

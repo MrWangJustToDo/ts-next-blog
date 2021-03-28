@@ -98,6 +98,7 @@ interface ButtonProps {
   initState?: boolean;
   request: () => Promise<void>;
   style?: { [props: string]: string };
+  loadingColor?: string;
 }
 
 interface ButtonType {
@@ -320,6 +321,7 @@ export type { InputEleType };
 interface LoadingProps {
   className?: string;
   _style?: { [props: string]: string };
+  color?: string;
 }
 
 interface LoadingType {
@@ -483,7 +485,7 @@ export type { ToastProps, ToastType };
 
 /* === Type === */
 interface TypeType {
-  (props: { typeContent: string; typeCount: number; className?: string }): JSX.Element;
+  (props: { typeContent: string; typeCount: number; className?: string; hoverAble?: boolean }): JSX.Element;
 }
 
 export type { TypeType };

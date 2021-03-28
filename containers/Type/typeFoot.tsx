@@ -5,10 +5,11 @@ import { TypeContentType } from "types/containers";
 let TypeFoot: TypeContentType;
 
 TypeFoot = ({ blogs }) => {
+  let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageBlogs } = useType(blogs);
 
-  let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage } = useType(blogs);
-  
-  return <PageFoot page={currentPage} increaseAble={increaseAble} decreaseAble={decreaseAble} increasePage={increasePage} decreasePage={decreasePage} />;
+  return currentPageBlogs.length ? (
+    <PageFoot page={currentPage} increaseAble={increaseAble} decreaseAble={decreaseAble} increasePage={increasePage} decreasePage={decreasePage} />
+  ) : null;
 };
 
 export default TypeFoot;

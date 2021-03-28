@@ -1,8 +1,10 @@
 import { ServerError } from "server/utils/error";
 import { insertType } from "server/database/insert";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
-import { getType, getTypeByTypeContent } from "server/database/get";
+import { getType, getTypeByTypeContent, getTypeByTypeId } from "server/database/get";
 import { getRandom } from "utils/data";
+import { apiName } from "config/api";
+import { deleteTypeByTypeId } from "server/database/delete";
 
 // 获取type数据
 const getTypeAction = autoRequestHandler({
@@ -28,7 +30,7 @@ const checkTypeAction = autoRequestHandler({
     success({ res, resDate: { state: "建成通过", data: `当前type：${typeContent}可用` } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
-  userConfig: { needCheck: true, checkStrict: true },
+  userConfig: { needCheck: true },
 });
 
 // 新增type
@@ -39,11 +41,32 @@ const addTypeAction = autoRequestHandler({
       throw new ServerError("add type参数不正确", 400);
     }
     const typeId = getRandom(10000).toString(16);
-    await insertType({ db: req.db!, typeId, typeContent, typeCount: 0 });
+    await insertType({ db: req.db!, typeId, typeState: 1, typeContent, typeCount: 0 });
     success({ res, resDate: { state: "新增type成功", data: `typeId: ${typeId}, typeContent: ${typeContent}` } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "添加type失败", data: e.toString(), methodName: "addTypeAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
+  cacheConfig: { needDelete: [apiName.type] },
 });
 
-export { getTypeAction, checkTypeAction, addTypeAction };
+// 删除type
+const deleteTypeAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    const { deleteType } = req.body;
+    if (!deleteType) {
+      throw new ServerError("delete type 参数不正确", 400);
+    }
+    const type = await getTypeByTypeId({ db: req.db!, typeId: deleteType });
+    if (!type) {
+      throw new ServerError(`需要删除的type：${deleteType}不存在`, 400);
+    }
+    await deleteTypeByTypeId({ db: req.db!, typeId: deleteType });
+    success({ res, resDate: { state: "删除type成功", data: `typeId: ${type.typeId}, typeContent: ${type.typeContent}` } });
+  },
+  errorHandler: ({ res, e, code = 500 }) =>
+    fail({ res, statuCode: code, resDate: { state: "删除type出错", data: e.toString(), methodName: "deleteTypeAction" } }),
+  userConfig: { needCheck: true, checkStrict: true },
+  cacheConfig: { needDelete: [apiName.type] },
+});
+
+export { getTypeAction, checkTypeAction, addTypeAction, deleteTypeAction };

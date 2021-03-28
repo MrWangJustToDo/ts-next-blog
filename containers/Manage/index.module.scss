@@ -10,3 +10,10 @@
 .item {
   min-width: 160px;
 }
+
+.swatchLink {
+  text-decoration: none !important;
+  transition-property: color;
+  transition-duration: 0.2s;
+  cursor: pointer;
+}

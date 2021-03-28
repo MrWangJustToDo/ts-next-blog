@@ -1,19 +1,19 @@
-import { produce, Draft } from "immer";
-import { AnyAction, Reducer } from "redux";
+import { produce } from "immer";
+import { Reducer } from "redux";
 import { clientAction } from "./action";
 import { actionName } from "config/action";
-import { State, ActionMapType } from "./@type";
-import { BlogContentProps } from "hook/@type";
+import { BlogContentProps } from "types/hook";
+import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<BlogContentProps[]>;
 
 let initState: CurrentState;
 let reducer: Reducer<CurrentState>;
-let actionReducerMap: ActionMapType<CurrentState>;
+let actionReducerMap: StateActionMapType<BlogContentProps[]>;
 
-initState = { data: [] };
+initState = { data: [], error: null, loaded: false, loading: false };
 
-reducer = (state: CurrentState = initState, action: AnyAction) => {
+reducer = (state: CurrentState = initState, action: StateAction<BlogContentProps[]>) => {
   let actionReducer = actionReducerMap[action.type];
   if (actionReducer) {
     return actionReducer(state, action);
@@ -23,13 +23,26 @@ reducer = (state: CurrentState = initState, action: AnyAction) => {
 };
 
 actionReducerMap = {
-  [clientAction.SETDATASUCESS(actionName.currentResult)]: (state: CurrentState, action: AnyAction) =>
-    produce(state, (proxy: Draft<CurrentState>) => {
-      proxy.data = action.data;
+  [clientAction.SETDATALOADING(actionName.currentResult)]: (state, action) =>
+    produce(state, (proxy) => {
+      proxy.data = [];
+      proxy.error = null;
+      proxy.loading = action.loadingState || true;
+      proxy.loaded = false;
     }),
-  [clientAction.SETDATAFAIL(actionName.currentResult)]: (state: CurrentState, action: AnyAction) =>
-    produce(state, (proxy: Draft<CurrentState>) => {
-      proxy.data = action.e;
+  [clientAction.SETDATASUCESS(actionName.currentResult)]: (state, action) =>
+    produce(state, (proxy) => {
+      proxy.data = action.data || [];
+      proxy.error = null;
+      proxy.loading = false;
+      proxy.loaded = true;
+    }),
+  [clientAction.SETDATAFAIL(actionName.currentResult)]: (state, action) =>
+    produce(state, (proxy) => {
+      proxy.data = [];
+      proxy.error = action.error;
+      proxy.loading = false;
+      proxy.loaded = true;
     }),
 };
 
