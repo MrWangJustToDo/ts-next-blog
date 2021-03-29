@@ -1,4 +1,4 @@
-@import '../../styles/variable.module';
+@import "../../styles/variable.module";
 
 .default {
   width: 25px;
@@ -22,14 +22,97 @@
   z-index: 1;
 }
 
-.sk-chase-dot:before {
+.sk-chase-dot::before {
   content: "";
   display: block;
   width: 25%;
   height: 25%;
-  background-color: $info;
   border-radius: 50%;
   animation: sk-chase-dot-before 2s infinite ease-in-out both;
+}
+
+.info::before {
+  background-color: $info;
+}
+
+.blue::before {
+  background-color: $blue;
+}
+
+.indigo::before {
+  background-color: $indigo;
+}
+
+.purple::before {
+  background-color: $purple;
+}
+
+.pink::before {
+  background-color: $pink;
+}
+
+.red::before {
+  background-color: $red;
+}
+
+.orange::before {
+  background-color: $orange;
+}
+
+.yellow::before {
+  background-color: $yellow;
+}
+
+.green::before {
+  background-color: $yellow;
+}
+
+.teal::before {
+  background-color: $teal;
+}
+
+.cyan::before {
+  background-color: $cyan;
+}
+
+.white::before {
+  background-color: $white;
+}
+
+.gray::before {
+  background-color: $gray;
+}
+
+.gray-dark::before {
+  background-color: $gray-dark;
+}
+
+.primary::before {
+  background-color: $primary;
+}
+
+.secondary::before {
+  background-color: $secondary;
+}
+
+.success::before {
+  background-color: $success;
+}
+
+.warning::before {
+  background-color: $warning;
+}
+
+.danger::before {
+  background-color: $danger;
+}
+
+.light::before {
+  background-color: $light;
+}
+
+.dark::before {
+  background-color: $dark;
 }
 
 .sk-chase-dot:nth-child(1) {

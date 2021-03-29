@@ -38,7 +38,7 @@ ManageSearch = () => {
             return <Drop<string> fieldName="tagId" className="form-control m-2" placeHolder="选择标签" data={data} multiple />;
           }}
         />
-        <Button className="btn-primary m-2" request={search} value={"搜索"} loadingColor="red" />
+        <Button className="btn-primary m-2" request={search} value={"搜索"} loadingColor="light" />
       </form>
     </div>
   );

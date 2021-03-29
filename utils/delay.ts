@@ -21,7 +21,7 @@ cancel = (key) => {
   }
   if (keyLength > maxKeyLength) {
     const keys = Object.keys(keyMap).sort((key1, key2) => (keyMap[key1] > keyMap[key2] ? 1 : -1));
-    log(`start delete delay key, over max length ${maxKeyLength}`, "normal");
+    log(`start delete delay key, currentLength ${keyLength} over max length ${maxKeyLength}`, "normal");
     for (let keyItem of keys) {
       if (keyItem !== key && !resolveMap[keyItem].length) {
         delete keyMap[keyItem];

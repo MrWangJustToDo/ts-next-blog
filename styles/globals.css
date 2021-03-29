@@ -29,6 +29,11 @@ a {
   box-sizing: border-box;
 }
 
+ul {
+  list-style: none;
+  margin-bottom: 0;
+}
+
 .son-inline-center {
   font-size: 0;
 }

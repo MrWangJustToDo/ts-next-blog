@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import debounce from "lodash/debounce";
 import throttle from "lodash/throttle";
-import { delay } from "utils/delay";
+import { cancel, delay } from "utils/delay";
 import { UseBoolType, UseArrayType } from "types/hook";
 
 let useBool: UseBoolType;
@@ -10,10 +10,10 @@ let timeStep: number;
 
 let useArray: UseArrayType;
 
-timeStep = 400;
+timeStep = 800;
 
 useBool = (props = {}) => {
-  const { init = false, stateChangeTimeStep = 400 } = props;
+  const { init = false, stateChangeTimeStep = 400, key = "useBool" } = props;
   const [bool, setBool] = useState<boolean>(init);
   const [boolState, setBoolState] = useState<boolean>(true);
   const show = useCallback(() => setBool(true), []);
@@ -33,30 +33,33 @@ useBool = (props = {}) => {
   );
   const showState = useCallback(() => {
     if (boolState) {
-      setBoolState(false);
       setBool(true);
-      delay(stateChangeTimeStep, () => setBoolState(true));
+      setBoolState(false);
+      cancel(key);
+      delay(stateChangeTimeStep, () => setBoolState(true), key);
     }
-  }, [boolState]);
+  }, [boolState, key]);
   const hideDebounceNoState = useCallback(
     debounce(() => {
       setBool(false);
       if (boolState) {
         setBoolState(false);
-        delay(stateChangeTimeStep, () => setBoolState(true));
+        cancel(key);
+        delay(stateChangeTimeStep, () => setBoolState(true), key);
       }
     }, timeStep),
-    [boolState]
+    [boolState, key]
   );
   const hideDebounceState = useCallback(
     debounce(() => {
       if (boolState) {
-        setBoolState(false);
         setBool(false);
-        delay(stateChangeTimeStep, () => setBoolState(true));
+        setBoolState(false);
+        cancel(key);
+        delay(stateChangeTimeStep, () => setBoolState(true), key);
       }
     }, timeStep),
-    [boolState]
+    [boolState, key]
   );
   const switchBoolState = useCallback(() => {
     if (boolState) {
@@ -67,6 +70,7 @@ useBool = (props = {}) => {
   }, [boolState]);
   return {
     bool,
+    boolState,
     show,
     hide,
     switchBool,

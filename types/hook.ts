@@ -198,6 +198,7 @@ export type { UseBlogMenuType, UseAutoScrollType, UseLinkToImgType, UseEditorTyp
 /* useData */
 interface UseBoolResult {
   bool: boolean;
+  boolState: boolean;
   switchBool: () => void;
   switchBoolThrottle: () => void;
   switchBoolState: () => void;
@@ -210,7 +211,7 @@ interface UseBoolResult {
   hideDebounceNoState: () => void;
 }
 interface UseBoolType {
-  (props?: { init?: boolean; stateChangeTimeStep?: number }): UseBoolResult;
+  (props?: { init?: boolean; stateChangeTimeStep?: number; key?: string }): UseBoolResult;
 }
 interface UseArrayType {
   <T>(init: T[]): [T[], (val: T) => void, (val: T) => void, (val: T) => void, (val: T) => void];

@@ -13,9 +13,9 @@ let WithReadBlogItem: BlogItemType;
 let WithWriteBlogItem: BlogItemType;
 
 BlogItem = (props) => {
-  const { blogImgLink } = props;
+  const { blogImgLink, className = "", _style = {} } = props;
   return (
-    <div className={getClass("card-body row flex-wrap-reverse border-bottom", flexAround, style.blogItem)}>
+    <div className={getClass("card-body row flex-wrap-reverse border-bottom", flexAround, style.blogItem, className)} style={_style}>
       <BlogItemLeft {...props} />
       <BlogItemRight src={blogImgLink!} />
     </div>
@@ -42,4 +42,4 @@ WithWriteBlogItem = (props) => {
   );
 };
 
-export { WithReadBlogItem, WithWriteBlogItem };
+export { BlogItem, WithReadBlogItem, WithWriteBlogItem };

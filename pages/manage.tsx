@@ -12,6 +12,8 @@ Manage = ({ isLogin }) => {
   return <div className={getClass(animateFadein, "container-md my-5")}>{isLogin ? <ManageContent /> : <NotLogin />}</div>;
 };
 
+Manage.title = "管理";
+
 // 判断是否已经登录
 export const getServerSideProps = wrapper.getServerSideProps(
   autoDispatchTockenHandler(async ({ req }) => ({

@@ -23,7 +23,13 @@ ManageDeleteTagItem = ({ tagId, tagContent, tagCount }) => {
 
   const click = useManageToDeleteModule({
     title: "确认删除",
-    item: <TagItem hoverAble={false} key={tagId} tagContent={tagContent!} tagCount={tagCount!} />,
+    item: (
+      <div className="text-center">
+        <hr />
+        <TagItem hoverAble={false} key={tagId} tagContent={tagContent!} tagCount={tagCount!} />
+        <hr />
+      </div>
+    ),
     body,
     request,
     successCallback: () => mutate(apiName.tag),

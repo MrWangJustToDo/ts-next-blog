@@ -20,7 +20,6 @@ import {
   UseManageToDeleteModuleType,
   UseSearchType,
 } from "types/hook";
-import { delay } from "utils/delay";
 
 let useSearch: UseSearchType;
 
@@ -45,7 +44,6 @@ useSearch = ({ request }) => {
         dispatch(setDataLoading_client({ name: actionName.currentResult }));
         return request({ data: formSerialize(ele) })
           .run<ApiRequestResult<BlogContentProps>>(apiName.search)
-          .then((data) => delay(10000, () => data))
           .then((res) => {
             if (res) {
               const { code, data } = res;
@@ -80,17 +78,20 @@ useAddRequest = ({ request, successCallback }) => {
   const success = useSucessToast();
   const doRequest = useCallback(
     () =>
-      request({ data: { [ref.current!.name]: ref.current?.value } })
-        .run<ApiRequestResult<string>>()
-        .then(({ code, data }) => {
-          if (code === 0) {
-            successCallback();
-            return success(`添加tag成功，${data.toString()}`);
-          } else {
-            return fail(`添加tag失败，请稍候尝试`);
-          }
-        })
-        .catch((e) => fail(`添加tag出错，${e.toString()}`)),
+      actionHandler<HTMLInputElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
+        return request({ data: { [ele.name]: ele.value } })
+          .run<ApiRequestResult<string>>()
+          .then(({ code, data }) => {
+            if (code === 0) {
+              ele.value = "";
+              successCallback();
+              return success(`添加tag成功，${data.toString()}`);
+            } else {
+              return fail(`添加tag失败，请稍候尝试`);
+            }
+          })
+          .catch((e) => fail(`添加tag出错，${e.toString()}`));
+      }),
     [request, successCallback]
   );
   return [ref, doRequest];

@@ -5,20 +5,18 @@ import style from "./index.module.scss";
 
 let Loading: LoadingType;
 
-Loading = ({ _style = {}, className = "", color = "#17a2b8" }) => {
+Loading = ({ _style = {}, className = "", color = "info" }) => {
   return (
     <div className={getClass("", flexCenter, className)}>
       <div className={style["default"]} style={_style}>
         <div className={style["sk-chase"]}>
-          {/* <div data-name="color" style={{ visibility: 'hidden', backgroundColor: color }}> */}
-            <div className={style["sk-chase-dot"]} />
-            <div className={style["sk-chase-dot"]} />
-            <div className={style["sk-chase-dot"]} />
-            <div className={style["sk-chase-dot"]} />
-            <div className={style["sk-chase-dot"]} />
-            <div className={style["sk-chase-dot"]} />
-          </div>
-        {/* </div> */}
+          <div className={getClass(style["sk-chase-dot"], style[color])} />
+          <div className={getClass(style["sk-chase-dot"], style[color])} />
+          <div className={getClass(style["sk-chase-dot"], style[color])} />
+          <div className={getClass(style["sk-chase-dot"], style[color])} />
+          <div className={getClass(style["sk-chase-dot"], style[color])} />
+          <div className={getClass(style["sk-chase-dot"], style[color])} />
+        </div>
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ PublishType = () => {
           const data: { name?: string; value: string }[] = res.map(({ typeContent, typeId }) => {
             return { name: typeContent, value: typeId! };
           });
-          return <Drop<string> fieldName="typeId" className="form-control" placeHolder="添加分类" data={data} />;
+          return <Drop<string> maxHeight={100} fieldName="typeId" className="form-control" placeHolder="添加分类" data={data} />;
         }}
       />
     </div>

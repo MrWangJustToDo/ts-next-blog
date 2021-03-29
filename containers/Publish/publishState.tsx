@@ -13,7 +13,7 @@ PublishState = () => {
           return (
             <div key={idx} className="form-check form-check-inline mr-4">
               <span className="mr-lg-2 mr-1">{name}</span>
-              <Drop fieldName={fieldName} data={value} className="rounded" style={{ minWidth: "120px" }} />
+              <Drop fieldName={fieldName} data={value} className="rounded" style={{ minWidth: "120px", zIndex: "8" }} />
             </div>
           );
         } else {

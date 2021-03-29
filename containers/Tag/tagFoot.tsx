@@ -8,7 +8,14 @@ TagFoot = ({ blogs }) => {
   let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageBlogs } = useTag(blogs);
 
   return currentPageBlogs.length ? (
-    <PageFoot page={currentPage} increaseAble={increaseAble} decreaseAble={decreaseAble} increasePage={increasePage} decreasePage={decreasePage} />
+    <PageFoot
+      className="border-0"
+      page={currentPage}
+      increaseAble={increaseAble}
+      decreaseAble={decreaseAble}
+      increasePage={increasePage}
+      decreasePage={decreasePage}
+    />
   ) : null;
 };
 

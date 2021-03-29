@@ -1,6 +1,29 @@
 import { apiName } from "config/api";
 import { BlogContentProps } from "types/hook";
 
+type Color =
+  | "blue"
+  | "indigo"
+  | "purple"
+  | "pink"
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "teal"
+  | "cyan"
+  | "white"
+  | "gray"
+  | "gray-dark"
+  | "primary"
+  | "secondary"
+  | "success"
+  | "info"
+  | "warning"
+  | "danger"
+  | "light"
+  | "dark";
+
 interface SimpleElement {
   (): JSX.Element;
 }
@@ -9,7 +32,7 @@ export type { SimpleElement };
 
 /* === BlogItem === */
 interface BlogItemType {
-  (props: BlogContentProps): JSX.Element;
+  (props: BlogContentProps & { className?: string; _style?: { [props: string]: string } }): JSX.Element;
 }
 
 export type { BlogItemType };
@@ -98,7 +121,7 @@ interface ButtonProps {
   initState?: boolean;
   request: () => Promise<void>;
   style?: { [props: string]: string };
-  loadingColor?: string;
+  loadingColor?: Color;
 }
 
 interface ButtonType {
@@ -321,7 +344,7 @@ export type { InputEleType };
 interface LoadingProps {
   className?: string;
   _style?: { [props: string]: string };
-  color?: string;
+  color?: Color;
 }
 
 interface LoadingType {

@@ -18,7 +18,7 @@ TypeContent = ({ blogs }) => {
     <ul className="p-0">
       {currentPageBlogs.length ? (
         currentPageBlogs.map((props) => (
-          <div key={props.blogId} className="d-flex">
+          <li key={props.blogId} className="d-flex">
             <div className="col-lg-8 px-0">
               <TypeContentItem {...props} />
             </div>
@@ -37,10 +37,10 @@ TypeContent = ({ blogs }) => {
                 )}
               />
             </div>
-          </div>
+          </li>
         ))
       ) : (
-        <div className={getClass("p-2 text-danger", flexCenter)}>nothing to display</div>
+        <div className={getClass("p-5 text-danger", flexCenter)}>nothing to display</div>
       )}
     </ul>
   );

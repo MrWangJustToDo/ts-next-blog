@@ -23,7 +23,13 @@ ManageDeleteTypeItem = ({ typeId, typeContent, typeCount }) => {
 
   const click = useManageToDeleteModule({
     title: "确认删除",
-    item: <TypeItem key={typeId} typeContent={typeContent!} typeCount={typeCount!} hoverAble={false} />,
+    item: (
+      <div className="text-center">
+        <hr />
+        <TypeItem key={typeId} typeContent={typeContent!} typeCount={typeCount!} hoverAble={false} />
+        <hr />
+      </div>
+    ),
     body,
     request,
     successCallback: () => mutate(apiName.type),

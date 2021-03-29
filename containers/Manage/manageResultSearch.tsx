@@ -1,9 +1,12 @@
 import CardPage from "components/PageFoot";
 import Loading from "components/Loading";
-import { WithWriteBlogItem as SearchResult } from "components/BlogItem";
+import ManageDeleteBlogItem from "./manageDeleteBlogItem";
+import { getClass } from "utils/class";
 import { useBasePage } from "hook/useBase";
 import { manageLength } from "config/manage";
 import { BlogContentProps } from "types/hook";
+
+import style from "./index.module.scss";
 
 const ManageResultSearch = (props: { data?: BlogContentProps[]; loading?: boolean } = {}) => {
   const { data = [], loading = false } = props;
@@ -20,7 +23,9 @@ const ManageResultSearch = (props: { data?: BlogContentProps[]; loading?: boolea
       ) : currentPageData.length ? (
         <>
           {currentPageData.map((props) => (
-            <SearchResult key={props.blogId} {...props} />
+            <div key={props.blogId} className={getClass("position-relative", style.blogItem)}>
+              <ManageDeleteBlogItem {...props} />
+            </div>
           ))}
           <CardPage className="border-0" page={currentPage} {...{ increaseAble, decreaseAble, increasePage, decreasePage }} />
         </>
