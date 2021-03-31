@@ -21,6 +21,8 @@ ManageDeleteTagItem = ({ tagId, tagContent, tagCount }) => {
     []
   );
 
+  const successCallback = useCallback(() => mutate(apiName.tag), []);
+
   const click = useManageToDeleteModule({
     title: "确认删除",
     item: (
@@ -32,7 +34,7 @@ ManageDeleteTagItem = ({ tagId, tagContent, tagCount }) => {
     ),
     body,
     request,
-    successCallback: () => mutate(apiName.tag),
+    successCallback,
   });
 
   return (

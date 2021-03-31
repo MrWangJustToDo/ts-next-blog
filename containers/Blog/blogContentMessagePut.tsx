@@ -1,8 +1,11 @@
-import { useCallback, useMemo } from "react";
+import { RefObject, useCallback, useMemo } from "react";
+import { mutate } from "swr";
 import { apiName } from "config/api";
+import { transformPath } from "utils/path";
 import { createRequest } from "utils/fetcher";
 import { usePutToCheckcodeModule } from "hook/useMessage";
 import BlogContentCheckcodeModule from "./blogContentCheckcodeModule";
+import { MyInputELement } from "types/hook";
 import { AutoRequestType } from "types/utils";
 import { BlogContentMessagePutType } from "types/containers";
 
@@ -11,18 +14,26 @@ import style from "./index.module.scss";
 let BlogContentMessagePut: BlogContentMessagePutType;
 
 BlogContentMessagePut = ({ blogId }) => {
-  
   const request = useMemo(() => createRequest({ method: "post", path: apiName.putPrimaryMessage, data: { blogId } }), [blogId]);
 
-  const body = useCallback<(request: AutoRequestType) => (closeHandler: () => void) => JSX.Element>(
-    (request) => (close) => <BlogContentCheckcodeModule request={request} closeHandler={close} />,
+  const body = useCallback<
+    (request: AutoRequestType) => (ref: RefObject<MyInputELement>) => (successCallback: () => void) => (closeHandler: () => void) => JSX.Element
+  >(
+    (request) => (ref) => (successCallback) => (close) => (
+      <BlogContentCheckcodeModule request={request} closeHandler={close} messageRef={ref} successCallback={successCallback} />
+    ),
     []
   );
+
+  console.log(transformPath({ apiPath: apiName.primaryMessage, query: { blogId }, needPre: false }));
+
+  const successCallback = useCallback(() => mutate(transformPath({ apiPath: apiName.primaryMessage, query: { blogId }, needPre: false })), [blogId]);
 
   const { ref, submit, canSubmit } = usePutToCheckcodeModule<HTMLTextAreaElement>({
     request,
     body,
     className: style.imgCheck,
+    successCallback,
   });
 
   return (

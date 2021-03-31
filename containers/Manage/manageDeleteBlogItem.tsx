@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { mutate } from "swr";
 import { WithWriteBlogItem as SearchResult, BlogItem } from "components/BlogItem";
 import ManageDeleteModule from "./manageDeleteModule";
 import { useUserRequest } from "hook/useUser";
@@ -7,26 +8,33 @@ import { BlogContentType } from "types/containers";
 
 import style from "./index.module.scss";
 import { apiName } from "config/api";
-import { useManageToDeleteModule } from "hook/useManage";
+import { useFilterResult, useManageToDeleteModule } from "hook/useManage";
 import { useCallback } from "react";
 import { AutoRequestType } from "types/utils";
 
 let ManageDeleteBlogItem: BlogContentType;
 
 ManageDeleteBlogItem = (props) => {
-  const request = useUserRequest({ method: "post", apiPath: apiName.deleteBlog, data: { blogId: props.blogId } });
+  const filter = useFilterResult({ currentBlogId: props.blogId! });
+
+  const request = useUserRequest({ method: "post", apiPath: apiName.deleteBlog, data: { blogId: props.blogId, typeId: props.typeId, tagId: props.tagId } });
 
   const body = useCallback<(request: AutoRequestType) => (item: JSX.Element) => (successCallback: () => void) => (close: () => void) => JSX.Element>(
     (request) => (item) => (successCallback) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
     []
   );
 
+  const successCallback = useCallback(() => {
+    mutate(apiName.home);
+    filter();
+  }, [filter]);
+
   const click = useManageToDeleteModule({
     title: "确认删除博客",
     item: <BlogItem {...props} className="border rounded m-2" _style={{ maxWidth: "600px" }} />,
     body,
     request,
-    successCallback: () => console.log("100"),
+    successCallback,
   });
 
   return (

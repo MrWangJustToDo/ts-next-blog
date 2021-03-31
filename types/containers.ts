@@ -1,7 +1,7 @@
 import { RefObject } from "react";
 import { mainRight } from "config/hoom";
 import { AutoRequestType } from "./utils";
-import { BlogContentProps, TypeProps } from "./hook";
+import { BlogContentProps, MyInputELement, TypeProps } from "./hook";
 import { ChildMessageProps, PrimaryMessageProps } from "./components";
 import { apiName } from "config/api";
 
@@ -62,6 +62,8 @@ export type { BlogContentChildMessageType, BlogContentChildMessageWithReplayType
 interface BlogContentCheckcodeModuleProps {
   request: AutoRequestType;
   closeHandler: () => void;
+  successCallback: () => void;
+  messageRef: RefObject<MyInputELement>;
 }
 interface BlogContentCheckcodeModuleType {
   (props: BlogContentCheckcodeModuleProps): JSX.Element;
@@ -211,6 +213,13 @@ interface TagProps {
 }
 
 export type { TagProps };
+
+/* publishSubmit */
+interface PublishSubmitType {
+  (props: { submit: () => Promise<void> }): JSX.Element;
+}
+
+export type { PublishSubmitType };
 
 /* === Manage === */
 /* manageAddModule */

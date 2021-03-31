@@ -58,8 +58,8 @@ const accessApi: AccessType = {
   [apiName.type]: { disable: false, token: false },
   // 博客信息
   [apiName.blog]: { disable: false, token: false },
-  [apiName.childMessage]: { disable: false, token: false, method: "post" },
-  [apiName.primaryMessage]: { disable: false, token: false, method: "post" },
+  [apiName.childMessage]: { disable: false, token: false },
+  [apiName.primaryMessage]: { disable: false, token: false },
   [apiName.putChildMessage]: { disable: false, token: false, method: "post" },
   [apiName.putPrimaryMessage]: { disable: false, token: false, method: "post" },
   // 管理信息
@@ -67,9 +67,9 @@ const accessApi: AccessType = {
   [apiName.addType]: { disable: false, token: false, method: "post" },
   [apiName.checkTag]: { disable: false, token: false, method: "post" },
   [apiName.checkType]: { disable: false, token: false, method: "post" },
-  [apiName.deleteTag]: { disable: false, token: false, method: "post" },
-  [apiName.deleteType]: { disable: false, token: false, method: "post" },
-  [apiName.deleteBlog]: { disable: false, token: true, method: "post" },
+  [apiName.deleteTag]: { disable: false, token: false, method: "delete" },
+  [apiName.deleteType]: { disable: false, token: false, method: "delete" },
+  [apiName.deleteBlog]: { disable: false, token: true, method: "delete" },
   [apiName.publishBlog]: { disable: false, token: true, method: "post" },
 };
 

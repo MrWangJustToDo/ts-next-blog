@@ -20,7 +20,6 @@ let BlogContentPrimaryMessage: BlogContentPrimaryMessageType;
 let BlogContentPrimaryMessageWithReplay: BlogContentPrimaryMessageWithReplayType;
 
 BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
-  // const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentMessage } = usePrimaryMessage(messages);
   const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageData } = useBasePage<PrimaryMessageProps>({
     pageLength: primaryMessageLength,
     data: messages,

@@ -3,7 +3,7 @@ import { ServerError } from "server/utils/error";
 import { PrimaryMessageProps } from "types/components";
 import { getPrimaryByBlogId, getChildByPrimaryId } from "server/database/get";
 import { deletePrimaryMessageByBlogId, deleteChildMessageByPrimaryId } from "server/database/delete";
-
+import { insertChildComment, insertPrimaryComment } from "server/database/insert";
 
 // 获取主评论
 const getPrimaryMessageByBlogIdAction = autoRequestHandler({
@@ -60,4 +60,46 @@ const deleteAllMessageByBlogIdAction = autoRequestHandler({
   userConfig: { needCheck: true, checkStrict: true },
 });
 
-export { getChildMessageByPrimaryIdAction, getPrimaryMessageByBlogIdAction, deleteAllMessageByBlogIdAction };
+// 发布主评论
+const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    const { blogId, commentId, userId, content } = req.body;
+    const now = new Date();
+    const ip = req.ip;
+    const createDate = now.toLocaleString();
+    const modifyState = 0;
+    const modifyDate = now.toLocaleString();
+    const childIds = "";
+    const childCount = 0;
+    await insertPrimaryComment({ db: req.db!, blogId, commentId, userId, ip, content, createDate, modifyDate, modifyState, childIds, childCount });
+    success({ res, resDate: { state: "评论留言成功", data: `时间：${createDate}` } });
+  },
+  errorHandler: ({ res, e, code = 500 }) =>
+    fail({ res, statuCode: code, resDate: { state: "评论发布错误", data: e.toString(), methodName: "publishPrimaryMessageByBlogIdAction" } }),
+  checkCodeConfig: { needCheck: true },
+});
+
+// 发布子评论
+const publishChildMessageByPrimaryIdAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    const { primaryCommentId, commentId, fromUserId, toIp, toUserId, content } = req.body;
+    const now = new Date();
+    const fromIp = req.ip;
+    const createDate = now.toLocaleString();
+    const modifyState = 0;
+    const modifyDate = now.toLocaleString();
+    await insertChildComment({ db: req.db!, primaryCommentId, commentId, fromIp, fromUserId, toIp, toUserId, content, createDate, modifyState, modifyDate });
+    success({ res, resDate: { state: "回复留言成功", data: `时间：${createDate}` } });
+  },
+  errorHandler: ({ res, e, code = 500 }) =>
+    fail({ res, statuCode: code, resDate: { state: "发布回复出错", data: e.toString(), methodName: "publishChildMessageByPrimaryIdAction" } }),
+  checkCodeConfig: { needCheck: true },
+});
+
+export {
+  getChildMessageByPrimaryIdAction,
+  getPrimaryMessageByBlogIdAction,
+  deleteAllMessageByBlogIdAction,
+  publishPrimaryMessageByBlogIdAction,
+  publishChildMessageByPrimaryIdAction,
+};

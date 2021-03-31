@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/dist/client/router";
 import tocbot from "tocbot";
 import { toCanvas } from "qrcode";
 import { apiName } from "config/api";
 import { cancel, delay } from "utils/delay";
-import { formSerialize } from "utils/data";
+import { formSerialize, getRandom } from "utils/data";
 import { actionHandler } from "utils/action";
 import { addIdForHeads } from "utils/markdown";
 import { useCurrentUser } from "./useUser";
@@ -167,6 +168,7 @@ useEditor = (id) => {
 
 usePublish = ({ request, id }) => {
   const htmlId = `#${id}_html`;
+  const router = useRouter();
   const ref = useRef<HTMLFormElement>(null);
   const { userId } = useCurrentUser();
   const success = useSucessToast();
@@ -180,13 +182,14 @@ usePublish = ({ request, id }) => {
             return fail("登录失效，请重新登录！");
           } else {
             const blogPreview = ele.querySelector(htmlId)?.textContent;
-            return request({ data: { ...formSerialize(ele), blogPreview } })
+            return request({ data: { ...formSerialize(ele), blogPreview, blogId: getRandom(1000).toString(16) } })
               .run<ApiRequestResult<string>>(apiName.publishBlog, { userId })
               .then(({ code, data }) => {
                 if (code === 0) {
-                  success(data.toString());
+                  delay(800, () => router.reload());
+                  return success(data.toString());
                 } else {
-                  fail(data.toString());
+                  return fail(data.toString());
                 }
               })
               .catch((e) => fail(e.toString()));

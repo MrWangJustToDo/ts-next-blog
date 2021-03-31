@@ -20,6 +20,7 @@ import {
   UseManageToDeleteModuleType,
   UseSearchType,
 } from "types/hook";
+import { useCurrentState } from "./useBase";
 
 let useSearch: UseSearchType;
 
@@ -174,7 +175,7 @@ useJudgeInput = ({ option, forWardRef, judgeApiName, successClassName, failClass
 
 useManageToDeleteModule = ({ title, body, request, item, successCallback }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body(request)(item)(successCallback) }), [body, request, item, successCallback]);
+  const click = useCallback(() => open({ head: title, body: body(request)(item)(successCallback) }), [body, request, successCallback]);
   return click;
 };
 
@@ -202,4 +203,13 @@ useDeleteRequest = ({ request, close, successCallback }) => {
   return doRequest;
 };
 
-export { useSearch, useManageToAddModule, useAddRequest, useJudgeInput, useManageToDeleteModule, useDeleteRequest };
+const useFilterResult = ({ currentBlogId }: { currentBlogId: string }) => {
+  const { state, dispatch } = useCurrentState();
+  // 获取当前result
+  const result = <BlogContentProps[]>state.client[actionName.currentResult]["data"];
+  return useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentResult, data: result.filter(({ blogId }) => blogId !== currentBlogId) })), [
+    currentBlogId,
+  ]);
+};
+
+export { useSearch, useManageToAddModule, useAddRequest, useJudgeInput, useManageToDeleteModule, useDeleteRequest, useFilterResult };

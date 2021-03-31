@@ -103,15 +103,15 @@ useAutoSetHeaderHeight = <T extends HTMLElement>(breakPoint: number = 1000) => {
   return { ref, height };
 };
 
-useAutoLoadCheckcodeImg = <T extends HTMLImageElement>({ imgUrl, strUrl }: UseAutoLoadCheckcodeImgProps) => {
+useAutoLoadCheckcodeImg = <T extends HTMLImageElement>({ imgUrl, strUrl, state = true }: UseAutoLoadCheckcodeImgProps) => {
   const ref = useRef<T>(null);
   const loadActionCallback = useCallback<() => void>(
     debounce(
-      () => actionHandler<T, void, void>(ref.current, (ele) => loadImg({ imgUrl, strUrl, imgElement: ele })),
+      () => actionHandler<T, void, void>(ref.current, (ele) => loadImg({ imgUrl, strUrl, imgElement: ele, state })),
       400,
       { leading: true } // 立即执行一次
     ),
-    []
+    [state]
   );
   const addListenerCallback = useCallback<(action: () => void) => void>(
     (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
@@ -121,12 +121,15 @@ useAutoLoadCheckcodeImg = <T extends HTMLImageElement>({ imgUrl, strUrl }: UseAu
     (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
     []
   );
-  useAutoActionHandler({
-    action: loadActionCallback,
-    rightNow: true,
-    addListener: addListenerCallback,
-    removeListener: removeListenerCallback,
-  });
+  useAutoActionHandler(
+    {
+      action: loadActionCallback,
+      rightNow: true,
+      addListener: addListenerCallback,
+      removeListener: removeListenerCallback,
+    },
+    state
+  );
   return ref;
 };
 
@@ -154,7 +157,8 @@ useAutoShowAndHide = <T extends HTMLElement>(breakPoint: number) => {
   return ref;
 };
 
-useAutoSetHeight = <T extends HTMLElement>({ forWardRef, maxHeight = 9999, deps = [] }: UseAutoSetHeightProps<T>) => {
+useAutoSetHeight = <T extends HTMLElement>(props: UseAutoSetHeightProps<T> = {}) => {
+  const { forWardRef, maxHeight = 9999, deps = [] } = props;
   const ref = useRef<T>(null);
   const currentRef = forWardRef ? forWardRef : ref;
   const [height, setHeight] = useState<number>(0);

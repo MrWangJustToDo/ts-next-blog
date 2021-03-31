@@ -64,13 +64,13 @@ interface PrimaryMessageProps {
   email?: string;
   gender?: number;
   qq?: string;
-  children: JSX.Element;
+  children?: JSX.Element;
 
   withReplay?: boolean;
   withChildren?: boolean;
   withHover?: boolean;
 
-  replayHandler: (props: PrimaryMessageProps) => void;
+  replayHandler?: (props: PrimaryMessageProps) => void;
 }
 
 interface PrimaryMessageType {
@@ -97,13 +97,13 @@ interface ChildMessageProps {
   gender?: number;
   qq?: string;
   toUserName?: string;
-  children: JSX.Element;
+  children?: JSX.Element;
 
   withReplay?: boolean;
   withChildren?: boolean;
   withHover?: boolean;
 
-  replayHandler: (props: ChildMessageProps) => void;
+  replayHandler?: (props: ChildMessageProps) => void;
 }
 
 interface ChildMessageType {

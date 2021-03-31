@@ -21,6 +21,8 @@ ManageDeleteTypeItem = ({ typeId, typeContent, typeCount }) => {
     []
   );
 
+  const successCallback = useCallback(() => mutate(apiName.type), []);
+
   const click = useManageToDeleteModule({
     title: "确认删除",
     item: (
@@ -32,7 +34,7 @@ ManageDeleteTypeItem = ({ typeId, typeContent, typeCount }) => {
     ),
     body,
     request,
-    successCallback: () => mutate(apiName.type),
+    successCallback,
   });
 
   return (

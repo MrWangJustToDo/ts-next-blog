@@ -40,6 +40,11 @@ const deletePrimaryMessageByBlogId = async ({ db, blogId }: { db: Database; blog
   return await db.run("DELETE FROM primaryComment WHERE blogId = ?", blogId);
 };
 
+// 删除指定博客下的所有childMessage
+const deleteChildMessageByBlogId = async ({ db, blogId }: { db: Database; blogId: string }) => {
+  return await db.run("DELETE FROM childComment WHERE blogId = ?", blogId);
+};
+
 // 删除指定primaryMessage
 const deletePrimaryMessageByCommentId = async ({ db, commentId }: { db: Database; commentId: string }) => {
   return await db.run("DELETE FROM primaryComment WHERE commentId = ?", commentId);
@@ -59,4 +64,4 @@ export { deleteBlogByBlogId, deleteBlogByBlogIdWithBlogState, deleteHomeByBlogId
 
 export { deleteTypeByTypeId, deleteTypeByTypeIdWithTypeState, deleteTagByTagId, deletePrimaryMessageByBlogId };
 
-export { deletePrimaryMessageByCommentId, deleteChildMessageByPrimaryId, deleteChildMessageByCommentId };
+export { deletePrimaryMessageByCommentId, deleteChildMessageByPrimaryId, deleteChildMessageByCommentId, deleteChildMessageByBlogId };

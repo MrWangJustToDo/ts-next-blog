@@ -8,8 +8,8 @@ import style from "./index.module.scss";
 let LoginCheckCode: LoginCheckCodeType;
 
 LoginCheckCode = ({ show }) => {
-  const [ref, height] = useAutoSetHeight<HTMLDivElement>({});
-  const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
+  const [ref, height] = useAutoSetHeight<HTMLDivElement>();
+  const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr, state: show });
   return (
     <div ref={ref} className={getClass("form-group row align-items-center overflow-hidden", style.checkcode)} style={{ height: show ? `${height}px` : "0px" }}>
       <label htmlFor="checkcode" className="col-sm-3 col-form-label">

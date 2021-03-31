@@ -9,9 +9,8 @@ let BlogContentCheckcodeModule: BlogContentCheckcodeModuleType;
 
 let BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImagType;
 
-BlogContentCheckcodeModuleWithImag = ({ request, closeHandler, imgRef }) => {
-
-  const { ref, submit, canSubmit } = useCheckcodeModuleToSubmit<HTMLInputElement>({ request, closeHandler });
+BlogContentCheckcodeModuleWithImag = ({ request, closeHandler, imgRef, messageRef, successCallback }) => {
+  const { ref, submit, canSubmit } = useCheckcodeModuleToSubmit<HTMLInputElement>({ request, closeHandler, messageRef, successCallback });
 
   return (
     <div className={getClass("row", flexCenter)}>
@@ -27,11 +26,18 @@ BlogContentCheckcodeModuleWithImag = ({ request, closeHandler, imgRef }) => {
   );
 };
 
-BlogContentCheckcodeModule = ({ request, closeHandler }) => {
-
+BlogContentCheckcodeModule = ({ request, closeHandler, messageRef, successCallback }) => {
   const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
-  
-  return <BlogContentCheckcodeModuleWithImag request={request} closeHandler={closeHandler} imgRef={imgRef} />;
+
+  return (
+    <BlogContentCheckcodeModuleWithImag
+      request={request}
+      closeHandler={closeHandler}
+      imgRef={imgRef}
+      messageRef={messageRef}
+      successCallback={successCallback}
+    />
+  );
 };
 
 export default BlogContentCheckcodeModule;

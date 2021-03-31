@@ -3,7 +3,7 @@ import { TransformPathType } from "types/utils";
 
 let transformPath: TransformPathType;
 
-transformPath = ({ path, apiPath, query }) => {
+transformPath = ({ path, apiPath, query, needPre = true }) => {
   if (!path && !apiPath) {
     log(`transform path not exist`, "warn");
     return "";
@@ -17,16 +17,19 @@ transformPath = ({ path, apiPath, query }) => {
     }
     currentPath = path;
   } else if (apiPath) {
-    if (!apiPath.startsWith("/")) {
+    currentPath = apiPath;
+    if (!currentPath.startsWith("/")) {
       currentPath = "/" + apiPath;
     }
-    if (!apiPath.startsWith("/api")) {
+    if (!currentPath.startsWith("/api")) {
       currentPath = "/api" + currentPath;
     }
-    currentPath = process.env.NEXT_PUBLIC_APIHOST + currentPath;
-  }
-  if (!currentPath.startsWith("http")) {
-    currentPath = "http://" + currentPath;
+    if (needPre) {
+      currentPath = process.env.NEXT_PUBLIC_APIHOST + currentPath;
+      if (!currentPath.startsWith("http")) {
+        currentPath = "http://" + currentPath;
+      }
+    }
   }
   if (query) {
     currentPath += "?";

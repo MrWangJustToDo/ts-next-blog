@@ -108,6 +108,7 @@ interface UseAutoSetHeaderHeightType {
 interface UseAutoLoadCheckcodeImgProps {
   imgUrl: apiName;
   strUrl: apiName;
+  state?: boolean;
 }
 interface UseAutoLoadCheckcodeImgType {
   <T extends HTMLImageElement>(props: UseAutoLoadCheckcodeImgProps): RefObject<T>;
@@ -121,7 +122,7 @@ interface UseAutoSetHeightProps<T> {
   deps?: any[];
 }
 interface UseAutoSetHeightType {
-  <T extends HTMLElement>(props: UseAutoSetHeightProps<T>): [RefObject<T>, number];
+  <T extends HTMLElement>(props?: UseAutoSetHeightProps<T>): [RefObject<T>, number];
 }
 interface UseAutoLoadRandomImgType {
   (apiName: apiName): [RefObject<HTMLImageElement>, boolean];
@@ -321,9 +322,10 @@ interface UseJudgeInputValueType {
   <T extends MyInputELement>(ref: RefObject<T>): boolean;
 }
 interface UsePutToCheckcodeModuleProps {
-  request: AutoRequestType;
-  body: (request: AutoRequestType) => (closeHandler: () => void) => JSX.Element;
   className: string;
+  request: AutoRequestType;
+  successCallback: () => void;
+  body: (request: AutoRequestType) => (ref: RefObject<MyInputELement>) => (successCallback: () => void) => (closeHandler: () => void) => JSX.Element;
 }
 interface UsePutToCheckcodeModuleType {
   <T extends MyInputELement>(props: UsePutToCheckcodeModuleProps): {
@@ -333,8 +335,10 @@ interface UsePutToCheckcodeModuleType {
   };
 }
 interface UseCheckcodeModuleToSubmitProps {
+  messageRef: RefObject<MyInputELement>;
   request: AutoRequestType;
   closeHandler: () => void;
+  successCallback: () => void;
 }
 interface UseCheckcodeModuleToSubmitType {
   <T extends MyInputELement>(props: UseCheckcodeModuleToSubmitProps): {

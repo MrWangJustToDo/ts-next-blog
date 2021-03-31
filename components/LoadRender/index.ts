@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
 import loadingError from "./loadingError";
+import { transformPath } from "utils/path";
 import { cancel, delay } from "utils/delay";
 import { autoTransformData } from "utils/data";
 import { cacheAllRequest } from "utils/fetcher";
@@ -42,23 +43,24 @@ LoadRender = <T>({
   const currentPath = apiPath ? apiPath : path;
 
   useEffect(() => {
-    delay(delayTime, () => setLoadingEle(loading({ _style: placeholder })), currentPath);
+    delay(delayTime, () => setLoadingEle(loading({ _style: placeholder, className: "p-4" })), currentPath);
     return () => cancel(currentPath!);
   }, [method, query, requestData, delayTime, currentPath]);
 
-  const defaultFetcher = useMemo(() => cacheAllRequest({ method, data: requestData ? requestData : false, header: token ? { apiToken: token } : false }), [
+  const defaultFetcher = cacheAllRequest({
     method,
-    requestData,
-    token,
-  ]);
+    query: false,
+    data: requestData ? requestData : false,
+    header: token ? { apiToken: token } : false,
+  });
 
   const currentFetcher = fetcher ? fetcher : defaultFetcher.run;
 
   const { initialData: currentInitialData, dispatch } = getCurrentInitialData({ initialData, apiPath, needinitialData });
 
-  const queryString = query ? JSON.stringify(query) : undefined;
+  const currentRequestKey = query ? transformPath({ path, apiPath, query, needPre: false }) : currentPath!;
 
-  const { data, error }: { data?: any; error?: any } = useSWR(queryString ? [currentPath, queryString] : currentPath!, currentFetcher, {
+  const { data, error }: { data?: any; error?: any } = useSWR(currentRequestKey, currentFetcher, {
     initialData: currentInitialData,
     revalidateOnMount,
     revalidateOnFocus,

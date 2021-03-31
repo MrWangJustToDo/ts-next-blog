@@ -1,6 +1,8 @@
 import { RefObject, useCallback, useMemo, useRef, useState } from "react";
 import { childMessageLength } from "config/message";
+import { getRandom } from "utils/data";
 import { actionHandler } from "utils/action";
+import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSucessToast } from "./useToast";
@@ -60,39 +62,48 @@ useJudgeInputValue = <T extends MyInputELement>(ref: RefObject<T>) => {
   return bool;
 };
 
-usePutToCheckcodeModule = <T extends MyInputELement>({ request, body, className = "" }: UsePutToCheckcodeModuleProps) => {
+usePutToCheckcodeModule = <T extends MyInputELement>({ request, body, className = "", successCallback }: UsePutToCheckcodeModuleProps) => {
   const ref = useRef<T>(null);
   const open = useOverlayOpen();
+  const { userId } = useCurrentUser();
   const submit = useCallback(() => {
     actionHandler<T, void, void>(ref.current, (ele) => {
       if (!!ele.value.length) {
         open({
           head: "验证码",
-          body: body(request({ data: { content: ele.value } })),
+          body: body(request({ data: { content: ele.value, userId } }))(ref)(successCallback),
           className,
         });
       }
     });
-  }, [open, body, request]);
+  }, [body, request, userId, successCallback]);
   const canSubmit = useJudgeInputValue<T>(ref);
   return { ref, submit, canSubmit };
 };
 
-useCheckcodeModuleToSubmit = <T extends MyInputELement>({ request, closeHandler }: UseCheckcodeModuleToSubmitProps) => {
+useCheckcodeModuleToSubmit = <T extends MyInputELement>({ request, closeHandler, messageRef, successCallback }: UseCheckcodeModuleToSubmitProps) => {
   const ref = useRef<T>(null);
   const pushFail = useFailToast();
   const pushSucess = useSucessToast();
   const submit = useCallback(() => {
     return actionHandler<T, Promise<void>, Promise<void>>(ref.current, (ele) => {
       if (ele.value.length) {
-        return request({ data: { checkcode: ele.value } })
+        return request({ data: { checkCode: ele.value, commentId: getRandom(1000).toString(16) } })
           .run<ApiRequestResult<string>>()
           .then(({ code, data }) => {
             if (code === 0) {
-              pushSucess("提交成功");
-              closeHandler();
+              if (closeHandler && typeof closeHandler === "function") {
+                closeHandler();
+              }
+              if (successCallback && typeof successCallback === "function") {
+                successCallback();
+              }
+              if (messageRef.current) {
+                messageRef.current.value = "";
+              }
+              return pushSucess("提交成功");
             } else {
-              pushFail(`提交失败: ${data.toString()}`);
+              return pushFail(`提交失败: ${data.toString()}`);
             }
           })
           .catch((e) => pushFail(`发生错误: ${e.toString()}`));
@@ -100,7 +111,7 @@ useCheckcodeModuleToSubmit = <T extends MyInputELement>({ request, closeHandler 
         return pushFail(`输入框没有内容？`);
       }
     });
-  }, [request, closeHandler]);
+  }, [request, closeHandler, successCallback]);
   const canSubmit = useJudgeInputValue<T>(ref);
   return { ref, submit, canSubmit };
 };

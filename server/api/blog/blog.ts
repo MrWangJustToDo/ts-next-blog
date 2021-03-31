@@ -2,9 +2,11 @@ import { apiName } from "config/api";
 import { ServerError } from "server/utils/error";
 import { insertBlog, insertHome } from "server/database/insert";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
-import { getBlogByBlogId, getTagByTagId, getTypeByTypeId } from "server/database/get";
-import { deleteBlogByBlogIdWithBlogState, deleteHomeByBlogIdWithBlogState } from "server/database/delete";
+import { getBlogByBlogId, getPrimaryByBlogId, getTagByTagId, getTypeByTypeId } from "server/database/get";
+import { deleteBlogByBlogId, deleteChildMessageByPrimaryId, deleteHomeByBlogId, deletePrimaryMessageByBlogId } from "server/database/delete";
 import { updateTableWithParam, updateTagCountByTagId, updateTypeCountByTypeId } from "server/database/updata";
+import { TagProps } from "types/containers";
+import { PrimaryMessageProps } from "types/components";
 
 // 根据id获取blog
 const getBlogByBlogIdAction = autoRequestHandler({
@@ -24,7 +26,7 @@ const getBlogByBlogIdAction = autoRequestHandler({
 // 发布一个新的blog
 const publishBlogAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const { blogOriginState, blogTitle, blogContent, typeId, tagId, blogImgLink, blogState, blogPriseState, blogCommentState, blogPreview } = req.body;
+    const { blogId, blogOriginState, blogTitle, blogContent, typeId, tagId, blogImgLink, blogState, blogPriseState, blogCommentState, blogPreview } = req.body;
     if (typeId) {
       // 获取当前type
       const type = await getTypeByTypeId({ db: req.db!, typeId });
@@ -41,7 +43,7 @@ const publishBlogAction = autoRequestHandler({
     // 增加blog
     const now = new Date();
     const authorId = req.user.userId;
-    const blogId = now.getTime().toString(36);
+    const blogIdStr = blogId || now.getTime().toString(36);
     const blogCreateDate = now.toLocaleString();
     const blogCreateYear = String(now.getFullYear());
     const blogModifyDate = now.toLocaleString();
@@ -55,7 +57,7 @@ const publishBlogAction = autoRequestHandler({
     await insertBlog({
       db: req.db!,
       authorId,
-      blogId,
+      blogId: blogIdStr,
       blogState,
       blogOriginState,
       blogTitle,
@@ -77,7 +79,7 @@ const publishBlogAction = autoRequestHandler({
     await insertHome({
       db: req.db!,
       authorId,
-      blogId,
+      blogId: blogIdStr,
       blogState,
       blogTitle,
       blogCreateDate,
@@ -103,10 +105,15 @@ const deleteBlogByBlogIdAAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { blogId, typeId, tagId } = req.body;
     if (tagId) {
-      const tagIdArr = tagId.split(",");
+      let tagIdArr;
+      if (typeof tagId === "string") {
+        tagIdArr = tagId.split(",");
+      } else {
+        tagIdArr = tagId;
+      }
       for (let id of tagIdArr) {
-        const tag = await getTagByTagId({ db: req.db!, tagId: id });
-        await updateTagCountByTagId({ db: req.db!, tagId, count: tag.tagCount - 1 });
+        const tag = <TagProps>await getTagByTagId({ db: req.db!, tagId: id });
+        await updateTagCountByTagId({ db: req.db!, tagId, count: tag.tagCount! - 1 });
       }
     }
     if (typeId) {
@@ -115,10 +122,17 @@ const deleteBlogByBlogIdAAction = autoRequestHandler({
       // 减少type
       await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount - 1 });
     }
+    // 获取博客评论
+    const primaryMessage = <PrimaryMessageProps[]>await getPrimaryByBlogId({ db: req.db!, blogId });
+    for (let i = 0; i < primaryMessage.length; i++) {
+      await deleteChildMessageByPrimaryId({ db: req.db!, primaryId: primaryMessage[i].commentId });
+    }
+    // 删除所有评论
+    await deletePrimaryMessageByBlogId({ db: req.db!, blogId });
     // 删除blog
-    await deleteBlogByBlogIdWithBlogState({ db: req.db!, blogId });
+    await deleteBlogByBlogId({ db: req.db!, blogId });
     // 删除home
-    await deleteHomeByBlogIdWithBlogState({ db: req.db!, blogId });
+    await deleteHomeByBlogId({ db: req.db!, blogId });
     success({ res, resDate: { state: "删除博客成功", data: "删除博客成功" } });
   },
   errorHandler: ({ res, e, code = 400 }) =>

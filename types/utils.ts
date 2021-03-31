@@ -74,6 +74,7 @@ interface TransformPathProps {
   path?: string;
   apiPath?: apiName;
   query?: QueryProps;
+  needPre?: boolean;
 }
 interface TransformPathType {
   (props: TransformPathProps): string;
@@ -167,6 +168,7 @@ interface LoadImgProps {
   imgUrl: apiName;
   strUrl: apiName;
   imgElement: HTMLImageElement;
+  state?: boolean;
 }
 interface LoadImgType {
   (props: LoadImgProps): Promise<HTMLImageElement | void>;

@@ -12,6 +12,8 @@ import {
   RequestHandlerProps,
   UserConfigProps,
   RequestHandlerType,
+  ExpressRequest,
+  CheckCodeConfigProps,
 } from "types/server";
 
 const cache = new Cache<string, any>();
@@ -62,17 +64,29 @@ let catchHandler = (requestHandler: RequestHandlerType, errorHandler?: ErrorHand
 let cacheHandler = (requestHandler: RequestHandlerType, time: number | undefined, cacheConfig: CacheConfigProps) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     const currentCacheConfig = assign(cacheConfig, req.config?.cache);
-    const key = req.originalUrl;
+    const key = currentCacheConfig.cacheKey
+      ? typeof currentCacheConfig.cacheKey === "function"
+        ? currentCacheConfig.cacheKey({ req })
+        : currentCacheConfig.cacheKey
+      : req.originalUrl;
     const needCache = currentCacheConfig.needCache;
     const cacheTime = currentCacheConfig.cacheTime ? currentCacheConfig.cacheTime : time;
     const needDelete = currentCacheConfig.needDelete;
     if (needDelete) {
       if (Array.isArray(needDelete)) {
-        needDelete.forEach(cache.deleteRightNow);
+        needDelete.forEach((item: string | (({ req }: { req: ExpressRequest }) => string)) => {
+          if (typeof item === "function") {
+            cache.deleteRightNow(item({ req }));
+          } else {
+            cache.deleteRightNow(item);
+          }
+        });
       } else if (typeof needDelete === "string") {
         cache.deleteRightNow(needDelete);
       } else if (needDelete === true) {
         cache.deleteRightNow(key);
+      } else {
+        cache.deleteRightNow(needDelete({ req }));
       }
     }
     if (needCache) {
@@ -91,6 +105,29 @@ let cacheHandler = (requestHandler: RequestHandlerType, time: number | undefined
     } else {
       return await requestHandler({ req, res, next });
     }
+  };
+};
+
+let checkcodeHandler = (requestHandler: RequestHandlerType, check: boolean | undefined, checkCodeConfig: CheckCodeConfigProps) => {
+  return async ({ req, res, next }: RequestHandlerProps) => {
+    const currentCheckCodeConfig = assign(checkCodeConfig, req.config?.check);
+    const needCheck = currentCheckCodeConfig.needCheck ? currentCheckCodeConfig.needCheck : check;
+    const fieldName = currentCheckCodeConfig.fieldName || "checkCode";
+    const fromQuery = currentCheckCodeConfig.fromQuery;
+    if (needCheck) {
+      if (fromQuery) {
+        const checkCode = req.query[fieldName];
+        if (checkCode !== req.session.captcha) {
+          throw new ServerError("验证码不正确", 400);
+        }
+      } else {
+        const checkCode = req.body[fieldName];
+        if (checkCode !== req.session.captcha) {
+          throw new ServerError("验证码不正确", 400);
+        }
+      }
+    }
+    return await requestHandler({ req, res, next });
   };
 };
 
@@ -115,8 +152,13 @@ let userHandler = (requestHandler: RequestHandlerType, strict: boolean | undefin
   };
 };
 
-let autoRequestHandler = ({ requestHandler, errorHandler, strict, time, cacheConfig, userConfig }: AutoRequestHandlerProps) => {
-  return transformHandler(catchHandler(userHandler(cacheHandler(requestHandler, time, cacheConfig || {}), strict, userConfig || {}), errorHandler));
+let autoRequestHandler = ({ requestHandler, errorHandler, strict, time, check, cacheConfig, userConfig, checkCodeConfig }: AutoRequestHandlerProps) => {
+  return transformHandler(
+    catchHandler(
+      checkcodeHandler(userHandler(cacheHandler(requestHandler, time, cacheConfig || {}), strict, userConfig || {}), check, checkCodeConfig || {}),
+      errorHandler
+    )
+  );
 };
 
-export { success, fail, transformHandler, catchHandler, cacheHandler, userHandler, autoRequestHandler };
+export { success, fail, transformHandler, catchHandler, cacheHandler, checkcodeHandler, userHandler, autoRequestHandler };

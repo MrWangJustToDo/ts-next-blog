@@ -1,6 +1,9 @@
 import Button from "components/Button";
+import { PublishSubmitType } from "types/containers";
 
-let PublishSubmit = ({ submit }) => {
+let PublishSubmit: PublishSubmitType;
+
+PublishSubmit = ({ submit }) => {
   return (
     <div className="form-row mb-5 mt-3 flex-row-reverse">
       <Button request={submit} className="btn-info mx-2 active" value={"发布"} />

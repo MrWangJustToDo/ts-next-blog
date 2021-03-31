@@ -1,7 +1,12 @@
 import { Database } from "sqlite";
 import { NextFunction, Request, Response } from "express";
 
-type ExpressRequest = Request & { db?: Database; session?: any; user?: any; config?: { cache?: CacheConfigProps; user?: UserConfigProps } };
+type ExpressRequest = Request & {
+  db?: Database;
+  session?: any;
+  user?: any;
+  config?: { cache?: CacheConfigProps; user?: UserConfigProps; check?: CheckCodeConfigProps };
+};
 
 /* === API === */
 /* api */
@@ -37,9 +42,15 @@ interface ErrorHandlerType {
   (props: ErrorHandlerProps): Promise<void> | void;
 }
 interface CacheConfigProps {
+  cacheKey?: string | (({ req }: { req: ExpressRequest }) => string);
   cacheTime?: number;
   needCache?: boolean;
-  needDelete?: string | string[] | boolean;
+  needDelete?: string | string[] | boolean | (({ req }: { req: ExpressRequest }) => string) | (({ req }: { req: ExpressRequest }) => string)[];
+}
+interface CheckCodeConfigProps {
+  needCheck?: boolean;
+  fieldName?: string;
+  fromQuery?: boolean;
 }
 interface UserConfigProps {
   needCheck?: boolean;
@@ -48,13 +59,16 @@ interface UserConfigProps {
 interface AutoRequestHandlerProps {
   requestHandler: RequestHandlerType;
   errorHandler: ErrorHandlerType;
+  check?: boolean;
   strict?: boolean;
   time?: number;
+  checkCodeConfig?: CheckCodeConfigProps;
   cacheConfig?: CacheConfigProps;
   userConfig?: UserConfigProps;
 }
 
 export type {
+  ExpressRequest,
   ApiResponseData,
   ApiResponseProps,
   ApiResponseType,
@@ -62,6 +76,7 @@ export type {
   RequestHandlerType,
   ErrorHandlerType,
   CacheConfigProps,
+  CheckCodeConfigProps,
   UserConfigProps,
   AutoRequestHandlerProps,
 };

@@ -87,6 +87,7 @@ createRequest = (props: AutoRequestProps = {}) => {
   return autoRequest;
 };
 
+// only use this cache client side data
 cacheAllRequest = (props: AutoRequestProps = {}) => {
   const { method, path, apiPath, query, data, header } = props;
 
