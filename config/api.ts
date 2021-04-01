@@ -63,6 +63,7 @@ const accessApi: AccessType = {
   [apiName.putChildMessage]: { disable: false, token: false, method: "post" },
   [apiName.putPrimaryMessage]: { disable: false, token: false, method: "post" },
   // 管理信息
+  [apiName.search]: { disable: false, token: true, method: "post" },
   [apiName.addTag]: { disable: false, token: false, method: "post" },
   [apiName.addType]: { disable: false, token: false, method: "post" },
   [apiName.checkTag]: { disable: false, token: false, method: "post" },
@@ -70,6 +71,7 @@ const accessApi: AccessType = {
   [apiName.deleteTag]: { disable: false, token: false, method: "delete" },
   [apiName.deleteType]: { disable: false, token: false, method: "delete" },
   [apiName.deleteBlog]: { disable: false, token: true, method: "delete" },
+  [apiName.updataBlog]: { disable: false, token: true, method: "post" },
   [apiName.publishBlog]: { disable: false, token: true, method: "post" },
 };
 

@@ -151,13 +151,13 @@ const getAliveBlogCount = async ({ db }: { db: Database }) => {
 
 // 获取主评论
 const getPrimaryByBlogId = async ({ db, blogId }: { db: Database; blogId: string }) => {
-  return await db.all("SELECT * FROM primaryComment LEFT JOIN users WHERE primaryComment.blogId = ? AND primaryComment.userId = users.userId", blogId);
+  return await db.all("SELECT * FROM primaryComment LEFT JOIN users ON primaryComment.userId = users.userId WHERE primaryComment.blogId = ?", blogId);
 };
 
 // 获取子评论
 const getChildByPrimaryId = async ({ db, primaryCommentId }: { db: Database; primaryCommentId: string }) => {
   const childMessage = await db.all(
-    "SELECT * FROM childComment LEFT JOIN users WHERE childComment.primaryCommentId = ? AND childComment.fromUserId = users.userId",
+    "SELECT * FROM childComment LEFT JOIN users ON childComment.fromUserId = users.userId WHERE childComment.primaryCommentId = ?",
     primaryCommentId
   );
   for (let key in childMessage) {
@@ -170,8 +170,12 @@ const getChildByPrimaryId = async ({ db, primaryCommentId }: { db: Database; pri
   return childMessage;
 };
 
+const getChildByBlogId = async ({ db, blogId }: { db: Database; blogId: string }) => {
+  return await db.all("SELECT * FROM childComment LEFT JOIN users ON childComment.fromUserId = users.userId WHERE childComment.blogId = ?", blogId);
+};
+
 export { getUserByUser, getAliveBlogCount, getAliveTag, getBlogCount, getBlogByBlogId, getChildByPrimaryId, getHome, getPrimaryByBlogId, getTag };
 
 export { getTypeByTypeContent, getTagByTagContent, getAliveType, getTagByTagId, getTagCount, getType, getTypeByTypeId, getTypeCount, getUserByUserId };
 
-export { getUserCount, getUsersExByUserId, getBlogsByBlogTitle, getBlogsByTypeId, getBlogsByTagId };
+export { getUserCount, getUsersExByUserId, getBlogsByBlogTitle, getBlogsByTypeId, getBlogsByTagId, getChildByBlogId };

@@ -4,6 +4,8 @@ import { PrimaryMessageProps } from "types/components";
 import { getPrimaryByBlogId, getChildByPrimaryId } from "server/database/get";
 import { deletePrimaryMessageByBlogId, deleteChildMessageByPrimaryId } from "server/database/delete";
 import { insertChildComment, insertPrimaryComment } from "server/database/insert";
+import { transformPath } from "utils/path";
+import { apiName } from "config/api";
 
 // 获取主评论
 const getPrimaryMessageByBlogIdAction = autoRequestHandler({
@@ -39,7 +41,7 @@ const getChildMessageByPrimaryIdAction = autoRequestHandler({
 // 根据博客id删除所有评论
 const deleteAllMessageByBlogIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const blogId = req.query.blogId as string;
+    const { blogId } = req.body;
     if (!blogId) {
       throw new ServerError("请求的blogId参数不存在", 400);
     }
@@ -58,6 +60,7 @@ const deleteAllMessageByBlogIdAction = autoRequestHandler({
   errorHandler: ({ res, e, code = 500 }) =>
     fail({ res, statuCode: code, resDate: { state: "删除失败", data: e.toString(), methodName: "deleteAllMessageByBlogId" } }),
   userConfig: { needCheck: true, checkStrict: true },
+  cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
 });
 
 // 发布主评论
@@ -77,6 +80,7 @@ const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
   errorHandler: ({ res, e, code = 500 }) =>
     fail({ res, statuCode: code, resDate: { state: "评论发布错误", data: e.toString(), methodName: "publishPrimaryMessageByBlogIdAction" } }),
   checkCodeConfig: { needCheck: true },
+  cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
 });
 
 // 发布子评论
@@ -94,6 +98,7 @@ const publishChildMessageByPrimaryIdAction = autoRequestHandler({
   errorHandler: ({ res, e, code = 500 }) =>
     fail({ res, statuCode: code, resDate: { state: "发布回复出错", data: e.toString(), methodName: "publishChildMessageByPrimaryIdAction" } }),
   checkCodeConfig: { needCheck: true },
+  cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId } }) },
 });
 
 export {

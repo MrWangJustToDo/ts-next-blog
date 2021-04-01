@@ -2,11 +2,10 @@ import { apiName } from "config/api";
 import { ServerError } from "server/utils/error";
 import { insertBlog, insertHome } from "server/database/insert";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
-import { getBlogByBlogId, getPrimaryByBlogId, getTagByTagId, getTypeByTypeId } from "server/database/get";
-import { deleteBlogByBlogId, deleteChildMessageByPrimaryId, deleteHomeByBlogId, deletePrimaryMessageByBlogId } from "server/database/delete";
+import { getBlogByBlogId, getTagByTagId, getTypeByTypeId } from "server/database/get";
 import { updateTableWithParam, updateTagCountByTagId, updateTypeCountByTypeId } from "server/database/updata";
+import { deleteBlogByBlogId, deleteChildMessageByBlogId, deleteHomeByBlogId, deletePrimaryMessageByBlogId } from "server/database/delete";
 import { TagProps } from "types/containers";
-import { PrimaryMessageProps } from "types/components";
 
 // 根据id获取blog
 const getBlogByBlogIdAction = autoRequestHandler({
@@ -27,18 +26,20 @@ const getBlogByBlogIdAction = autoRequestHandler({
 const publishBlogAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { blogId, blogOriginState, blogTitle, blogContent, typeId, tagId, blogImgLink, blogState, blogPriseState, blogCommentState, blogPreview } = req.body;
-    if (typeId) {
-      // 获取当前type
-      const type = await getTypeByTypeId({ db: req.db!, typeId });
-      // 增加type
-      await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount + 1 });
+    if (!typeId) {
+      throw new ServerError("typeId参数不存在", 403);
     }
-    if (tagId) {
-      const tagIdArr = tagId.split(",");
-      for (let id of tagIdArr) {
-        const tag = await getTagByTagId({ db: req.db!, tagId: id });
-        await updateTagCountByTagId({ db: req.db!, tagId, count: tag.tagCount + 1 });
-      }
+    if (!tagId) {
+      throw new ServerError("tagId参数不存在", 403);
+    }
+    // 获取当前type
+    const type = await getTypeByTypeId({ db: req.db!, typeId });
+    // 增加type
+    await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount + 1 });
+    const tagIdArr = tagId.split(",");
+    for (let id of tagIdArr) {
+      const tag = await getTagByTagId({ db: req.db!, tagId: id });
+      await updateTagCountByTagId({ db: req.db!, tagId, count: tag.tagCount + 1 });
     }
     // 增加blog
     const now = new Date();
@@ -92,7 +93,7 @@ const publishBlogAction = autoRequestHandler({
       typeId,
       tagId,
     });
-    success({ res, statuCode: 200, resDate: { state: "创建博客成功", data: `博客id：${now.getTime().toString(36)}` } });
+    success({ res, statuCode: 200, resDate: { state: "创建博客成功", data: `博客id：${blogIdStr}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
     fail({ res, statuCode: code, resDate: { state: "创建博客失败", data: e.toString(), methodName: "publishBlogAction" } }),
@@ -104,30 +105,23 @@ const publishBlogAction = autoRequestHandler({
 const deleteBlogByBlogIdAAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { blogId, typeId, tagId } = req.body;
-    if (tagId) {
-      let tagIdArr;
-      if (typeof tagId === "string") {
-        tagIdArr = tagId.split(",");
-      } else {
-        tagIdArr = tagId;
-      }
-      for (let id of tagIdArr) {
-        const tag = <TagProps>await getTagByTagId({ db: req.db!, tagId: id });
-        await updateTagCountByTagId({ db: req.db!, tagId, count: tag.tagCount! - 1 });
-      }
+    if (!typeId) {
+      throw new ServerError("typeId参数不存在", 403);
     }
-    if (typeId) {
-      // 获取当前type
-      const type = await getTypeByTypeId({ db: req.db!, typeId });
-      // 减少type
-      await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount - 1 });
+    if (!tagId) {
+      throw new ServerError("tagId参数不存在", 403);
     }
-    // 获取博客评论
-    const primaryMessage = <PrimaryMessageProps[]>await getPrimaryByBlogId({ db: req.db!, blogId });
-    for (let i = 0; i < primaryMessage.length; i++) {
-      await deleteChildMessageByPrimaryId({ db: req.db!, primaryId: primaryMessage[i].commentId });
+    let tagIdArr = tagId.split(",");
+    for (let id of tagIdArr) {
+      const tag = <TagProps>await getTagByTagId({ db: req.db!, tagId: id });
+      await updateTagCountByTagId({ db: req.db!, tagId, count: tag.tagCount! - 1 });
     }
+    // 获取当前type
+    const type = await getTypeByTypeId({ db: req.db!, typeId });
+    // 减少type
+    await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount - 1 });
     // 删除所有评论
+    await deleteChildMessageByBlogId({ db: req.db!, blogId });
     await deletePrimaryMessageByBlogId({ db: req.db!, blogId });
     // 删除blog
     await deleteBlogByBlogId({ db: req.db!, blogId });
@@ -183,6 +177,7 @@ const updateBlogByBlogIdAction = autoRequestHandler({
   errorHandler: ({ res, e, code = 500 }) =>
     fail({ res, statuCode: code, resDate: { state: "更新博客失败", data: e.toString(), methodName: "updateBlogByBlogIdAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
+  cacheConfig: { needDelete: [apiName.home, apiName.tag, apiName.type] },
 });
 
 export { updateBlogByBlogIdAction, getBlogByBlogIdAction, publishBlogAction, deleteBlogByBlogIdAAction };
