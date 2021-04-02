@@ -58,7 +58,7 @@ interface UserConfigProps {
 }
 interface AutoRequestHandlerProps {
   requestHandler: RequestHandlerType;
-  errorHandler: ErrorHandlerType;
+  errorHandler?: ErrorHandlerType;
   check?: boolean;
   strict?: boolean;
   time?: number;

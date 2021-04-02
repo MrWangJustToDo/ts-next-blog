@@ -1,6 +1,8 @@
 @import "../../styles/basic.module";
 
 .autoHide {
+  max-height: 170px;
+  overflow-y: auto;
   @include mobile {
     display: none;
   }

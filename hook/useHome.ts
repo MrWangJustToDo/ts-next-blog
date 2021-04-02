@@ -22,7 +22,7 @@ useHome = () => {
   const decreasePage = useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentHomePage, data: currentPage - 1 })), [currentPage]);
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
-  const currentPageBlogs = blogs.slice(currentPage - 1 * pageContentLength, currentPage * pageContentLength);
+  const currentPageBlogs = blogs.slice((currentPage - 1) * pageContentLength, currentPage * pageContentLength);
   return { currentPage, allPage, blogs, currentPageBlogs, increaseAble, decreaseAble, increasePage, decreasePage };
 };
 

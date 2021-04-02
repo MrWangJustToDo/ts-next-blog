@@ -78,6 +78,7 @@ interface PrimaryMessageType {
 }
 
 interface ChildMessageProps {
+  blogId: string;
   primaryCommentId: string;
   commentId: string;
   fromIp: string;
@@ -527,8 +528,8 @@ interface UserExProps {
   collect?: number;
   assent?: number;
   publish?: number;
-  collectIds?: number;
-  assentIds?: number;
+  collectIds?: string;
+  assentIds?: string;
 }
 
 export type { UserExProps, UserHoverItemType };

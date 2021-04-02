@@ -25,7 +25,7 @@ BlogItem = (props) => {
 WithReadBlogItem = (props) => {
   return (
     <Link href={`/blog/${props.blogId}`}>
-      <a className="text-reset text-decoration-none ">
+      <a className="text-reset text-decoration-none">
         <BlogItem {...props} />
       </a>
     </Link>

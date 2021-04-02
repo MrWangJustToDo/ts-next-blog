@@ -25,8 +25,6 @@ BlogContentMessagePut = ({ blogId }) => {
     []
   );
 
-  console.log(transformPath({ apiPath: apiName.primaryMessage, query: { blogId }, needPre: false }));
-
   const successCallback = useCallback(() => mutate(transformPath({ apiPath: apiName.primaryMessage, query: { blogId }, needPre: false })), [blogId]);
 
   const { ref, submit, canSubmit } = usePutToCheckcodeModule<HTMLTextAreaElement>({

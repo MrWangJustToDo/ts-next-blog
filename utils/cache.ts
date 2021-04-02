@@ -1,6 +1,6 @@
 import { log } from "./log";
-import { cancel, delay } from "./delay";
 import { parseToString } from "./data";
+import { cancel, delay } from "./delay";
 
 const maxTimeStore = 1000 * 60 * 10;
 
@@ -63,9 +63,9 @@ class Cache<T, K> {
       log(`force delete data from cache. key: ${key}`, "warn");
     } else {
       if (typeof key === "string") {
-        let newKey = "";
-        if (!key.startsWith("/")) {
-          newKey = "/" + key;
+        let newKey = key as string;
+        if (!newKey.startsWith("/")) {
+          newKey = "/" + newKey;
         }
         if (!newKey.startsWith("/api")) {
           newKey = "/api" + newKey;
@@ -77,7 +77,7 @@ class Cache<T, K> {
           return;
         }
       }
-      log(`error, nothing need to delete. key: ${key}`, "error");
+      log(`error, nothing need to delete. key: ${key}, typeOf key: ${typeof key}`, "error");
     }
   };
 }

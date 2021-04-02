@@ -5,10 +5,10 @@ import { typeHandler } from "./type";
 import { userHandler } from "./user";
 import { messageHandler } from "./message";
 import { blogHandler } from "./blog";
+import { testHandler } from "./test";
 import { fail } from "server/middleware/apiHandler";
 import { Request, Response } from "express";
 
-// const { testHandler } = require("./test");
 
 const allHandler: {[props: string]: Function} = {
   ...imageHandler,
@@ -18,7 +18,7 @@ const allHandler: {[props: string]: Function} = {
   ...userHandler,
   ...blogHandler,
   ...messageHandler,
-  // ...testHandler,
+  ...testHandler,
 };
 
 const apiHandler = async (req: Request, res: Response) => {

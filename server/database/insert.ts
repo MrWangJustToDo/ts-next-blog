@@ -148,6 +148,7 @@ const insertPrimaryComment = async ({
 // 添加子回复
 const insertChildComment = async ({
   db,
+  blogId,
   primaryCommentId,
   commentId,
   fromIp,
@@ -160,7 +161,8 @@ const insertChildComment = async ({
   modifyDate,
 }: ChildMessageProps & { db: Database }) => {
   return await db.run(
-    "INSERT INTO childComment VALUES(?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO childComment VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    blogId,
     primaryCommentId,
     commentId,
     fromIp,

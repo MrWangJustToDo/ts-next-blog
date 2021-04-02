@@ -39,7 +39,7 @@ useTag = (blogs) => {
   const decreasePage = useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentTagPage, data: currentPage - 1 })), [currentPage]);
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
-  const currentPageBlogs = currentBlogs.slice(currentPage - 1 * pageContentLength, currentPage * pageContentLength);
+  const currentPageBlogs = currentBlogs.slice((currentPage - 1) * pageContentLength, currentPage * pageContentLength);
   return {
     tag,
     currentTag,

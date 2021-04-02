@@ -186,7 +186,7 @@ usePublish = ({ request, id }) => {
               .run<ApiRequestResult<string>>(apiName.publishBlog, { userId })
               .then(({ code, data }) => {
                 if (code === 0) {
-                  delay(800, () => router.reload());
+                  delay(800, () => router.push('/'));
                   return success(data.toString());
                 } else {
                   return fail(data.toString());

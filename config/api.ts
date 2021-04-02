@@ -34,6 +34,15 @@ enum apiName {
   deleteTag = "deleteTag", // 删除Tag
   deleteType = "deleteType", // 删除Type
   deleteBlog = "deleteBlog", // 删除blog
+  // test
+  testTag = "testTag",
+  testChild = "testChild",
+  testType = "testType",
+  testUserEx = "testUserEx",
+  testPrimary = "testPrimary",
+  testBlog = "testBlog",
+  testHome = "testHome",
+  testUser = "testUser",
 }
 
 // 需要暂存结果的路径

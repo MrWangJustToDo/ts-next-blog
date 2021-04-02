@@ -15,9 +15,9 @@ const transformObjectValueToArray = (srcObject: { [props: string]: any }) => {
 };
 
 const mergeTypeTagToBlog = (blog: BlogContentProps, type: TypeProps[], tag: TagProps[]) => {
-  const currentType = type.find((it) => Number(blog.typeId) === Number(it.typeId));
-  const currentTagIds = String(blog.tagId).split(",").map(Number);
-  const currentTagArray = tag.filter((it) => currentTagIds.includes(Number(it.tagId)));
+  const currentType = type.find((it) => blog.typeId === it.typeId);
+  const currentTagIds = (<unknown>blog.tagId as string).split(",");
+  const currentTagArray = tag.filter((it) => currentTagIds.includes(it.tagId!));
   let currentTag;
   if (currentTagArray.length > 1) {
     const head = currentTagArray.pop();

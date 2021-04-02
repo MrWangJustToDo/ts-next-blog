@@ -39,7 +39,7 @@ const publishBlogAction = autoRequestHandler({
     const tagIdArr = tagId.split(",");
     for (let id of tagIdArr) {
       const tag = await getTagByTagId({ db: req.db!, tagId: id });
-      await updateTagCountByTagId({ db: req.db!, tagId, count: tag.tagCount + 1 });
+      await updateTagCountByTagId({ db: req.db!, tagId: id, count: tag.tagCount + 1 });
     }
     // 增加blog
     const now = new Date();

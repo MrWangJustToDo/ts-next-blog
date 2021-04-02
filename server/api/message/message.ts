@@ -86,13 +86,26 @@ const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
 // 发布子评论
 const publishChildMessageByPrimaryIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const { primaryCommentId, commentId, fromUserId, toIp, toUserId, content } = req.body;
+    const { primaryCommentId, blogId, commentId, fromUserId, toIp, toUserId, content } = req.body;
     const now = new Date();
     const fromIp = req.ip;
     const createDate = now.toLocaleString();
     const modifyState = 0;
     const modifyDate = now.toLocaleString();
-    await insertChildComment({ db: req.db!, primaryCommentId, commentId, fromIp, fromUserId, toIp, toUserId, content, createDate, modifyState, modifyDate });
+    await insertChildComment({
+      db: req.db!,
+      blogId,
+      primaryCommentId,
+      commentId,
+      fromIp,
+      fromUserId,
+      toIp,
+      toUserId,
+      content,
+      createDate,
+      modifyState,
+      modifyDate,
+    });
     success({ res, resDate: { state: "回复留言成功", data: `时间：${createDate}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>

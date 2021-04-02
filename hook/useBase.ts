@@ -31,7 +31,7 @@ useBasePage = <T>(props: UseBasePageProps<T> = {}) => {
   const decreasePage = useCallback(() => setCurrentPage((lastPage) => lastPage - 1), []);
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
-  const currentPageData = allData?.slice(currentPage - 1 * pageLength, currentPage * pageLength);
+  const currentPageData = allData?.slice((currentPage - 1) * pageLength, currentPage * pageLength);
   if (allPage > 0 && currentPage > allPage) {
     setCurrentPage(allPage);
   }
