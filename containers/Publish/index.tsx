@@ -13,11 +13,10 @@ import { SimpleElement } from "types/components";
 let Publish: SimpleElement;
 
 Publish = () => {
-
   const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true } }), []);
 
   const [ref, submit] = usePublish({ request, id: editorId });
-  
+
   return (
     <div className="card mx-lg-4 border-0">
       <form ref={ref}>

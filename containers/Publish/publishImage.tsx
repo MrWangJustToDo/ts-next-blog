@@ -9,14 +9,13 @@ import style from "./index.module.scss";
 let PublishImage: SimpleElement;
 
 PublishImage = () => {
-
   const [val, setVal] = useState<string>("");
 
   const click = useInputToImageModule({
     appendHandler: setVal,
     body: (appendHandler) => (closeHandler) => <PublishImageModule closeHandler={closeHandler} appendHandler={appendHandler} />,
   });
-  
+
   const typeClick = useCallback<(e: ChangeEvent<HTMLInputElement>) => void>((e) => setVal(e.target.value), []);
   return (
     <div className="input-group mb-3 position-relative">

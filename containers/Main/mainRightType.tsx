@@ -3,14 +3,13 @@ import MainRightHead from "components/CardHead";
 import MainRightTypeItem from "./mainRightTypeItem";
 import { mainRightHeader } from "config/hoom";
 import { apiName } from "config/api";
-import useType from "hook/useType";
+import { useType } from "hook/useType";
 import { TypeProps } from "types/hook";
 import { MainRightTypeType } from "types/containers";
 
 let MainRightType: MainRightTypeType;
 
 MainRightType = ({ index }) => {
-
   const { type, changeCurrentType } = useType();
 
   const { icon, content, hrefTo } = mainRightHeader[index];

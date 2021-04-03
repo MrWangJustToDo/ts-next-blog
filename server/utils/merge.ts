@@ -1,4 +1,5 @@
 import mergeWith from "lodash/mergeWith";
+import cloneDeep from 'lodash/cloneDeep';
 import { TagProps } from "types/containers";
 import { BlogContentProps, TypeProps } from "types/hook";
 
@@ -15,9 +16,11 @@ const transformObjectValueToArray = (srcObject: { [props: string]: any }) => {
 };
 
 const mergeTypeTagToBlog = (blog: BlogContentProps, type: TypeProps[], tag: TagProps[]) => {
-  const currentType = type.find((it) => blog.typeId === it.typeId);
-  const currentTagIds = (<unknown>blog.tagId as string).split(",");
-  const currentTagArray = tag.filter((it) => currentTagIds.includes(it.tagId!));
+  const currentTagArr = cloneDeep(tag);
+  const currentTypeArr = cloneDeep(type);
+  const currentType = currentTypeArr.find((it) => String(blog.typeId) === String(it.typeId));
+  const currentTagIds = ((<unknown>blog.tagId) as string).split(",");
+  const currentTagArray = currentTagArr.filter((it) => currentTagIds.includes(String(it.tagId!)));
   let currentTag;
   if (currentTagArray.length > 1) {
     const head = currentTagArray.pop();

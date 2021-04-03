@@ -7,11 +7,10 @@ import { MainRightCommendType } from "types/containers";
 let MainRightCommend: MainRightCommendType;
 
 MainRightCommend = ({ index }) => {
-  
   const { commendBlogs } = useCommend();
 
   const { icon, content, hrefTo } = mainRightHeader[index];
-  
+
   return (
     <div className="card mt-4">
       <MainRightHead icon={icon!} content={content!} hrefTo={hrefTo!} />

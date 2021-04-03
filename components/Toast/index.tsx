@@ -11,13 +11,17 @@ let Toast: ToastType;
 
 Toast = ({ title, currentTime, contentState, content, showState = false, closeHandler, autoCloseSecond = 0 }) => {
   const [currentTimeString, setCurrentTimeString] = useState(momentTo(currentTime || new Date()));
+
   useAutoActionHandler({ delayTime: 60 * 1000, action: () => setCurrentTimeString(momentTo(currentTime || new Date())), timmer: true, once: false });
+
   useAutoActionHandler({ delayTime: autoCloseSecond, action: closeHandler!, timmer: autoCloseSecond > 0, once: true });
+
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: showState,
     showClassName: "animate__fadeInRight",
     hideClassName: "animate__fadeOutRight",
   });
+  
   return (
     <div ref={ref} className={getClass("toast user-select-none", style.toast)} style={{ display: "none" }}>
       <div className={getClass("toast-header p-md-2", flexBetween)}>

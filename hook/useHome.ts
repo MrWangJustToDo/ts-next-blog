@@ -23,6 +23,9 @@ useHome = () => {
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
   const currentPageBlogs = blogs.slice((currentPage - 1) * pageContentLength, currentPage * pageContentLength);
+  if (allPage > 0 && currentPage > allPage) {
+    setDataSucess_client({ name: actionName.currentHomePage, data: allPage });
+  }
   return { currentPage, allPage, blogs, currentPageBlogs, increaseAble, decreaseAble, increasePage, decreasePage };
 };
 

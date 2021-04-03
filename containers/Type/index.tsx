@@ -10,9 +10,8 @@ import { SimpleElement } from "types/components";
 let Type: SimpleElement;
 
 Type = () => {
-
   const { blogs } = useHome();
-  
+
   return (
     <>
       <TypeHead />

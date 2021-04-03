@@ -10,6 +10,7 @@ let HeadContainerList: HeadContainerListType;
 
 HeadContainerList = ({ show }) => {
   const { ref, height } = useAutoSetHeaderHeight<HTMLUListElement>(992);
+  
   return (
     <div className="navbar-collapse ml-lg-4">
       <ul className={getClass(style.transHeight, "navbar-nav mr-auto")} style={{ height: `${show ? height : 0}px` }} ref={ref}>

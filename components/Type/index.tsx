@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import useType from "hook/useType";
+import { useType } from "hook/useType";
 import { getClass } from "utils/class";
 import { TypeType } from "types/components";
 
@@ -18,7 +18,9 @@ Type = ({ typeCount, typeContent, className = "", hoverAble = true }) => {
 
 WithChangeType = ({ typeCount, typeContent, className }) => {
   const { changeCurrentType } = useType();
+
   const changeType = useCallback(() => changeCurrentType(typeContent), []);
+
   return (
     <div onClick={changeType}>
       <Type {...{ typeContent, typeCount, className }} />

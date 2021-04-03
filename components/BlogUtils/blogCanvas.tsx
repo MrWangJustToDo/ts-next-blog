@@ -10,7 +10,9 @@ let BlogCanvas: SimpleElement;
 
 BlogCanvas = () => {
   const canvasRef = useLinkToImg<HTMLCanvasElement>();
+
   const { bool, switchBoolState } = useBool();
+
   useShowAndHideAnimate<HTMLCanvasElement>({
     key: "blogMenu",
     state: bool,
@@ -18,9 +20,10 @@ BlogCanvas = () => {
     showClassName: "animate__fadeIn",
     hideClassName: "animate__fadeOut",
   });
+
   return (
     <>
-      <button type="button" className="btn btn-secondary" onClick={switchBoolState} data-show={bool}>
+      <button type="button" className="btn btn-secondary" onClick={switchBoolState}>
         <i className="ri-smartphone-line" />
       </button>
       <canvas ref={canvasRef} className={getClass("position-absolute border rounded", style.canvasContent)} style={{ display: "none" }} />

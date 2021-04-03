@@ -1,28 +1,38 @@
 import Link from "next/link";
 import { useBool } from "hook/useData";
+import { useRouter } from "next/dist/client/router";
 import { useCurrentUser, useLogout } from "hook/useUser";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { getCurrentAvatar } from "utils/data";
-import { flexCenter, getClass } from "utils/class";
-import { SimpleElement } from "types/components";
+import { animateFadein, flexCenter, getClass } from "utils/class";
 
 import style from "./index.module.scss";
+import { useCallback } from "react";
 
-let HeadContainerUser: SimpleElement;
+const HeadContainerUser = () => {
+  const router = useRouter();
 
-HeadContainerUser = () => {
-  const logoutCallback = useLogout();
+  const logout = useLogout();
+
   const { username, avatar, gender, userId } = useCurrentUser();
+
   const { bool, switchBoolThrottle, hideDebounceState } = useBool();
+
+  const logoutCallback = useCallback(() => {
+    logout();
+    hideDebounceState();
+  }, [logout, hideDebounceState]);
+
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: bool,
     key: "admin",
     showClassName: "animate__flipInX",
     hideClassName: "animate__flipOutX",
   });
+
   return userId ? (
     <div className={getClass("d-inline-block", style.headUser, bool ? style.headUserActive : "")}>
-      <div className={getClass("bg-dark", flexCenter, style.userPanel)} onClick={switchBoolThrottle}>
+      <div className={getClass("bg-dark", animateFadein, flexCenter, style.userPanel)} onClick={switchBoolThrottle}>
         <img className="rounded-circle" src={getCurrentAvatar(avatar, gender)} alt="头像" height="30" width="30" />
         <span className={getClass("mx-2 text-info", style.username)}>{username}</span>
       </div>
@@ -39,20 +49,20 @@ HeadContainerUser = () => {
               管理
             </a>
           </Link>
-          <div className="small text-info text-decoration-none text-nowrap cursor-pointer" onClick={logoutCallback}>
+          <a className="small text-info text-decoration-none text-nowrap cursor-pointer" onClick={logoutCallback}>
             退出
-          </div>
+          </a>
         </div>
       </div>
     </div>
-  ) : (
+  ) : router.pathname !== "/login" ? (
     <Link href="/login">
       <a className={getClass("text-info", style.login, flexCenter)}>
         <i className="ri-arrow-right-line" />
         <span className="ml-1 ml-md-2">去登录</span>
       </a>
     </Link>
-  );
+  ) : null;
 };
 
 export default HeadContainerUser;

@@ -8,6 +8,7 @@ let CheckBox: CheckBoxType;
 
 CheckBox = ({ fieldName, style, type = "radio", init, className = "" }) => {
   const { bool, switchBoolState } = useBool({ init });
+  
   return (
     <div className={getClass(className)} style={style}>
       <div className={getClass(styleCss.checkbox, bool ? styleCss.checked : "")} onClick={switchBoolState} />

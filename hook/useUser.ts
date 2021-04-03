@@ -94,18 +94,24 @@ useLogout = () => {
   const { state, dispatch } = useCurrentState();
   const user = state.client[actionName.currentUser]["data"] as UserProps;
   const logoutCallback = useCallback(() => {
-    return logoutRequest
-      .run<ApiRequestResult<string>>(apiName.logout)
-      .then(({ code, state }) => {
-        if (code === 0) {
-          dispatch(setDataSucess_client({ name: actionName.currentUser, data: {} }));
-          successToast("登出成功，即将返回首页");
-          delay(1000, () => router.push("/"));
-        } else {
-          failToast(`登出失败：${state}`);
-        }
-      })
-      .catch((e) => failToast(`出现错误：${e.toString()}`));
+    if (user.userId) {
+      return delay<void>(100, () =>
+        logoutRequest
+          .run<ApiRequestResult<string>>(apiName.logout)
+          .then(({ code, state }) => {
+            if (code === 0) {
+              dispatch(setDataSucess_client({ name: actionName.currentUser, data: {} }));
+              successToast("登出成功，即将返回首页");
+              delay(1000, () => router.push("/"));
+            } else {
+              failToast(`登出失败：${state}`);
+            }
+          })
+          .catch((e) => failToast(`出现错误：${e.toString()}`))
+      );
+    } else {
+      return failToast(`当前未登录`);
+    }
   }, [user]);
   return logoutCallback;
 };

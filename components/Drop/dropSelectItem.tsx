@@ -16,6 +16,7 @@ DropSelectItem = ({ idx, name, value, cacel, multiple }) => {
     },
     [multiple]
   );
+  
   return (
     <span
       onClick={cacelCallback}

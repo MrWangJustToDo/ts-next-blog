@@ -12,8 +12,11 @@ let BlogUtils: SimpleElement;
 
 BlogUtils = () => {
   const divRef = useAutoShowAndHide<HTMLDivElement>(360);
+
   const topRef = useAutoScrollTop<HTMLButtonElement>();
+
   const bottomRef = useAutoScrollBottom<HTMLButtonElement>();
+
   return (
     <div ref={divRef} className={getClass("btn-group-vertical position-fixed", style.btnsPosition)} style={{ display: "none" }}>
       <BlogMenu />

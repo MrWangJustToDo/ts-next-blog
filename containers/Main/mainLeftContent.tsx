@@ -5,9 +5,8 @@ import { SimpleElement } from "types/components";
 let MainLeftContent: SimpleElement;
 
 MainLeftContent = () => {
-
   const { currentPageBlogs } = useHome();
-  
+
   return (
     <>
       {currentPageBlogs.map((props) => (

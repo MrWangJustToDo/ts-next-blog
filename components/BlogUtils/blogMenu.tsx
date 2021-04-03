@@ -10,16 +10,19 @@ let BlogMenu: SimpleElement;
 
 BlogMenu = () => {
   const seted = useBlogMenu(".blog-content");
+
   const { bool, switchBoolThrottle } = useBool();
+
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: bool && seted,
     key: "blogMenu",
     showClassName: "animate__lightSpeedInRight",
     hideClassName: "animate__lightSpeedOutRight",
   });
+
   return (
     <>
-      <button type="button" className="btn btn-info" onClick={switchBoolThrottle} data-show={bool && seted}>
+      <button type="button" className="btn btn-info" onClick={switchBoolThrottle}>
         目录
       </button>
       <div ref={ref} className={getClass("position-absolute mb-2 py-1 border rounded", style.menuContent)} style={{ display: "none" }}>

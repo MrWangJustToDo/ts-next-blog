@@ -10,6 +10,7 @@ const Footer = dynamic(() => import("../Footer"));
 
 const Layout = ({ title, container = true, children }: { title?: string; container: boolean; children?: object }): JSX.Element => {
   useAutoLogin();
+
   const withModuleChildren = (
     <ModuleManager
       children={
@@ -23,6 +24,7 @@ const Layout = ({ title, container = true, children }: { title?: string; contain
       }
     />
   );
+  
   return (
     <>
       <LoadingBar />

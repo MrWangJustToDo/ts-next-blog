@@ -6,6 +6,7 @@ let BlogItemLeft: BlogItemType;
 
 BlogItemLeft = (props) => {
   const { blogTitle, typeContent, blogPreview } = props;
+  
   return (
     <div className="col-lg-8">
       <h5 className={getClass("card-title font-weight-bold", flexBetween)}>

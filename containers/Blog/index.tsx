@@ -12,17 +12,16 @@ let Blog: BlogContentType;
 const BlogContentMessage = dynamic(() => import("./blogContentMessage"));
 
 Blog = (props) => {
+  const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId, blogOriginState, blogPriseState } = props;
 
-  const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId } = props;
-  
   return (
     <div className="card user-select-none">
       <BlogHead {...props} />
       <ul className="list-group list-group-flush">
         <BlogContentImg src={blogImgLink!} />
-        <BlogContentType_Tag typeContent={typeContent} tagContent={tagContent} />
+        <BlogContentType_Tag typeContent={typeContent} tagContent={tagContent} blogOriginState={blogOriginState} />
         <BlogContentBody blogTitle={blogTitle} blogContent={blogContent} />
-        <BlogContentLike blogId={blogId} />
+        <BlogContentLike blogId={blogId} blogPriseState={blogPriseState} />
         <BlogContentMessage blogId={blogId!} />
         <BlogContentMessagePut blogId={blogId!} />
       </ul>

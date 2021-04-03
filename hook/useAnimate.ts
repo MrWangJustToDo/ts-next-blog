@@ -27,11 +27,17 @@ useShowAndHideAnimate = <T extends HTMLElement>({
         () => actionHandler<T, void, void>(currentRef.current, (ele) => ele.classList.add(hideClassName)),
         key
       )
-        .then(() => delay<void>(delayTime, () => actionHandler<T, void, void>(currentRef.current, (ele) => (ele.style.display = "none")), key))
+        .then(() =>
+          delay<void>(
+            delayTime,
+            () => actionHandler<T, void, void>(currentRef.current, (ele) => ((ele.style.display = "none"), (ele.dataset.show = "false"))),
+            key
+          )
+        )
         .then(() => actionHandler<T, void, void>(currentRef.current, (ele) => ele.classList.remove(hideClassName)));
     } else {
       // show
-      delay<void>(0, () => actionHandler<T, void, void>(currentRef.current, (ele) => (ele.style.display = "block")), key)
+      delay<void>(0, () => actionHandler<T, void, void>(currentRef.current, (ele) => ((ele.style.display = "block"), (ele.dataset.show = "true"))), key)
         .then(() => actionHandler<T, void, void>(currentRef.current, (ele) => ele.classList.add(showClassName)))
         .then(() =>
           delay<void>(

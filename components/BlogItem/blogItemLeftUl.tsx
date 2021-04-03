@@ -13,7 +13,9 @@ let BlogItemLeftUl: BlogItemType;
 
 BlogItemLeftUl = (props) => {
   const { blogAssentCount, blogCollectCount, blogReadCount, avatar, gender, username } = props;
+
   const arr = [blogAssentCount, blogCollectCount, blogReadCount];
+  
   return (
     <ul className={getClass(style.ulStyle, "list-unstyled d-table text-center mb-3 mb-lg-0")}>
       <li className="d-table-cell align-middle">

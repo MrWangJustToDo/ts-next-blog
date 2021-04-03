@@ -1,5 +1,5 @@
 import PageFoot from "components/PageFoot";
-import useType from "hook/useType";
+import { useType } from "hook/useType";
 import { TypeContentType } from "types/containers";
 
 let TypeFoot: TypeContentType;

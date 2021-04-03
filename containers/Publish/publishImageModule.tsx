@@ -12,7 +12,6 @@ import { actionHandler } from "utils/action";
 let PublishImageModule: PublishImageModuleType;
 
 PublishImageModule = ({ closeHandler, appendHandler }) => {
-  
   const [ref, bool] = useAutoLoadRandomImg(apiName.image);
 
   useShowAndHideAnimate<HTMLImageElement>({ state: bool, forWardRef: ref, key: "imgPreview" });
@@ -20,7 +19,7 @@ PublishImageModule = ({ closeHandler, appendHandler }) => {
   const clickCallback = useCallback(() => {
     actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => appendHandler(ele.src));
     closeHandler();
-  }, []);
+  }, [closeHandler]);
 
   return (
     <div className="container">

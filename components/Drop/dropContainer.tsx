@@ -8,6 +8,7 @@ let DropContainer: DropContainerType;
 
 DropContainer = ({ bool, children, length, maxHeight }) => {
   const [ref, height] = useAutoSetHeight<HTMLDivElement>({ deps: [length], maxHeight });
+  
   return (
     <div
       ref={ref}

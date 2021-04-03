@@ -14,8 +14,11 @@ let Login: SimpleElement;
 
 Login = () => {
   const formRef = useLogin();
+
   const [username, setUsername] = useState<boolean>(false);
+
   const [password, setPassword] = useState<boolean>(false);
+
   return (
     <div className={getClass("rounded my-4 my-lg-5 px-3 overflow-auto user-select-none", style.loginForm)}>
       <Link href="/">

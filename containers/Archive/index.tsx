@@ -8,8 +8,9 @@ let Archive: SimpleElement;
 
 Archive = () => {
   const { value, canLoad, loadMore } = useArchive();
+
   useAutoLoadArchive({ canLoad, loadMore, breakPoint: 600 });
-  console.log(value);
+
   return (
     <>
       <ArchiveHead />

@@ -5,9 +5,8 @@ import { flexBetween, getClass } from "utils/class";
 let MainLeftHead: SimpleElement;
 
 MainLeftHead = () => {
-
   let { allPage } = useHome();
-  
+
   return (
     <h5 className={getClass("card-header bg-transparent text-info", flexBetween)}>
       <span>博客</span>

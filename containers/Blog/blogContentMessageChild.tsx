@@ -16,9 +16,8 @@ let BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType;
 let BlogContentChildMessage: BlogContentChildMessageType;
 
 BlogContentChildMessageWithReplay = ({ messages, replay }) => {
-
   const { messageProps, more, loadMore } = useChildMessage(messages);
-  
+
   return (
     <>
       {messageProps.map((item, index) => (
@@ -37,7 +36,6 @@ BlogContentChildMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentChildMessage = ({ messages }) => {
-
   const request = useMemo(() => createRequest({ method: "post", path: apiName.putChildMessage }), []);
 
   const body = useCallback<(request: AutoRequestType) => (props: ChildMessageProps) => (closeHandler: () => void) => JSX.Element>(

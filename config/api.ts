@@ -60,13 +60,13 @@ const accessApi: AccessType = {
   [apiName.captcha]: { disable: false, token: false },
   [apiName.captchaStr]: { disable: false, token: false },
   // 首页信息
-  [apiName.home]: { disable: false, token: false },
+  [apiName.home]: { disable: false, token: false, config: { cache: { needCache: true } } },
   [apiName.user]: { disable: false, token: false },
   [apiName.userEx]: { disable: false, token: true },
   [apiName.tag]: { disable: false, token: false },
   [apiName.type]: { disable: false, token: false },
   // 博客信息
-  [apiName.blog]: { disable: false, token: false },
+  [apiName.blog]: { disable: false, token: false, config: { cache: { needCache: true } } },
   [apiName.childMessage]: { disable: false, token: false },
   [apiName.primaryMessage]: { disable: false, token: false },
   [apiName.putChildMessage]: { disable: false, token: false, method: "post" },

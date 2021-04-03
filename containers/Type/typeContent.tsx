@@ -1,7 +1,7 @@
 import LoadRender from "components/LoadRender";
 import { PrimaryMessage } from "components/BlogMessage";
 import { WithReadBlogItem as TypeContentItem } from "components/BlogItem";
-import useType from "hook/useType";
+import { useType } from "hook/useType";
 import { apiName } from "config/api";
 import { flexCenter, getClass } from "utils/class";
 import { TypeContentType } from "types/containers";

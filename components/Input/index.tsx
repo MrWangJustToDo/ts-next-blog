@@ -29,11 +29,13 @@ Input = ({
     failClassName: failClassName || style.fail,
     loadingClassName: loadingClassName || getClass("spinner-border spinner-border-sm text-info", style.loading),
   });
+
   useEffect(() => {
     if (changeState && typeof changeState === "function") {
       changeState(bool);
     }
   }, [changeState, bool]);
+  
   return (
     <div className={getClass("position-relative", outerClassName)}>
       <input ref={ref} className={getClass("form-control", innerClassName)} name={name} type={type || "text"} placeholder={placeHolder} data-check={bool} />

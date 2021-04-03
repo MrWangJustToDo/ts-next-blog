@@ -26,10 +26,10 @@ PrimaryMessage = (props) => {
     withChildren = true,
   } = props;
 
-  const replayCallback = useCallback(() => replayHandler(props), [props]);
+  const replayCallback = useCallback(() => typeof replayHandler === "function" && replayHandler(props), [props]);
 
   const src = useMemo(() => getCurrentAvatar(avatar, gender), [avatar, gender]);
-  
+
   return (
     <div className="media py-2">
       {withHover ? (

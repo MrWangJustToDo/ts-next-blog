@@ -14,6 +14,7 @@ let WithWriteBlogItem: BlogItemType;
 
 BlogItem = (props) => {
   const { blogImgLink, className = "", _style = {} } = props;
+  
   return (
     <div className={getClass("card-body row flex-wrap-reverse border-bottom", flexAround, style.blogItem, className)} style={_style}>
       <BlogItemLeft {...props} />
@@ -25,7 +26,7 @@ BlogItem = (props) => {
 WithReadBlogItem = (props) => {
   return (
     <Link href={`/blog/${props.blogId}`}>
-      <a className="text-reset text-decoration-none">
+      <a className="text-reset text-decoration-none d-block h-100">
         <BlogItem {...props} />
       </a>
     </Link>
@@ -35,7 +36,7 @@ WithReadBlogItem = (props) => {
 WithWriteBlogItem = (props) => {
   return (
     <Link href={`/editor/${props.blogId}`}>
-      <a className="text-reset text-decoration-none">
+      <a className="text-reset text-decoration-none d-block h-100">
         <BlogItem {...props} />
       </a>
     </Link>

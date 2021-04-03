@@ -8,10 +8,12 @@ let Button: ButtonType;
 
 Button = ({ request, type = "button", disable = false, value = "确定", initState = true, className = "", style = {}, loadingColor }) => {
   const { bool, show, hide } = useBool({ init: initState });
+
   const requestCallback = useCallback(() => {
     hide();
     request().then(show).catch(show);
   }, [request]);
+  
   return (
     <button
       className={getClass("btn position-relative", flexCenter, className)}

@@ -1,4 +1,4 @@
-import useType from "hook/useType";
+import { useType } from "hook/useType";
 import { WithChangeType as TypeItem } from "components/Type";
 import { flexBetween, flexCenter, getClass } from "utils/class";
 import { SimpleElement } from "types/components";

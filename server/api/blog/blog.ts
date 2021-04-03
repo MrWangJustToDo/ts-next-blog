@@ -60,7 +60,7 @@ const publishBlogAction = autoRequestHandler({
       authorId,
       blogId: blogIdStr,
       blogState,
-      blogOriginState,
+      blogOriginState: Number(blogOriginState),
       blogTitle,
       blogImgLink,
       blogCreateDate,

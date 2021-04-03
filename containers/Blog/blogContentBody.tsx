@@ -5,7 +5,7 @@ import { BlogContentType } from "types/containers";
 let BlogContentBody: BlogContentType;
 
 BlogContentBody = ({ blogTitle, blogContent }) => {
-  const html = useMemo(() => mark.render(blogContent || ""), [mark, blogContent]);
+  const html = useMemo(() => mark.render(blogContent || ""), [blogContent]);
   const content = mark.render(
     `## 手把手教你写一个markdown编辑器
 
@@ -192,7 +192,7 @@ export default class Demo extends React.Component {
       <div className="card-body typo">
         <h1 className="font-weight-bold text-center">{blogTitle}</h1>
         <br />
-        <div className="blog-content" dangerouslySetInnerHTML={{ __html: content }} />
+        <div className="blog-content" dangerouslySetInnerHTML={{ __html: html }} />
       </div>
     </li>
   );

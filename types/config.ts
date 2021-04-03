@@ -120,9 +120,9 @@ interface LoginType {
 export type { InputProps, LoginType };
 
 /* BlogOrigin */
-type BlogOriginProps = Array<{ name?: string; value: number }>;
+type BlogOriginProps = Array<{ name?: string; value: string }>;
 
-type BlogStateType = Array<{ fieldName: string; name: string; value: number | BlogOriginProps }>;
+type BlogStateType = Array<{ fieldName: string; name: string; value: string | BlogOriginProps }>;
 
 export type { BlogOriginProps, BlogStateType };
 

@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from "react";
+import { AnyAction } from "redux";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { pageContentLength } from "config/type&tag";
@@ -15,6 +16,14 @@ let autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Func
       changeCurrentTag(tag[0].tagContent);
     }
   }, [currentTag, changeCurrentTag, tag]);
+};
+
+let autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
+  useEffect(() => {
+    if (allPage > 0 && currentPage > allPage) {
+      dispatch(setDataSucess_client({ name: actionName.currentTagPage, data: allPage }));
+    }
+  }, [allPage, currentPage]);
 };
 
 useTag = (blogs) => {
@@ -39,6 +48,7 @@ useTag = (blogs) => {
   const decreasePage = useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentTagPage, data: currentPage - 1 })), [currentPage]);
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
+  autoChangePage(allPage, currentPage, dispatch);
   const currentPageBlogs = currentBlogs.slice((currentPage - 1) * pageContentLength, currentPage * pageContentLength);
   return {
     tag,
