@@ -2,11 +2,11 @@ import Drop from "components/Drop";
 import LoadRender from "components/LoadRender";
 import { apiName } from "config/api";
 import { TypeProps } from "types/hook";
-import { SimpleElement } from "types/components";
+import { BlogContentType } from "types/containers";
 
-let PublishType: SimpleElement;
+let PublishType: BlogContentType;
 
-PublishType = () => {
+PublishType = ({ typeId }) => {
   return (
     <div className="input-group col">
       <div className="input-group-prepend text-center">
@@ -24,7 +24,8 @@ PublishType = () => {
           const data: { name?: string; value: string }[] = res.map(({ typeContent, typeId }) => {
             return { name: typeContent, value: typeId! };
           });
-          return <Drop<string> fieldName="typeId" className="form-control" placeHolder="添加分类" data={data} />;
+          const init = typeId !== undefined && data.length ? [typeId].map((it) => data.findIndex(({ value }) => value === it)) : [];
+          return <Drop<string> fieldName="typeId" className="form-control" placeHolder="添加分类" data={data} initData={init} />;
         }}
       />
     </div>

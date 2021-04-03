@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { useEditor } from "hook/useBlog";
 import { getClass } from "utils/class";
 import { markNOLineNumber } from "utils/markdown";
-import { PublishEditorType } from "types/containers";
+import { BlogContentType } from "types/containers";
 
 import style from "./index.module.scss";
 import "react-markdown-editor-lite/lib/index.css";
@@ -11,16 +11,22 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
 });
 
-let PublishEditor: PublishEditorType;
+let PublishEditor: BlogContentType;
 
-PublishEditor = ({ id }) => {
+PublishEditor = ({ blogId, blogContent = "" }) => {
   if (process.browser) {
-    useEditor(id);
+    useEditor(blogId!);
   }
 
   return (
     <div className={getClass("mb-3", style.editor)}>
-      <MdEditor id={id} name="blogContent" renderHTML={(text) => markNOLineNumber.render(text)} style={{ minHeight: "90vh", borderRadius: "3px" }} />
+      <MdEditor
+        id={`editor_${blogId}`}
+        value={blogContent}
+        name="blogContent"
+        renderHTML={(text) => markNOLineNumber.render(text)}
+        style={{ minHeight: "90vh", borderRadius: "3px" }}
+      />
     </div>
   );
 };

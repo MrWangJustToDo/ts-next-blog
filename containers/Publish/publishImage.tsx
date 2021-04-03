@@ -1,22 +1,31 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, RefObject, useCallback, useRef, useState } from "react";
 import { getClass } from "utils/class";
 import { useInputToImageModule } from "hook/useBlog";
 import PublishImageModule from "./publishImageModule";
-import { SimpleElement } from "types/components";
+import { BlogContentType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let PublishImage: SimpleElement;
+let PublishImage: BlogContentType;
 
-PublishImage = () => {
-  const [val, setVal] = useState<string>("");
+PublishImage = ({ blogImgLink }) => {
+  const ref = useRef<HTMLInputElement>(null);
+
+  const [val, setVal] = useState<string>(blogImgLink || "");
+
+  const body = useCallback<(appendHandler: (props: string) => void) => (ref: RefObject<HTMLInputElement>) => (closeHandler: () => void) => JSX.Element>(
+    (appendHandler) => (ref) => (closeHandler) => <PublishImageModule closeHandler={closeHandler} appendHandler={appendHandler} inputRef={ref} />,
+    []
+  );
 
   const click = useInputToImageModule({
+    inputRef: ref,
     appendHandler: setVal,
-    body: (appendHandler) => (closeHandler) => <PublishImageModule closeHandler={closeHandler} appendHandler={appendHandler} />,
+    body,
   });
 
   const typeClick = useCallback<(e: ChangeEvent<HTMLInputElement>) => void>((e) => setVal(e.target.value), []);
+
   return (
     <div className="input-group mb-3 position-relative">
       <div className="input-group-prepend text-center">
@@ -30,7 +39,7 @@ PublishImage = () => {
       <button type="button" className={getClass("position-absolute btn btn-info btn-sm", style.btn)} onClick={click}>
         选择图片
       </button>
-      <input type="text" value={val} onChange={typeClick} name="blogImgLink" className="form-control shadow-none" placeholder="文章首图" />
+      <input ref={ref} type="text" value={val} onChange={typeClick} name="blogImgLink" className="form-control shadow-none" placeholder="文章首图" />
     </div>
   );
 };

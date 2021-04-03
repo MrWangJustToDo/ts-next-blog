@@ -54,7 +54,7 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentPrimaryMessage = ({ messages }) => {
-  const request = useMemo(() => createRequest({ method: "post", path: apiName.putPrimaryMessage }), []);
+  const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.putPrimaryMessage }), []);
 
   const body = useCallback<(request: AutoRequestType) => (props: PrimaryMessageProps) => (closeHandler: () => void) => JSX.Element>(
     (request) => (props) => (closeHandler) => (

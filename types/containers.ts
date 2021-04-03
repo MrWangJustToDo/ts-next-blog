@@ -185,15 +185,9 @@ interface TagContentType {
 export type { TagContentType };
 
 /* === Publish === */
-/* publishEditor */
-interface PublishEditorType {
-  (props: { id: string }): JSX.Element;
-}
-
-export type { PublishEditorType };
-
 /* publishImageModule */
 interface PublishImageModuleProps {
+  inputRef: RefObject<HTMLInputElement>;
   closeHandler: () => void;
   appendHandler: (url: string) => void;
 }

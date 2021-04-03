@@ -36,7 +36,7 @@ BlogContentChildMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentChildMessage = ({ messages }) => {
-  const request = useMemo(() => createRequest({ method: "post", path: apiName.putChildMessage }), []);
+  const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.putChildMessage }), []);
 
   const body = useCallback<(request: AutoRequestType) => (props: ChildMessageProps) => (closeHandler: () => void) => JSX.Element>(
     (request) => (props) => (closeHandler) => (

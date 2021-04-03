@@ -192,7 +192,7 @@ useAutoSetHeight = <T extends HTMLElement>(props: UseAutoSetHeightProps<T> = {})
   return [currentRef, height];
 };
 
-useAutoLoadRandomImg = (apiName) => {
+useAutoLoadRandomImg = ({ imgUrl, initUrl }) => {
   const fail = useFailToast();
   const { bool, show, hide } = useBool();
   const ref = useRef<HTMLImageElement>(null);
@@ -201,7 +201,7 @@ useAutoLoadRandomImg = (apiName) => {
       () => {
         hide();
         const getImgUrl = () =>
-          createRequest({ apiPath: apiName, header: { apiToken: true } })
+          createRequest({ apiPath: imgUrl, header: { apiToken: true } })
             .run<ApiRequestResult<string>>()
             .then(({ data }) => {
               if (Array.isArray(data)) {
@@ -222,27 +222,33 @@ useAutoLoadRandomImg = (apiName) => {
       800,
       { leading: true }
     ),
-    [apiName]
+    [imgUrl]
   );
+
   const addListenerCallback = useCallback<(action: () => void) => void>(
-    (action) =>
-      actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => {
-        ele.addEventListener("load", show);
-        ele.addEventListener("click", action);
-      }),
+    (action) => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
     []
   );
+
   const removeListenerCallback = useCallback<(action: () => void) => void>(
-    (action) =>
-      actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => {
-        ele.removeEventListener("load", show);
-        ele.removeEventListener("click", action);
-      }),
+    (action) => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
     []
   );
+
+  useEffect(() => {
+    if (initUrl) {
+      actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => (ele.src = initUrl));
+    }
+  }, [initUrl]);
+
+  useEffect(() => {
+    actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.addEventListener("load", show));
+    () => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.removeEventListener("load", show));
+  }, []);
+
   useAutoActionHandler({
     action: loadSrc,
-    rightNow: true,
+    rightNow: initUrl ? false : true,
     addListener: addListenerCallback,
     removeListener: removeListenerCallback,
   });

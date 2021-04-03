@@ -3,6 +3,7 @@ import { SagaStore } from "store";
 import { ServerResponse } from "http";
 import { IncomingMessage } from "http";
 import { Method } from "axios";
+import { BlogContentProps } from "./hook";
 import { CacheConfigProps, UserConfigProps } from "./server";
 
 /* api */
@@ -122,7 +123,7 @@ export type { InputProps, LoginType };
 /* BlogOrigin */
 type BlogOriginProps = Array<{ name?: string; value: string }>;
 
-type BlogStateType = Array<{ fieldName: string; name: string; value: string | BlogOriginProps }>;
+type BlogStateType = Array<{ fieldName: keyof BlogContentProps; name: string; value: string | BlogOriginProps }>;
 
 export type { BlogOriginProps, BlogStateType };
 

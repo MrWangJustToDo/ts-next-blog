@@ -4,15 +4,15 @@ import { useAutoLoadRandomImg } from "hook/useAuto";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { apiName } from "config/api";
 import { getClass } from "utils/class";
+import { actionHandler } from "utils/action";
 import { PublishImageModuleType } from "types/containers";
 
 import style from "./index.module.scss";
-import { actionHandler } from "utils/action";
 
 let PublishImageModule: PublishImageModuleType;
 
-PublishImageModule = ({ closeHandler, appendHandler }) => {
-  const [ref, bool] = useAutoLoadRandomImg(apiName.image);
+PublishImageModule = ({ closeHandler, appendHandler, inputRef }) => {
+  const [ref, bool] = useAutoLoadRandomImg({ imgUrl: apiName.image, initUrl: inputRef.current?.value });
 
   useShowAndHideAnimate<HTMLImageElement>({ state: bool, forWardRef: ref, key: "imgPreview" });
 

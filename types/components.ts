@@ -165,6 +165,7 @@ type ValueType = string | number;
 
 interface DropProps<T> {
   data?: Array<{ name?: string; value: T }>;
+  initData?: Array<number>;
   multiple?: boolean;
   className?: string;
   fieldName: string;

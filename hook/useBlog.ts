@@ -110,7 +110,7 @@ useLinkToImg = <T extends HTMLElement>() => {
 };
 
 useEditor = (id) => {
-  const mdId = `#${id}_md`;
+  const mdId = `#editor_${id}_md`;
   // 创建DOM观察者对象，观察DOM的class变化，执行对应的操作
   const observer = new MutationObserver(function (mutationsList) {
     // 遍历出所有的MutationRecord对象
@@ -147,7 +147,7 @@ useEditor = (id) => {
         200,
         () =>
           actionHandler<HTMLDivElement, void, void>(
-            document.querySelector(`#${id}`) as HTMLDivElement,
+            document.querySelector(`#editor_${id}`) as HTMLDivElement,
             (ele) => observer.observe(ele, { attributes: true }),
             listen
           ),
@@ -167,7 +167,7 @@ useEditor = (id) => {
 };
 
 usePublish = ({ request, id }) => {
-  const htmlId = `#${id}_html`;
+  const htmlId = `#editor_${id}_html`;
   const router = useRouter();
   const ref = useRef<HTMLFormElement>(null);
   const { userId } = useCurrentUser();
@@ -186,7 +186,7 @@ usePublish = ({ request, id }) => {
               .run<ApiRequestResult<string>>(apiName.publishBlog, { userId })
               .then(({ code, data }) => {
                 if (code === 0) {
-                  delay(800, () => router.push('/'));
+                  delay(800, () => router.push("/"));
                   return success(data.toString());
                 } else {
                   return fail(data.toString());
@@ -202,10 +202,10 @@ usePublish = ({ request, id }) => {
   return [ref, submit];
 };
 
-useInputToImageModule = ({ body, className, appendHandler }) => {
+useInputToImageModule = ({ body, className, appendHandler, inputRef }) => {
   const open = useOverlayOpen();
   const select = useCallback<() => void>(() => {
-    open({ head: "选择图片", body: body(appendHandler), className });
+    open({ head: "选择图片，点击刷新", body: body(appendHandler)(inputRef), className });
   }, [body]);
   return select;
 };

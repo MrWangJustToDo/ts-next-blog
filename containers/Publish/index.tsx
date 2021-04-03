@@ -2,11 +2,11 @@ import { useMemo } from "react";
 import { usePublish } from "hook/useBlog";
 import { createRequest } from "utils/fetcher";
 import { editorId } from "config/publish";
-import PublishHead from "./publishHead";
-import PublishEditor from "./publishEditor";
-import PublishTypeTag from "./publishType&Tag";
+import PublishHead from "components/Publish/publishHead";
+import PublishEditor from "components/Publish/publishEditor";
+import PublishTypeTag from "components/Publish/publishType&Tag";
+import PublishState from "components/Publish/publishState";
 import PublishImage from "./publishImage";
-import PublishState from "./publishState";
 import PublishSubmit from "./publishSubmit";
 import { SimpleElement } from "types/components";
 
@@ -21,7 +21,7 @@ Publish = () => {
     <div className="card mx-lg-4 border-0">
       <form ref={ref}>
         <PublishHead />
-        <PublishEditor id={editorId} />
+        <PublishEditor blogId={editorId} />
         <PublishTypeTag />
         <PublishImage />
         <PublishState />

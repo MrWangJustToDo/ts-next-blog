@@ -124,8 +124,12 @@ interface UseAutoSetHeightProps<T> {
 interface UseAutoSetHeightType {
   <T extends HTMLElement>(props?: UseAutoSetHeightProps<T>): [RefObject<T>, number];
 }
+interface UseAutoLoadRandomImgProps {
+  imgUrl: apiName;
+  initUrl?: string;
+}
 interface UseAutoLoadRandomImgType {
-  (apiName: apiName): [RefObject<HTMLImageElement>, boolean];
+  (props: UseAutoLoadRandomImgProps): [RefObject<HTMLImageElement>, boolean];
 }
 
 export type {
@@ -187,8 +191,9 @@ interface UsePublishType {
 }
 interface UseInputToImageModuleProps {
   className?: string;
+  inputRef: RefObject<HTMLInputElement>;
   appendHandler: (url: string) => void;
-  body: (appendHandler: (url: string) => void) => (closeHandler: () => void) => JSX.Element;
+  body: (appendHandler: (props: string) => void) => (ref: RefObject<HTMLInputElement>) => (closeHandler: () => void) => JSX.Element;
 }
 interface UseInputToImageModuleType {
   (props: UseInputToImageModuleProps): () => void;

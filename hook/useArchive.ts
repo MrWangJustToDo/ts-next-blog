@@ -51,7 +51,7 @@ useAutoLoadArchive = ({ canLoad, loadMore, breakPoint }) => {
         loadMore();
       }
     }, 1000),
-    []
+    [breakPoint]
   );
   const addListenerCallback = useCallback<(action: () => void) => void>((action) => window.addEventListener("scroll", action), []);
   const removeListenerCallback = useCallback<(action: () => void) => void>((action) => window.removeEventListener("scroll", action), []);

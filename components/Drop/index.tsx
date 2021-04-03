@@ -9,8 +9,17 @@ import styleCss from "./index.module.scss";
 
 let Drop: DropType;
 
-Drop = <T extends ValueType>({ data = [], className = "", placeHolder = "请选择", multiple = false, fieldName, maxHeight, style }: DropProps<T>) => {
-  const [indexArr, _1, _2, onlyOne, switchItem] = useArray<number>([]);
+Drop = <T extends ValueType>({
+  data = [],
+  className = "",
+  placeHolder = "请选择",
+  multiple = false,
+  fieldName,
+  maxHeight,
+  style,
+  initData = [],
+}: DropProps<T>) => {
+  const [indexArr, _1, _2, onlyOne, switchItem] = useArray<number>(initData);
 
   const { bool, switchBoolState } = useBool({ stateChangeTimeStep: 500 });
 

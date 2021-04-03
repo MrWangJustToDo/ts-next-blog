@@ -14,10 +14,10 @@ import style from "./index.module.scss";
 let BlogContentMessagePut: BlogContentMessagePutType;
 
 BlogContentMessagePut = ({ blogId }) => {
-  const request = useMemo(() => createRequest({ method: "post", path: apiName.putPrimaryMessage, data: { blogId } }), [blogId]);
+  const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId } }), [blogId]);
 
   const body = useCallback<
-    (request: AutoRequestType) => (ref: RefObject<MyInputELement>) => (successCallback: () => void) => (closeHandler: () => void) => JSX.Element
+    (request: AutoRequestType) => (ref: RefObject<MyInputELement>) => (callback: () => void) => (closeHandler: () => void) => JSX.Element
   >(
     (request) => (ref) => (successCallback) => (close) => (
       <BlogContentCheckcodeModule request={request} closeHandler={close} messageRef={ref} successCallback={successCallback} />
