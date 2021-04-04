@@ -10,7 +10,7 @@ let ManageResultAll: SimpleElement;
 ManageResultAll = () => {
   const { currentPage, currentPageData, increaseAble, increasePage, decreaseAble, decreasePage } = useBasePage<BlogContentProps>({
     stateSide: "server",
-    stateName: apiName.home,
+    stateName: apiName.userHome,
   });
 
   return (
