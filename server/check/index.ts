@@ -45,8 +45,8 @@ detectionToken = transformHandler(
       if (disable) {
         throw new ServerError("路径不存在", 404);
       }
-      if (method !== req.method) {
-        throw new ServerError(`方法不支持: ${req.method}`, 405);
+      if (method.toLowerCase() !== req.method.toLowerCase()) {
+        throw new ServerError(`方法不支持: ${req.method.toLowerCase()}`, 405);
       }
       if (token && req.headers.apitoken !== req.session.apiToken) {
         throw new ServerError("token检测失败", 401);

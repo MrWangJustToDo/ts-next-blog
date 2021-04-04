@@ -1,6 +1,6 @@
 import createSagaMiddleware, { Task } from "redux-saga";
 import { createStore, applyMiddleware, compose, Store } from "redux";
-import { MakeStore, createWrapper, Context } from "next-redux-wrapper";
+import { MakeStore, createWrapper } from "next-redux-wrapper";
 import rootReducer from "./reducer";
 import rootSaga from "./saga";
 
@@ -15,7 +15,7 @@ export interface SagaStore extends Store {
   sagaTask?: Task;
 }
 
-export const makeStore: MakeStore<State> = (context: Context) => {
+export const makeStore: MakeStore<State> = () => {
   const devtools =
     typeof window !== "undefined" &&
     typeof window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ === "function" &&

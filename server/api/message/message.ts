@@ -1,11 +1,11 @@
-import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
-import { ServerError } from "server/utils/error";
-import { PrimaryMessageProps } from "types/components";
-import { getPrimaryByBlogId, getChildByPrimaryId } from "server/database/get";
-import { deletePrimaryMessageByBlogId, deleteChildMessageByPrimaryId } from "server/database/delete";
-import { insertChildComment, insertPrimaryComment } from "server/database/insert";
-import { transformPath } from "utils/path";
 import { apiName } from "config/api";
+import { transformPath } from "utils/path";
+import { ServerError } from "server/utils/error";
+import { getPrimaryByBlogId, getChildByPrimaryId } from "server/database/get";
+import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
+import { insertChildComment, insertPrimaryComment } from "server/database/insert";
+import { deletePrimaryMessageByBlogId, deleteChildMessageByPrimaryId } from "server/database/delete";
+import { PrimaryMessageProps } from "types/components";
 
 // 获取主评论
 const getPrimaryMessageByBlogIdAction = autoRequestHandler({

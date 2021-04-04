@@ -1,10 +1,10 @@
+import { apiName } from "config/api";
+import { getRandom } from "utils/data";
 import { ServerError } from "server/utils/error";
 import { insertType } from "server/database/insert";
+import { deleteTypeByTypeId } from "server/database/delete";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { getType, getTypeByTypeContent, getTypeByTypeId } from "server/database/get";
-import { getRandom } from "utils/data";
-import { apiName } from "config/api";
-import { deleteTypeByTypeId } from "server/database/delete";
 
 // 获取type数据
 const getTypeAction = autoRequestHandler({

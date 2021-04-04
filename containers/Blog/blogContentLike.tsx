@@ -4,7 +4,7 @@ import { BlogContentType } from "types/containers";
 
 let BlogContentLike: BlogContentType;
 
-BlogContentLike = ({ blogId, blogPriseState }) => {
+BlogContentLike = ({ blogPriseState }) => {
   const fail = useFailToast();
   return (
     <li className="list-group-item">

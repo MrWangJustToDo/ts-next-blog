@@ -1,10 +1,10 @@
-import { ServerError } from "server/utils/error";
-import { insertTag } from "server/database/insert";
-import { getTag, getTagByTagContent, getTagByTagId } from "server/database/get";
-import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { apiName } from "config/api";
 import { getRandom } from "utils/data";
+import { ServerError } from "server/utils/error";
+import { insertTag } from "server/database/insert";
 import { deleteTagByTagId } from "server/database/delete";
+import { getTag, getTagByTagContent, getTagByTagId } from "server/database/get";
+import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 
 // 获取tag数据
 const getTagAction = autoRequestHandler({

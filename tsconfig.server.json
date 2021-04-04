@@ -4,6 +4,7 @@
     "outDir": "dist",
     "target": "es2020",
     "module": "commonjs",
+    "allowJs": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "declaration": true,
@@ -14,13 +15,15 @@
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
+    "noEmit": false,
     "baseUrl": ".",
     "paths": {
       "utils/*": ["utils/*"],
-      "config/*": ["config/*"]
+      "config/*": ["config/*"],
+      "server/*": ["server/*"]
     },
     "typeRoots": ["global.d.ts", "next-env.d.ts", "types"],
-    "plugins": [{ "transform": "typescript-transform-paths" }]
+    "plugins": [{ "transform": "typescript-transform-paths" }],
   },
   "include": ["**/*.ts", "**/*.tsx"]
 }
