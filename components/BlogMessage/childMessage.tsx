@@ -41,13 +41,13 @@ ChildMessage = (props) => {
         <Image src={src} className="rounded" alt="头像" width="38" height="38" />
       )}
       <div className="media-body ml-2 ml-md-3">
-        <h5 className="small">
+        <h5 className="small pt-1 border-top rounded">
           <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{username ? username : fromIp}</span>
           <span className="mx-1 align-middle">回复</span>
           <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{toUserName ? toUserName : toIp}</span>
           <span className="float-right badge badge-primary">{modifyState ? "更新于：" : "回复于：" + momentTo(modifyDate)}</span>
         </h5>
-        <p className="mb-0 mb-md-3">{content}</p>
+        <p className="mb-0 mb-md-3 pb-1 border-bottom rounded">{content}</p>
         {withReplay && (
           <button className={getClass("btn btn-outline-info", style.replay)} onClick={replayCallback}>
             replay

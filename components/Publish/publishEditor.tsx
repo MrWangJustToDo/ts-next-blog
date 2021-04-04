@@ -21,11 +21,11 @@ PublishEditor = ({ blogId, blogContent = "" }) => {
   return (
     <div className={getClass("mb-3", style.editor)}>
       <MdEditor
-        id={`editor_${blogId}`}
-        value={blogContent}
         name="blogContent"
-        renderHTML={(text) => markNOLineNumber.render(text)}
+        id={`editor_${blogId}`}
+        defaultValue={blogContent}
         style={{ minHeight: "90vh", borderRadius: "3px" }}
+        renderHTML={(text) => markNOLineNumber.render(text)}
       />
     </div>
   );

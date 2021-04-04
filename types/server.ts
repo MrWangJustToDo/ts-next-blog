@@ -45,7 +45,7 @@ interface CacheConfigProps {
   cacheKey?: string | (({ req }: { req: ExpressRequest }) => string);
   cacheTime?: number;
   needCache?: boolean;
-  needDelete?: string | string[] | boolean | (({ req }: { req: ExpressRequest }) => string) | (({ req }: { req: ExpressRequest }) => string)[];
+  needDelete?: string | Array<string | (({ req }: { req: ExpressRequest }) => string)> | boolean | (({ req }: { req: ExpressRequest }) => string);
 }
 interface CheckCodeConfigProps {
   needCheck?: boolean;

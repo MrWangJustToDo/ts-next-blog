@@ -25,11 +25,36 @@ const getHome = async ({ db }: { db: Database }) => {
   return aliveHome.map((item) => mergeTypeTagToBlog(item, aliveType, aliveTag));
 };
 
+const getHomeByUserId = async ({ db, userId }: { db: Database; userId: string }) => {
+  const aliveHome = await db.all(
+    "SELECT * FROM home LEFT JOIN users WHERE home.authorId = ? And home.authorId = users.userId AND home.blogState != -1",
+    userId
+  );
+  const aliveType = await getAliveType({ db });
+  const aliveTag = await getAliveTag({ db });
+  return aliveHome.map((item) => mergeTypeTagToBlog(item, aliveType, aliveTag));
+};
+
 // 根据名称模糊查询博客
 const getBlogsByBlogTitle = async ({ db, blogTitle }: { db: Database; blogTitle: string }) => {
   const blogs = await db.all(
     "SELECT * FROM home LEFT JOIN users WHERE home.blogTitle LIKE ? AND home.authorId = users.userId AND home.blogState != -1",
     `%${blogTitle}%`
+  );
+  if (blogs.length) {
+    const aliveType = await getAliveType({ db });
+    const aliveTag = await getAliveTag({ db });
+    return blogs.map((item) => mergeTypeTagToBlog(item, aliveType, aliveTag));
+  } else {
+    return blogs;
+  }
+};
+
+const getBlogsByBlogTitleAndUserId = async ({ db, blogTitle, userId }: { db: Database; blogTitle: string; userId: string }) => {
+  const blogs = await db.all(
+    "SELECT * FROM home LEFT JOIN users WHERE home.blogTitle LIKE ? AND home.authorId = ? AND home.authorId = users.userId AND home.blogState != -1",
+    `%${blogTitle}%`,
+    userId
   );
   if (blogs.length) {
     const aliveType = await getAliveType({ db });
@@ -52,6 +77,21 @@ const getBlogsByTypeId = async ({ db, typeId }: { db: Database; typeId: string }
   }
 };
 
+const getBlogsByTypeIdAndUserId = async ({ db, typeId, userId }: { db: Database; typeId: string; userId: string }) => {
+  const blogs = await db.all(
+    "SELECT * FROM home LEFT JOIN users WHERE home.typeId = ? AND home.authorId = ? AND home.authorId = users.userId AND home.blogState != -1",
+    typeId,
+    userId
+  );
+  if (blogs.length) {
+    const aliveType = await getAliveType({ db });
+    const aliveTag = await getAliveTag({ db });
+    return blogs.map((item) => mergeTypeTagToBlog(item, aliveType, aliveTag));
+  } else {
+    return blogs;
+  }
+};
+
 // 根据tagId获取博客
 const getBlogsByTagId = async ({ db, tagId }: { db: Database; tagId: string }) => {
   const sqls = tagId.split(",").filter(Boolean);
@@ -60,6 +100,30 @@ const getBlogsByTagId = async ({ db, tagId }: { db: Database; tagId: string }) =
     const temp = await db.all(
       "SELECT * FROM home LEFT JOIN users WHERE home.tagId LIKE ? AND home.authorId = users.userId AND home.blogState != -1",
       `%${sqls[i]}%`
+    );
+    temp.forEach((it) => {
+      if (blogs.every((blog) => blog.blogId !== it.blogId)) {
+        blogs.push(it);
+      }
+    });
+  }
+  if (blogs.length) {
+    const aliveType = await getAliveType({ db });
+    const aliveTag = await getAliveTag({ db });
+    return blogs.map((item) => mergeTypeTagToBlog(item, aliveType, aliveTag));
+  } else {
+    return blogs;
+  }
+};
+
+const getBlogsByTagIdAndUserId = async ({ db, tagId, userId }: { db: Database; tagId: string; userId: string }) => {
+  const sqls = tagId.split(",").filter(Boolean);
+  const blogs: BlogContentProps[] = [];
+  for (let i = 0; i < sqls.length; i++) {
+    const temp = await db.all(
+      "SELECT * FROM home LEFT JOIN users WHERE home.tagId LIKE ? AND home.authorId = ? AND home.authorId = users.userId AND home.blogState != -1",
+      `%${sqls[i]}%`,
+      userId
     );
     temp.forEach((it) => {
       if (blogs.every((blog) => blog.blogId !== it.blogId)) {
@@ -151,7 +215,7 @@ const getAliveBlogCount = async ({ db }: { db: Database }) => {
 
 // 获取主评论
 const getPrimaryByBlogId = async ({ db, blogId }: { db: Database; blogId: string }) => {
-  return await db.all("SELECT * FROM primaryComment LEFT JOIN users ON primaryComment.userId = users.userId WHERE primaryComment.blogId = ?", blogId);
+  return await db.all("SELECT * FROM primaryComment LEFT JOIN users ON primaryComment.fromUserId = users.userId WHERE primaryComment.blogId = ?", blogId);
 };
 
 // 获取子评论
@@ -164,7 +228,9 @@ const getChildByPrimaryId = async ({ db, primaryCommentId }: { db: Database; pri
     const { toUserId } = childMessage[key];
     if (toUserId) {
       const user = await getUserByUserId({ db, userId: toUserId });
-      childMessage[key]["toUserName"] = user.username;
+      if (user) {
+        childMessage[key]["toUserName"] = user.username;
+      }
     }
   }
   return childMessage;
@@ -178,4 +244,6 @@ export { getUserByUser, getAliveBlogCount, getAliveTag, getBlogCount, getBlogByB
 
 export { getTypeByTypeContent, getTagByTagContent, getAliveType, getTagByTagId, getTagCount, getType, getTypeByTypeId, getTypeCount, getUserByUserId };
 
-export { getUserCount, getUsersExByUserId, getBlogsByBlogTitle, getBlogsByTypeId, getBlogsByTagId, getChildByBlogId };
+export { getUserCount, getUsersExByUserId, getBlogsByBlogTitle, getBlogsByTypeId, getBlogsByTagId, getChildByBlogId, getBlogsByBlogTitleAndUserId };
+
+export { getBlogsByTypeIdAndUserId, getBlogsByTagIdAndUserId, getHomeByUserId };

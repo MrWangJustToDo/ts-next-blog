@@ -11,9 +11,9 @@ let ManageAddTypeButton: SimpleElement;
 ManageAddTypeButton = () => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.addType });
 
-  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => JSX.Element>(
-    (request) => (judgeApiName) => (requestApiName) => (
-      <ManageAddModule requestApiName={requestApiName} fieldname="typeContent" request={request} judgeApiName={judgeApiName} />
+  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => (closeHandler: () => void) => JSX.Element>(
+    (request) => (judgeApiName) => (requestApiName) => (closeHandler) => (
+      <ManageAddModule requestApiName={requestApiName} fieldname="typeContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />
     ),
     []
   );

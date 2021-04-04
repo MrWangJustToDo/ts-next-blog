@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import debounce from "lodash/debounce";
 import throttle from "lodash/throttle";
 import { cancel, delay } from "utils/delay";
@@ -86,7 +86,6 @@ useBool = (props = {}) => {
 
 useArray = <T>(init: T[]) => {
   const [array, setArray] = useState<T[]>(init);
-  useMemo(() => setArray(init), [init]);
   const pushItem = useCallback<(props: T) => void>((val) => setArray((last) => (last.push(val), last)), []);
   const dropItem = useCallback<(props: T) => void>((val) => setArray((last) => last.filter((item) => item !== val)), []);
   const onlyOne = useCallback<(props: T) => void>((val) => setArray([val]), []);

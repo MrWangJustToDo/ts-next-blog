@@ -13,7 +13,7 @@ const updateTableWithParam = async ({
 }: {
   db: Database;
   table: string;
-  param: { set: { [props: string]: string }; where: { [props: string]: { value: string; operator?: string } } };
+  param: { set: { [props: string]: string | number }; where: { [props: string]: { value: string | number; operator?: string } } };
 }) => {
   let Sql = `UPDATE ${table} SET`;
   const sqlParam = [];
@@ -25,17 +25,17 @@ const updateTableWithParam = async ({
     Sql += ` ${key} = ?,`;
     sqlParam.push(set[key]);
   }
-  Sql = Sql.slice(-1);
+  Sql = Sql.slice(0, -1);
   const where = param.where;
   if (!where || typeof where !== "object") {
     throw new ServerError(`更新${table}参数错误`, 400);
   }
-  Sql = Sql + "WHERE";
+  Sql = Sql + " WHERE";
   for (let key in where) {
     Sql += ` ${key} = ?`;
     sqlParam.push(where[key].value);
     if (where[key].operator) {
-      Sql += `${where[key].operator}`;
+      Sql += ` ${where[key].operator}`;
     }
   }
   log(`update type sql: ${Sql}, params: ${sqlParam.toString()}`, "normal");

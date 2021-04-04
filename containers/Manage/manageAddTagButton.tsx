@@ -11,9 +11,9 @@ let ManageAddTagButton: SimpleElement;
 ManageAddTagButton = () => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.addTag });
 
-  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => JSX.Element>(
-    (request) => (judgeApiName) => (requestApiName) => (
-      <ManageAddModule requestApiName={requestApiName} fieldname="tagContent" request={request} judgeApiName={judgeApiName} />
+  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => (closeHandler: () => void) => JSX.Element>(
+    (request) => (judgeApiName) => (requestApiName) => (closeHandler) => (
+      <ManageAddModule requestApiName={requestApiName} fieldname="tagContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />
     ),
     []
   );

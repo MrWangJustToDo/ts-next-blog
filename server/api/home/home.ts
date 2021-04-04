@@ -1,4 +1,4 @@
-import { getBlogsByBlogTitle, getBlogsByTagId, getBlogsByTypeId, getHome } from "server/database/get";
+import { getBlogsByBlogTitleAndUserId, getBlogsByTagIdAndUserId, getBlogsByTypeIdAndUserId, getHome, getHomeByUserId } from "server/database/get";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { BlogContentProps } from "types/hook";
 
@@ -15,10 +15,10 @@ const getHomeAction = autoRequestHandler({
 // 根据指定参数获取blog
 const getBlogsByParams = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const { blogTitle, typeId: currentTypeId, tagId: currentTagId } = req.body;
+    const { blogTitle, typeId: currentTypeId, tagId: currentTagId, userId } = req.body;
     let blogs: BlogContentProps[] = [];
     if (blogTitle) {
-      blogs = await getBlogsByBlogTitle({ db: req.db!, blogTitle });
+      blogs = await getBlogsByBlogTitleAndUserId({ db: req.db!, blogTitle, userId });
       blogs = blogs.filter(({ typeId, tagId }) => {
         if (currentTypeId) {
           if (typeId !== currentTypeId) {
@@ -34,7 +34,7 @@ const getBlogsByParams = autoRequestHandler({
         return true;
       });
     } else if (currentTypeId) {
-      blogs = await getBlogsByTypeId({ db: req.db!, typeId: currentTypeId });
+      blogs = await getBlogsByTypeIdAndUserId({ db: req.db!, typeId: currentTypeId, userId });
       blogs = blogs.filter(({ tagId }) => {
         if (currentTagId) {
           const currentTagArray = currentTagId.split(",");
@@ -45,7 +45,7 @@ const getBlogsByParams = autoRequestHandler({
         return true;
       });
     } else if (currentTagId) {
-      blogs = await getBlogsByTagId({ db: req.db!, tagId: currentTagId });
+      blogs = await getBlogsByTagIdAndUserId({ db: req.db!, tagId: currentTagId, userId });
     }
     success({ res, resDate: { state: "搜索成功", data: blogs } });
   },
@@ -53,4 +53,18 @@ const getBlogsByParams = autoRequestHandler({
   userConfig: { needCheck: true },
 });
 
-export { getHomeAction, getBlogsByParams };
+const getUserHomeAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    const { userId } = req.query;
+    if (userId) {
+      const data = await getHomeByUserId({ db: req.db!, userId: userId as string });
+      success({ res, resDate: { data } });
+    } else {
+      success({ res, resDate: { data: [] } });
+    }
+  },
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getUserHomeAction" } }),
+  userConfig: { needCheck: true },
+});
+
+export { getHomeAction, getBlogsByParams, getUserHomeAction };

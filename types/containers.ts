@@ -50,7 +50,7 @@ export type { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWithReplay
 
 /* blogContentChildMessage */
 interface BlogContentChildMessageType {
-  (props: { messages: ChildMessageProps[] }): JSX.Element;
+  (props: { messages: ChildMessageProps[]; primaryCommentId: string }): JSX.Element;
 }
 interface BlogContentChildMessageWithReplayType {
   (props: { messages: ChildMessageProps[]; replay: (props: ChildMessageProps) => void }): JSX.Element;
@@ -84,6 +84,9 @@ export type { BlogContentMessagePutType };
 /* blogContentReplayModule */
 
 interface BlogContentReplayModuleProps {
+  toIp: string;
+  toUserId: string;
+  primaryCommentId: string;
   request: AutoRequestType;
   closeHandler: () => void;
 }
@@ -222,6 +225,7 @@ interface ManageAddModuleProps {
   judgeApiName: apiName;
   request: AutoRequestType;
   requestApiName: apiName;
+  closeHandler: () => void;
 }
 
 interface ManageAddModuleType {

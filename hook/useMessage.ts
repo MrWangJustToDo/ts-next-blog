@@ -20,6 +20,9 @@ import {
   UseReplayModuleToSubmitType,
   UsePutToCheckcodeModuleProps,
 } from "types/hook";
+import { useCurrentState } from "./useBase";
+import { actionName } from "config/action";
+import { ChildMessageProps } from "types/components";
 
 let useChildMessage: UseChildMessageType;
 
@@ -34,9 +37,11 @@ let useMessageToReplayModule: UseMessageToReplayModuleType;
 let useReplayModuleToSubmit: UseReplayModuleToSubmitType;
 
 useChildMessage = (props) => {
-  const [more, setMore] = useState<boolean>(props.length > childMessageLength);
-  const loadMore = useCallback(() => setMore(true), []);
-  const messageProps = useMemo(() => (more ? props.slice(0, childMessageLength) : props), [more, props]);
+  const [page, setPage] = useState<number>(1);
+  const [messageProps, setMessageProps] = useState<ChildMessageProps[]>([]);
+  const more = page * childMessageLength < props.length;
+  useMemo(() => setMessageProps(props.slice((page - 1) * childMessageLength, page * childMessageLength)), [page, props.length]);
+  const loadMore = useCallback(() => setPage((last) => last + 1), []);
   return { messageProps, more, loadMore };
 };
 
@@ -127,25 +132,45 @@ useMessageToReplayModule = <T extends {}>({ request, body, className }: UseMessa
   return replay;
 };
 
-useReplayModuleToSubmit = <T extends MyInputELement, F extends MyInputELement>({ request, closeHandler }: UseReplayModuleToSubmitProps) => {
+useReplayModuleToSubmit = <T extends MyInputELement, F extends MyInputELement>({
+  request,
+  closeHandler,
+  successCallback,
+  primaryCommentId,
+  toIp,
+  toUserId,
+}: UseReplayModuleToSubmitProps) => {
   const input1 = useRef<T>(null);
   const input2 = useRef<F>(null);
+  const { state } = useCurrentState();
+  const blogId = state.client[actionName.currentBlogId]["data"];
   const pushFail = useFailToast();
   const pushSucess = useSucessToast();
   const submit = useCallback(
     () =>
-      request({ data: { content: input1.current!.value, checkcode: input2.current!.value } })
+      request({
+        data: {
+          content: input1.current!.value,
+          checkCode: input2.current!.value,
+          blogId,
+          primaryCommentId,
+          toIp,
+          toUserId,
+          commentId: getRandom(1000).toString(16),
+        },
+      })
         .run<ApiRequestResult<string>>()
         .then(({ code, data }) => {
           if (code === 0) {
-            pushSucess("提交成功");
             closeHandler();
+            successCallback();
+            pushSucess("提交成功");
           } else {
             pushFail(`提交失败: ${data.toString()}`);
           }
         })
         .catch((e) => pushFail(`发生错误: ${e.toString()}`)),
-    [request, closeHandler]
+    [request, closeHandler, blogId, primaryCommentId, toIp, toUserId, successCallback]
   );
   const canSubmit1 = useJudgeInputValue(input1);
   const canSubmit2 = useJudgeInputValue(input2);

@@ -270,7 +270,7 @@ interface UseSearchType {
 }
 interface UseManageToAddModuleProps {
   title: string;
-  body: (request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => JSX.Element;
+  body: (request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => (closeHandler: () => void) => JSX.Element;
   judgeApiName: apiName;
   requestApiName: apiName;
   request: AutoRequestType;
@@ -363,6 +363,10 @@ interface UseMessageToReplayModuleType {
 interface UseReplayModuleToSubmitProps {
   request: AutoRequestType;
   closeHandler: () => void;
+  successCallback: () => void;
+  toIp: string;
+  toUserId: string;
+  primaryCommentId: string;
 }
 interface UseReplayModuleToSubmitType {
   <T extends MyInputELement, F extends MyInputELement>(props: UseReplayModuleToSubmitProps): {

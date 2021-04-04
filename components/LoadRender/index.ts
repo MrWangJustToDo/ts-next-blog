@@ -6,7 +6,7 @@ import loadingError from "./loadingError";
 import { transformPath } from "utils/path";
 import { cancel, delay } from "utils/delay";
 import { autoTransformData } from "utils/data";
-import { cacheAllRequest } from "utils/fetcher";
+import { createRequest } from "utils/fetcher";
 import { useCurrentState } from "hook/useBase";
 import { getDataSucess_Server } from "store/reducer/server/action";
 import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType } from "types/components";
@@ -47,7 +47,7 @@ LoadRender = <T>({
     return () => cancel(currentPath!);
   }, [method, query, requestData, delayTime, currentPath]);
 
-  const defaultFetcher = cacheAllRequest({
+  const defaultFetcher = createRequest({
     method,
     query: false,
     data: requestData ? requestData : false,

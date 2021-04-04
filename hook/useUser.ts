@@ -120,7 +120,14 @@ useLogout = () => {
 useUserRequest = (props = {}) => {
   const { method, data, path, apiPath, header } = props;
   const user = useCurrentUser();
-  return useMemo(() => createRequest({ method, data, path, apiPath, header, query: { userId: user.userId! } }), [user, data, path, apiPath, header, method]);
+  return useMemo(() => createRequest({ method, data: { ...data, userId: user.userId! }, path, apiPath, header, query: { userId: user.userId! } }), [
+    user,
+    data,
+    path,
+    apiPath,
+    header,
+    method,
+  ]);
 };
 
 export { useAutoLogin, useCurrentUser, useLogin, useLogout, useUserRequest };

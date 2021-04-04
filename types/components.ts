@@ -48,8 +48,8 @@ export type { BlogItemRightType };
 interface PrimaryMessageProps {
   blogId: string;
   commentId: string;
-  userId?: string;
-  ip: string;
+  fromUserId?: string;
+  fromIp: string;
   content: string;
   createDate: string;
   modifyState: number;

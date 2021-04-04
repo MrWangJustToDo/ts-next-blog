@@ -1,10 +1,9 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import PageFoot from "components/PageFoot";
 import LoadRender from "components/LoadRender";
 import { PrimaryMessage } from "components/BlogMessage";
 import { apiName } from "config/api";
 import { primaryMessageLength } from "config/message";
-import { createRequest } from "utils/fetcher";
 import { useBasePage } from "hook/useBase";
 import { useMessageToReplayModule } from "hook/useMessage";
 import BlogContentChildMessage from "./blogContentMessageChild";
@@ -14,6 +13,7 @@ import { ChildMessageProps, PrimaryMessageProps } from "types/components";
 import { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWithReplayType } from "types/containers";
 
 import style from "./index.module.scss";
+import { useUserRequest } from "hook/useUser";
 
 let BlogContentPrimaryMessage: BlogContentPrimaryMessageType;
 
@@ -36,7 +36,7 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
               apiPath={apiName.childMessage}
               query={{ primaryCommentId: String(item.commentId) }}
               requestData={{ primaryCommentId: item.commentId }}
-              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} /> : null)}
+              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} primaryCommentId={item.commentId} /> : null)}
             />
           </PrimaryMessage>
         ))}
@@ -54,13 +54,19 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentPrimaryMessage = ({ messages }) => {
-  const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.putPrimaryMessage }), []);
+  const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage });
 
   const body = useCallback<(request: AutoRequestType) => (props: PrimaryMessageProps) => (closeHandler: () => void) => JSX.Element>(
     (request) => (props) => (closeHandler) => (
       <>
         <PrimaryMessage {...props} withReplay={false} withChildren={false} />
-        <BlogContentReplayModule request={request} closeHandler={closeHandler} />
+        <BlogContentReplayModule
+          request={request}
+          closeHandler={closeHandler}
+          primaryCommentId={props.commentId}
+          toUserId={props.fromUserId!}
+          toIp={props.fromIp}
+        />
       </>
     ),
     []

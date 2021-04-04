@@ -12,7 +12,7 @@ let Blog: BlogContentType;
 const BlogContentMessage = dynamic(() => import("./blogContentMessage"));
 
 Blog = (props) => {
-  const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId, blogOriginState, blogPriseState } = props;
+  const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId, blogOriginState, blogPriseState, blogCommentState } = props;
 
   return (
     <div className="card user-select-none">
@@ -22,8 +22,8 @@ Blog = (props) => {
         <BlogContentType_Tag typeContent={typeContent} tagContent={tagContent} blogOriginState={blogOriginState} />
         <BlogContentBody blogTitle={blogTitle} blogContent={blogContent} />
         <BlogContentLike blogId={blogId} blogPriseState={blogPriseState} />
-        <BlogContentMessage blogId={blogId!} />
-        <BlogContentMessagePut blogId={blogId!} />
+        {blogCommentState ? <BlogContentMessage blogId={blogId!} /> : null}
+        {blogCommentState ? <BlogContentMessagePut blogId={blogId!} /> : null}
       </ul>
     </div>
   );

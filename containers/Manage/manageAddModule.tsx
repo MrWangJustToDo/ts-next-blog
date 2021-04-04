@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { mutate } from "swr";
 import Input from "components/Input";
 import Button from "components/Button";
@@ -8,12 +8,17 @@ import { ManageAddModuleType } from "types/containers";
 
 let ManageAddModule: ManageAddModuleType;
 
-ManageAddModule = ({ request, judgeApiName, fieldname, requestApiName }) => {
+ManageAddModule = ({ request, judgeApiName, fieldname, requestApiName, closeHandler }) => {
   const [bool, setBool] = useState<boolean>(true);
+
+  const successCallback = useCallback(() => {
+    mutate(requestApiName);
+    closeHandler();
+  }, [closeHandler, requestApiName]);
 
   const [ref, doRequest] = useAddRequest({
     request,
-    successCallback: () => mutate(requestApiName),
+    successCallback,
   });
 
   return (

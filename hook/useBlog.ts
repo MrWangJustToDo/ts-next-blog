@@ -4,9 +4,9 @@ import tocbot from "tocbot";
 import { toCanvas } from "qrcode";
 import { apiName } from "config/api";
 import { cancel, delay } from "utils/delay";
-import { formSerialize, getRandom } from "utils/data";
 import { actionHandler } from "utils/action";
 import { addIdForHeads } from "utils/markdown";
+import { formSerialize, getRandom } from "utils/data";
 import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
@@ -29,6 +29,8 @@ let useEditor: UseEditorType;
 let usePublish: UsePublishType;
 
 let useInputToImageModule: UseInputToImageModuleType;
+
+let useUpdateBlog: UsePublishType;
 
 useBlogMenu = (className) => {
   const [bool, setBool] = useState<boolean>(false);
@@ -167,12 +169,12 @@ useEditor = (id) => {
 };
 
 usePublish = ({ request, id }) => {
-  const htmlId = `#editor_${id}_html`;
   const router = useRouter();
+  const fail = useFailToast();
+  const success = useSucessToast();
+  const htmlId = `#editor_${id}_html`;
   const ref = useRef<HTMLFormElement>(null);
   const { userId } = useCurrentUser();
-  const success = useSucessToast();
-  const fail = useFailToast();
   const submit = useCallback(
     () =>
       actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(
@@ -210,4 +212,36 @@ useInputToImageModule = ({ body, className, appendHandler, inputRef }) => {
   return select;
 };
 
-export { useBlogMenu, useAutoScrollTop, useAutoScrollBottom, useLinkToImg, useEditor, usePublish, useInputToImageModule };
+useUpdateBlog = ({ request, id }) => {
+  const router = useRouter();
+  const fail = useFailToast();
+  const success = useSucessToast();
+  const htmlId = `#editor_${id}_html`;
+  const ref = useRef<HTMLFormElement>(null);
+  const submit = useCallback(
+    () =>
+      actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(
+        ref.current,
+        (ele) => {
+          const blogPreview = ele.querySelector(htmlId)?.textContent;
+          return request({ data: { newProps: { ...formSerialize(ele), blogPreview, blogId: id } } })
+            .run<ApiRequestResult<string>>(apiName.updataBlog)
+            .then(({ data, code }) => {
+              if (code === 0) {
+                delay(800, () => router.push("/"));
+                return success(data.toString());
+              } else {
+                return fail(data.toString());
+              }
+            })
+            .catch((e) => fail(e.toString()));
+        },
+        () => fail(`form元素不存在...`)
+      ),
+    [request, id]
+  );
+
+  return [ref, submit];
+};
+
+export { useBlogMenu, useAutoScrollTop, useAutoScrollBottom, useLinkToImg, useEditor, usePublish, useInputToImageModule, useUpdateBlog };

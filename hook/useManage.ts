@@ -21,6 +21,7 @@ import {
   UseSearchType,
 } from "types/hook";
 import { useCurrentState } from "./useBase";
+import { useCurrentUser } from "./useUser";
 
 let useSearch: UseSearchType;
 
@@ -38,31 +39,36 @@ useSearch = ({ request }) => {
   const fail = useFailToast();
   const success = useSucessToast();
   const dispatch = useDispatch();
+  const { userId } = useCurrentUser();
   const ref = useRef<HTMLFormElement>(null);
   const search = useCallback(
     () =>
       actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
-        dispatch(setDataLoading_client({ name: actionName.currentResult }));
-        return request({ data: formSerialize(ele) })
-          .run<ApiRequestResult<BlogContentProps>>(apiName.search)
-          .then((res) => {
-            if (res) {
-              const { code, data } = res;
-              dispatch(setDataSucess_client({ name: actionName.currentResult, data }));
-              if (code === 0) {
-                if (Array.isArray(data)) {
-                  return success(`搜索数据成功，一共${data.length}条数据`);
+        if (userId !== undefined) {
+          dispatch(setDataLoading_client({ name: actionName.currentResult }));
+          return request({ data: { ...formSerialize(ele), userId } })
+            .run<ApiRequestResult<BlogContentProps>>(apiName.search)
+            .then((res) => {
+              if (res) {
+                const { code, data } = res;
+                if (code === 0) {
+                  if (Array.isArray(data)) {
+                    dispatch(setDataSucess_client({ name: actionName.currentResult, data }));
+                    return success(`搜索数据成功，一共${data.length}条数据`);
+                  }
                 }
               }
-            }
-            return fail("搜索结果数据错误");
-          })
-          .catch((e) => {
-            dispatch(setDataFail_client({ name: actionName.currentResult, error: e }));
-            return fail(`搜索出错:${e.toString()}`);
-          });
+              return fail("搜索结果数据错误");
+            })
+            .catch((e) => {
+              dispatch(setDataFail_client({ name: actionName.currentResult, error: e }));
+              return fail(`搜索出错:${e.toString()}`);
+            });
+        } else {
+          return fail(`当前未登录`);
+        }
       }),
-    [request]
+    [request, userId]
   );
   return [ref, search];
 };
@@ -84,7 +90,6 @@ useAddRequest = ({ request, successCallback }) => {
           .run<ApiRequestResult<string>>()
           .then(({ code, data }) => {
             if (code === 0) {
-              ele.value = "";
               successCallback();
               return success(`添加tag成功，${data.toString()}`);
             } else {

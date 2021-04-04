@@ -4,7 +4,7 @@ import { BlogContentType } from "types/containers";
 
 let BlogContentLike: BlogContentType;
 
-BlogContentLike = ({ blogId }) => {
+BlogContentLike = ({ blogId, blogPriseState }) => {
   const fail = useFailToast();
   return (
     <li className="list-group-item">
@@ -17,10 +17,12 @@ BlogContentLike = ({ blogId }) => {
           <i className="ri-star-line align-middle mr-2"></i>
           <span>收藏</span>
         </button>
-        <button className="btn btn-sm btn-outline-danger mx-2 mx-md-5 rounded-pill">
-          <i className="ri-award-line align-middle mr-2"></i>
-          <span>打赏</span>
-        </button>
+        {blogPriseState ? (
+          <button className="btn btn-sm btn-outline-danger mx-2 mx-md-5 rounded-pill">
+            <i className="ri-award-line align-middle mr-2"></i>
+            <span>打赏</span>
+          </button>
+        ) : null}
       </div>
     </li>
   );

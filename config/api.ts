@@ -4,6 +4,7 @@ import { AccessType } from "types/config";
 enum apiName {
   // 首页信息
   home = "home", // 获取home页面数据
+  userHome = "userHome", // 当前用户的所有数据
   userEx = "userEx", // 获取用户信息数据
   user = "user", // 获取用户详细数据
   type = "type", // 获取type页面数据apiName
@@ -61,6 +62,7 @@ const accessApi: AccessType = {
   [apiName.captchaStr]: { disable: false, token: false },
   // 首页信息
   [apiName.home]: { disable: false, token: false, config: { cache: { needCache: true } } },
+  [apiName.userHome]: { disable: false, token: true },
   [apiName.user]: { disable: false, token: false },
   [apiName.userEx]: { disable: false, token: true },
   [apiName.tag]: { disable: false, token: false },

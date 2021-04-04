@@ -22,7 +22,11 @@ ManageResult = () => {
 
   const loading = state.client[actionName.currentResult]["loading"];
 
-  const allData = <LoadRender<BlogContentProps[]> needUpdate needinitialData apiPath={apiName.home} loaded={() => <ManageResultAll />} />;
+  const { userId } = state.client[actionName.currentUser]["data"];
+
+  const allData = (
+    <LoadRender<BlogContentProps[]> needUpdate needinitialData apiPath={apiName.userHome} query={{ userId }} loaded={() => <ManageResultAll />} />
+  );
 
   const searchData = (
     <div className={getClass(animateFadein)}>

@@ -1,15 +1,15 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { ChildMessage } from "components/BlogMessage";
 import { useChildMessage, useMessageToReplayModule } from "hook/useMessage";
 import { apiName } from "config/api";
 import { getClass } from "utils/class";
-import { createRequest } from "utils/fetcher";
 import BlogContentReplayModule from "./blogContentReplayModule";
 import { AutoRequestType } from "types/utils";
 import { ChildMessageProps } from "types/components";
 import { BlogContentChildMessageType, BlogContentChildMessageWithReplayType } from "types/containers";
 
 import style from "./index.module.scss";
+import { useUserRequest } from "hook/useUser";
 
 let BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType;
 
@@ -35,14 +35,20 @@ BlogContentChildMessageWithReplay = ({ messages, replay }) => {
   );
 };
 
-BlogContentChildMessage = ({ messages }) => {
-  const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.putChildMessage }), []);
+BlogContentChildMessage = ({ messages, primaryCommentId }) => {
+  const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage });
 
   const body = useCallback<(request: AutoRequestType) => (props: ChildMessageProps) => (closeHandler: () => void) => JSX.Element>(
     (request) => (props) => (closeHandler) => (
       <>
         <ChildMessage {...props} withReplay={false} withChildren={false} />
-        <BlogContentReplayModule request={request} closeHandler={closeHandler} />
+        <BlogContentReplayModule
+          request={request}
+          closeHandler={closeHandler}
+          primaryCommentId={primaryCommentId}
+          toUserId={props.fromUserId}
+          toIp={props.fromIp}
+        />
       </>
     ),
     []

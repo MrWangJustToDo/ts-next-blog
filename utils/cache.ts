@@ -41,7 +41,7 @@ class Cache<T, K> {
           log(`error, nothing need to delete. key: ${key}`, "error");
         }
       },
-      key instanceof String ? key.toString() : undefined
+      typeof key === "string" ? key : undefined
     );
   };
 
@@ -56,29 +56,35 @@ class Cache<T, K> {
 
   deleteRightNow = (key: T) => {
     if (this.store.has(key)) {
-      if (key instanceof String) {
-        cancel(key.toString());
+      if (typeof key === "string") {
+        cancel(key);
       }
       this.store.delete(key);
       log(`force delete data from cache. key: ${key}`, "warn");
-    } else {
-      if (typeof key === "string") {
-        let newKey = key as string;
-        if (!newKey.startsWith("/")) {
-          newKey = "/" + newKey;
-        }
-        if (!newKey.startsWith("/api")) {
-          newKey = "/api" + newKey;
-        }
-        if (this.store.has(newKey as any)) {
-          cancel(newKey);
-          this.store.delete(newKey as any);
-          log(`force delete data from cache. key: ${newKey}`, "warn");
-          return;
-        }
-      }
-      log(`error, nothing need to delete. key: ${key}, typeOf key: ${typeof key}`, "error");
+      return;
     }
+    if (typeof key === "string") {
+      let newKey = key as string;
+      if (!newKey.startsWith("/")) {
+        newKey = "/" + newKey;
+      }
+      if (this.store.has(newKey as any)) {
+        cancel(newKey);
+        this.store.delete(newKey as any);
+        log(`force delete data from cache. newKey: ${newKey}`, "warn");
+        return;
+      }
+      if (!newKey.startsWith("/api")) {
+        newKey = "/api" + newKey;
+      }
+      if (this.store.has(newKey as any)) {
+        cancel(newKey);
+        this.store.delete(newKey as any);
+        log(`force delete data from cache. newKey: ${newKey}`, "warn");
+        return;
+      }
+    }
+    log(`error, nothing need to delete. key: ${key}, typeOf key: ${typeof key}`, "error");
   };
 }
 

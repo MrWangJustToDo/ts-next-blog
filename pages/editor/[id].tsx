@@ -3,11 +3,11 @@ import { END } from "redux-saga";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { autoDispatchTockenHandler } from "config/ssr";
+import { animateFadein, getClass } from "utils/class";
 import Editor from "containers/Editor";
 import { setDataSucess_client } from "store/reducer/client/action";
 import { getDataAction_Server, getDataSucess_Server } from "store/reducer/server/action";
 import { BlogContentType } from "types/containers";
-import { animateFadein, getClass } from "utils/class";
 
 let EditorContent: BlogContentType & { title?: string };
 

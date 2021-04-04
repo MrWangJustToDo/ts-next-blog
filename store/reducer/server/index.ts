@@ -3,6 +3,7 @@ import home from "./home";
 import type from "./type";
 import tag from "./tag";
 import blog from "./blog";
+import userHome from "./userHome";
 import { apiName } from "config/api";
 
 export default combineReducers({
@@ -10,4 +11,5 @@ export default combineReducers({
   [apiName.type]: type,
   [apiName.tag]: tag,
   [apiName.blog]: blog,
+  [apiName.userHome]: userHome,
 });
