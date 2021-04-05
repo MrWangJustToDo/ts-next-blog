@@ -14,6 +14,7 @@ import {
   RequestHandlerType,
   ExpressRequest,
   CheckCodeConfigProps,
+  CheckParamsConfigProps,
 } from "types/server";
 
 const cache = new Cache<string, any>();
@@ -131,6 +132,29 @@ let checkcodeHandler = (requestHandler: RequestHandlerType, check: boolean | und
   };
 };
 
+let checkParamsHandler = (requestHandler: RequestHandlerType, checkParamsConfig: CheckParamsConfigProps) => {
+  return async ({ req, res, next }: RequestHandlerProps) => {
+    const currentCheckParamsConfig = assign(checkParamsConfig, req.config?.params);
+    const currentFromQuery = currentCheckParamsConfig.fromQuery;
+    const currentFromBody = currentCheckParamsConfig.fromBody;
+    if (currentFromBody && currentFromBody.length > 0) {
+      for (let i = 0; i < currentFromBody.length; i++) {
+        if (req.body[currentFromBody[i]] === undefined) {
+          throw new ServerError(`请求参数错误, body: ${currentFromBody[i]}`, 403);
+        }
+      }
+    }
+    if (currentFromQuery && currentFromQuery.length > 0) {
+      for (let i = 0; i < currentFromQuery.length; i++) {
+        if (req.query[currentFromQuery[i]] === undefined) {
+          throw new ServerError(`请求参数错误, query: ${currentFromQuery[i]}`, 403);
+        }
+      }
+    }
+    return await requestHandler({ req, res, next });
+  };
+};
+
 let userHandler = (requestHandler: RequestHandlerType, strict: boolean | undefined, userConfig: UserConfigProps) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     const currentUserConfig = assign(userConfig, req.config?.user);
@@ -152,10 +176,23 @@ let userHandler = (requestHandler: RequestHandlerType, strict: boolean | undefin
   };
 };
 
-let autoRequestHandler = ({ requestHandler, errorHandler, strict, time, check, cacheConfig, userConfig, checkCodeConfig }: AutoRequestHandlerProps) => {
+let autoRequestHandler = ({
+  requestHandler,
+  errorHandler,
+  strict,
+  time,
+  check,
+  cacheConfig,
+  userConfig,
+  checkCodeConfig,
+  paramsConfig,
+}: AutoRequestHandlerProps) => {
   return transformHandler(
     catchHandler(
-      checkcodeHandler(userHandler(cacheHandler(requestHandler, time, cacheConfig || {}), strict, userConfig || {}), check, checkCodeConfig || {}),
+      checkParamsHandler(
+        checkcodeHandler(userHandler(cacheHandler(requestHandler, time, cacheConfig || {}), strict, userConfig || {}), check, checkCodeConfig || {}),
+        paramsConfig || {}
+      ),
       errorHandler
     )
   );

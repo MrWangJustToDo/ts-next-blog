@@ -5,7 +5,7 @@ type ExpressRequest = Request & {
   db?: Database;
   session?: any;
   user?: any;
-  config?: { cache?: CacheConfigProps; user?: UserConfigProps; check?: CheckCodeConfigProps };
+  config?: { cache?: CacheConfigProps; user?: UserConfigProps; check?: CheckCodeConfigProps; params?: CheckParamsConfigProps };
 };
 
 /* === API === */
@@ -52,6 +52,10 @@ interface CheckCodeConfigProps {
   fieldName?: string;
   fromQuery?: boolean;
 }
+interface CheckParamsConfigProps {
+  fromQuery?: string[];
+  fromBody?: string[];
+}
 interface UserConfigProps {
   needCheck?: boolean;
   checkStrict?: boolean;
@@ -65,6 +69,7 @@ interface AutoRequestHandlerProps {
   checkCodeConfig?: CheckCodeConfigProps;
   cacheConfig?: CacheConfigProps;
   userConfig?: UserConfigProps;
+  paramsConfig?: CheckParamsConfigProps;
 }
 
 export type {
@@ -77,6 +82,7 @@ export type {
   ErrorHandlerType,
   CacheConfigProps,
   CheckCodeConfigProps,
+  CheckParamsConfigProps,
   UserConfigProps,
   AutoRequestHandlerProps,
 };

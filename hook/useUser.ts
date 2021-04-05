@@ -90,7 +90,7 @@ useLogout = () => {
   const router = useRouter();
   const failToast = useFailToast();
   const successToast = useSucessToast();
-  const logoutRequest = useMemo(() => createRequest({ method: "post", header: { apiToken: true } }), []);
+  const logoutRequest = useMemo(() => createRequest({ header: { apiToken: true } }), []);
   const { state, dispatch } = useCurrentState();
   const user = state.client[actionName.currentUser]["data"] as UserProps;
   const logoutCallback = useCallback(() => {

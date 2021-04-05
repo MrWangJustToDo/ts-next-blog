@@ -56,15 +56,12 @@ const getBlogsByParams = autoRequestHandler({
 const getUserHomeAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { userId } = req.query;
-    if (userId) {
-      const data = await getHomeByUserId({ db: req.db!, userId: userId as string });
-      success({ res, resDate: { data } });
-    } else {
-      success({ res, resDate: { data: [] } });
-    }
+    const data = await getHomeByUserId({ db: req.db!, userId: userId as string });
+    success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getUserHomeAction" } }),
   userConfig: { needCheck: true },
+  paramsConfig: { fromQuery: ["userId"] },
 });
 
 export { getHomeAction, getBlogsByParams, getUserHomeAction };

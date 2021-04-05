@@ -1,4 +1,5 @@
-import AboutRightAbout from './aboutRightAbout'
+import AboutRightLink from "./aboutRightLink";
+import AboutRightAbout from "./aboutRightAbout";
 import { SimpleElement } from "types/components";
 
 let AboutRight: SimpleElement;
@@ -12,6 +13,7 @@ AboutRight = () => {
         </div>
         <ul className="list-group list-group-flush">
           <AboutRightAbout />
+          <AboutRightLink />
         </ul>
       </div>
     </div>

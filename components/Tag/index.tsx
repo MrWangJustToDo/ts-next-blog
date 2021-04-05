@@ -11,7 +11,10 @@ let WithChangeTag: TagType;
 
 Tag = ({ tagContent, tagCount, className = "", hoverAble = true }) => {
   return (
-    <div title={tagContent} className={getClass(flexCenter, style.tagItem, "border rounded user-select-none", hoverAble ? style.hoverItem : "", className)}>
+    <div
+      title={tagContent}
+      className={getClass(flexCenter, style.tagItem, "border rounded user-select-none d-inline-flex", hoverAble ? style.hoverItem : "", className)}
+    >
       <div className={getClass("bg-info", flexCenter, style.tagItem__left)}>
         <i className={getClass("ri-price-tag-line pl-1", style.tagItem__left__icon)} />
         <span className={getClass("px-1", style.tagItem__left__text)}>{tagContent}</span>

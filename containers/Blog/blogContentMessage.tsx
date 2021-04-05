@@ -14,9 +14,7 @@ BlogContentMessage = ({ blogId }) => {
         <h5 className="card-header small">留言区</h5>
         <LoadRender<PrimaryMessageProps[]>
           token
-          method="post"
           query={{ blogId }}
-          requestData={{ blogId }}
           apiPath={apiName.primaryMessage}
           loaded={(data) =>
             data.length ? <BlogContentPrimaryMessage messages={data} /> : <div className={getClass("p-5 text-danger", flexCenter)}>暂时没有留言</div>

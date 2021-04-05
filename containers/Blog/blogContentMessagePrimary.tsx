@@ -5,6 +5,7 @@ import { PrimaryMessage } from "components/BlogMessage";
 import { apiName } from "config/api";
 import { primaryMessageLength } from "config/message";
 import { useBasePage } from "hook/useBase";
+import { useUserRequest } from "hook/useUser";
 import { useMessageToReplayModule } from "hook/useMessage";
 import BlogContentChildMessage from "./blogContentMessageChild";
 import BlogContentReplayModule from "./blogContentReplayModule";
@@ -13,7 +14,6 @@ import { ChildMessageProps, PrimaryMessageProps } from "types/components";
 import { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWithReplayType } from "types/containers";
 
 import style from "./index.module.scss";
-import { useUserRequest } from "hook/useUser";
 
 let BlogContentPrimaryMessage: BlogContentPrimaryMessageType;
 
@@ -32,10 +32,8 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
           <PrimaryMessage key={item.commentId} {...item} replayHandler={replay}>
             <LoadRender<ChildMessageProps[]>
               token
-              method="post"
               apiPath={apiName.childMessage}
               query={{ primaryCommentId: String(item.commentId) }}
-              requestData={{ primaryCommentId: item.commentId }}
               loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} primaryCommentId={item.commentId} /> : null)}
             />
           </PrimaryMessage>

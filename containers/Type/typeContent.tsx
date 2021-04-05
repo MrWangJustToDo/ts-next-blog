@@ -24,10 +24,8 @@ TypeContent = ({ blogs }) => {
             </div>
             <div className={getClass("col-lg-4 border-left border-bottom py-2", style.autoHide)}>
               <LoadRender<PrimaryMessageProps[]>
-                method="post"
                 apiPath={apiName.primaryMessage}
                 query={{ blogId: props.blogId! }}
-                requestData={{ blogId: props.blogId }}
                 loaded={(data) => (
                   <>
                     {data.length ? (

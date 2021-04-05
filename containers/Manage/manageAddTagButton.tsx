@@ -9,7 +9,7 @@ import { AutoRequestType } from "types/utils";
 let ManageAddTagButton: SimpleElement;
 
 ManageAddTagButton = () => {
-  const request = useUserRequest({ method: "delete", apiPath: apiName.addTag });
+  const request = useUserRequest({ method: "post", apiPath: apiName.addTag });
 
   const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => (closeHandler: () => void) => JSX.Element>(
     (request) => (judgeApiName) => (requestApiName) => (closeHandler) => (

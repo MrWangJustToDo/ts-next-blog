@@ -1,6 +1,5 @@
 import { apiName } from "config/api";
 import { transformPath } from "utils/path";
-import { ServerError } from "server/utils/error";
 import { getPrimaryByBlogId, getChildByPrimaryId } from "server/database/get";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { insertChildComment, insertPrimaryComment } from "server/database/insert";
@@ -10,41 +9,32 @@ import { PrimaryMessageProps } from "types/components";
 // 获取主评论
 const getPrimaryMessageByBlogIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const body = req.body || {};
-    const { blogId } = body;
-    if (blogId === undefined) {
-      throw new ServerError("博客id参数不存在", 400);
-    }
-    const primaryMessages = await getPrimaryByBlogId({ db: req.db!, blogId });
+    const { blogId } = req.query;
+    const primaryMessages = await getPrimaryByBlogId({ db: req.db!, blogId: blogId as string });
     return success({ res, resDate: { state: "获取成功", data: primaryMessages } });
   },
   errorHandler: ({ res, e, code = 404 }) =>
     fail({ res, statuCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getPrimaryMessageByBlogIdAction" } }),
   cacheConfig: { needCache: true },
+  paramsConfig: { fromQuery: ["blogId"] },
 });
 
 // 获取子评论
 const getChildMessageByPrimaryIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const body = req.body || {};
-    const { primaryCommentId } = body;
-    if (primaryCommentId === undefined) {
-      throw new ServerError("主评论id参数不存在", 400);
-    }
-    const childMessage = await getChildByPrimaryId({ db: req.db!, primaryCommentId });
+    const { primaryCommentId } = req.query;
+    const childMessage = await getChildByPrimaryId({ db: req.db!, primaryCommentId: primaryCommentId as string });
     return success({ res, resDate: { data: childMessage } });
   },
   errorHandler: ({ res, e, code = 404 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getChildMessageByPrimaryIdAction" } }),
   cacheConfig: { needCache: true },
+  paramsConfig: { fromQuery: ["primaryCommentId"] },
 });
 
 // 根据博客id删除所有评论
 const deleteAllMessageByBlogIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { blogId } = req.body;
-    if (!blogId) {
-      throw new ServerError("请求的blogId参数不存在", 400);
-    }
     const primaryIds: string[] = [];
     // 获取需要删除的主评论
     const primaryMessages: PrimaryMessageProps[] = await getPrimaryByBlogId({ db: req.db!, blogId });
@@ -61,6 +51,7 @@ const deleteAllMessageByBlogIdAction = autoRequestHandler({
     fail({ res, statuCode: code, resDate: { state: "删除失败", data: e.toString(), methodName: "deleteAllMessageByBlogId" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
+  paramsConfig: { fromBody: ["blogId"] },
 });
 
 // 发布主评论
@@ -93,6 +84,7 @@ const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
     fail({ res, statuCode: code, resDate: { state: "评论发布错误", data: e.toString(), methodName: "publishPrimaryMessageByBlogIdAction" } }),
   checkCodeConfig: { needCheck: true },
   cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
+  paramsConfig: { fromBody: ["blogId", "commentId", "userId", "content"] },
 });
 
 // 发布子评论
@@ -126,6 +118,7 @@ const publishChildMessageByPrimaryIdAction = autoRequestHandler({
   cacheConfig: {
     needDelete: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
   },
+  paramsConfig: { fromBody: ["primaryCommentId", "blogId", "commentId", "userId", "toIp", "toUserId", "content"] },
 });
 
 export {

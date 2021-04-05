@@ -11,39 +11,40 @@ import { transformPath } from "utils/path";
 // 根据id获取blog
 const getBlogByBlogIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    if (req.query.blogId === undefined) {
-      throw new ServerError("博客id为空", 400);
-    } else {
-      const blogId = <string>req.query.blogId;
-      const data = await getBlogByBlogId({ db: req.db!!, blogId });
-      return success({ res, statuCode: 200, resDate: { data } });
-    }
+    const blogId = <string>req.query.blogId;
+    const data = await getBlogByBlogId({ db: req.db!!, blogId });
+    return success({ res, statuCode: 200, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getBlogByBlogIdAction" } }),
   cacheConfig: { needCache: true },
+  paramsConfig: { fromQuery: ["blogId"] },
 });
 
 // 发布一个新的blog
 const publishBlogAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { blogId, blogOriginState, blogTitle, blogContent, typeId, tagId, blogImgLink, blogState, blogPriseState, blogCommentState, blogPreview } = req.body;
-    if (!typeId) {
-      throw new ServerError("typeId参数不存在", 403);
-    }
-    if (!tagId) {
-      throw new ServerError("tagId参数不存在", 403);
-    }
-    // 获取当前type
-    const type = await getTypeByTypeId({ db: req.db!, typeId });
-    // 增加type
-    await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount + 1 });
     const tagIdArr = typeof tagId === "string" ? tagId.split(",") : tagId;
     if (!Array.isArray(tagIdArr)) {
       throw new ServerError(`tagId参数类型错误, tagId: ${tagId}`, 401);
     }
+    // 获取当前type
+    const type = await getTypeByTypeId({ db: req.db!, typeId });
+    if (!type) {
+      throw new ServerError(`typeId不合法, typeId: ${typeId}`, 404);
+    }
+    const tagArr = [];
+    // 增加type
     for (let id of tagIdArr) {
       const tag = await getTagByTagId({ db: req.db!, tagId: id });
-      await updateTagCountByTagId({ db: req.db!, tagId: id, count: tag.tagCount + 1 });
+      if (!tag) {
+        throw new ServerError(`tagId不合法, tagId: ${id}`, 404);
+      }
+      tagArr.push(tag);
+    }
+    await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount + 1 });
+    for (let tagProps of tagArr) {
+      await updateTagCountByTagId({ db: req.db!, tagId: tagProps.id, count: tagProps.tagCount + 1 });
     }
     // 增加blog
     const now = new Date();
@@ -101,28 +102,54 @@ const publishBlogAction = autoRequestHandler({
     fail({ res, statuCode: code, resDate: { state: "创建博客失败", data: e.toString(), methodName: "publishBlogAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.home, apiName.type, apiName.tag] },
+  paramsConfig: {
+    fromQuery: ["userId"],
+    fromBody: [
+      "blogOriginState",
+      "blogTitle",
+      "blogContent",
+      "typeId",
+      "tagId",
+      "blogImgLink",
+      "blogState",
+      "blogPriseState",
+      "blogCommentState",
+      "blogPreview",
+    ],
+  },
 });
 
 // 根据id删除blog
 const deleteBlogByBlogIdAAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { blogId, typeId, tagId } = req.body;
-    if (!typeId) {
-      throw new ServerError("typeId参数不存在", 403);
-    }
-    if (!tagId) {
-      throw new ServerError("tagId参数不存在", 403);
-    }
+    // 判断
     let tagIdArr = typeof tagId === "string" ? tagId.split(",") : tagId;
     if (!Array.isArray(tagIdArr)) {
       throw new ServerError(`tagId的参数不正确, tagId: ${tagId}`, 401);
     }
+    let tagArr = [];
     for (let id of tagIdArr) {
       const tag = <TagProps>await getTagByTagId({ db: req.db!, tagId: id });
-      await updateTagCountByTagId({ db: req.db!, tagId, count: tag.tagCount! - 1 });
+      if (!tag) {
+        throw new ServerError(`tagId不合法, tagId: ${id}`, 404);
+      }
+      tagArr.push(tag);
     }
-    // 获取当前type
     const type = await getTypeByTypeId({ db: req.db!, typeId });
+    if (!type) {
+      throw new ServerError(`typeId不合法, typeId: ${typeId}`, 404);
+    }
+    const blog = await getBlogByBlogId({ db: req.db!, blogId });
+    if (!blog) {
+      throw new ServerError(`blogId不合法, blogId: ${blogId}`, 404);
+    }
+
+    // 更新
+    // 减少tag
+    for (let tagProps of tagArr) {
+      await updateTagCountByTagId({ db: req.db!, tagId: tagProps.tagId!, count: tagProps.tagCount! - 1 });
+    }
     // 减少type
     await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount - 1 });
     // 删除所有评论
@@ -138,6 +165,7 @@ const deleteBlogByBlogIdAAction = autoRequestHandler({
     fail({ res, statuCode: code, resDate: { state: "删除博客失败", data: e.toString(), methodName: "deleteBlogByBlogIdAAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.home, apiName.tag, apiName.type] },
+  paramsConfig: { fromQuery: ["userId"], fromBody: ["blogId", "typeId", "tagId"] },
 });
 
 // 根据id更新blog
@@ -149,12 +177,16 @@ const updateBlogByBlogIdAction = autoRequestHandler({
     if (oldProps.typeId !== newProps.typeId) {
       // 获取type
       const oldType = await getTypeByTypeId({ db: req.db!, typeId: oldProps.typeId });
-      console.log(oldType);
-      // 减少type
-      await updateTypeCountByTypeId({ db: req.db!, typeId: oldProps.typeId, count: oldType.typeCount - 1 });
       // 获取type
       const newType = await getTypeByTypeId({ db: req.db!, typeId: newProps.typeId });
-      console.log(newType);
+      if (!oldType) {
+        throw new ServerError(`oldType不合法, typeId: ${oldProps.typeId}`, 404);
+      }
+      if (!newType) {
+        throw new ServerError(`newType不合法, typeId: ${newProps.typeId}`, 404);
+      }
+      // 减少type
+      await updateTypeCountByTypeId({ db: req.db!, typeId: oldProps.typeId, count: oldType.typeCount - 1 });
       // 增加type
       await updateTypeCountByTypeId({ db: req.db!, typeId: newProps.typeId, count: newType.typeCount + 1 });
     }
@@ -233,6 +265,7 @@ const updateBlogByBlogIdAction = autoRequestHandler({
       ({ req }) => transformPath({ apiPath: apiName.blog, query: { blogId: req.body.newProps.blogId }, needPre: false }),
     ],
   },
+  paramsConfig: { fromQuery: ["userId"], fromBody: ["oldProps", "newProps"] },
 });
 
 export { updateBlogByBlogIdAction, getBlogByBlogIdAction, publishBlogAction, deleteBlogByBlogIdAAction };

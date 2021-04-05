@@ -14,7 +14,7 @@ import style from "./index.module.scss";
 let ManageDeleteTypeItem: ManageDeleteTypeItemType;
 
 ManageDeleteTypeItem = ({ typeId, typeContent, typeCount }) => {
-  const request = useUserRequest({ method: "post", apiPath: apiName.deleteType, data: { deleteType: typeId } });
+  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId } });
 
   const body = useCallback<(request: AutoRequestType) => (item: JSX.Element) => (successCallback: () => void) => (close: () => void) => JSX.Element>(
     (request) => (item) => (successCallback) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,

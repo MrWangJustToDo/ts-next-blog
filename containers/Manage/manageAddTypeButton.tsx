@@ -9,7 +9,7 @@ import { AutoRequestType } from "types/utils";
 let ManageAddTypeButton: SimpleElement;
 
 ManageAddTypeButton = () => {
-  const request = useUserRequest({ method: "delete", apiPath: apiName.addType });
+  const request = useUserRequest({ method: "post", apiPath: apiName.addType });
 
   const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => (closeHandler: () => void) => JSX.Element>(
     (request) => (judgeApiName) => (requestApiName) => (closeHandler) => (

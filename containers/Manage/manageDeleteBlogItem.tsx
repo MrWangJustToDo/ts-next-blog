@@ -17,7 +17,12 @@ let ManageDeleteBlogItem: BlogContentType;
 ManageDeleteBlogItem = (props) => {
   const filter = useFilterResult({ currentBlogId: props.blogId! });
 
-  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteBlog, data: { blogId: props.blogId, typeId: props.typeId, tagId: props.tagId } });
+  const request = useUserRequest({
+    method: "delete",
+    apiPath: apiName.deleteBlog,
+    data: { blogId: props.blogId, typeId: props.typeId, tagId: props.tagId },
+    header: { apiToken: true },
+  });
 
   const body = useCallback<(request: AutoRequestType) => (item: JSX.Element) => (successCallback: () => void) => (close: () => void) => JSX.Element>(
     (request) => (item) => (successCallback) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,

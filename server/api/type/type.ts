@@ -5,6 +5,7 @@ import { insertType } from "server/database/insert";
 import { deleteTypeByTypeId } from "server/database/delete";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { getType, getTypeByTypeContent, getTypeByTypeId } from "server/database/get";
+import { TypeProps } from "types/hook";
 
 // 获取type数据
 const getTypeAction = autoRequestHandler({
@@ -20,9 +21,6 @@ const getTypeAction = autoRequestHandler({
 const checkTypeAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { typeContent } = req.body;
-    if (!typeContent) {
-      throw new ServerError("check type参数不正确", 400);
-    }
     const result = await getTypeByTypeContent({ db: req.db!, typeContent });
     if (result) {
       throw new ServerError("type 内容重复", 400);
@@ -31,15 +29,13 @@ const checkTypeAction = autoRequestHandler({
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
   userConfig: { needCheck: true },
+  paramsConfig: { fromBody: ["typeContent"] },
 });
 
 // 新增type
 const addTypeAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { typeContent } = req.body;
-    if (!typeContent) {
-      throw new ServerError("add type参数不正确", 400);
-    }
     const typeId = getRandom(10000).toString(16);
     await insertType({ db: req.db!, typeId, typeState: 1, typeContent, typeCount: 0 });
     success({ res, resDate: { state: "新增type成功", data: `typeId: ${typeId}, typeContent: ${typeContent}` } });
@@ -47,18 +43,19 @@ const addTypeAction = autoRequestHandler({
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "添加type失败", data: e.toString(), methodName: "addTypeAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.type] },
+  paramsConfig: { fromBody: ["typeContent"] },
 });
 
 // 删除type
 const deleteTypeAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { deleteType } = req.body;
-    if (!deleteType) {
-      throw new ServerError("delete type 参数不正确", 400);
-    }
-    const type = await getTypeByTypeId({ db: req.db!, typeId: deleteType });
+    const type = <TypeProps>await getTypeByTypeId({ db: req.db!, typeId: deleteType });
     if (!type) {
       throw new ServerError(`需要删除的type：${deleteType}不存在`, 400);
+    }
+    if (type.typeCount! > 0) {
+      throw new ServerError(`需要删除的type的博客引用不为0`, 400);
     }
     await deleteTypeByTypeId({ db: req.db!, typeId: deleteType });
     success({ res, resDate: { state: "删除type成功", data: `typeId: ${type.typeId}, typeContent: ${type.typeContent}` } });
@@ -67,6 +64,7 @@ const deleteTypeAction = autoRequestHandler({
     fail({ res, statuCode: code, resDate: { state: "删除type出错", data: e.toString(), methodName: "deleteTypeAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.type] },
+  paramsConfig: { fromBody: ["deleteType"] },
 });
 
 export { getTypeAction, checkTypeAction, addTypeAction, deleteTypeAction };
