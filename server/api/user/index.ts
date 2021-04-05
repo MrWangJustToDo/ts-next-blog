@@ -1,6 +1,6 @@
 // 用户信息的操作
 import { apiName } from "config/api";
-import { autoLoginAction, loginAction, logoutAction, registerAction, getUserExByUserIdAction, getUserByUserIdAction } from "./user";
+import { autoLoginAction, loginAction, logoutAction, registerAction, getUserExByUserIdAction, getUserByUserIdAction, getAuthorByUserIdAction } from "./user";
 
 const userHandler = {
   [apiName.login]: loginAction,
@@ -9,6 +9,7 @@ const userHandler = {
   [apiName.autoLogin]: autoLoginAction,
   [apiName.user]: getUserByUserIdAction,
   [apiName.userEx]: getUserExByUserIdAction,
+  [apiName.author]: getAuthorByUserIdAction,
 };
 
 export { userHandler };

@@ -6,13 +6,23 @@ import { apiName } from "config/api";
 import { cancel, delay } from "utils/delay";
 import { actionHandler } from "utils/action";
 import { addIdForHeads } from "utils/markdown";
+import { createRequest } from "utils/fetcher";
 import { formSerialize, getRandom } from "utils/data";
 import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSucessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
-import { UseBlogMenuType, UseAutoScrollType, UseLinkToImgType, UsePublishType, UseEditorType, UseInputToImageModuleType } from "types/hook";
+import {
+  UseBlogMenuType,
+  UseAutoScrollType,
+  UseLinkToImgType,
+  UsePublishType,
+  UseEditorType,
+  UseInputToImageModuleType,
+  UseUpdateBlogReadType,
+  UseLikeToPayModuleType,
+} from "types/hook";
 
 import "tocbot/dist/tocbot.css";
 
@@ -31,6 +41,10 @@ let usePublish: UsePublishType;
 let useInputToImageModule: UseInputToImageModuleType;
 
 let useUpdateBlog: UsePublishType;
+
+let useUpdateBlogRead: UseUpdateBlogReadType;
+
+let useLikeToPayModule: UseLikeToPayModuleType;
 
 useBlogMenu = (className) => {
   const [bool, setBool] = useState<boolean>(false);
@@ -244,4 +258,44 @@ useUpdateBlog = ({ request, id }) => {
   return [ref, submit];
 };
 
-export { useBlogMenu, useAutoScrollTop, useAutoScrollBottom, useLinkToImg, useEditor, usePublish, useInputToImageModule, useUpdateBlog };
+useUpdateBlogRead = (blogId) => {
+  const fail = useFailToast();
+  const success = useSucessToast();
+  useEffect(() => {
+    const request = createRequest({ method: "post", apiPath: apiName.addBlogRead, data: { blogId } });
+    delay(1000, () => {
+      request
+        .run<ApiRequestResult<string>>()
+        .then(({ code, data }) => {
+          if (code === 0) {
+            success("更新阅读次数成功");
+          } else {
+            fail(`更新阅读次数失败, ${data.toString()}`);
+          }
+        })
+        .catch((e) => fail(`更新阅读次数出错, ${e.toString()}`));
+    });
+  }, [blogId]);
+};
+
+useLikeToPayModule = ({ body, className }) => {
+  const opne = useOverlayOpen();
+  const click = useCallback(() => {
+    opne({ head: "感谢", body, className });
+  }, [body]);
+
+  return click;
+};
+
+export {
+  useBlogMenu,
+  useAutoScrollTop,
+  useAutoScrollBottom,
+  useLinkToImg,
+  useEditor,
+  usePublish,
+  useInputToImageModule,
+  useUpdateBlog,
+  useUpdateBlogRead,
+  useLikeToPayModule,
+};

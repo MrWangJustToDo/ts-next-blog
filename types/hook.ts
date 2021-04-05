@@ -189,6 +189,16 @@ interface UsePublishProps {
 interface UsePublishType {
   (props: UsePublishProps): [RefObject<HTMLFormElement>, () => Promise<void>];
 }
+interface UseUpdateBlogReadType {
+  (props: string): void;
+}
+interface UseLikeToPayModuleProps {
+  body: JSX.Element;
+  className?: string;
+}
+interface UseLikeToPayModuleType {
+  (props: UseLikeToPayModuleProps): () => void;
+}
 interface UseInputToImageModuleProps {
   className?: string;
   inputRef: RefObject<HTMLInputElement>;
@@ -198,8 +208,25 @@ interface UseInputToImageModuleProps {
 interface UseInputToImageModuleType {
   (props: UseInputToImageModuleProps): () => void;
 }
+interface AuthorProps {
+  userId?: string;
+  userAlipay?: string;
+  userWechat?: string;
+  cacheState?: number;
+}
 
-export type { UseBlogMenuType, UseAutoScrollType, UseLinkToImgType, UseEditorType, UsePublishProps, UsePublishType, UseInputToImageModuleType };
+export type {
+  AuthorProps,
+  UseBlogMenuType,
+  UseAutoScrollType,
+  UseLinkToImgType,
+  UseEditorType,
+  UsePublishProps,
+  UsePublishType,
+  UseInputToImageModuleType,
+  UseUpdateBlogReadType,
+  UseLikeToPayModuleType,
+};
 
 /* useData */
 interface UseBoolResult {

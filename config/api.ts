@@ -11,6 +11,7 @@ enum apiName {
   tag = "tag", // 获取tag页面数据apiName
   // 用户信息
   login = "login", // 登录
+  author = "author",
   logout = "logout", // 登出
   register = "register", // 注册
   autoLogin = "autoLogin", // 自动登录
@@ -20,6 +21,7 @@ enum apiName {
   captchaStr = "captchaStr", // 获取验证码文本
   // 博客信息
   blog = "blog", // 获取blog详情
+  addBlogRead = "addBlogRead",
   childMessage = "childMessage", // 获取次要留言信息
   primaryMessage = "primaryMessage", // 获取主要留言信息
   putChildMessage = "putChildMessage", // 发布次要评论
@@ -44,6 +46,7 @@ enum apiName {
   testBlog = "testBlog",
   testHome = "testHome",
   testUser = "testUser",
+  testAuthor = "testAuthor",
 }
 
 // 需要暂存结果的路径
@@ -56,6 +59,7 @@ const accessApi: AccessType = {
   [apiName.login]: { disable: false, token: false, method: "post" },
   [apiName.logout]: { disable: false, token: false },
   [apiName.register]: { disable: false, token: false, method: "post" },
+  [apiName.author]: { disable: false, token: false },
   // 图片信息
   [apiName.image]: { disable: false, token: false },
   [apiName.captcha]: { disable: false, token: false },
@@ -69,6 +73,7 @@ const accessApi: AccessType = {
   [apiName.type]: { disable: false, token: false },
   // 博客信息
   [apiName.blog]: { disable: false, token: false, config: { cache: { needCache: true } } },
+  [apiName.addBlogRead]: { disable: false, token: false, method: "post" },
   [apiName.childMessage]: { disable: false, token: false },
   [apiName.primaryMessage]: { disable: false, token: false },
   [apiName.putChildMessage]: { disable: false, token: false, method: "post" },

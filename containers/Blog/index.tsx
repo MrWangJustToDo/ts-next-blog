@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import BlogHead from "components/BlogHead";
+import { useUpdateBlogRead } from "hook/useBlog";
 import BlogContentImg from "./blogContentImg";
 import BlogContentType_Tag from "./blogContentType&Tag";
 import BlogContentBody from "./blogContentBody";
@@ -12,7 +13,9 @@ let Blog: BlogContentType;
 const BlogContentMessage = dynamic(() => import("./blogContentMessage"));
 
 Blog = (props) => {
-  const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId, blogOriginState, blogPriseState, blogCommentState } = props;
+  const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId, blogOriginState, blogPriseState, blogCommentState, userId } = props;
+
+  useUpdateBlogRead(blogId!);
 
   return (
     <div className="card user-select-none">
@@ -21,7 +24,7 @@ Blog = (props) => {
         <BlogContentImg src={blogImgLink!} />
         <BlogContentType_Tag typeContent={typeContent} tagContent={tagContent} blogOriginState={blogOriginState} />
         <BlogContentBody blogTitle={blogTitle} blogContent={blogContent} />
-        <BlogContentLike blogId={blogId} blogPriseState={blogPriseState} />
+        <BlogContentLike blogId={blogId} blogPriseState={blogPriseState} userId={userId} />
         {blogCommentState ? <BlogContentMessage blogId={blogId!} /> : null}
         {blogCommentState ? <BlogContentMessagePut blogId={blogId!} /> : null}
       </ul>

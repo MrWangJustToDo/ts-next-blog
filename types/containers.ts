@@ -82,7 +82,6 @@ interface BlogContentMessagePutType {
 export type { BlogContentMessagePutType };
 
 /* blogContentReplayModule */
-
 interface BlogContentReplayModuleProps {
   toIp: string;
   toUserId: string;
@@ -98,6 +97,18 @@ interface BlogContentReplayModuleWithImagType {
 }
 
 export type { BlogContentReplayModuleType, BlogContentReplayModuleWithImagType };
+
+/* BlogContentLikeToPayModule */
+interface BlogContentLikeToPayModuleProps {
+  aliUrl: string;
+  wchatUrl: string;
+}
+
+interface BlogContentLikeToPayModuleType {
+  (props: BlogContentLikeToPayModuleProps): JSX.Element;
+}
+
+export type { BlogContentLikeToPayModuleType };
 
 /* === Login === */
 interface ForWardRefType<T> {

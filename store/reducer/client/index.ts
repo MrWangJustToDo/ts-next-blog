@@ -9,6 +9,7 @@ import currentTag from "./currentTag";
 import currentTagPage from "./currentTagPage";
 import currentBlogId from "./currentBlogId";
 import currentArchive from "./currentArchive";
+import currentAssentId from "./currentAssentId";
 import currentUser from "./currentUser";
 import currentResult from "./currentResult";
 
@@ -22,6 +23,7 @@ export default combineReducers({
   [actionName.currentTagPage]: currentTagPage,
   [actionName.currentBlogId]: currentBlogId,
   [actionName.currentArchive]: currentArchive,
+  [actionName.currentAssent]: currentAssentId,
   [actionName.currentUser]: currentUser,
   [actionName.currentResult]: currentResult,
 });

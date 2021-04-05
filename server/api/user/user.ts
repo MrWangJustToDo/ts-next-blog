@@ -1,6 +1,6 @@
 import { ServerError } from "server/utils/error";
 import { insertUser } from "server/database/insert";
-import { getUserByUser, getUserByUserId, getUsersExByUserId } from "server/database/get";
+import { getAuthorByUserId, getUserByUser, getUserByUserId, getUsersExByUserId } from "server/database/get";
 import { autoRequestHandler, success, fail, transformHandler, catchHandler } from "server/middleware/apiHandler";
 
 // 用户登录请求
@@ -85,4 +85,16 @@ const getUserByUserIdAction = autoRequestHandler({
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getUserByUserIdAction" } }),
 });
 
-export { loginAction, logoutAction, autoLoginAction, registerAction, getUserByUserIdAction, getUserExByUserIdAction };
+const getAuthorByUserIdAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    const { userId } = req.query;
+    const data = await getAuthorByUserId({ db: req.db!, userId: userId as string });
+    success({ res, resDate: { data } });
+  },
+  errorHandler: ({ res, e, code = 500 }) =>
+    fail({ res, statuCode: code, resDate: { state: "获取失败", data: e.toString() }, methodName: "getAuthorByUserIdAction" }),
+  cacheConfig: { needCache: true },
+  paramsConfig: { fromQuery: ["userId"] },
+});
+
+export { loginAction, logoutAction, autoLoginAction, registerAction, getUserByUserIdAction, getUserExByUserIdAction, getAuthorByUserIdAction };

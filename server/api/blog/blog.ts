@@ -268,4 +268,25 @@ const updateBlogByBlogIdAction = autoRequestHandler({
   paramsConfig: { fromQuery: ["userId"], fromBody: ["oldProps", "newProps"] },
 });
 
-export { updateBlogByBlogIdAction, getBlogByBlogIdAction, publishBlogAction, deleteBlogByBlogIdAAction };
+const updateBlogReadAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    const { blogId } = req.body;
+    const blog = await getBlogByBlogId({ db: req.db!, blogId });
+    if (!blog) {
+      throw new ServerError(`blogIg不合法, blogId: ${blogId}`, 403);
+    }
+    await updateTableWithParam({ db: req.db!, table: "home", param: { set: { blogReadCount: blog.blogReadCount + 1 }, where: { blogId: { value: blogId } } } });
+    await updateTableWithParam({
+      db: req.db!,
+      table: "blogs",
+      param: { set: { blogReadCount: blog.blogReadCount + 1 }, where: { blogId: { value: blogId } } },
+    });
+    success({ res, resDate: { data: "更新readCount成功" } });
+  },
+  errorHandler: ({ res, e, code = 500 }) =>
+    fail({ res, statuCode: code, resDate: { state: "更新readcount失败", data: e.toString(), methodName: "updateBlogReadAction" } }),
+  paramsConfig: { fromBody: ["blogId"] },
+  cacheConfig: { needDelete: [apiName.home] },
+});
+
+export { updateBlogByBlogIdAction, getBlogByBlogIdAction, publishBlogAction, deleteBlogByBlogIdAAction, updateBlogReadAction };

@@ -240,10 +240,14 @@ const getChildByBlogId = async ({ db, blogId }: { db: Database; blogId: string }
   return await db.all("SELECT * FROM childComment LEFT JOIN users ON childComment.fromUserId = users.userId WHERE childComment.blogId = ?", blogId);
 };
 
+const getAuthorByUserId = async ({ db, userId }: { db: Database; userId: string }) => {
+  return await db.get("SELECT * FROM author WHERE userId = ?", userId);
+};
+
 export { getUserByUser, getAliveBlogCount, getAliveTag, getBlogCount, getBlogByBlogId, getChildByPrimaryId, getHome, getPrimaryByBlogId, getTag };
 
 export { getTypeByTypeContent, getTagByTagContent, getAliveType, getTagByTagId, getTagCount, getType, getTypeByTypeId, getTypeCount, getUserByUserId };
 
 export { getUserCount, getUsersExByUserId, getBlogsByBlogTitle, getBlogsByTypeId, getBlogsByTagId, getChildByBlogId, getBlogsByBlogTitleAndUserId };
 
-export { getBlogsByTypeIdAndUserId, getBlogsByTagIdAndUserId, getHomeByUserId };
+export { getBlogsByTypeIdAndUserId, getBlogsByTagIdAndUserId, getHomeByUserId, getAuthorByUserId };

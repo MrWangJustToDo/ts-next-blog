@@ -1,6 +1,6 @@
 import { Database } from "sqlite";
 import { TagProps } from "types/containers";
-import { BlogContentProps, TypeProps, UserProps } from "types/hook";
+import { AuthorProps, BlogContentProps, TypeProps, UserProps } from "types/hook";
 import { ChildMessageProps, PrimaryMessageProps, UserExProps } from "types/components";
 
 // 添加博客信息
@@ -176,4 +176,8 @@ const insertChildComment = async ({
   );
 };
 
-export { insertBlog, insertHome, insertUserEx, insertUser, insertType, insertTag, insertChildComment, insertPrimaryComment };
+const insertAuthor = async ({ db, userId, userAlipay, userWechat, cacheState }: AuthorProps & { db: Database }) => {
+  return await db.run("INSERT INTO author VALUES(?,?,?,?)", userId, userAlipay, userWechat, cacheState);
+};
+
+export { insertBlog, insertHome, insertUserEx, insertUser, insertType, insertTag, insertChildComment, insertPrimaryComment, insertAuthor };

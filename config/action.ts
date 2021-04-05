@@ -11,6 +11,7 @@ enum actionName {
   currentArchive = "currentArchive",
   currentUser = "currentUser",
   currentResult = "currentResult",
+  currentAssent = "currentAssent",
 }
 
 export { actionName };

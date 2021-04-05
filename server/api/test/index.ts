@@ -1,5 +1,6 @@
 import { apiName } from "config/api";
 import {
+  test_author,
   test_childComment,
   test_insertTag,
   test_insertType,
@@ -19,6 +20,7 @@ const testHandler = {
   [apiName.testType]: test_insertType,
   [apiName.testUser]: test_registerUser,
   [apiName.testUserEx]: test_insertUserEx,
+  [apiName.testAuthor]: test_author,
 };
 
 export { testHandler };

@@ -1,4 +1,14 @@
-import { insertBlog, insertChildComment, insertHome, insertPrimaryComment, insertTag, insertType, insertUser, insertUserEx } from "server/database/insert";
+import {
+  insertAuthor,
+  insertBlog,
+  insertChildComment,
+  insertHome,
+  insertPrimaryComment,
+  insertTag,
+  insertType,
+  insertUser,
+  insertUserEx,
+} from "server/database/insert";
 import { autoRequestHandler, success } from "server/middleware/apiHandler";
 
 const test_publishBlog = autoRequestHandler({
@@ -130,4 +140,27 @@ const test_childComment = autoRequestHandler({
   },
 });
 
-export { test_insertTag, test_childComment, test_insertType, test_insertUserEx, test_primaryComment, test_publishBlog, test_publishHome, test_registerUser };
+const test_author = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    await insertAuthor({
+      db: req.db!,
+      userId: "1",
+      userAlipay: "/avatar/aliPay.jpg",
+      userWechat: "/avatar/weichatPay.png",
+      cacheState: 0,
+    });
+    success({ res, resDate: { data: "ok" } });
+  },
+});
+
+export {
+  test_insertTag,
+  test_childComment,
+  test_insertType,
+  test_insertUserEx,
+  test_primaryComment,
+  test_publishBlog,
+  test_publishHome,
+  test_registerUser,
+  test_author,
+};
