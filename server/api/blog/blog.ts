@@ -44,7 +44,7 @@ const publishBlogAction = autoRequestHandler({
     }
     await updateTypeCountByTypeId({ db: req.db!, typeId, count: type.typeCount + 1 });
     for (let tagProps of tagArr) {
-      await updateTagCountByTagId({ db: req.db!, tagId: tagProps.id, count: tagProps.tagCount + 1 });
+      await updateTagCountByTagId({ db: req.db!, tagId: tagProps.tagId, count: tagProps.tagCount + 1 });
     }
     // 增加blog
     const now = new Date();

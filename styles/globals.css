@@ -61,6 +61,15 @@ ul {
   transform: translate(-50%, -50%);
 }
 
+.three-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
 /* 块/段落引用 */
 .typo blockquote {
   position: relative;

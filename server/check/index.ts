@@ -37,10 +37,10 @@ detectionToken = transformHandler(
       // 挂载config
       req.config = config;
       // 开发环境无需验证
-      // if (process.env.NODE_ENV !== "production") {
-      //   next();
-      //   return;
-      // }
+      if (process.env.NODE_ENV !== "production") {
+        next();
+        return;
+      }
       // 当前路径无效
       if (disable) {
         throw new ServerError("路径不存在", 404);
@@ -55,12 +55,12 @@ detectionToken = transformHandler(
     } else {
       // 未配置api访问检测
       log(`this api request not set yet: ${path}`, "warn");
-      // if (process.env.NODE_ENV !== "production") {
-      //   req.config = {};
-      //   next();
-      // } else {
-      throw new ServerError("访问路径不存在", 404);
-      // }
+      if (process.env.NODE_ENV !== "production") {
+        req.config = {};
+        next();
+      } else {
+        throw new ServerError("访问路径不存在", 404);
+      }
     }
   })
 );

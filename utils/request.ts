@@ -42,10 +42,12 @@ removePending = (config) => {
 // 添加请求拦截器
 instance.interceptors.request.use(
   (request) => {
-    // removePending(request);
-    request.cancelToken = new CancelToken((c) => {
-      pending.push({ url: request.url, method: request.method, params: request.params, data: request.data, cancel: c });
-    });
+    if ((process as any).browser) {
+      removePending(request);
+      request.cancelToken = new CancelToken((c) => {
+        pending.push({ url: request.url, method: request.method, params: request.params, data: request.data, cancel: c });
+      });
+    }
     return request;
   },
   (error) => {
@@ -56,7 +58,9 @@ instance.interceptors.request.use(
 // 添加响应拦截器
 instance.interceptors.response.use(
   (response) => {
-    // removePending(response.config);
+    if ((process as any).browser) {
+      removePending(response.config);
+    }
     return response;
   },
   (error) => {

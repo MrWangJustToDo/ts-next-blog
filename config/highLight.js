@@ -9,6 +9,7 @@ import less from "highlight.js/lib/languages/less";
 import scss from "highlight.js/lib/languages/scss";
 import shell from "highlight.js/lib/languages/shell";
 import xml from "highlight.js/lib/languages/xml";
+import sql from 'highlight.js/lib/languages/sql';
 // import "highlight.js/styles/monokai-sublime.css";
 import "highlight.js/styles/dracula.css";
 
@@ -21,5 +22,6 @@ Hljs.registerLanguage("less", less);
 Hljs.registerLanguage("scss", scss);
 Hljs.registerLanguage("shell", shell);
 Hljs.registerLanguage("xml", xml);
+Hljs.registerLanguage("sql", sql);
 
 export default Hljs;

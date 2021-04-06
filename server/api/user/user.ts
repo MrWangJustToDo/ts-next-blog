@@ -61,15 +61,13 @@ const registerAction = autoRequestHandler({
 // 获取用户点赞相关数据
 const getUserExByUserIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    if (req.query.userId === undefined) {
-      throw new ServerError("用户信息不存在", 400);
-    } else {
-      const userId = req.query.userId as string;
-      const data = await getUsersExByUserId({ userId, db: req.db! });
-      success({ res, resDate: { data } });
-    }
+    const userId = req.query.userId as string;
+    const data = await getUsersExByUserId({ userId, db: req.db! });
+    return success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getUserExByUserIdAction" } }),
+  cacheConfig: { needCache: true },
+  paramsConfig: { fromQuery: ["userId"] },
 });
 
 // 根据id获取用户详细数据
@@ -89,7 +87,7 @@ const getAuthorByUserIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { userId } = req.query;
     const data = await getAuthorByUserId({ db: req.db!, userId: userId as string });
-    success({ res, resDate: { data } });
+    return success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
     fail({ res, statuCode: code, resDate: { state: "获取失败", data: e.toString() }, methodName: "getAuthorByUserIdAction" }),

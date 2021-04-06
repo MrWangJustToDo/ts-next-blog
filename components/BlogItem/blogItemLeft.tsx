@@ -15,7 +15,7 @@ BlogItemLeft = (props) => {
           <p className="badge badge-info font-weight-normal">{typeContent}</p>
         </div>
       </h5>
-      <p className="card-text">{blogPreview}</p>
+      <p className="card-text three-line">{blogPreview}</p>
       <BlogItemLeftUl {...props} />
     </div>
   );
