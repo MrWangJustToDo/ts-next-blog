@@ -18,7 +18,11 @@ const handle = nextApp.getRequestHandler();
 
 const app = express();
 
-app.use(express.static(`${process.cwd()}/static`));
+app.use(
+  express.static(`${process.cwd()}/static`, {
+    maxAge: 365 * 24 * 3600000,
+  })
+);
 
 app.use(express.json({ limit: "5mb" }));
 

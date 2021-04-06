@@ -48,7 +48,7 @@ detectionToken = transformHandler(
       if (method.toLowerCase() !== req.method.toLowerCase()) {
         throw new ServerError(`方法不支持: ${req.method.toLowerCase()}`, 405);
       }
-      if (token && req.headers.apitoken !== req.session.apiToken) {
+      if (token && req.headers.apiToken !== req.session.apiToken) {
         throw new ServerError("token检测失败", 401);
       }
       next();

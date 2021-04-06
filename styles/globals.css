@@ -17,7 +17,7 @@ body {
 
 @font-face {
   font-family: blog-font;
-  src: url("/font/测试2.ttf") format("truetype");
+  src: url("/font/blog.ttf") format("truetype");
 }
 
 a {

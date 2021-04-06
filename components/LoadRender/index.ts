@@ -79,6 +79,12 @@ LoadRender = <T>({
     return loaded(currentData);
   }
 
+  if (initialData) {
+    cancel(currentPath!);
+
+    return loaded(initialData);
+  }
+
   return loadingEle;
 };
 

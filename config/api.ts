@@ -55,7 +55,7 @@ const cacheApi = [apiName.home, apiName.userEx, apiName.user, apiName.type, apiN
 // 响应配置
 const accessApi: AccessType = {
   // 用户信息
-  [apiName.autoLogin]: { disable: false },
+  [apiName.autoLogin]: { disable: false, token: false },
   [apiName.login]: { disable: false, token: false, method: "post" },
   [apiName.logout]: { disable: false, token: false },
   [apiName.register]: { disable: false, token: false, method: "post" },
@@ -66,9 +66,9 @@ const accessApi: AccessType = {
   [apiName.captchaStr]: { disable: false, token: false },
   // 首页信息
   [apiName.home]: { disable: false, token: false, config: { cache: { needCache: true } } },
-  [apiName.userHome]: { disable: false, token: true },
+  [apiName.userHome]: { disable: false, token: false },
   [apiName.user]: { disable: false, token: false },
-  [apiName.userEx]: { disable: false, token: true },
+  [apiName.userEx]: { disable: false, token: false },
   [apiName.tag]: { disable: false, token: false },
   [apiName.type]: { disable: false, token: false },
   // 博客信息
@@ -79,16 +79,16 @@ const accessApi: AccessType = {
   [apiName.putChildMessage]: { disable: false, token: false, method: "post" },
   [apiName.putPrimaryMessage]: { disable: false, token: false, method: "post" },
   // 管理信息
-  [apiName.search]: { disable: false, token: true, method: "post" },
+  [apiName.search]: { disable: false, token: false, method: "post" },
   [apiName.addTag]: { disable: false, token: false, method: "post" },
   [apiName.addType]: { disable: false, token: false, method: "post" },
   [apiName.checkTag]: { disable: false, token: false, method: "post" },
   [apiName.checkType]: { disable: false, token: false, method: "post" },
   [apiName.deleteTag]: { disable: false, token: false, method: "delete" },
   [apiName.deleteType]: { disable: false, token: false, method: "delete" },
-  [apiName.deleteBlog]: { disable: false, token: true, method: "delete" },
-  [apiName.updataBlog]: { disable: false, token: true, method: "post" },
-  [apiName.publishBlog]: { disable: false, token: true, method: "post" },
+  [apiName.deleteBlog]: { disable: false, token: false, method: "delete" },
+  [apiName.updataBlog]: { disable: false, token: false, method: "post" },
+  [apiName.publishBlog]: { disable: false, token: false, method: "post" },
 };
 
 export { apiName, cacheApi, accessApi };
