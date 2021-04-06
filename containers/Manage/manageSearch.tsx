@@ -12,7 +12,7 @@ import { TagProps } from "types/containers";
 let ManageSearch: SimpleElement;
 
 ManageSearch = () => {
-  const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true } }), []);
+  const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true }, cache: false }), []);
 
   const [ref, search] = useSearch({ request });
 

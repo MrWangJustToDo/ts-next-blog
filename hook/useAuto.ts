@@ -200,21 +200,20 @@ useAutoLoadRandomImg = ({ imgUrl, initUrl }) => {
     debounce(
       () => {
         hide();
+        const request = createRequest({ apiPath: imgUrl, header: { apiToken: true }, cache: false });
         const getImgUrl = () =>
-          createRequest({ apiPath: imgUrl, header: { apiToken: true } })
-            .run<ApiRequestResult<string>>()
-            .then(({ data }) => {
-              if (Array.isArray(data)) {
-                throw new Error(`接口返回数据不正确：${data.toString()}`);
-              } else {
-                return data;
-              }
-            });
+          request.run<ApiRequestResult<string>>().then(({ data }) => {
+            if (Array.isArray(data)) {
+              throw new Error(`接口返回数据不正确：${data.toString()}`);
+            } else {
+              return data;
+            }
+          });
         const url = ref.current?.src;
-        const judge = () => getImgUrl().then((newUrl) => (newUrl === url ? null : newUrl));
+        let getUniqueImg: () => Promise<string>;
+        getUniqueImg = () => getImgUrl().then((newUrl) => (newUrl === url ? getUniqueImg() : newUrl));
         // 保证前后两次加载的图片路径不一致
-        judge()
-          .then((currentUrl) => (currentUrl !== null ? currentUrl : judge()))
+        getUniqueImg()
           .then((url) => (actionHandler<HTMLImageElement, string, void>(ref.current, (ele) => (ele.src = "")), url))
           .then((url) => actionHandler<HTMLImageElement, string, void>(ref.current, (ele) => (ele.src = url!)))
           .catch((e) => fail(`获取失败: ${e.toString()}`));

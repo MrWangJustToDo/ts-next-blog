@@ -6,13 +6,14 @@ import { instance } from "./request";
 import { getHeader } from "./headers";
 import { transformPath } from "./path";
 import { AutoRequestProps, AutoRequestType, CreateRequestType, QueryProps } from "types/utils";
+import { log } from "./log";
 
 let createRequest: CreateRequestType;
 
-const cache = new Cache<string, any>(5000);
+const cacheResult = new Cache<string, any>(5000);
 
 createRequest = (props: AutoRequestProps = {}) => {
-  const { method, path, apiPath, query, data, header } = props;
+  const { method, path, apiPath, query, data, header, cache = true } = props;
 
   const tempPath = apiPath ? apiPath : path;
 
@@ -29,6 +30,8 @@ createRequest = (props: AutoRequestProps = {}) => {
 
     const newHeader = props.header !== false ? assign(header, props.header) : undefined;
 
+    const newCache = props.cache === false ? false : cache;
+
     return createRequest({
       method: newMethod,
       path: newPath,
@@ -36,6 +39,7 @@ createRequest = (props: AutoRequestProps = {}) => {
       query: newQuery,
       data: newData,
       header: newHeader,
+      cache: newCache,
     });
   };
 
@@ -54,9 +58,10 @@ createRequest = (props: AutoRequestProps = {}) => {
       ? transformPath({ path: targetPath, query: targetQuery })
       : transformPath({ apiPath: targetPath as apiName, query: targetQuery });
 
-    if ((process as any).browser) {
-      const target = cache.get(relativePath);
+    if ((process as any).browser && cache) {
+      const target = cacheResult.get(relativePath);
       if (target) {
+        log(`get data from cache, key: ${relativePath}, path: ${targetPath}, apiName: ${apiPath}`, "normal");
         return Promise.resolve(<T>target);
       }
     }
@@ -74,8 +79,8 @@ createRequest = (props: AutoRequestProps = {}) => {
       data,
     });
 
-    if ((process as any).browser) {
-      return requestPromise.then((res) => res.data).then((resData) => (cache.set(relativePath, resData), resData));
+    if ((process as any).browser && cache) {
+      return requestPromise.then((res) => res.data).then((resData) => (cacheResult.set(relativePath, resData), resData));
     } else {
       return requestPromise.then((res) => res.data);
     }

@@ -100,6 +100,7 @@ interface AutoRequestProps {
   query?: QueryProps | false;
   header?: HeaderProps | false;
   data?: object | false;
+  cache?: boolean;
 }
 interface ApiRequestResult<T> {
   code: number;
