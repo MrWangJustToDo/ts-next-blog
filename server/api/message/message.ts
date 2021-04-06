@@ -84,7 +84,7 @@ const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
     fail({ res, statuCode: code, resDate: { state: "评论发布错误", data: e.toString(), methodName: "publishPrimaryMessageByBlogIdAction" } }),
   checkCodeConfig: { needCheck: true },
   cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
-  paramsConfig: { fromBody: ["blogId", "commentId", "userId", "content"] },
+  paramsConfig: { fromBody: ["blogId", "commentId", "content"] },
 });
 
 // 发布子评论
@@ -118,7 +118,7 @@ const publishChildMessageByPrimaryIdAction = autoRequestHandler({
   cacheConfig: {
     needDelete: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
   },
-  paramsConfig: { fromBody: ["primaryCommentId", "blogId", "commentId", "userId", "toIp", "toUserId", "content"] },
+  paramsConfig: { fromBody: ["primaryCommentId", "blogId", "commentId", "toIp", "content"] },
 });
 
 export {

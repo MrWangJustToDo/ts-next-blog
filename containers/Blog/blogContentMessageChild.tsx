@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { ChildMessage } from "components/BlogMessage";
+import { useUserRequest } from "hook/useUser";
 import { useChildMessage, useMessageToReplayModule } from "hook/useMessage";
 import { apiName } from "config/api";
 import { getClass } from "utils/class";
@@ -9,7 +10,6 @@ import { ChildMessageProps } from "types/components";
 import { BlogContentChildMessageType, BlogContentChildMessageWithReplayType } from "types/containers";
 
 import style from "./index.module.scss";
-import { useUserRequest } from "hook/useUser";
 
 let BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType;
 

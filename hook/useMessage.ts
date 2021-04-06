@@ -40,7 +40,7 @@ useChildMessage = (props) => {
   const [page, setPage] = useState<number>(1);
   const [messageProps, setMessageProps] = useState<ChildMessageProps[]>([]);
   const more = page * childMessageLength < props.length;
-  useMemo(() => setMessageProps(props.slice((page - 1) * childMessageLength, page * childMessageLength)), [page, props.length]);
+  useMemo(() => setMessageProps(props.slice(0, page * childMessageLength)), [page, props.length]);
   const loadMore = useCallback(() => setPage((last) => last + 1), []);
   return { messageProps, more, loadMore };
 };
