@@ -18,7 +18,7 @@ getCurrentAvatar = (avatar, gender) => {
   if (avatar && avatar.length > 0) {
     return avatar;
   } else {
-    if (gender === undefined) {
+    if (gender === undefined || gender === null) {
       return process.env.NEXT_PUBLIC_MAN as string;
     }
     if (gender === 0) {
