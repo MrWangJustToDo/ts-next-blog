@@ -18,7 +18,7 @@ TypeHead = () => {
           <span>个</span>
         </div>
       </h5>
-      <div className="card-body d-flex">
+      <div className="card-body d-flex flex-wrap">
         {type.length ? (
           type.map(({ typeId, typeContent, typeCount }) => (
             <div key={typeId} className="m-2">

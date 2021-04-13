@@ -10,7 +10,7 @@ let timeStep: number;
 
 let useArray: UseArrayType;
 
-timeStep = 800;
+timeStep = 200;
 
 useBool = (props = {}) => {
   const { init = false, stateChangeTimeStep = 400, key = "useBool" } = props;

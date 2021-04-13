@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 import useLoadingBar from "hook/useLoadingBar";
 import Bar from "./loadingBar";
@@ -6,7 +6,7 @@ import { LoadingBarType } from "types/components";
 
 let LoadingBar: LoadingBarType;
 
-LoadingBar = ({ height = 1.5, present = 0, loading = false }) => {
+LoadingBar = React.memo(({ height = 1.5, present = 0, loading = false }) => {
   const router = useRouter();
 
   const { start, end, autoAdd, state } = useLoadingBar({ height, present, loading });
@@ -21,6 +21,6 @@ LoadingBar = ({ height = 1.5, present = 0, loading = false }) => {
   }, []);
   
   return <Bar {...state} autoAdd={autoAdd} />;
-};
+});
 
 export default LoadingBar;

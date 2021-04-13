@@ -20,7 +20,7 @@ TagHead = () => {
           <span>个</span>
         </div>
       </h5>
-      <div className="card-body d-flex">
+      <div className="card-body d-flex flex-wrap">
         {tag.length &&
           tag.map(({ tagId, tagContent, tagCount }) => (
             <div key={tagId} className="m-2">

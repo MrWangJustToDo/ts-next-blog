@@ -364,7 +364,7 @@ interface LoadingBarProps {
 }
 
 interface LoadingBarType {
-  (props: LoadingBarProps): JSX.Element;
+  (props: LoadingBarProps): React.ReactElement | null;
 }
 
 export type { LoadingBarType, LoadingBarProps };
@@ -490,7 +490,7 @@ export type { TagType };
 /* === Toast === */
 import { toastState } from "config/toast";
 import { InputProps } from "./config";
-import { RefObject } from "react";
+import React, { RefObject } from "react";
 
 interface ToastProps {
   title: string;
