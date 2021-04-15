@@ -16,8 +16,10 @@ let ManageDeleteTagItem: ManageDeleteTagItemType;
 ManageDeleteTagItem = ({ tagId, tagContent, tagCount }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteTag, data: { deleteTag: tagId } });
 
-  const body = useCallback<(request: AutoRequestType) => (item: JSX.Element) => (successCallback: () => void) => (close: () => void) => JSX.Element>(
-    (request) => (item) => (successCallback) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
+  const body = useCallback<
+    ({ request, item, successCallback }: { request: AutoRequestType; item: JSX.Element; successCallback: () => void }) => (close: () => void) => JSX.Element
+  >(
+    ({ request, item, successCallback }) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
     []
   );
 

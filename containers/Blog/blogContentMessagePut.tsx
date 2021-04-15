@@ -1,8 +1,4 @@
-import { RefObject, useCallback, useMemo } from "react";
-import { mutate } from "swr";
-import { apiName } from "config/api";
-import { transformPath } from "utils/path";
-import { createRequest } from "utils/fetcher";
+import { RefObject, useCallback } from "react";
 import { usePutToCheckcodeModule } from "hook/useMessage";
 import BlogContentCheckcodeModule from "./blogContentCheckcodeModule";
 import { MyInputELement } from "types/hook";
@@ -14,8 +10,6 @@ import style from "./index.module.scss";
 let BlogContentMessagePut: BlogContentMessagePutType;
 
 BlogContentMessagePut = ({ blogId }) => {
-  const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId } }), [blogId]);
-
   const body = useCallback<
     (request: AutoRequestType) => (ref: RefObject<MyInputELement>) => (callback: () => void) => (closeHandler: () => void) => JSX.Element
   >(
@@ -25,13 +19,10 @@ BlogContentMessagePut = ({ blogId }) => {
     []
   );
 
-  const successCallback = useCallback(() => mutate(transformPath({ apiPath: apiName.primaryMessage, query: { blogId }, needPre: false })), [blogId]);
-
   const { ref, submit, canSubmit } = usePutToCheckcodeModule<HTMLTextAreaElement>({
-    request,
     body,
+    blogId,
     className: style.imgCheck,
-    successCallback,
   });
 
   return (

@@ -6,8 +6,8 @@ import { useSearch } from "hook/useManage";
 import { createRequest } from "utils/fetcher";
 import { apiName } from "config/api";
 import { TypeProps } from "types/hook";
-import { DropItemProps, SimpleElement } from "types/components";
 import { TagProps } from "types/containers";
+import { DropItemProps, SimpleElement } from "types/components";
 
 let ManageSearch: SimpleElement;
 
@@ -26,7 +26,7 @@ ManageSearch = () => {
           apiPath={apiName.type}
           loaded={(res) => {
             const data: DropItemProps<string>[] = res.map(({ typeContent, typeId }) => ({ name: typeContent, value: typeId! }));
-            return <Drop<string> fieldName="typeId" className="form-control m-2" placeHolder="选择分类" data={data} />;
+            return <Drop<string> style={{zIndex: '3'}} fieldName="typeId" className="form-control m-2" placeHolder="选择分类" data={data} />;
           }}
         />
         <LoadRender<TagProps[]>

@@ -3,12 +3,13 @@ import { WithWriteBlogItem as SearchResult } from "components/BlogItem";
 import { apiName } from "config/api";
 import { useBasePage } from "hook/useBase";
 import { BlogContentProps } from "types/hook";
-import { SimpleElement } from "types/components";
+import { ManageResultType } from "types/containers";
 
-let ManageResultAll: SimpleElement;
+let ManageResultAll: ManageResultType;
 
-ManageResultAll = () => {
+ManageResultAll = (props) => {
   const { currentPage, currentPageData, increaseAble, increasePage, decreaseAble, decreasePage } = useBasePage<BlogContentProps>({
+    data: props,
     stateSide: "server",
     stateName: apiName.userHome,
   });

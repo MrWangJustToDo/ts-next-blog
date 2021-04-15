@@ -16,11 +16,10 @@ actionHandler = (element, action, otherAction) => {
   }
 };
 
-const removeElements = (element: HTMLElement) => {
-  actionHandler<HTMLCollection, void, void>(element.parentElement?.children, (eles) => {
-    Array.from(eles).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove());
-  });
-};
+const removeElements = (element: HTMLElement) =>
+  actionHandler<HTMLCollection, void, void>(element.parentElement?.children, (eles) =>
+    Array.from(eles).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove())
+  );
 
 judgeAction = async <T extends HTMLElement>({
   element,
@@ -55,7 +54,7 @@ judgeAction = async <T extends HTMLElement>({
       failCallback();
     }
   }
-  actionHandler<HTMLElement, void, void>(element.parentElement, (ele) => ele.appendChild(span));
+  actionHandler<T, void, void>(element, (ele) => ele.parentElement?.appendChild(span));
 };
 
 loadingAction = <T extends HTMLElement>({ element, loadingClassName }: LoadingActionProps<T>) => {

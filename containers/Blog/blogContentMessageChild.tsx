@@ -1,8 +1,6 @@
 import { useCallback } from "react";
 import { ChildMessage } from "components/BlogMessage";
-import { useUserRequest } from "hook/useUser";
 import { useChildMessage, useMessageToReplayModule } from "hook/useMessage";
-import { apiName } from "config/api";
 import { getClass } from "utils/class";
 import BlogContentReplayModule from "./blogContentReplayModule";
 import { AutoRequestType } from "types/utils";
@@ -36,8 +34,6 @@ BlogContentChildMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentChildMessage = ({ messages, primaryCommentId }) => {
-  const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage });
-
   const body = useCallback<(request: AutoRequestType) => (props: ChildMessageProps) => (closeHandler: () => void) => JSX.Element>(
     (request) => (props) => (closeHandler) => (
       <>
@@ -57,7 +53,6 @@ BlogContentChildMessage = ({ messages, primaryCommentId }) => {
   const replay = useMessageToReplayModule<ChildMessageProps>({
     body,
     className: style.replayModule,
-    request,
   });
 
   return <BlogContentChildMessageWithReplay messages={messages} replay={replay} />;

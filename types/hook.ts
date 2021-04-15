@@ -329,14 +329,23 @@ interface UseManageToDeleteModuleProps {
   item: JSX.Element;
   request: AutoRequestType;
   successCallback: () => void;
-  body: (request: AutoRequestType) => (item: JSX.Element) => (successCallback: () => void) => (close: () => void) => JSX.Element;
+  body: ({
+    request,
+    item,
+    successCallback,
+  }: {
+    request: AutoRequestType;
+    item: JSX.Element;
+    successCallback: () => void;
+  }) => (close: () => void) => JSX.Element;
+  // body: (request: AutoRequestType) => (item: JSX.Element) => (successCallback: () => void) => (close: () => void) => JSX.Element;
 }
 interface UseManageToDeleteModuleType {
   (props: UseManageToDeleteModuleProps): () => void;
 }
 interface UseDeleteRequestProps {
   request: AutoRequestType;
-  successCallback?: () => void;
+  successCallback: () => void;
   close: () => void;
 }
 interface UseDeleteRequestType {
@@ -355,8 +364,7 @@ interface UseJudgeInputValueType {
 }
 interface UsePutToCheckcodeModuleProps {
   className: string;
-  request: AutoRequestType;
-  successCallback: () => void;
+  blogId: string;
   body: (request: AutoRequestType) => (ref: RefObject<MyInputELement>) => (successCallback: () => void) => (closeHandler: () => void) => JSX.Element;
 }
 interface UsePutToCheckcodeModuleType {
@@ -380,7 +388,6 @@ interface UseCheckcodeModuleToSubmitType {
   };
 }
 interface UseMessageToReplayModuleProps<T> {
-  request: AutoRequestType;
   body: (request: AutoRequestType) => (props: T) => (closeHandler: () => void) => JSX.Element;
   className: string;
 }
@@ -390,7 +397,7 @@ interface UseMessageToReplayModuleType {
 interface UseReplayModuleToSubmitProps {
   request: AutoRequestType;
   closeHandler: () => void;
-  successCallback: () => void;
+  successCallback?: () => void;
   toIp: string;
   toUserId: string;
   primaryCommentId: string;

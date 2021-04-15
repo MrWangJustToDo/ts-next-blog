@@ -97,9 +97,9 @@ interface AutoRequestProps {
   method?: Method;
   path?: string;
   apiPath?: apiName;
-  query?: QueryProps | false;
-  header?: HeaderProps | false;
-  data?: object | false;
+  query?: QueryProps | string | false;
+  header?: HeaderProps | string | false;
+  data?: object | string | false;
   cache?: boolean;
 }
 interface ApiRequestResult<T> {
@@ -113,7 +113,7 @@ interface CreateRequestType {
 }
 interface AutoRequestType {
   (props?: AutoRequestProps): AutoRequestType;
-  run: <T>(path?: string, query?: QueryProps) => Promise<T>;
+  run: <T>(path?: string, query?: QueryProps | string) => Promise<T>;
 }
 
 export type { AutoRequestProps, ApiRequestResult, CreateRequestType, AutoRequestType };

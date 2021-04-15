@@ -24,15 +24,17 @@ ManageDeleteBlogItem = (props) => {
     header: { apiToken: true },
   });
 
-  const body = useCallback<(request: AutoRequestType) => (item: JSX.Element) => (successCallback: () => void) => (close: () => void) => JSX.Element>(
-    (request) => (item) => (successCallback) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
-    []
-  );
-
   const successCallback = useCallback(() => {
     mutate(apiName.home);
     filter();
   }, [filter]);
+
+  const body = useCallback<
+    ({ request, item, successCallback }: { request: AutoRequestType; item: JSX.Element; successCallback: () => void }) => (close: () => void) => JSX.Element
+  >(
+    ({ request, item, successCallback }) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
+    []
+  );
 
   const click = useManageToDeleteModule({
     title: "确认删除博客",

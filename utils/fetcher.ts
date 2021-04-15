@@ -1,16 +1,44 @@
 import { AxiosResponse } from "axios";
 import assign from "lodash/assign";
-import { apiName } from "config/api";
+import { log } from "./log";
 import { Cache } from "./cache";
+import { apiName } from "config/api";
 import { instance } from "./request";
 import { getHeader } from "./headers";
 import { transformPath } from "./path";
 import { AutoRequestProps, AutoRequestType, CreateRequestType, QueryProps } from "types/utils";
-import { log } from "./log";
 
 let createRequest: CreateRequestType;
 
 const cacheResult = new Cache<string, any>(5000);
+
+const autoParse = (params: string | any) => {
+  if (typeof params === "string") {
+    return JSON.parse(params);
+  } else if (params) {
+    return params;
+  } else {
+    return undefined;
+  }
+};
+
+const autoStringify = (params: string | any) => {
+  if (typeof params === "string") {
+    return params;
+  } else if (params) {
+    return JSON.stringify(params);
+  } else {
+    return undefined;
+  }
+};
+
+const autoAssignParams = (oldParams: string | false | object | undefined, newParams: string | false | object | undefined) => {
+  if (newParams === false) {
+    return undefined;
+  } else {
+    return assign(autoParse(oldParams), autoParse(newParams));
+  }
+};
 
 createRequest = (props: AutoRequestProps = {}) => {
   const { method, path, apiPath, query, data, header, cache = true } = props;
@@ -24,11 +52,11 @@ createRequest = (props: AutoRequestProps = {}) => {
 
     const newApiPath = props.apiPath ? props.apiPath : apiPath;
 
-    const newQuery = props.query !== false ? assign(query, props.query) : undefined;
+    const newQuery = autoAssignParams(query, props.query);
 
-    const newData = props.data !== false ? assign(data, props.data) : undefined;
+    const newData = autoAssignParams(data, props.data);
 
-    const newHeader = props.header !== false ? assign(header, props.header) : undefined;
+    const newHeader = autoAssignParams(header, props.header);
 
     const newCache = props.cache === false ? false : cache;
 
@@ -50,9 +78,7 @@ createRequest = (props: AutoRequestProps = {}) => {
       throw new Error("request path should not undefined!!");
     }
 
-    const currentQueryObj = currentQuery && typeof currentQuery === "string" ? JSON.parse(currentQuery) : currentQuery;
-
-    const targetQuery = assign(query, currentQueryObj);
+    const targetQuery = autoAssignParams(query, currentQuery);
 
     const relativePath = targetPath.startsWith("http")
       ? transformPath({ path: targetPath, query: targetQuery })
@@ -68,7 +94,9 @@ createRequest = (props: AutoRequestProps = {}) => {
 
     const currentMethod = method || "get";
 
-    const currentHeader = header !== undefined && header !== false && (process as any).browser ? getHeader(header) : header;
+    const currentHeader = header !== false && (process as any).browser ? getHeader(autoParse(header)) : autoParse(header);
+
+    const currentData = data !== false ? autoParse(data) : undefined;
 
     let requestPromise: Promise<AxiosResponse<T>>;
 
@@ -76,7 +104,7 @@ createRequest = (props: AutoRequestProps = {}) => {
       method: currentMethod,
       headers: currentHeader,
       url: relativePath,
-      data,
+      data: currentData,
     });
 
     if ((process as any).browser && cache) {
@@ -88,4 +116,4 @@ createRequest = (props: AutoRequestProps = {}) => {
   return autoRequest;
 };
 
-export { createRequest };
+export { createRequest, autoAssignParams, autoStringify };

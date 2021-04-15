@@ -27,7 +27,7 @@ ChildMessage = (props) => {
     withReplay = true,
     withChildren = true,
   } = props;
-  const replayCallback = useCallback(() => typeof replayHandler === "function" && replayHandler(props), [props]);
+  const replayCallback = useCallback(() => typeof replayHandler === "function" && replayHandler(props), [replayHandler, props]);
 
   const src = useMemo(() => getCurrentAvatar(avatar, gender), [avatar, gender]);
 

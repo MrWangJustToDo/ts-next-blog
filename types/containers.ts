@@ -245,6 +245,13 @@ interface ManageAddModuleType {
 
 export type { ManageAddModuleType };
 
+/* manageResult */
+interface ManageResultType {
+  (props: BlogContentProps[]): JSX.Element;
+}
+
+export type { ManageResultType };
+
 /* manageDeleteTagItem */
 interface ManageDeleteTagItemType {
   (props: TagProps): JSX.Element;

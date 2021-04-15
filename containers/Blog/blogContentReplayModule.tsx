@@ -1,8 +1,5 @@
-import { useCallback } from "react";
-import { mutate } from "swr";
 import { apiName } from "config/api";
 import Button from "components/Button";
-import { transformPath } from "utils/path";
 import { flexBetween, getClass } from "utils/class";
 import { useAutoLoadCheckcodeImg } from "hook/useAuto";
 import { useReplayModuleToSubmit } from "hook/useMessage";
@@ -15,15 +12,12 @@ let BlogContentReplayModule: BlogContentReplayModuleType;
 let BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImagType;
 
 BlogContentReplayModuleWithImag = ({ request, closeHandler, imgRef, primaryCommentId, toIp, toUserId }) => {
-  const successCallback = useCallback(() => mutate(transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId }, needPre: false })), []);
-
   const { input1, input2, submit, canSubmit } = useReplayModuleToSubmit<HTMLTextAreaElement, HTMLInputElement>({
     request,
     closeHandler,
     primaryCommentId,
     toIp,
     toUserId,
-    successCallback,
   });
 
   return (

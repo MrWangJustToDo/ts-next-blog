@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
@@ -6,7 +6,7 @@ import loadingError from "./loadingError";
 import { transformPath } from "utils/path";
 import { cancel, delay } from "utils/delay";
 import { autoTransformData } from "utils/data";
-import { createRequest } from "utils/fetcher";
+import { autoStringify, createRequest } from "utils/fetcher";
 import { useCurrentState } from "hook/useBase";
 import { getDataSucess_Server } from "store/reducer/server/action";
 import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType } from "types/components";
@@ -42,17 +42,22 @@ LoadRender = <T>({
 
   const currentPath = apiPath ? apiPath : path;
 
+  const currentQuery = autoStringify(query);
+
+  const currentRequestData = autoStringify(requestData);
+
+  const currentHeaderToken = token ? JSON.stringify({ apiToken: token }) : false;
+
   useEffect(() => {
     delay(delayTime, () => setLoadingEle(loading({ _style: placeholder, className: "p-4" })), currentPath);
     return () => cancel(currentPath!);
-  }, [method, query, requestData, delayTime, currentPath]);
+  }, [method, currentQuery, currentRequestData, delayTime, currentPath]);
 
-  const defaultFetcher = createRequest({
-    method,
-    query: false,
-    data: requestData ? requestData : false,
-    header: token ? { apiToken: token } : false,
-  });
+  const defaultFetcher = useMemo(() => createRequest({ method, query: false, data: currentRequestData, header: currentHeaderToken, apiPath }), [
+    apiPath,
+    currentRequestData,
+    currentHeaderToken,
+  ]);
 
   const currentFetcher = fetcher ? fetcher : defaultFetcher.run;
 

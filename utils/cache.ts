@@ -55,6 +55,7 @@ class Cache<T, K> {
   };
 
   deleteRightNow = (key: T) => {
+    const tryKeys = [];
     if (this.store.has(key)) {
       if (typeof key === "string") {
         cancel(key);
@@ -63,6 +64,7 @@ class Cache<T, K> {
       log(`force delete data from cache. key: ${key}`, "warn");
       return;
     }
+    tryKeys.push(key);
     if (typeof key === "string") {
       let newKey = key as string;
       if (!newKey.startsWith("/")) {
@@ -74,6 +76,7 @@ class Cache<T, K> {
         log(`force delete data from cache. newKey: ${newKey}`, "warn");
         return;
       }
+      tryKeys.push(newKey);
       if (!newKey.startsWith("/api")) {
         newKey = "/api" + newKey;
       }
@@ -83,8 +86,9 @@ class Cache<T, K> {
         log(`force delete data from cache. newKey: ${newKey}`, "warn");
         return;
       }
+      tryKeys.push(newKey);
     }
-    log(`error, nothing need to delete. key: ${key}, typeOf key: ${typeof key}`, "error");
+    log(`error, nothing need to delete. keys: ${tryKeys.join(",")}`, "error");
   };
 }
 

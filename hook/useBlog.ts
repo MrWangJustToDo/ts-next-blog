@@ -198,8 +198,12 @@ usePublish = ({ request, id }) => {
             return fail("登录失效，请重新登录！");
           } else {
             const blogPreview = ele.querySelector(htmlId)?.textContent;
-            return request({ data: { ...formSerialize(ele), blogPreview, blogId: getRandom(1000).toString(16) } })
-              .run<ApiRequestResult<string>>(apiName.publishBlog, { userId })
+            return request({
+              data: { ...formSerialize(ele), blogPreview, blogId: getRandom(1000).toString(16) },
+              query: { userId },
+              apiPath: apiName.publishBlog,
+            })
+              .run<ApiRequestResult<string>>()
               .then(({ code, data }) => {
                 if (code === 0) {
                   delay(800, () => router.push("/"));
@@ -238,8 +242,8 @@ useUpdateBlog = ({ request, id }) => {
         ref.current,
         (ele) => {
           const blogPreview = ele.querySelector(htmlId)?.textContent;
-          return request({ data: { newProps: { ...formSerialize(ele), blogPreview, blogId: id } } })
-            .run<ApiRequestResult<string>>(apiName.updataBlog)
+          return request({ data: { newProps: { ...formSerialize(ele), blogPreview, blogId: id } }, apiPath: apiName.updataBlog })
+            .run<ApiRequestResult<string>>()
             .then(({ data, code }) => {
               if (code === 0) {
                 delay(800, () => router.push("/"));

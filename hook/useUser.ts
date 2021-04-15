@@ -5,8 +5,8 @@ import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { delay } from "utils/delay";
 import { formSerialize } from "utils/data";
-import { createRequest } from "utils/fetcher";
 import { actionHandler } from "utils/action";
+import { autoAssignParams, autoStringify, createRequest } from "utils/fetcher";
 import { setDataFail_client, setDataSucess_client } from "store/reducer/client/action";
 import { useCurrentState } from "./useBase";
 import { useAutoActionHandler } from "./useAuto";
@@ -24,14 +24,14 @@ let useLogout: UseLogoutType;
 
 let useUserRequest: UseUserRequest;
 
-// 未登录时尝试自动登录
+// 自动登录
 useAutoLogin = () => {
   const { dispatch } = useCurrentState();
-  const loginRequest = useMemo(() => createRequest({ header: { apiToken: true } }), []);
+  const loginRequest = useMemo(() => createRequest({ header: { apiToken: true }, apiPath: apiName.autoLogin, cache: false }), []);
   const autoLoginCallback = useCallback(
     () =>
       loginRequest
-        .run<ApiRequestResult<UserProps>>(apiName.autoLogin)
+        .run<ApiRequestResult<UserProps>>()
         .then(({ code, data }) => {
           if (code === 0 && !Array.isArray(data) && data.userId) {
             dispatch(setDataSucess_client({ name: actionName.currentUser, data }));
@@ -60,8 +60,8 @@ useLogin = () => {
   const ref = useRef<HTMLFormElement>(null);
   const loginCallback = useCallback<(e?: Event) => void>((e) => {
     e?.preventDefault();
-    createRequest({ method: "post", data: formSerialize(ref.current!) })
-      .run<ApiRequestResult<UserProps>>(apiName.login)
+    createRequest({ method: "post", data: formSerialize(ref.current!), cache: false, apiPath: apiName.login })
+      .run<ApiRequestResult<UserProps>>()
       .then(({ code, data }) => {
         if (code === 0 && !Array.isArray(data) && data.userId) {
           dispatch(setDataSucess_client({ name: actionName.currentUser, data }));
@@ -90,14 +90,14 @@ useLogout = () => {
   const router = useRouter();
   const failToast = useFailToast();
   const successToast = useSucessToast();
-  const logoutRequest = useMemo(() => createRequest({ header: { apiToken: true } }), []);
+  const logoutRequest = useMemo(() => createRequest({ header: { apiToken: true }, cache: false, apiPath: apiName.logout }), []);
   const { state, dispatch } = useCurrentState();
   const user = state.client[actionName.currentUser]["data"] as UserProps;
   const logoutCallback = useCallback(() => {
     if (user.userId) {
       return delay<void>(100, () =>
         logoutRequest
-          .run<ApiRequestResult<string>>(apiName.logout)
+          .run<ApiRequestResult<string>>()
           .then(({ code, state }) => {
             if (code === 0) {
               dispatch(setDataSucess_client({ name: actionName.currentUser, data: {} }));
@@ -118,16 +118,23 @@ useLogout = () => {
 
 // 自动绑定当前用户的request
 useUserRequest = (props = {}) => {
-  const { method, data, path, apiPath, header } = props;
+  const { method, data, path, apiPath, header, cache } = props;
+  const stringdata = autoStringify(data);
+  const stringHeader = autoStringify(header);
   const user = useCurrentUser();
-  return useMemo(() => createRequest({ method, data: { ...data, userId: user.userId! }, path, apiPath, header, query: { userId: user.userId! } }), [
-    user,
-    data,
-    path,
-    apiPath,
-    header,
-    method,
-  ]);
+  return useMemo(
+    () =>
+      createRequest({
+        method,
+        data: autoAssignParams(stringdata, { userId: user.userId! }),
+        path,
+        cache,
+        apiPath,
+        header: stringHeader,
+        query: { userId: user.userId! },
+      }),
+    [user.userId, stringdata, path, apiPath, stringHeader, method, cache]
+  );
 };
 
 export { useAutoLogin, useCurrentUser, useLogin, useLogout, useUserRequest };

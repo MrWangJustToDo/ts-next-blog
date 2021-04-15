@@ -17,6 +17,7 @@ Bar = ({ height = 1.5, present = 0, loading = false, autoAdd }) => {
       className="position-fixed w-100 bg-info"
       style={{
         zIndex: 1,
+        top: 0,
         height: `${height}px`,
         transformOrigin: `0 0`,
         transform: `scale(${present / 100}, 1)`,

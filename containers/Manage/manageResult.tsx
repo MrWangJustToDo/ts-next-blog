@@ -25,7 +25,7 @@ ManageResult = () => {
   const { userId } = state.client[actionName.currentUser]["data"];
 
   const allData = (
-    <LoadRender<BlogContentProps[]> token needUpdate needinitialData apiPath={apiName.userHome} query={{ userId }} loaded={() => <ManageResultAll />} />
+    <LoadRender<BlogContentProps[]> token needUpdate needinitialData apiPath={apiName.userHome} query={{ userId }} loaded={(data) => <ManageResultAll {...data} />} />
   );
 
   const searchData = (

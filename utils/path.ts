@@ -32,9 +32,18 @@ transformPath = ({ path, apiPath, query, needPre = true }) => {
     }
   }
   if (query) {
-    currentPath += "?";
+    if (!currentPath.includes("?")) {
+      currentPath += "?";
+    } else {
+      currentPath += "&";
+    }
     for (let key in query) {
-      currentPath += `${key}=${query[key]}&`;
+      if (query[key] !== undefined) {
+        const targetParams = `${key}=${query[key]}`;
+        if (!currentPath.includes(targetParams)) {
+          currentPath += `${targetParams}&`;
+        }
+      }
     }
     currentPath = currentPath.slice(0, -1);
   }

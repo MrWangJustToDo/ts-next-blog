@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { delay } from "./delay";
 import { log } from "./log";
+import { delay } from "./delay";
 import { PendingType, RemovePendingType } from "types/utils";
 
 let pending: Array<PendingType>;

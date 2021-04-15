@@ -7,6 +7,8 @@ import { createRequest } from "utils/fetcher";
 import { formSerialize } from "utils/data";
 import { actionHandler, judgeAction, loadingAction } from "utils/action";
 import { setDataFail_client, setDataLoading_client, setDataSucess_client } from "store/reducer/client/action";
+import { useCurrentState } from "./useBase";
+import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSucessToast } from "./useToast";
@@ -20,8 +22,6 @@ import {
   UseManageToDeleteModuleType,
   UseSearchType,
 } from "types/hook";
-import { useCurrentState } from "./useBase";
-import { useCurrentUser } from "./useUser";
 
 let useSearch: UseSearchType;
 
@@ -37,8 +37,8 @@ let useDeleteRequest: UseDeleteRequestType;
 
 useSearch = ({ request }) => {
   const fail = useFailToast();
-  const success = useSucessToast();
   const dispatch = useDispatch();
+  const success = useSucessToast();
   const { userId } = useCurrentUser();
   const ref = useRef<HTMLFormElement>(null);
   const search = useCallback(
@@ -46,8 +46,8 @@ useSearch = ({ request }) => {
       actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
         if (userId !== undefined) {
           dispatch(setDataLoading_client({ name: actionName.currentResult }));
-          return request({ data: { ...formSerialize(ele), userId } })
-            .run<ApiRequestResult<BlogContentProps>>(apiName.search)
+          return request({ data: { ...formSerialize(ele), userId }, apiPath: apiName.search })
+            .run<ApiRequestResult<BlogContentProps>>()
             .then((res) => {
               if (res) {
                 const { code, data } = res;
@@ -123,7 +123,7 @@ useJudgeInput = ({ option, forWardRef, judgeApiName, successClassName, failClass
             () => <Promise<boolean>>actionHandler<apiName, Promise<boolean>, Promise<boolean>>(
                 judgeApiName,
                 (apiname) =>
-                  createRequest({ apiPath: apiname, method: "post", data: { [currentRef.current!.name]: currentRef.current!.value } })
+                  createRequest({ apiPath: apiname, method: "post", data: { [currentRef.current!.name]: currentRef.current!.value }, cache: false })
                     .run<ApiRequestResult<string>>()
                     .then(({ code, data }) => {
                       if (code === 0) {
@@ -180,7 +180,7 @@ useJudgeInput = ({ option, forWardRef, judgeApiName, successClassName, failClass
 
 useManageToDeleteModule = ({ title, body, request, item, successCallback }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body(request)(item)(successCallback) }), [body, request, successCallback]);
+  const click = useCallback(() => open({ head: title, body: body({ request, item, successCallback }) }), [body, request, successCallback]);
   return click;
 };
 

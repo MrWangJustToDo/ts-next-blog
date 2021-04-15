@@ -19,7 +19,7 @@ const handle = nextApp.getRequestHandler();
 const app = express();
 
 app.use(
-  express.static(`${process.cwd()}/static`, {
+  express.static(`${process.cwd()}/public`, {
     maxAge: 365 * 24 * 3600000,
   })
 );

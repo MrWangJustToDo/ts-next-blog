@@ -1,12 +1,18 @@
 import { RefObject, useCallback, useMemo, useRef, useState } from "react";
+import { mutate } from "swr";
+import { apiName } from "config/api";
+import { actionName } from "config/action";
 import { childMessageLength } from "config/message";
 import { getRandom } from "utils/data";
+import { transformPath } from "utils/path";
 import { actionHandler } from "utils/action";
-import { useCurrentUser } from "./useUser";
+import { useUserRequest } from "./useUser";
+import { useCurrentState } from "./useBase";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSucessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
+import { ChildMessageProps } from "types/components";
 import {
   UseChildMessageType,
   MyInputELement,
@@ -20,9 +26,6 @@ import {
   UseReplayModuleToSubmitType,
   UsePutToCheckcodeModuleProps,
 } from "types/hook";
-import { useCurrentState } from "./useBase";
-import { actionName } from "config/action";
-import { ChildMessageProps } from "types/components";
 
 let useChildMessage: UseChildMessageType;
 
@@ -67,21 +70,22 @@ useJudgeInputValue = <T extends MyInputELement>(ref: RefObject<T>) => {
   return bool;
 };
 
-usePutToCheckcodeModule = <T extends MyInputELement>({ request, body, className = "", successCallback }: UsePutToCheckcodeModuleProps) => {
+usePutToCheckcodeModule = <T extends MyInputELement>({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps) => {
   const ref = useRef<T>(null);
   const open = useOverlayOpen();
-  const { userId } = useCurrentUser();
+  const request = useUserRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId } });
+  const successCallback = useCallback(() => mutate(transformPath({ apiPath: apiName.primaryMessage, query: { blogId }, needPre: false })), [blogId]);
   const submit = useCallback(() => {
     actionHandler<T, void, void>(ref.current, (ele) => {
       if (!!ele.value.length) {
         open({
           head: "验证码",
-          body: body(request({ data: { content: ele.value, userId } }))(ref)(successCallback),
+          body: body(request({ data: { content: ele.value } }))(ref)(successCallback),
           className,
         });
       }
     });
-  }, [body, request, userId, successCallback]);
+  }, [body, request, successCallback]);
   const canSubmit = useJudgeInputValue<T>(ref);
   return { ref, submit, canSubmit };
 };
@@ -121,8 +125,9 @@ useCheckcodeModuleToSubmit = <T extends MyInputELement>({ request, closeHandler,
   return { ref, submit, canSubmit };
 };
 
-useMessageToReplayModule = <T extends {}>({ request, body, className }: UseMessageToReplayModuleProps<T>) => {
+useMessageToReplayModule = <T extends {}>({ body, className }: UseMessageToReplayModuleProps<T>) => {
   const open = useOverlayOpen();
+  const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage });
   const replay = useCallback<(props: T) => void>(
     (props) => {
       open({ head: "回复", body: body(request)(props), className });
@@ -146,6 +151,9 @@ useReplayModuleToSubmit = <T extends MyInputELement, F extends MyInputELement>({
   const blogId = state.client[actionName.currentBlogId]["data"];
   const pushFail = useFailToast();
   const pushSucess = useSucessToast();
+  const flashData = useCallback(() => mutate(transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId }, needPre: false })), [
+    primaryCommentId,
+  ]);
   const submit = useCallback(
     () =>
       request({
@@ -163,14 +171,17 @@ useReplayModuleToSubmit = <T extends MyInputELement, F extends MyInputELement>({
         .then(({ code, data }) => {
           if (code === 0) {
             closeHandler();
-            successCallback();
+            flashData();
+            if (successCallback) {
+              successCallback();
+            }
             pushSucess("提交成功");
           } else {
             pushFail(`提交失败: ${data.toString()}`);
           }
         })
         .catch((e) => pushFail(`发生错误: ${e.toString()}`)),
-    [request, closeHandler, blogId, primaryCommentId, toIp, toUserId, successCallback]
+    [request, closeHandler, blogId, primaryCommentId, toIp, toUserId, successCallback, flashData]
   );
   const canSubmit1 = useJudgeInputValue(input1);
   const canSubmit2 = useJudgeInputValue(input2);
