@@ -1,5 +1,3 @@
-// 类名自动处理函数
-
 import { GetArray, GetClass, GetItem, TransformArray } from "types/utils";
 
 let transformArray: TransformArray;

@@ -1,7 +1,7 @@
 import moment from "moment";
 import "moment/locale/zh-cn";
-import { TimeToString } from "types/utils";
 import { log } from "./log";
+import { TimeToString } from "types/utils";
 
 let momentTo: TimeToString;
 let calendar: TimeToString;

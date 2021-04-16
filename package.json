@@ -1,7 +1,11 @@
 {
   "name": "ts-blog",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "author": {
+    "name": "王老师说过"
+  },
+  "license": "MIT",
   "scripts": {
     "dev": "nodemon",
     "build": "next build && ttsc --project tsconfig.server.json",

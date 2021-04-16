@@ -7,7 +7,7 @@
     "allowJs": true,
     "strict": true,
     "strictPropertyInitialization": false,
-    "declaration": true,
+    "declaration": false,
     "skipLibCheck": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -23,7 +23,7 @@
       "server/*": ["server/*"],
       "types/*": ["types/*"]
     },
-    "typeRoots": ["global.d.ts", "next-env.d.ts", "types"],
+    "typeRoots": ["global.d.ts", "next-env.d.ts"],
     "plugins": [{ "transform": "typescript-transform-paths" }]
   },
   "include": ["**/*.ts", "**/*.tsx"]

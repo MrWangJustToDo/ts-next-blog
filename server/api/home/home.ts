@@ -51,6 +51,7 @@ const getBlogsByParams = autoRequestHandler({
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "搜索出错", data: e.toString(), methodName: "getBlogsByParams" } }),
   userConfig: { needCheck: true },
+  paramsConfig: { fromBody: ["userId"] },
 });
 
 const getUserHomeAction = autoRequestHandler({

@@ -1,4 +1,5 @@
 import { apiName } from "config/api";
+import { transformPath } from "utils/path";
 import { ServerError } from "server/utils/error";
 import { insertBlog, insertHome } from "server/database/insert";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
@@ -6,7 +7,6 @@ import { getBlogByBlogId, getTagByTagId, getTypeByTypeId } from "server/database
 import { updateTableWithParam, updateTagCountByTagId, updateTypeCountByTypeId } from "server/database/updata";
 import { deleteBlogByBlogId, deleteChildMessageByBlogId, deleteHomeByBlogId, deletePrimaryMessageByBlogId } from "server/database/delete";
 import { TagProps } from "types/containers";
-import { transformPath } from "utils/path";
 
 // 根据id获取blog
 const getBlogByBlogIdAction = autoRequestHandler({
@@ -285,8 +285,8 @@ const updateBlogReadAction = autoRequestHandler({
   },
   errorHandler: ({ res, e, code = 500 }) =>
     fail({ res, statuCode: code, resDate: { state: "更新readcount失败", data: e.toString(), methodName: "updateBlogReadAction" } }),
-  paramsConfig: { fromBody: ["blogId"] },
   cacheConfig: { needDelete: [apiName.home] },
+  paramsConfig: { fromBody: ["blogId"] },
 });
 
 export { updateBlogByBlogIdAction, getBlogByBlogIdAction, publishBlogAction, deleteBlogByBlogIdAAction, updateBlogReadAction };

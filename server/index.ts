@@ -45,5 +45,5 @@ nextApp.prepare().then(() => {
     return handle(req, res);
   });
 
-  http.createServer(app).listen(port, () => log(`=== listening on port: ${port} ===`, "normal"));
+  http.createServer(app).listen(port, () => log(`=== listening on port: ${port} ===`, "warn"));
 });

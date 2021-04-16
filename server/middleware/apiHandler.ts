@@ -30,6 +30,8 @@ let success = <T>({ res, statuCode = 200, resDate }: ApiResponseProps<T>): ApiRe
 let fail = <T>({ res, statuCode = 404, resDate, methodName }: ApiResponseProps<T> & { methodName?: string }): void => {
   if (methodName && process.env.NODE_ENV === "development") {
     resDate["methodName"] = `method: ${methodName} 出现错误`;
+  } else {
+    delete resDate["methodName"];
   }
   resDate.code = resDate.code || -1;
   resDate.state = resDate.state || "获取失败";
