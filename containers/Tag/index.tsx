@@ -21,6 +21,7 @@ Tag = () => {
           needinitialData
           apiPath={apiName.home}
           initialData={blogs}
+          revalidateOnFocus={false}
           loaded={(data) => {
             return (
               <>

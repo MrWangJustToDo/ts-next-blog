@@ -102,7 +102,7 @@ useLogout = () => {
             if (code === 0) {
               dispatch(setDataSucess_client({ name: actionName.currentUser, data: {} }));
               successToast("登出成功，即将返回首页");
-              delay(1000, () => router.push("/"));
+              delay(600, () => router.push("/"));
             } else {
               failToast(`登出失败：${state}`);
             }

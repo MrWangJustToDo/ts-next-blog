@@ -1,6 +1,7 @@
 import { Database } from "sqlite";
 import { mergeTypeTagToBlog } from "server/utils/merge";
 import { BlogContentProps } from "types/hook";
+import { ChildMessageProps, PrimaryMessageProps } from "types/components";
 
 // 根据用户名与密码获取用户信息
 const getUserByUser = async ({ username, password, db }: { username: string; password: string; db: Database }) => {
@@ -214,12 +215,12 @@ const getAliveBlogCount = async ({ db }: { db: Database }) => {
 };
 
 // 获取主评论
-const getPrimaryByBlogId = async ({ db, blogId }: { db: Database; blogId: string }) => {
+const getPrimaryByBlogId = async ({ db, blogId }: { db: Database; blogId: string }): Promise<PrimaryMessageProps[]> => {
   return await db.all("SELECT * FROM primaryComment LEFT JOIN users ON primaryComment.fromUserId = users.userId WHERE primaryComment.blogId = ?", blogId);
 };
 
 // 获取子评论
-const getChildByPrimaryId = async ({ db, primaryCommentId }: { db: Database; primaryCommentId: string }) => {
+const getChildByPrimaryId = async ({ db, primaryCommentId }: { db: Database; primaryCommentId: string }): Promise<ChildMessageProps[]> => {
   const childMessage = await db.all(
     "SELECT * FROM childComment LEFT JOIN users ON childComment.fromUserId = users.userId WHERE childComment.primaryCommentId = ?",
     primaryCommentId

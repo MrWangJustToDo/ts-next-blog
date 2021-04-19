@@ -31,9 +31,10 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
           <PrimaryMessage key={item.commentId} {...item} replayHandler={replay}>
             <LoadRender<ChildMessageProps[]>
               token
+              revalidateOnFocus={false}
               apiPath={apiName.childMessage}
               query={{ primaryCommentId: String(item.commentId) }}
-              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} primaryCommentId={item.commentId} /> : null)}
+              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data.reverse()} primaryCommentId={item.commentId} /> : null)}
             />
           </PrimaryMessage>
         ))}

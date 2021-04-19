@@ -25,7 +25,7 @@ UserHoverItem = (props) => {
         </div>
       </div>
       <div className="card-body text-left py-2">
-        <LoadRender<UserExProps> apiPath={apiName.userEx} token query={{ userId: userId! }} loaded={Loaded} />
+        <LoadRender<UserExProps> apiPath={apiName.userEx} token query={{ userId: userId! }} revalidateOnFocus={false} loaded={Loaded} />
         {getUserProps(props).map(({ key, icon, value }) => (
           <div key={key}>
             <i className={icon} />

@@ -39,8 +39,8 @@ PrimaryMessage = (props) => {
       ) : (
         <Image src={src} className="rounded" alt="头像" width="38" height="38" />
       )}
-      <div className="media-body ml-2 ml-md-3 border-bottom border-danger rounded pb-1">
-        <h5 className="small border-top border-info rounded pt-1">
+      <div className="media-body ml-2 ml-md-3 border-bottom rounded pb-1">
+        <h5 className="small border-top rounded pt-1">
           <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{username ? username : fromIp}</span>
           <span className="float-right badge badge-primary align-middle">{modifyState ? "更新于：" : "回复于：" + momentTo(modifyDate)}</span>
         </h5>

@@ -3,6 +3,7 @@ import useSWR from "swr";
 import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
 import loadingError from "./loadingError";
+import { log } from "utils/log";
 import { transformPath } from "utils/path";
 import { cancel, delay } from "utils/delay";
 import { autoTransformData } from "utils/data";
@@ -106,6 +107,7 @@ getCurrentInitialData = ({ initialData, apiPath, needinitialData }) => {
 autoUpdateState = ({ needUpdate, initialData, apiPath, currentData, dispatch }) => {
   useEffect(() => {
     if (needUpdate && apiPath && !isEqual(initialData, currentData)) {
+      log(`start update store from loadrender, apiPath: ${apiPath}`, "normal");
       dispatch(getDataSucess_Server({ name: apiPath, data: currentData }));
     }
   }, [needUpdate, apiPath, initialData, currentData]);
