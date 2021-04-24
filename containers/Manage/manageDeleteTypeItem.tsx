@@ -6,7 +6,7 @@ import { useManageToDeleteModule } from "hook/useManage";
 import { apiName } from "config/api";
 import { getClass } from "utils/class";
 import ManageDeleteModule from "./manageDeleteModule";
-import { AutoRequestType } from "types/utils";
+import { UseManageToDeleteModuleBody } from "types/hook";
 import { ManageDeleteTypeItemType } from "types/containers";
 
 import style from "./index.module.scss";
@@ -16,9 +16,7 @@ let ManageDeleteTypeItem: ManageDeleteTypeItemType;
 ManageDeleteTypeItem = ({ typeId, typeContent, typeCount }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId } });
 
-  const body = useCallback<
-    ({ request, item, successCallback }: { request: AutoRequestType; item: JSX.Element; successCallback: () => void }) => (close: () => void) => JSX.Element
-  >(
+  const body = useCallback<UseManageToDeleteModuleBody>(
     ({ request, item, successCallback }) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
     []
   );

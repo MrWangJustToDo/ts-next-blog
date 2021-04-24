@@ -17,7 +17,7 @@ BlogContentMessage = ({ blogId }) => {
           query={{ blogId }}
           apiPath={apiName.primaryMessage}
           loaded={(data) =>
-            data.length ? <BlogContentPrimaryMessage messages={data.reverse()} /> : <div className={getClass("p-5 text-danger", flexCenter)}>暂时没有留言</div>
+            data.length ? <BlogContentPrimaryMessage messages={data} /> : <div className={getClass("p-5 text-danger", flexCenter)}>暂时没有留言</div>
           }
         />
       </div>

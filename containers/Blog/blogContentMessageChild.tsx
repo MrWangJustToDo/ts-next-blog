@@ -1,10 +1,10 @@
 import { useCallback } from "react";
+import { getClass } from "utils/class";
 import { ChildMessage } from "components/BlogMessage";
 import { useChildMessage, useMessageToReplayModule } from "hook/useMessage";
-import { getClass } from "utils/class";
 import BlogContentReplayModule from "./blogContentReplayModule";
-import { AutoRequestType } from "types/utils";
 import { ChildMessageProps } from "types/components";
+import { UseMessageToReplayModuleBody } from "types/hook";
 import { BlogContentChildMessageType, BlogContentChildMessageWithReplayType } from "types/containers";
 
 import style from "./index.module.scss";
@@ -34,8 +34,8 @@ BlogContentChildMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentChildMessage = ({ messages, primaryCommentId }) => {
-  const body = useCallback<(request: AutoRequestType) => (props: ChildMessageProps) => (closeHandler: () => void) => JSX.Element>(
-    (request) => (props) => (closeHandler) => (
+  const body = useCallback<UseMessageToReplayModuleBody<ChildMessageProps>>(
+    ({ request, props }) => (closeHandler) => (
       <>
         <ChildMessage {...props} withReplay={false} withChildren={false} />
         <BlogContentReplayModule

@@ -1,8 +1,7 @@
-import { RefObject, useCallback } from "react";
+import { useCallback } from "react";
 import { usePutToCheckcodeModule } from "hook/useMessage";
 import BlogContentCheckcodeModule from "./blogContentCheckcodeModule";
-import { MyInputELement } from "types/hook";
-import { AutoRequestType } from "types/utils";
+import { UsePutToCheckcodeModuleBody } from "types/hook";
 import { BlogContentMessagePutType } from "types/containers";
 
 import style from "./index.module.scss";
@@ -10,11 +9,9 @@ import style from "./index.module.scss";
 let BlogContentMessagePut: BlogContentMessagePutType;
 
 BlogContentMessagePut = ({ blogId }) => {
-  const body = useCallback<
-    (request: AutoRequestType) => (ref: RefObject<MyInputELement>) => (callback: () => void) => (closeHandler: () => void) => JSX.Element
-  >(
-    (request) => (ref) => (successCallback) => (close) => (
-      <BlogContentCheckcodeModule request={request} closeHandler={close} messageRef={ref} successCallback={successCallback} />
+  const body = useCallback<UsePutToCheckcodeModuleBody>(
+    ({ request, ref, successCallback }) => (closeHandler) => (
+      <BlogContentCheckcodeModule request={request} closeHandler={closeHandler} messageRef={ref} successCallback={successCallback} />
     ),
     []
   );

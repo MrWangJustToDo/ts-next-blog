@@ -4,15 +4,15 @@ import ManageAddModule from "./manageAddModule";
 import { useUserRequest } from "hook/useUser";
 import { useManageToAddModule } from "hook/useManage";
 import { SimpleElement } from "types/components";
-import { AutoRequestType } from "types/utils";
+import { UseManageToAddModuleBody } from "types/hook";
 
 let ManageAddTypeButton: SimpleElement;
 
 ManageAddTypeButton = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.addType });
 
-  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => (closeHandler: () => void) => JSX.Element>(
-    (request) => (judgeApiName) => (requestApiName) => (closeHandler) => (
+  const body = useCallback<UseManageToAddModuleBody>(
+    ({ requestApiName, request, judgeApiName }) => (closeHandler) => (
       <ManageAddModule requestApiName={requestApiName} fieldname="typeContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />
     ),
     []

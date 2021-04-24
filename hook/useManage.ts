@@ -75,7 +75,11 @@ useSearch = ({ request }) => {
 
 useManageToAddModule = ({ title, body, request, className, judgeApiName, requestApiName }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body(request)(judgeApiName)(requestApiName), className }), [request, judgeApiName, requestApiName]);
+  const click = useCallback(() => open({ head: title, body: body({ request, requestApiName, judgeApiName }), className }), [
+    request,
+    judgeApiName,
+    requestApiName,
+  ]);
   return click;
 };
 

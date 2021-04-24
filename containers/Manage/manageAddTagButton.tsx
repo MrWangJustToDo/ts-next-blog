@@ -4,15 +4,15 @@ import ManageAddModule from "./manageAddModule";
 import { useUserRequest } from "hook/useUser";
 import { useManageToAddModule } from "hook/useManage";
 import { SimpleElement } from "types/components";
-import { AutoRequestType } from "types/utils";
+import { UseManageToAddModuleBody } from "types/hook";
 
 let ManageAddTagButton: SimpleElement;
 
 ManageAddTagButton = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.addTag });
 
-  const body = useCallback<(request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => (closeHandler: () => void) => JSX.Element>(
-    (request) => (judgeApiName) => (requestApiName) => (closeHandler) => (
+  const body = useCallback<UseManageToAddModuleBody>(
+    ({ request, requestApiName, judgeApiName }) => (closeHandler) => (
       <ManageAddModule requestApiName={requestApiName} fieldname="tagContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />
     ),
     []

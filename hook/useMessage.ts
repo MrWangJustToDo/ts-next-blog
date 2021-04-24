@@ -80,7 +80,8 @@ usePutToCheckcodeModule = <T extends MyInputELement>({ blogId, body, className =
       if (!!ele.value.length) {
         open({
           head: "验证码",
-          body: body(request({ data: { content: ele.value } }))(ref)(successCallback),
+          // body: body(request({ data: { content: ele.value } }))(ref)(successCallback),
+          body: body({ request: request({ data: { content: ele.value } }), ref, successCallback }),
           className,
         });
       }
@@ -130,7 +131,7 @@ useMessageToReplayModule = <T extends {}>({ body, className }: UseMessageToRepla
   const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage });
   const replay = useCallback<(props: T) => void>(
     (props) => {
-      open({ head: "回复", body: body(request)(props), className });
+      open({ head: "回复", body: body({ request, props }), className });
     },
     [body, request]
   );

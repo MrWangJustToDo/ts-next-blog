@@ -2,13 +2,13 @@ import { useCallback } from "react";
 import Link from "next/link";
 import { mutate } from "swr";
 import { apiName } from "config/api";
-import { flexCenter, getClass } from "utils/class";
 import { useUserRequest } from "hook/useUser";
+import { flexCenter, getClass } from "utils/class";
 import { useFilterResult, useManageToDeleteModule } from "hook/useManage";
 import { WithWriteBlogItem as SearchResult, BlogItem } from "components/BlogItem";
 import ManageDeleteModule from "./manageDeleteModule";
-import { AutoRequestType } from "types/utils";
 import { BlogContentType } from "types/containers";
+import { UseManageToDeleteModuleBody } from "types/hook";
 
 import style from "./index.module.scss";
 
@@ -29,9 +29,7 @@ ManageDeleteBlogItem = (props) => {
     filter();
   }, [filter]);
 
-  const body = useCallback<
-    ({ request, item, successCallback }: { request: AutoRequestType; item: JSX.Element; successCallback: () => void }) => (close: () => void) => JSX.Element
-  >(
+  const body = useCallback<UseManageToDeleteModuleBody>(
     ({ request, item, successCallback }) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
     []
   );

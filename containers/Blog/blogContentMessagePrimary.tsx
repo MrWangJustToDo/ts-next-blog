@@ -8,7 +8,7 @@ import { useBasePage } from "hook/useBase";
 import { useMessageToReplayModule } from "hook/useMessage";
 import BlogContentChildMessage from "./blogContentMessageChild";
 import BlogContentReplayModule from "./blogContentReplayModule";
-import { AutoRequestType } from "types/utils";
+import { UseMessageToReplayModuleBody } from "types/hook";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
 import { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWithReplayType } from "types/containers";
 
@@ -34,7 +34,7 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
               revalidateOnFocus={false}
               apiPath={apiName.childMessage}
               query={{ primaryCommentId: String(item.commentId) }}
-              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data.reverse()} primaryCommentId={item.commentId} /> : null)}
+              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} primaryCommentId={item.commentId} /> : null)}
             />
           </PrimaryMessage>
         ))}
@@ -52,8 +52,8 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
 };
 
 BlogContentPrimaryMessage = ({ messages }) => {
-  const body = useCallback<(request: AutoRequestType) => (props: PrimaryMessageProps) => (closeHandler: () => void) => JSX.Element>(
-    (request) => (props) => (closeHandler) => (
+  const body = useCallback<UseMessageToReplayModuleBody<PrimaryMessageProps>>(
+    ({ request, props }) => (closeHandler) => (
       <>
         <PrimaryMessage {...props} withReplay={false} withChildren={false} />
         <BlogContentReplayModule

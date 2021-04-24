@@ -295,9 +295,14 @@ export type { UseLoadType };
 interface UseSearchType {
   (props: { request: AutoRequestType }): [RefObject<HTMLFormElement>, () => Promise<void>];
 }
+interface UseManageToAddModuleBody {
+  ({ request, judgeApiName, requestApiName }: { request: AutoRequestType; judgeApiName: apiName; requestApiName: apiName }): (
+    closeHandler: () => void
+  ) => JSX.Element;
+}
 interface UseManageToAddModuleProps {
   title: string;
-  body: (request: AutoRequestType) => (judgeApiName: apiName) => (requestApiName: apiName) => (closeHandler: () => void) => JSX.Element;
+  body: UseManageToAddModuleBody;
   judgeApiName: apiName;
   requestApiName: apiName;
   request: AutoRequestType;
@@ -324,21 +329,15 @@ interface UseJudgeInputProps {
 interface UseJudgeInputType {
   (props: UseJudgeInputProps): [RefObject<HTMLInputElement>, boolean];
 }
+interface UseManageToDeleteModuleBody {
+  ({ request, item, successCallback }: { request: AutoRequestType; item: JSX.Element; successCallback: () => void }): (close: () => void) => JSX.Element;
+}
 interface UseManageToDeleteModuleProps {
   title: string;
   item: JSX.Element;
   request: AutoRequestType;
   successCallback: () => void;
-  body: ({
-    request,
-    item,
-    successCallback,
-  }: {
-    request: AutoRequestType;
-    item: JSX.Element;
-    successCallback: () => void;
-  }) => (close: () => void) => JSX.Element;
-  // body: (request: AutoRequestType) => (item: JSX.Element) => (successCallback: () => void) => (close: () => void) => JSX.Element;
+  body: UseManageToDeleteModuleBody;
 }
 interface UseManageToDeleteModuleType {
   (props: UseManageToDeleteModuleProps): () => void;
@@ -352,7 +351,16 @@ interface UseDeleteRequestType {
   (props: UseDeleteRequestProps): () => Promise<void>;
 }
 
-export type { UseSearchType, UseManageToAddModuleType, UseAddRequestType, UseJudgeInputType, UseManageToDeleteModuleType, UseDeleteRequestType };
+export type {
+  UseSearchType,
+  UseManageToAddModuleBody,
+  UseManageToAddModuleType,
+  UseAddRequestType,
+  UseJudgeInputType,
+  UseManageToDeleteModuleBody,
+  UseManageToDeleteModuleType,
+  UseDeleteRequestType,
+};
 
 /* useMessage */
 interface UseChildMessageType {
@@ -362,10 +370,15 @@ type MyInputELement = HTMLInputElement | HTMLTextAreaElement;
 interface UseJudgeInputValueType {
   <T extends MyInputELement>(ref: RefObject<T>): boolean;
 }
+interface UsePutToCheckcodeModuleBody {
+  ({ request, ref, successCallback }: { request: AutoRequestType; ref: RefObject<MyInputELement>; successCallback: () => void }): (
+    closeHandler: () => void
+  ) => JSX.Element;
+}
 interface UsePutToCheckcodeModuleProps {
   className: string;
   blogId: string;
-  body: (request: AutoRequestType) => (ref: RefObject<MyInputELement>) => (successCallback: () => void) => (closeHandler: () => void) => JSX.Element;
+  body: UsePutToCheckcodeModuleBody;
 }
 interface UsePutToCheckcodeModuleType {
   <T extends MyInputELement>(props: UsePutToCheckcodeModuleProps): {
@@ -387,8 +400,11 @@ interface UseCheckcodeModuleToSubmitType {
     submit: () => Promise<void>;
   };
 }
+interface UseMessageToReplayModuleBody<T> {
+  ({ request, props }: { request: AutoRequestType; props: T }): (closeHandler: () => void) => JSX.Element;
+}
 interface UseMessageToReplayModuleProps<T> {
-  body: (request: AutoRequestType) => (props: T) => (closeHandler: () => void) => JSX.Element;
+  body: UseMessageToReplayModuleBody<T>;
   className: string;
 }
 interface UseMessageToReplayModuleType {
@@ -415,10 +431,12 @@ export type {
   UseChildMessageType,
   MyInputELement,
   UseJudgeInputValueType,
+  UsePutToCheckcodeModuleBody,
   UsePutToCheckcodeModuleProps,
   UsePutToCheckcodeModuleType,
   UseCheckcodeModuleToSubmitProps,
   UseCheckcodeModuleToSubmitType,
+  UseMessageToReplayModuleBody,
   UseMessageToReplayModuleProps,
   UseMessageToReplayModuleType,
   UseReplayModuleToSubmitProps,
