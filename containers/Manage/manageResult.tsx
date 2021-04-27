@@ -7,13 +7,13 @@ import ManageResultSearch from "./manageResultSearch";
 import { useBool } from "hook/useData";
 import { useCurrentState } from "hook/useBase";
 import { BlogContentProps } from "types/hook";
-import { SimpleElement } from "types/components";
+import { ManageUserIdType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let ManageResult: SimpleElement;
+let ManageResult: ManageUserIdType;
 
-ManageResult = () => {
+ManageResult = ({ userId }) => {
   const { bool, switchBoolState } = useBool();
 
   const { state } = useCurrentState();
@@ -22,10 +22,15 @@ ManageResult = () => {
 
   const loading = state.client[actionName.currentResult]["loading"];
 
-  const { userId } = state.client[actionName.currentUser]["data"];
-
   const allData = (
-    <LoadRender<BlogContentProps[]> token needUpdate needinitialData apiPath={apiName.userHome} query={{ userId }} loaded={(data) => <ManageResultAll {...data} />} />
+    <LoadRender<BlogContentProps[]>
+      token
+      needUpdate
+      needinitialData
+      apiPath={apiName.userHome}
+      query={{ userId }}
+      loaded={(data) => <ManageResultAll {...data} />}
+    />
   );
 
   const searchData = (

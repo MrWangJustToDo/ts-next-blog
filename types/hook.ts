@@ -254,7 +254,7 @@ export type { UseBoolType, UseArrayType };
 
 /* useHeader */
 interface UseHeaderItemType {
-  (): { currentHeader: string; changeCurrentHeader: (headItem: string) => void };
+  (props?: {needInitHead?: boolean}): { currentHeader: string; changeCurrentHeader: (headItem: string) => void };
 }
 
 export type { UseHeaderItemType };
@@ -467,7 +467,7 @@ interface UseTypeResult {
   decreasePage: () => void;
 }
 interface UseTypeType {
-  (blogs?: BlogContentProps[]): UseTypeResult;
+  (props?:{blogs?: BlogContentProps[], needInitType?: boolean}) : UseTypeResult;
 }
 
 export type { UseTypeType };
@@ -492,7 +492,7 @@ interface UseTagResult {
   decreasePage: () => void;
 }
 interface UseTagType {
-  (blogs?: BlogContentProps[]): UseTagResult;
+  (props?:{blogs?:BlogContentProps[], needInitTag?: boolean}): UseTagResult;
 }
 
 export type { UseTagType };

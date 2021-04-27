@@ -230,6 +230,13 @@ interface PublishSubmitType {
 export type { PublishSubmitType };
 
 /* === Manage === */
+
+interface ManageUserIdType {
+  (props:{userId: string}): JSX.Element;
+}
+
+export type {ManageUserIdType}
+
 /* manageAddModule */
 interface ManageAddModuleProps {
   fieldname: string;

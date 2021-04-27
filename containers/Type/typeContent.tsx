@@ -12,7 +12,7 @@ import style from "./index.module.scss";
 let TypeContent: TypeContentType;
 
 TypeContent = ({ blogs }) => {
-  const { currentPageBlogs } = useType(blogs);
+  const { currentPageBlogs } = useType({ blogs, needInitType: true });
 
   return (
     <ul className="p-0">

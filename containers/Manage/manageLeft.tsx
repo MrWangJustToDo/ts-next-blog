@@ -1,14 +1,14 @@
 import ManageSearch from "./manageSearch";
 import ManageResult from "./manageResult";
-import { SimpleElement } from "types/components";
+import { ManageUserIdType } from "types/containers";
 
-let ManageLeft: SimpleElement;
+let ManageLeft: ManageUserIdType;
 
-ManageLeft = () => {
+ManageLeft = ({ userId }) => {
   return (
     <div className="col-md-8 user-select-none">
       <ManageSearch />
-      <ManageResult />
+      <ManageResult userId={userId} />
     </div>
   );
 };

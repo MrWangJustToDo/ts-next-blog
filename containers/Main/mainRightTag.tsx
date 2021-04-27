@@ -9,7 +9,7 @@ import { MainRightTagType, TagProps } from "types/containers";
 let MainRightTag: MainRightTagType;
 
 MainRightTag = ({ index }) => {
-  const { tag, changeCurrentTag } = useTag();
+  const { tag, changeCurrentTag } = useTag({ needInitTag: true });
 
   const { icon, content, hrefTo } = mainRightHeader[index];
 

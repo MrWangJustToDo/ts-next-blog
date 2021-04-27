@@ -1,13 +1,13 @@
+import { ManageUserIdType } from "types/containers";
 import ManageLeft from "./manageLeft";
 import ManageRight from "./manageRight";
-import { SimpleElement } from "types/components";
 
-let Manage: SimpleElement;
+let Manage: ManageUserIdType;
 
-Manage = () => {
+Manage = ({userId}) => {
   return (
     <div className="row px-lg-4 px-sm-2">
-      <ManageLeft />
+      <ManageLeft userId={userId} />
       <ManageRight />
     </div>
   );

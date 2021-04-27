@@ -10,12 +10,12 @@ import { TagProps } from "types/containers";
 
 let useTag: UseTagType;
 
-let autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Function) => {
+let autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Function, needChange: boolean) => {
   useEffect(() => {
-    if (currentTag === "" && tag.length) {
+    if (needChange && currentTag === "" && tag.length) {
       changeCurrentTag(tag[0].tagContent);
     }
-  }, [currentTag, changeCurrentTag, tag]);
+  }, [needChange, currentTag, changeCurrentTag, tag]);
 };
 
 let autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
@@ -26,7 +26,8 @@ let autoChangePage = (allPage: number, currentPage: number, dispatch: (props: An
   }, [allPage, currentPage]);
 };
 
-useTag = (blogs) => {
+useTag = (props = {}) => {
+  let { blogs, needInitTag = false } = props;
   const { state, dispatch } = useCurrentState();
   // 当前所有的tag
   const tag = state.server[apiName.tag]["data"];
@@ -39,7 +40,7 @@ useTag = (blogs) => {
   // 更改当前选中的tag
   const changeCurrentTag = useCallback((nextTag) => dispatch(setDataSucess_client({ name: actionName.currentTag, data: nextTag })), []);
   // 自动设置初始选中tag
-  autoChangeTag(tag, currentTag, changeCurrentTag);
+  autoChangeTag(tag, currentTag, changeCurrentTag, needInitTag);
   // 根据当前选中的tag获取blog
   const currentBlogs = blogs?.filter(({ tagContent }) => tagContent?.includes(currentTag)) || [];
   // 获取符合当前tag的blog页数

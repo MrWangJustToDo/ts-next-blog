@@ -10,7 +10,7 @@ import { MainRightTypeType } from "types/containers";
 let MainRightType: MainRightTypeType;
 
 MainRightType = ({ index }) => {
-  const { type, changeCurrentType } = useType();
+  const { type, changeCurrentType } = useType({ needInitType: true });
 
   const { icon, content, hrefTo } = mainRightHeader[index];
 

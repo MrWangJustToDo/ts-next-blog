@@ -12,7 +12,7 @@ import style from "./index.module.scss";
 let TagContent: TagContentType;
 
 TagContent = ({ blogs }) => {
-  const { currentPageBlogs } = useTag(blogs);
+  const { currentPageBlogs } = useTag({ blogs, needInitTag: true });
 
   return (
     <ul className="p-0">

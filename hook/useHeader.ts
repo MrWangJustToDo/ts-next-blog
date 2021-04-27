@@ -7,13 +7,16 @@ import { UseHeaderItemType } from "types/hook";
 
 let useHeaderItem: UseHeaderItemType;
 
-let autoChangeHeader = (item: string, changeCurrentItem: Function) => {
+let autoChangeHeader = (item: string, currentHeader: string, changeCurrentItem: Function, needChange: boolean) => {
   useEffect(() => {
-    changeCurrentItem(item);
-  }, [item, changeCurrentItem]);
+    if (needChange && item !== currentHeader) {
+      changeCurrentItem(item);
+    }
+  }, [item, changeCurrentItem, currentHeader, needChange]);
 };
 
-useHeaderItem = () => {
+useHeaderItem = (props = {}) => {
+  const { needInitHead = false } = props;
   const { route } = useRouter();
   const { state, dispatch } = useCurrentState();
   const currentHeader = state.client[actionName.currentHeader]["data"];
@@ -21,7 +24,7 @@ useHeaderItem = () => {
     (headItem) => dispatch(setDataSucess_client({ name: actionName.currentHeader, data: headItem })),
     []
   );
-  autoChangeHeader(route, changeCurrentHeader);
+  autoChangeHeader(route, currentHeader, changeCurrentHeader, needInitHead);
   return { currentHeader, changeCurrentHeader };
 };
 
