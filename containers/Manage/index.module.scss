@@ -1,10 +1,9 @@
 @import "../../styles/variable.module";
+@import "../../styles/basic.module";
 
 .closeIcon {
-  // display: none;
   cursor: pointer;
   &:hover {
-    // display: block;
     color: indigo;
   }
 }
@@ -38,5 +37,15 @@
       height: 100%;
       background-color: rgba(100, 100, 100, 0.6);
     }
+  }
+}
+
+.deleteBlogItem {
+  @include mobile {
+    max-width: 320px;
+  }
+
+  @include desktop {
+    max-width: 600px;
   }
 }

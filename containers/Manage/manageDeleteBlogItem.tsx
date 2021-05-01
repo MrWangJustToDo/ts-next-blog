@@ -36,7 +36,7 @@ ManageDeleteBlogItem = (props) => {
 
   const click = useManageToDeleteModule({
     title: "确认删除博客",
-    item: <BlogItem {...props} className="border rounded m-2" _style={{ maxWidth: "600px" }} />,
+    item: <BlogItem {...props} className={getClass("border rounded m-2", style.deleteBlogItem)} />,
     body,
     request,
     successCallback,

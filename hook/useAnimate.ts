@@ -24,25 +24,25 @@ useShowAndHideAnimate = <T extends HTMLElement>({
       // hide
       delay<void>(
         0,
-        () => actionHandler<T, void, void>(currentRef.current, (ele) => ele.classList.add(hideClassName)),
+        () => actionHandler<T, void, void>(currentRef.current, (ele) => requestAnimationFrame(() => ele.classList.add(hideClassName)) ),
         key
       )
         .then(() =>
           delay<void>(
             delayTime,
-            () => actionHandler<T, void, void>(currentRef.current, (ele) => ((ele.style.display = "none"), (ele.dataset.show = "false"))),
+            () => actionHandler<T, void, void>(currentRef.current, (ele) => requestAnimationFrame(() =>  ((ele.style.display = "none"), (ele.dataset.show = "false")))),
             key
           )
         )
-        .then(() => actionHandler<T, void, void>(currentRef.current, (ele) => ele.classList.remove(hideClassName)));
+        .then(() => actionHandler<T, void, void>(currentRef.current, (ele) => requestAnimationFrame(() => ele.classList.remove(hideClassName))) );
     } else {
       // show
-      delay<void>(0, () => actionHandler<T, void, void>(currentRef.current, (ele) => ((ele.style.display = "block"), (ele.dataset.show = "true"))), key)
-        .then(() => actionHandler<T, void, void>(currentRef.current, (ele) => ele.classList.add(showClassName)))
+      delay<void>(0, () => actionHandler<T, void, void>(currentRef.current, (ele) => requestAnimationFrame(() => ((ele.style.display = "block"), (ele.dataset.show = "true"))) ), key)
+        .then(() => actionHandler<T, void, void>(currentRef.current, (ele) => requestAnimationFrame(() => ele.classList.add(showClassName)) ))
         .then(() =>
           delay<void>(
             delayTime,
-            () => actionHandler<T, void, void>(currentRef.current, (ele) => ele.classList.remove(showClassName)),
+            () => actionHandler<T, void, void>(currentRef.current, (ele) => requestAnimationFrame(() => ele.classList.remove(showClassName)) ),
             key
           )
         );
