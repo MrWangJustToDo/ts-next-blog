@@ -18,10 +18,10 @@ Toast = ({ title, currentTime, contentState, content, showState = false, closeHa
 
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: showState,
-    showClassName: "animate__fadeInRight",
-    hideClassName: "animate__fadeOutRight",
+    showClassName: "fadeInRight",
+    hideClassName: "fadeOutRight",
   });
-  
+
   return (
     <div ref={ref} className={getClass("toast user-select-none", style.toast)} style={{ display: "none" }}>
       <div className={getClass("toast-header p-md-2", flexBetween)}>

@@ -25,9 +25,8 @@ const HeadContainerUser = () => {
 
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: bool,
-    key: "admin",
-    showClassName: "animate__flipInX",
-    hideClassName: "animate__flipOutX",
+    showClassName: "flipInX",
+    hideClassName: "flipOutX",
   });
 
   return userId ? (

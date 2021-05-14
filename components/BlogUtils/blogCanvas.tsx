@@ -14,11 +14,10 @@ BlogCanvas = () => {
   const { bool, switchBoolState } = useBool();
 
   useShowAndHideAnimate<HTMLCanvasElement>({
-    key: "blogMenu",
     state: bool,
     forWardRef: canvasRef,
-    showClassName: "animate__fadeIn",
-    hideClassName: "animate__fadeOut",
+    showClassName: "fadeIn",
+    hideClassName: "fadeOut",
   });
 
   return (

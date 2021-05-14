@@ -300,7 +300,7 @@ export type { HeadContainerListType };
 /* === Hover === */
 /* animate */
 interface AnimateType {
-  (props: { children?: JSX.Element; show: boolean }): JSX.Element;
+  (props: { children?: ReactElement; show: boolean }): JSX.Element;
 }
 
 export type { AnimateType };
@@ -490,7 +490,7 @@ export type { TagType };
 /* === Toast === */
 import { toastState } from "config/toast";
 import { InputProps } from "./config";
-import React, { RefObject } from "react";
+import React, { ReactElement, RefObject } from "react";
 
 interface ToastProps {
   title: string;

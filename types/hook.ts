@@ -62,7 +62,6 @@ export type { UserProps, TypeProps, TagProps, BlogProps, BlogContentProps };
 /* useAnimate */
 interface UseShowAndHideAnimateProps<T> {
   state: boolean;
-  key?: string;
   forWardRef?: RefObject<T>;
   showClassName?: string;
   hideClassName?: string;
@@ -254,7 +253,7 @@ export type { UseBoolType, UseArrayType };
 
 /* useHeader */
 interface UseHeaderItemType {
-  (props?: {needInitHead?: boolean}): { currentHeader: string; changeCurrentHeader: (headItem: string) => void };
+  (props?: { needInitHead?: boolean }): { currentHeader: string; changeCurrentHeader: (headItem: string) => void };
 }
 
 export type { UseHeaderItemType };
@@ -467,7 +466,7 @@ interface UseTypeResult {
   decreasePage: () => void;
 }
 interface UseTypeType {
-  (props?:{blogs?: BlogContentProps[], needInitType?: boolean}) : UseTypeResult;
+  (props?: { blogs?: BlogContentProps[]; needInitType?: boolean }): UseTypeResult;
 }
 
 export type { UseTypeType };
@@ -492,7 +491,7 @@ interface UseTagResult {
   decreasePage: () => void;
 }
 interface UseTagType {
-  (props?:{blogs?:BlogContentProps[], needInitTag?: boolean}): UseTagResult;
+  (props?: { blogs?: BlogContentProps[]; needInitTag?: boolean }): UseTagResult;
 }
 
 export type { UseTagType };

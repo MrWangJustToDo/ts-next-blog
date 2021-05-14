@@ -14,7 +14,7 @@ let PublishImageModule: PublishImageModuleType;
 PublishImageModule = ({ closeHandler, appendHandler, inputRef }) => {
   const [ref, bool] = useAutoLoadRandomImg({ imgUrl: apiName.image, initUrl: inputRef.current?.value });
 
-  useShowAndHideAnimate<HTMLImageElement>({ state: bool, forWardRef: ref, key: "imgPreview" });
+  useShowAndHideAnimate<HTMLImageElement>({ state: bool, forWardRef: ref });
 
   const clickCallback = useCallback(() => {
     actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => appendHandler(ele.src));

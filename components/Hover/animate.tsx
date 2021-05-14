@@ -8,7 +8,7 @@ let Animate: AnimateType;
 
 Animate = ({ children, show }) => {
   const ref = useShowAndHideAnimate<HTMLDivElement>({ state: show });
-  
+
   return (
     <div ref={ref} className={getClass("overflow-hidden", style.animatePanel)} style={{ display: "none" }}>
       {children}

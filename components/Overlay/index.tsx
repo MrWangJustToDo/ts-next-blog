@@ -11,9 +11,8 @@ Overlay = ({ head, body, foot, closeHandler, showState, className = "" }) => {
 
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: showState || false,
-    key: "overlay",
-    showClassName: "animate__fadeInDown",
-    hideClassName: "animate__fadeOutDown",
+    showClassName: "fadeInDown",
+    hideClassName: "fadeOutDown",
   });
 
   const bodyContent = useMemo(() => {

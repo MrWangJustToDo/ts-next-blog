@@ -15,9 +15,8 @@ BlogMenu = () => {
 
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: bool && seted,
-    key: "blogMenu",
-    showClassName: "animate__lightSpeedInRight",
-    hideClassName: "animate__lightSpeedOutRight",
+    showClassName: "lightSpeedInRight",
+    hideClassName: "lightSpeedOutRight",
   });
 
   return (

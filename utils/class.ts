@@ -1,4 +1,4 @@
-import { GetArray, GetClass, GetItem, TransformArray } from "types/utils";
+import { GetArray, GetClass, GetItem, TransformArray, AnimateCSSType } from "types/utils";
 
 let transformArray: TransformArray;
 let getClass: GetClass;
@@ -54,4 +54,32 @@ flexBetween = () => "d-flex justify-content-between align-items-center";
 flexAround = () => "d-flex justify-content-around align-items-center";
 flexBottom = () => "d-flex justify-content-center align-items-end";
 
-export { getClass, animateFadein, animateZoomin, animateFadeout, animateZoomout, flexCenter, flexStart, flexEnd, flexBetween, flexAround, flexBottom };
+const animateCSS: AnimateCSSType = ({ element, animation, prefix = "animate__" }) =>
+  new Promise((resolve) => {
+    const animationName = `${prefix}${animation}`;
+
+    element.classList.add(`${prefix}animated`, `${prefix}faster`, animationName);
+
+    function handleAnimationEnd(event: Event) {
+      event.stopPropagation();
+      element.classList.remove(`${prefix}animated`, `${prefix}faster`, animationName);
+      resolve();
+    }
+
+    element.addEventListener("animationend", handleAnimationEnd, { once: true });
+  });
+
+export {
+  getClass,
+  animateFadein,
+  animateZoomin,
+  animateFadeout,
+  animateZoomout,
+  flexCenter,
+  flexStart,
+  flexEnd,
+  flexBetween,
+  flexAround,
+  flexBottom,
+  animateCSS,
+};

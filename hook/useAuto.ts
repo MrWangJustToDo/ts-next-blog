@@ -153,7 +153,7 @@ useAutoShowAndHide = <T extends HTMLElement>(breakPoint: number) => {
     addListener: addListenerCallback,
     removeListener: removeListenerCallback,
   });
-  const ref = useShowAndHideAnimate<T>({ state: value, key: "blogUtil", showClassName: "animate__slideInRight", hideClassName: "animate__slideOutRight" });
+  const ref = useShowAndHideAnimate<T>({ state: value, showClassName: "slideInRight", hideClassName: "slideOutRight" });
   return ref;
 };
 
