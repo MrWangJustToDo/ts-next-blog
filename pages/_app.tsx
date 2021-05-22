@@ -6,7 +6,7 @@ import Layout from "components/Layout";
 
 import "../styles/globals.css";
 
-type MyNextComponent = NextComponentType & { container?: boolean; title?: string };
+type MyNextComponent = NextComponentType & { container?: boolean; title?: string; routerIn?: string; routerOut?: string };
 
 interface MyAppProps extends AppProps {
   Component: MyNextComponent;

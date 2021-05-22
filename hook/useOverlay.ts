@@ -11,9 +11,9 @@ let useOverlayProps: UseOverlayPropsType;
 let useOverlayOpen: () => UseOverlayOpenType;
 
 useOverlayProps = () => {
-  const [overlay, setReplay] = useState<OverlayProps | null>(null);
-  const update = useCallback(() => setReplay((last) => ({ ...last! })), []);
-  const clear = useCallback(() => setReplay(null), []);
+  const [overlay, setOverlay] = useState<OverlayProps | null>(null);
+  const update = useCallback(() => setOverlay((last) => ({ ...last! })), []);
+  const clear = useCallback(() => setOverlay(null), []);
   const open = useCallback(
     (props) => {
       cancel("replayModule");
@@ -23,7 +23,7 @@ useOverlayProps = () => {
         update();
         delay(600, clear, "replayModule");
       };
-      setReplay(props);
+      setOverlay(props);
     },
     [update]
   );

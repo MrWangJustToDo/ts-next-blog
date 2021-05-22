@@ -21,6 +21,7 @@ MainRightTag = ({ index }) => {
           needUpdate
           needinitialData
           apiPath={apiName.tag}
+          revalidateOnFocus={false}
           initialData={tag}
           loaded={(data) => (
             <>

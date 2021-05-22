@@ -13,6 +13,7 @@ ManageType = () => {
         needUpdate
         needinitialData
         apiPath={apiName.type}
+        revalidateOnFocus={false}
         loaded={(data) => {
           return (
             <>

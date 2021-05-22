@@ -23,6 +23,7 @@ MainRightType = ({ index }) => {
             needUpdate
             needinitialData
             apiPath={apiName.type}
+            revalidateOnFocus={false}
             initialData={type}
             loaded={(data) => (
               <>

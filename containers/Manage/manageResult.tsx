@@ -27,6 +27,7 @@ ManageResult = ({ userId }) => {
       token
       needUpdate
       needinitialData
+      revalidateOnFocus={false}
       apiPath={apiName.userHome}
       query={{ userId }}
       loaded={(data) => <ManageResultAll {...data} />}

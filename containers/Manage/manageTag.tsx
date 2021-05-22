@@ -13,6 +13,7 @@ ManageTag = () => {
         needUpdate
         needinitialData
         apiPath={apiName.tag}
+        revalidateOnFocus={false}
         loaded={(data) => {
           return (
             <>

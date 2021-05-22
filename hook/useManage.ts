@@ -75,11 +75,10 @@ useSearch = ({ request }) => {
 
 useManageToAddModule = ({ title, body, request, className, judgeApiName, requestApiName }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body({ request, requestApiName, judgeApiName }), className }), [
-    request,
-    judgeApiName,
-    requestApiName,
-  ]);
+  const click = useCallback(
+    () => open({ head: title, body: body({ request, requestApiName, judgeApiName }), className }),
+    [request, judgeApiName, requestApiName]
+  );
   return click;
 };
 
@@ -216,9 +215,10 @@ const useFilterResult = ({ currentBlogId }: { currentBlogId: string }) => {
   const { state, dispatch } = useCurrentState();
   // 获取当前result
   const result = <BlogContentProps[]>state.client[actionName.currentResult]["data"];
-  return useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentResult, data: result.filter(({ blogId }) => blogId !== currentBlogId) })), [
-    currentBlogId,
-  ]);
+  return useCallback(
+    () => dispatch(setDataSucess_client({ name: actionName.currentResult, data: result.filter(({ blogId }) => blogId !== currentBlogId) })),
+    [currentBlogId]
+  );
 };
 
 export { useSearch, useManageToAddModule, useAddRequest, useJudgeInput, useManageToDeleteModule, useDeleteRequest, useFilterResult };

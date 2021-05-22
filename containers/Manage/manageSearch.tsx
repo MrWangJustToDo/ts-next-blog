@@ -23,15 +23,17 @@ ManageSearch = () => {
         <LoadRender<TypeProps[]>
           needUpdate
           needinitialData
+          revalidateOnFocus={false}
           apiPath={apiName.type}
           loaded={(res) => {
             const data: DropItemProps<string>[] = res.map(({ typeContent, typeId }) => ({ name: typeContent, value: typeId! }));
-            return <Drop<string> style={{zIndex: '3'}} fieldName="typeId" className="form-control m-2" placeHolder="选择分类" data={data} />;
+            return <Drop<string> style={{ zIndex: "3" }} fieldName="typeId" className="form-control m-2" placeHolder="选择分类" data={data} />;
           }}
         />
         <LoadRender<TagProps[]>
           needUpdate
           needinitialData
+          revalidateOnFocus={false}
           apiPath={apiName.tag}
           loaded={(res) => {
             const data: DropItemProps<string>[] = res.map(({ tagContent, tagId }) => ({ name: tagContent, value: tagId! }));

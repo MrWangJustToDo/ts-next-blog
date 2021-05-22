@@ -30,6 +30,7 @@ Overlay = ({ head, body, foot, closeHandler, showState, className = "" }) => {
   }, [padding]);
 
   useEffect(() => {
+
     document.body.style.overflowY = "hidden";
     document.body.style.paddingRight = `${padding}px`;
     return () => {
