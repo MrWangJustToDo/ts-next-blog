@@ -4,9 +4,7 @@ import { useBool } from "hook/useData";
 import Animate from "./animate";
 import { HoverType } from "types/components";
 
-let Hover: HoverType;
-
-Hover = ({ className = "", children, hoverItem }) => {
+const Hover: HoverType = ({ className = "", children, hoverItem }) => {
   const key = useRef(String(Date.now()));
 
   const { bool, showState, hideDebounceNoState } = useBool({ stateChangeTimeStep: 600, key: key.current });

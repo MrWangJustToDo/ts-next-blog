@@ -9,9 +9,7 @@ import { UserExProps, UserHoverItemType } from "types/components";
 
 import style from "./index.module.scss";
 
-let UserHoverItem: UserHoverItemType;
-
-UserHoverItem = (props) => {
+const UserHoverItem: UserHoverItemType = (props) => {
   const { avatar, gender, username, userId } = props;
   return (
     <div className="card border-0">

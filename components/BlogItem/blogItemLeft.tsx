@@ -2,9 +2,7 @@ import BlogItemLeftUl from "./blogItemLeftUl";
 import { flexBetween, getClass } from "utils/class";
 import { BlogItemType } from "types/components";
 
-let BlogItemLeft: BlogItemType;
-
-BlogItemLeft = (props) => {
+const BlogItemLeft: BlogItemType = (props) => {
   const { blogTitle, typeContent, blogPreview } = props;
   
   return (

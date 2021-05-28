@@ -2,9 +2,7 @@ import Hover from "components/Hover";
 import HoverItem from "./hoverItem";
 import { UserHoverType } from "types/components";
 
-let UserHover: UserHoverType;
-
-UserHover = (props) => {
+const UserHover: UserHoverType = (props) => {
   const { userId, children = null } = props;
   if (userId && children) {
     return (

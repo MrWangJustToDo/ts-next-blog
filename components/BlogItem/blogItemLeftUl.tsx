@@ -9,9 +9,7 @@ import style from "./index.module.scss";
 
 const UserHover = dynamic(() => import("components/UserHover"));
 
-let BlogItemLeftUl: BlogItemType;
-
-BlogItemLeftUl = (props) => {
+const BlogItemLeftUl: BlogItemType = (props) => {
   const { blogAssentCount, blogCollectCount, blogReadCount, avatar, gender, username } = props;
 
   const arr = [blogAssentCount, blogCollectCount, blogReadCount];

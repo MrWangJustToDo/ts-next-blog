@@ -3,9 +3,7 @@ import { HeadContainerTagNavBtnType } from "types/components";
 
 import style from "./index.module.scss";
 
-let HeadContainerTagNavBtn: HeadContainerTagNavBtnType;
-
-HeadContainerTagNavBtn = ({ handler }) => {
+const HeadContainerTagNavBtn: HeadContainerTagNavBtnType = ({ handler }) => {
   return (
     <button type="button" className={getClass(style.btn, "navbar-toggler")} onClick={handler}>
       <span className="navbar-toggler-icon" />

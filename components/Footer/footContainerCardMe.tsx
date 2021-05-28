@@ -4,9 +4,7 @@ import { getClass, flexCenter } from "utils/class";
 
 import style from "./index.module.scss";
 
-let FootContainerCardMe: SimpleElement;
-
-FootContainerCardMe = () => {
+const FootContainerCardMe: SimpleElement = () => {
   return (
     <div className="col-4 col-lg-2 border-right border-secondary d-flex justify-content-center justify-content-lg-start">
       <div className={getClass(style.img, flexCenter)}>

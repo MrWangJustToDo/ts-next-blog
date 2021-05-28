@@ -4,11 +4,7 @@ import { SimpleElement, YiYanComponent } from "types/components";
 
 import style from "./index.module.scss";
 
-let Bquote: YiYanComponent;
-
-let FootContainerYiYan: SimpleElement;
-
-Bquote = ({ hitokoto, from_who, from }) => {
+const Bquote: YiYanComponent = ({ hitokoto, from_who, from }) => {
   return (
     <blockquote className={getClass(style.bquoteFont, "text-center m-0")}>
       <p className="m-0">{hitokoto}</p>
@@ -20,7 +16,7 @@ Bquote = ({ hitokoto, from_who, from }) => {
   );
 };
 
-FootContainerYiYan = () => {
+const FootContainerYiYan: SimpleElement = () => {
   return (
     <div className={getClass(style.autoHide, "col-lg-4 text-white border-left border-secondary")}>
       <h6 className={getClass(style.fontInherit, "my-2 mb-lg-3", flexCenter)}>

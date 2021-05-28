@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useCallback } from "react";
 import { useBool } from "hook/useData";
 import { useRouter } from "next/dist/client/router";
 import { useCurrentUser, useLogout } from "hook/useUser";
@@ -7,7 +8,6 @@ import { getCurrentAvatar } from "utils/data";
 import { animateFadein, flexCenter, getClass } from "utils/class";
 
 import style from "./index.module.scss";
-import { useCallback } from "react";
 
 const HeadContainerUser = () => {
   const router = useRouter();

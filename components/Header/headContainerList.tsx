@@ -7,9 +7,7 @@ import { HeadContainerListType } from "types/components";
 
 import style from "./index.module.scss";
 
-let HeadContainerList: HeadContainerListType;
-
-HeadContainerList = ({ show }) => {
+const HeadContainerList: HeadContainerListType = ({ show }) => {
   const { ref, height } = useAutoSetHeaderHeight<HTMLUListElement>(992);
 
   useHeaderItem({ needInitHead: true });

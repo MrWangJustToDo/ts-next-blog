@@ -4,9 +4,7 @@ import { BlogItemRightType } from "types/components";
 
 import style from "./index.module.scss";
 
-let BlogItemRight: BlogItemRightType;
-
-BlogItemRight = ({ src }) => {
+const BlogItemRight: BlogItemRightType = ({ src }) => {
   return (
     <div className={getClass("col-lg-4 mb-4 my-lg-0")}>
       <div className={getClass(style.imgHover, "rounded overflow-hidden")}>

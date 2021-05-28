@@ -8,9 +8,7 @@ import { ChildMessageType } from "types/components";
 
 import style from "./index.module.scss";
 
-let ChildMessage: ChildMessageType;
-
-ChildMessage = (props) => {
+const ChildMessage: ChildMessageType = (props) => {
   const {
     modifyState,
     modifyDate,

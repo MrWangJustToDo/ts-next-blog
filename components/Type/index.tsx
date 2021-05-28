@@ -3,11 +3,7 @@ import { useType } from "hook/useType";
 import { getClass } from "utils/class";
 import { TypeType } from "types/components";
 
-let Type: TypeType;
-
-let WithChangeType: TypeType;
-
-Type = ({ typeCount, typeContent, className = "", hoverAble = true }) => {
+const Type: TypeType = ({ typeCount, typeContent, className = "", hoverAble = true }) => {
   return (
     <div className={getClass("btn btn-outline-info shadow-none btn-sm m-1", className, hoverAble ? "" : "active")}>
       <span className="mr-2">{typeContent}</span>
@@ -16,7 +12,7 @@ Type = ({ typeCount, typeContent, className = "", hoverAble = true }) => {
   );
 };
 
-WithChangeType = ({ typeCount, typeContent, className }) => {
+const WithChangeType: TypeType = ({ typeCount, typeContent, className }) => {
   const { changeCurrentType } = useType();
 
   const changeType = useCallback(() => changeCurrentType(typeContent), []);

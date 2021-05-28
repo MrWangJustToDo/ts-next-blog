@@ -5,11 +5,7 @@ import { TagType } from "types/components";
 
 import style from "./index.module.scss";
 
-let Tag: TagType;
-
-let WithChangeTag: TagType;
-
-Tag = ({ tagContent, tagCount, className = "", hoverAble = true }) => {
+const Tag: TagType = ({ tagContent, tagCount, className = "", hoverAble = true }) => {
   return (
     <div
       title={tagContent}
@@ -24,7 +20,7 @@ Tag = ({ tagContent, tagCount, className = "", hoverAble = true }) => {
   );
 };
 
-WithChangeTag = ({ tagContent, tagCount, className }) => {
+const WithChangeTag: TagType = ({ tagContent, tagCount, className }) => {
   const { changeCurrentTag } = useTag();
 
   const changeTag = useCallback(() => changeCurrentTag(tagContent), [tagContent]);

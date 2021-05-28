@@ -4,9 +4,7 @@ import { apiName } from "config/api";
 import { TypeProps } from "types/hook";
 import { BlogContentType } from "types/containers";
 
-let PublishType: BlogContentType;
-
-PublishType = ({ typeId }) => {
+const PublishType: BlogContentType = ({ typeId }) => {
   return (
     <div className="input-group col">
       <div className="input-group-prepend text-center">

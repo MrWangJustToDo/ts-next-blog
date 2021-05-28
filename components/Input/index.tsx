@@ -5,9 +5,7 @@ import { InputEleType } from "types/components";
 
 import style from "./index.module.scss";
 
-let Input: InputEleType;
-
-Input = ({
+const Input: InputEleType = ({
   type,
   name,
   option,

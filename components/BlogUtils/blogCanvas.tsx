@@ -6,9 +6,7 @@ import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-let BlogCanvas: SimpleElement;
-
-BlogCanvas = () => {
+const BlogCanvas: SimpleElement = () => {
   const canvasRef = useLinkToImg<HTMLCanvasElement>();
 
   const { bool, switchBoolState } = useBool();

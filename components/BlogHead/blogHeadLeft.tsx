@@ -3,9 +3,7 @@ import { getCurrentAvatar } from "utils/data";
 import { flexBetween, flexCenter, getClass } from "utils/class";
 import { BlogContentType } from "types/containers";
 
-let BlogHeadLeft: BlogContentType;
-
-BlogHeadLeft = ({ gender, avatar, username, blogModifyState, blogModifyDate, blogReadCount }) => {
+const BlogHeadLeft: BlogContentType = ({ gender, avatar, username, blogModifyState, blogModifyDate, blogReadCount }) => {
   return (
     <ul className={getClass("list-unstyled text-truncate w-50 small overflow-auto m-0", flexBetween)} style={{ maxWidth: "240px" }}>
       <li className="small">

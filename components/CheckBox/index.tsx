@@ -4,9 +4,7 @@ import { CheckBoxType } from "types/components";
 
 import styleCss from "./index.module.scss";
 
-let CheckBox: CheckBoxType;
-
-CheckBox = ({ fieldName, style, type = "radio", init, className = "" }) => {
+const CheckBox: CheckBoxType = ({ fieldName, style, type = "radio", init, className = "" }) => {
   const { bool, switchBoolState } = useBool({ init });
   
   return (

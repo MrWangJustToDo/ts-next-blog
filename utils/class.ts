@@ -1,4 +1,4 @@
-import { GetArray, GetClass, GetItem, TransformArray, AnimateCSSType } from "types/utils";
+import { GetArray, GetClass, GetItem, TransformArray, AnimateCSSType, HandleClassActionType } from "types/utils";
 
 let transformArray: TransformArray;
 let getClass: GetClass;
@@ -56,18 +56,26 @@ flexBottom = () => "d-flex justify-content-center align-items-end";
 
 const animateCSS: AnimateCSSType = ({ element, animation, prefix = "animate__" }) =>
   new Promise((resolve) => {
-    const animationName = `${prefix}${animation}`;
+    const classNames = [`${prefix}animated`, `${prefix}faster`, `${prefix}${animation}`];
 
-    element.classList.add(`${prefix}animated`, `${prefix}faster`, animationName);
+    handleCssAction({ element, classNames, type: "add" });
 
     function handleAnimationEnd(event: Event) {
       event.stopPropagation();
-      element.classList.remove(`${prefix}animated`, `${prefix}faster`, animationName);
+      handleCssAction({ element, classNames, type: "remove" });
       resolve();
     }
 
     element.addEventListener("animationend", handleAnimationEnd, { once: true });
   });
+
+const handleCssAction: HandleClassActionType = ({ element, classNames, type }) => {
+  if (type === "add") {
+    element.classList.add(...classNames.filter(Boolean));
+  } else {
+    element.classList.remove(...classNames.filter(Boolean));
+  }
+};
 
 export {
   getClass,
@@ -82,4 +90,5 @@ export {
   flexAround,
   flexBottom,
   animateCSS,
+  handleCssAction,
 };

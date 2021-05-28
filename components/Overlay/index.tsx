@@ -4,9 +4,7 @@ import { flexBetween, getClass } from "utils/class";
 import { OverlayType } from "types/components";
 import { getScrollBarSize } from "utils/action";
 
-let Overlay: OverlayType;
-
-Overlay = ({ head, body, foot, closeHandler, showState, className = "" }) => {
+const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, className = "" }) => {
   const [padding, setPadding] = useState<number>(0);
 
   const ref = useShowAndHideAnimate<HTMLDivElement>({

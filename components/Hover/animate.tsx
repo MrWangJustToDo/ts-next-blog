@@ -4,9 +4,7 @@ import { getClass } from "utils/class";
 
 import style from "./index.module.scss";
 
-let Animate: AnimateType;
-
-Animate = ({ children, show }) => {
+const Animate: AnimateType = ({ children, show }) => {
   const ref = useShowAndHideAnimate<HTMLDivElement>({ state: show });
 
   return (

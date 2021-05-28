@@ -3,9 +3,7 @@ import Drop from "components/Drop";
 import { blogOrigin } from "config/publish";
 import { BlogContentType } from "types/containers";
 
-let PublishHead: BlogContentType;
-
-PublishHead = ({ blogOriginState, blogTitle }) => {
+const PublishHead: BlogContentType = ({ blogOriginState, blogTitle }) => {
   const init = useMemo(() => {
     if (blogOriginState !== undefined) {
       return [blogOriginState].map(Number);

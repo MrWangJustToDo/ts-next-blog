@@ -4,9 +4,7 @@ import useLoadingBar from "hook/useLoadingBar";
 import Bar from "./loadingBar";
 import { LoadingBarType } from "types/components";
 
-let LoadingBar: LoadingBarType;
-
-LoadingBar = React.memo(({ height = 1.5, present = 0, loading = false }) => {
+const LoadingBar: LoadingBarType = React.memo(({ height = 1.5, present = 0, loading = false }) => {
   const router = useRouter();
 
   const { start, end, autoAdd, state } = useLoadingBar({ height, present, loading });

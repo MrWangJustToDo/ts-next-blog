@@ -133,18 +133,24 @@ interface GetArray<T> {
 interface GetItem<T> {
   (): T;
 }
-
 interface AnimateCSSProps {
   element: HTMLElement;
   prefix?: string;
   animation: string;
 }
-
 interface AnimateCSSType {
   (props: AnimateCSSProps): Promise<void>;
 }
+interface HandleCssActionProps {
+  element: HTMLElement;
+  classNames: string[];
+  type: "add" | "remove";
+}
+interface HandleClassActionType {
+  (props: HandleCssActionProps): void;
+}
 
-export type { TransformArray, GetClass, GetArray, GetItem, AnimateCSSType };
+export type { TransformArray, GetClass, GetArray, GetItem, AnimateCSSType, HandleClassActionType };
 
 /* data */
 type ResultProps<T, F> = ApiRequestResult<T> & F;

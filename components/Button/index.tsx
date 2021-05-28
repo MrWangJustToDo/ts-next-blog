@@ -4,9 +4,7 @@ import { useBool } from "hook/useData";
 import { flexCenter, getClass } from "utils/class";
 import { ButtonType } from "types/components";
 
-let Button: ButtonType;
-
-Button = ({ request, type = "button", disable = false, value = "确定", initState = true, className = "", style = {}, loadingColor }) => {
+const Button: ButtonType = ({ request, type = "button", disable = false, value = "确定", initState = true, className = "", style = {}, loadingColor }) => {
   const { bool, show, hide } = useBool({ init: initState });
 
   const requestCallback = useCallback(() => {

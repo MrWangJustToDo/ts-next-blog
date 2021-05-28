@@ -3,9 +3,7 @@ import Drop from "components/Drop";
 import LoadRender from "components/LoadRender";
 import { BlogContentType, TagProps } from "types/containers";
 
-let PublishTag: BlogContentType;
-
-PublishTag = ({ tagId }) => {
+const PublishTag: BlogContentType = ({ tagId }) => {
   return (
     <div className="input-group col">
       <div className="input-group-prepend text-center">

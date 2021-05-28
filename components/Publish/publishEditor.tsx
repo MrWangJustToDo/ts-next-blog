@@ -11,9 +11,7 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
 });
 
-let PublishEditor: BlogContentType;
-
-PublishEditor = ({ blogId, blogContent = "" }) => {
+const PublishEditor: BlogContentType = ({ blogId, blogContent = "" }) => {
   if (process.browser) {
     useEditor(blogId!);
   }

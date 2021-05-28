@@ -12,13 +12,26 @@ import { useCurrentState } from "hook/useBase";
 import { getDataSucess_Server } from "store/reducer/server/action";
 import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType } from "types/components";
 
-let LoadRender: LoadRenderType;
+const getCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath, needinitialData }) => {
+  const { state, dispatch } = useCurrentState();
 
-let getCurrentInitialData: GetCurrentInitialDataType;
+  if (initialData) return { initialData, dispatch };
 
-let autoUpdateState: AutoUpdateStateType;
+  if (apiPath && needinitialData) return { initialData: state.server[apiPath]["data"], dispatch };
 
-LoadRender = <T>({
+  return { dispatch };
+};
+
+const autoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiPath, currentData, dispatch }) => {
+  useEffect(() => {
+    if (needUpdate && apiPath && !isEqual(initialData, currentData)) {
+      log(`start update store from loadrender, apiPath: ${apiPath}`, "normal");
+      dispatch(getDataSucess_Server({ name: apiPath, data: currentData }));
+    }
+  }, [needUpdate, apiPath, initialData, currentData]);
+};
+
+const LoadRender: LoadRenderType = <T>({
   method,
   path,
   apiPath,
@@ -94,23 +107,5 @@ LoadRender = <T>({
   return loadingEle;
 };
 
-getCurrentInitialData = ({ initialData, apiPath, needinitialData }) => {
-  const { state, dispatch } = useCurrentState();
-
-  if (initialData) return { initialData, dispatch };
-
-  if (apiPath && needinitialData) return { initialData: state.server[apiPath]["data"], dispatch };
-
-  return { dispatch };
-};
-
-autoUpdateState = ({ needUpdate, initialData, apiPath, currentData, dispatch }) => {
-  useEffect(() => {
-    if (needUpdate && apiPath && !isEqual(initialData, currentData)) {
-      log(`start update store from loadrender, apiPath: ${apiPath}`, "normal");
-      dispatch(getDataSucess_Server({ name: apiPath, data: currentData }));
-    }
-  }, [needUpdate, apiPath, initialData, currentData]);
-};
 
 export default LoadRender;

@@ -14,14 +14,17 @@ useShowAndHideAnimate = <T extends HTMLElement>({ state, forWardRef, showClassNa
     actionHandler<T, void, void>(currentRef.current, (ele) =>
       ele.classList.remove("animate__animated", `animate__${showClassName}`, `animate__${hideClassName}`)
     );
+    let needCacel = false;
     if (!state) {
       // hide
       actionHandler<T, void, Promise<void>>(currentRef.current, (ele) => {
         if (ele.style.display !== "none") {
           return animateCSS({ element: ele, animation: hideClassName }).then(() =>
             actionHandler<T, void, void>(currentRef.current, (ele) => {
-              ele.style.display = "none";
-              ele.dataset.show = "false";
+              if (!needCacel) {
+                ele.style.display = "none";
+                ele.dataset.show = "false";
+              }
             })
           );
         }
@@ -35,6 +38,10 @@ useShowAndHideAnimate = <T extends HTMLElement>({ state, forWardRef, showClassNa
         })
       ).then(() => actionHandler<T, Promise<void>, Promise<void>>(currentRef.current, (ele) => animateCSS({ element: ele, animation: showClassName })));
     }
+
+    return () => {
+      needCacel = true;
+    };
   }, [state]);
   return currentRef;
 };

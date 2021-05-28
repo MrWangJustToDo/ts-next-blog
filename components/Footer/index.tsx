@@ -7,9 +7,7 @@ import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-let Footer: SimpleElement;
-
-Footer = () => {
+const Footer: SimpleElement = () => {
   return (
     <footer className={getClass(style.footFont, "bg-dark text-center user-select-none")}>
       <div className="container-md">

@@ -3,9 +3,7 @@ import CheckBox from "components/CheckBox";
 import { blogState } from "config/publish";
 import { BlogContentType } from "types/containers";
 
-let PublishState: BlogContentType;
-
-PublishState = (props) => {
+const PublishState: BlogContentType = (props) => {
   return (
     <>
       {blogState.map(({ fieldName, name, value }, idx) => {

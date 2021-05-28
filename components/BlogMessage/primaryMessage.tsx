@@ -8,9 +8,7 @@ import { PrimaryMessageType } from "types/components";
 
 import style from "./index.module.scss";
 
-let PrimaryMessage: PrimaryMessageType;
-
-PrimaryMessage = (props) => {
+const PrimaryMessage: PrimaryMessageType = (props) => {
   const {
     modifyState,
     modifyDate,

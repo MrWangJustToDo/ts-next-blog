@@ -6,9 +6,7 @@ import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-let BlogMenu: SimpleElement;
-
-BlogMenu = () => {
+const BlogMenu: SimpleElement = () => {
   const seted = useBlogMenu(".blog-content");
 
   const { bool, switchBoolThrottle } = useBool();

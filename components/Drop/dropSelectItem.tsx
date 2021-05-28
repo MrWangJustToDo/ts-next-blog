@@ -4,9 +4,7 @@ import { DropSelectItemType } from "types/components";
 
 import style from "./index.module.scss";
 
-let DropSelectItem: DropSelectItemType;
-
-DropSelectItem = ({ idx, name, value, cacel, multiple }) => {
+const DropSelectItem: DropSelectItemType = ({ idx, name, value, cacel, multiple }) => {
   const cacelCallback = useCallback<(e: MouseEvent) => void>(
     (e) => {
       if (multiple) {

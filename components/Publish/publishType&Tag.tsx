@@ -2,9 +2,7 @@ import PublishType from "./publishType";
 import PublishTag from "./publishTag";
 import { BlogContentType } from "types/containers";
 
-let PublishType_Tag: BlogContentType;
-
-PublishType_Tag = ({ typeId, tagId }) => {
+const PublishType_Tag: BlogContentType = ({ typeId, tagId }) => {
   return (
     <div className="form-row mb-3">
       <PublishType typeId={typeId} />

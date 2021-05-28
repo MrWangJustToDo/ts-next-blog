@@ -6,15 +6,9 @@ import { BlogItemType } from "types/components";
 
 import style from "./index.module.scss";
 
-let BlogItem: BlogItemType;
-
-let WithReadBlogItem: BlogItemType;
-
-let WithWriteBlogItem: BlogItemType;
-
-BlogItem = (props) => {
+const BlogItem: BlogItemType = (props) => {
   const { blogImgLink, className = "", _style = {} } = props;
-  
+
   return (
     <div className={getClass("card-body row flex-wrap-reverse border-bottom", flexAround, style.blogItem, className)} style={_style}>
       <BlogItemLeft {...props} />
@@ -23,7 +17,7 @@ BlogItem = (props) => {
   );
 };
 
-WithReadBlogItem = (props) => {
+const WithReadBlogItem: BlogItemType = (props) => {
   return (
     <Link href={`/blog/${props.blogId}`}>
       <a className="text-reset text-decoration-none d-block h-100">
@@ -33,7 +27,7 @@ WithReadBlogItem = (props) => {
   );
 };
 
-WithWriteBlogItem = (props) => {
+const WithWriteBlogItem: BlogItemType = (props) => {
   return (
     <Link href={`/editor/${props.blogId}`}>
       <a className="text-reset text-decoration-none d-block h-100">

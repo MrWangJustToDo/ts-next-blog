@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { SimpleElement } from "types/components";
 
-let BlogHeadRight: SimpleElement;
-
-BlogHeadRight = () => {
+const BlogHeadRight: SimpleElement = () => {
   return (
     <nav aria-label="breadcrumb">
       <ol className="bg-transparent small breadcrumb m-0">

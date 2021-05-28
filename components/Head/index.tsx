@@ -5,10 +5,8 @@ interface ComponentType {
   ({ title }: { title?: string }): JSX.Element;
 }
 
-let Component: ComponentType;
-
 // Head 组件
-Component = ({ title = "Blog" }) => {
+const Component: ComponentType = ({ title = "Blog" }) => {
   return (
     <Head>
       <meta charSet="utf-8" />

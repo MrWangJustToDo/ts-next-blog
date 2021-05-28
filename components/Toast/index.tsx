@@ -7,9 +7,7 @@ import { ToastType } from "types/components";
 
 import style from "./index.module.scss";
 
-let Toast: ToastType;
-
-Toast = ({ title, currentTime, contentState, content, showState = false, closeHandler, autoCloseSecond = 0 }) => {
+const Toast: ToastType = ({ title, currentTime, contentState, content, showState = false, closeHandler, autoCloseSecond = 0 }) => {
   const [currentTimeString, setCurrentTimeString] = useState(momentTo(currentTime || new Date()));
 
   useAutoActionHandler({ delayTime: 60 * 1000, action: () => setCurrentTimeString(momentTo(currentTime || new Date())), timmer: true, once: false });

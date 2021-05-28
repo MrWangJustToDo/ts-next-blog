@@ -5,9 +5,7 @@ import { FootContainerRecommendType } from "types/components";
 
 import style from "./index.module.scss";
 
-let FootContainerRecommend: FootContainerRecommendType;
-
-FootContainerRecommend = ({ length = footContentLength }) => {
+const FootContainerRecommend: FootContainerRecommendType = ({ length = footContentLength }) => {
   return (
     <div className="col-4 col-lg-3 text-white">
       <h6 className={getClass(style.fontInherit, "my-2 mb-lg-3", flexCenter)}>

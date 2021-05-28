@@ -7,9 +7,7 @@ import { DropProps, DropType, ValueType } from "types/components";
 
 import styleCss from "./index.module.scss";
 
-let Drop: DropType;
-
-Drop = <T extends ValueType>({
+const Drop: DropType = <T extends ValueType>({
   data = [],
   className = "",
   placeHolder = "请选择",

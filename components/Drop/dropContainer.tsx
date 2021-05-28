@@ -4,11 +4,9 @@ import { DropContainerType } from "types/components";
 
 import style from "./index.module.scss";
 
-let DropContainer: DropContainerType;
-
-DropContainer = ({ bool, children, length, maxHeight }) => {
+const DropContainer: DropContainerType = ({ bool, children, length, maxHeight }) => {
   const [ref, height] = useAutoSetHeight<HTMLDivElement>({ deps: [length], maxHeight });
-  
+
   return (
     <div
       ref={ref}

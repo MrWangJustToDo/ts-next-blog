@@ -8,9 +8,7 @@ import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-let BlogUtils: SimpleElement;
-
-BlogUtils = () => {
+const BlogUtils: SimpleElement = () => {
   const divRef = useAutoShowAndHide<HTMLDivElement>(360);
 
   const topRef = useAutoScrollTop<HTMLButtonElement>();
