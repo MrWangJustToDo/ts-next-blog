@@ -449,8 +449,11 @@ interface UseOverlayOpenType {
 interface UseOverlayPropsType {
   (): { overlay: OverlayProps | null; open: UseOverlayOpenType };
 }
+interface UseBodyLockType {
+  (props: { ref: RefObject<HTMLElement> }): void;
+}
 
-export type { UseOverlayPropsType, UseOverlayOpenType };
+export type { UseOverlayPropsType, UseOverlayOpenType, UseBodyLockType };
 
 /* useType */
 interface UseTypeResult {
