@@ -358,9 +358,9 @@ export type { LoadingType };
 /* === LoadingBar === */
 /* index */
 interface LoadingBarProps {
+  forwardRef?: RefObject<HTMLDivElement>;
   height?: number;
   present?: number;
-  loading?: boolean;
 }
 
 interface LoadingBarType {
@@ -370,12 +370,8 @@ interface LoadingBarType {
 export type { LoadingBarType, LoadingBarProps };
 
 /* loadingBar */
-interface BarProps extends LoadingBarProps {
-  autoAdd: () => NodeJS.Timeout;
-}
-
 interface BarType {
-  (props: BarProps): JSX.Element;
+  (props: { forwardRef: RefObject<HTMLDivElement> }): JSX.Element;
 }
 
 export type { BarType };

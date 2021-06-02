@@ -1,31 +1,48 @@
-import { useCallback, useState } from "react";
-import { delay } from "utils/delay";
+import { useEffect, useRef } from "react";
+import { useBool } from "./useData";
+import { cancel, delay } from "utils/delay";
 import { UseLoadType } from "types/hook";
 import { LoadingBarProps } from "types/components";
 
-let useLoad: UseLoadType;
+const useLoad: UseLoadType = ({ height = 1.5, present = 0, forwardRef }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const targetRef = forwardRef || ref;
+  const state = useRef<LoadingBarProps>({ present });
+  const { bool, show, hide } = useBool();
+  useEffect(() => {
+    state.current.height = height;
+    state.current.present = present;
+  }, [bool, height, present]);
 
-useLoad = ({ loading = false, height = 1.5, present = 0 }) => {
-  const [state, setState] = useState<LoadingBarProps>({ loading, height, present });
-  const start = useCallback(() => setState({ loading: true, present: 0 }), []);
-  const complate = useCallback(() => setState({ loading: false, present: 100 }), []);
-  const hide = useCallback(() => setState({ height: 0 }), []);
-  const end = useCallback(() => delay(40, complate, "loadingBar").then(() => delay(80, hide, "loadingBar")), []);
-  const autoAdd = useCallback(() => {
-    let count = 8;
-    return setInterval(() => {
-      setState((last) => {
-        if (count > 1) {
-          count--;
-        }
-        let next = last.present! + (Math.random() + count - Math.random());
-        next = next < 99.5 ? next : 99.5;
-        return { ...last, present: next };
-      });
-    }, 60);
-  }, []);
+  useEffect(() => {
+    if (targetRef.current) {
+      const ele = targetRef.current;
+      if (bool) {
+        let count = 8;
+        const id = setInterval(() => {
+          if (count > 1) {
+            count--;
+          }
+          let next = state.current.present! + (Math.random() + count - Math.random());
+          next = next < 99.5 ? next : 99.5;
+          ele.style.cssText =
+            "z-index: 1;" +
+            "top: 0;" +
+            `height: ${state.current.height}px;` +
+            `transform-origin: 0 0;` +
+            `transform: scale(${next / 100}, 1);` +
+            `filter: drop-shadow(2px 2px 2px rgba(200, 200, 200, 0.4))`;
+          state.current.present = next;
+        }, 60);
+        return () => clearInterval(id);
+      } else {
+        delay(40, () => (ele.style.transform = "scale(1)"), "loadingBar").then(() => delay(80, () => (ele.style.height = "0px"), "loadingBar"));
+        return () => cancel("loadingBar");
+      }
+    }
+  }, [bool, targetRef]);
 
-  return { start, end, state, autoAdd };
+  return { start: show, end: hide, ref: targetRef };
 };
 
 export default useLoad;

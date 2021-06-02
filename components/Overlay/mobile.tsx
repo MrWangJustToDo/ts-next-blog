@@ -17,7 +17,7 @@ const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, class
   const variant = useMemo(
     () => ({
       show: {
-        height: " 80%",
+        height: "80%",
         opacity: 1,
       },
       hide: {
@@ -29,7 +29,14 @@ const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, class
   );
 
   return (
-    <motion.div className={getClass("card m-auto user-select-none", style.mobileModal, className)}>
+    <motion.div
+      className={getClass("card m-auto user-select-none", style.mobileModal, className)}
+      variants={variant}
+      initial="hide"
+      animate={showState ? "show" : "hide"}
+      drag="y"
+      dragConstraints={{ bottom: 0, top: 0 }}
+    >
       <div className={getClass("card-header", flexBetween)}>
         {head}
         <button className="close" style={{ outline: "none" }} onClick={closeHandler}>

@@ -281,8 +281,7 @@ export type { UseHomeType, UseCommendType };
 interface UseLoadReturn {
   start: () => void;
   end: () => void;
-  state: LoadingBarProps;
-  autoAdd: () => NodeJS.Timeout;
+  ref: RefObject<HTMLDivElement>;
 }
 interface UseLoadType {
   (props: LoadingBarProps): UseLoadReturn;

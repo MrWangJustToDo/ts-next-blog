@@ -23,7 +23,7 @@
       "server/*": ["server/*"],
       "types/*": ["types/*"]
     },
-    "typeRoots": ["global.d.ts", "next-env.d.ts"],
+    "typeRoots": ["global.d.ts", "next-env.d.ts", "types/*"],
     "plugins": [{ "transform": "typescript-transform-paths" }]
   },
   "include": ["**/*.ts", "**/*.tsx"]

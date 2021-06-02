@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import Toast from "components/Toast";
 import { DeskTopOverlay, MobileOverlay } from "components/Overlay";
 import { flexCenter, getClass } from "utils/class";
@@ -11,6 +12,13 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
   const { toast, push } = useToastProps([]);
   const { overlay, open } = useOverlayProps();
   const state = useMediaQuery("only screen and (max-width: 600px)");
+  const { deskTop, mobile } = useMemo(
+    () => ({
+      deskTop: overlay && !state,
+      mobile: overlay && state,
+    }),
+    [state, overlay]
+  );
   return (
     <>
       <div className="position-fixed" style={{ right: "10px", top: "15px", zIndex: 999 }} data-show={toast.length > 0}>
@@ -22,24 +30,18 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
         <OverlayOpenContext.Provider value={open}>{children}</OverlayOpenContext.Provider>
         <div className="position-fixed h-100 w-100" style={{ left: 0, top: 0, zIndex: 200, pointerEvents: "none" }}>
           <div
-            className={getClass(
-              "w-100 overflow-auto py-5",
-              !state ? "h-100" : "h-0",
-              flexCenter,
-              style.cover,
-              overlay && overlay.showState ? style.cover_active : ""
-            )}
-            style={{ pointerEvents: overlay && overlay.showState && !state ? "auto" : "none" }}
+            className={getClass("w-100 overflow-auto", flexCenter, style.cover, overlay && overlay.showState ? style.cover_active : "")}
+            style={{ height: deskTop ? "100%" : "0", pointerEvents: deskTop ? "auto" : "none" }}
             data-modal="desktop"
-            data-show={!!overlay && !state}
+            data-show={deskTop}
           >
             {overlay && !state && <DeskTopOverlay {...overlay} />}
           </div>
           <div
-            className={getClass("w-100 position-relative", state ? "h-100" : "h-0", style.cover, overlay && overlay.showState ? style.cover_active : "")}
-            style={{ pointerEvents: overlay && overlay.showState && state ? "auto" : "none" }}
+            className={getClass("w-100 position-relative", style.cover, overlay && overlay.showState ? style.cover_active : "")}
+            style={{ height: mobile ? "100%" : "0", pointerEvents: mobile ? "auto" : "none" }}
             data-modal="mobile"
-            data-show={!!overlay && state}
+            data-show={mobile}
           >
             {overlay && state && <MobileOverlay {...overlay} />}
           </div>

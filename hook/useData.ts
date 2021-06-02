@@ -4,15 +4,9 @@ import throttle from "lodash/throttle";
 import { cancel, delay } from "utils/delay";
 import { UseBoolType, UseArrayType } from "types/hook";
 
-let useBool: UseBoolType;
+const timeStep: number = 200;
 
-let timeStep: number;
-
-let useArray: UseArrayType;
-
-timeStep = 200;
-
-useBool = (props = {}) => {
+const useBool: UseBoolType = (props = {}) => {
   const { init = false, stateChangeTimeStep = 400, key = "useBool" } = props;
   const [bool, setBool] = useState<boolean>(init);
   const [boolState, setBoolState] = useState<boolean>(true);
@@ -84,7 +78,7 @@ useBool = (props = {}) => {
   };
 };
 
-useArray = <T>(init: T[]) => {
+const useArray: UseArrayType = <T>(init: T[]) => {
   const [array, setArray] = useState<T[]>(init);
   const pushItem = useCallback<(props: T) => void>((val) => setArray((last) => (last.push(val), last)), []);
   const dropItem = useCallback<(props: T) => void>((val) => setArray((last) => last.filter((item) => item !== val)), []);

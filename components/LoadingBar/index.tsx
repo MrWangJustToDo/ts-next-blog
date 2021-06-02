@@ -4,10 +4,10 @@ import useLoadingBar from "hook/useLoadingBar";
 import Bar from "./loadingBar";
 import { LoadingBarType } from "types/components";
 
-const LoadingBar: LoadingBarType = React.memo(({ height = 1.5, present = 0, loading = false }) => {
+const LoadingBar: LoadingBarType = React.memo(({ height = 1.5, present = 0 }) => {
   const router = useRouter();
 
-  const { start, end, autoAdd, state } = useLoadingBar({ height, present, loading });
+  const { start, end, ref } = useLoadingBar({ height, present });
 
   useEffect(() => {
     router.events.on("routeChangeStart", start);
@@ -17,8 +17,8 @@ const LoadingBar: LoadingBarType = React.memo(({ height = 1.5, present = 0, load
       router.events.off("routeChangeComplete", end);
     };
   }, []);
-  
-  return <Bar {...state} autoAdd={autoAdd} />;
+
+  return <Bar forwardRef={ref} />;
 });
 
 export default LoadingBar;
