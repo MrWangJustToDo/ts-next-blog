@@ -8,9 +8,7 @@ import { setDataSucess_client } from "store/reducer/client/action";
 import { UseTagType } from "types/hook";
 import { TagProps } from "types/containers";
 
-let useTag: UseTagType;
-
-let autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Function, needChange: boolean) => {
+const autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Function, needChange: boolean) => {
   useEffect(() => {
     if (needChange && currentTag === "" && tag.length) {
       changeCurrentTag(tag[0].tagContent);
@@ -18,7 +16,7 @@ let autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Func
   }, [needChange, currentTag, changeCurrentTag, tag]);
 };
 
-let autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
+const autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
   useEffect(() => {
     if (allPage > 0 && currentPage > allPage) {
       dispatch(setDataSucess_client({ name: actionName.currentTagPage, data: allPage }));
@@ -26,7 +24,7 @@ let autoChangePage = (allPage: number, currentPage: number, dispatch: (props: An
   }, [allPage, currentPage]);
 };
 
-useTag = (props = {}) => {
+const useTag: UseTagType = (props = {}) => {
   let { blogs, needInitTag = false } = props;
   const { state, dispatch } = useCurrentState();
   // 当前所有的tag

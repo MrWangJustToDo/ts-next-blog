@@ -6,11 +6,7 @@ const propsIconArray = [["ri-men-line", "ri-women-line"], "ri-qq-line", "ri-mail
 const stateArray = ["collect", "assent", "publish"];
 const stateIconArray = ["ri-star-line text-primary", "ri-thumb-up-line text-success", "ri-article-line text-info"];
 
-let getUserProps: (props: GetUserPropsProps) => Array<{ key: any; icon: string; value: string }>;
-
-let getUserState: (props: GetUserStateProps) => Array<{ key: any; icon: string; value: number }>;
-
-getUserProps = (props) => {
+const getUserProps = (props: GetUserPropsProps): Array<{ key: any; icon: string; value: string }> => {
   const re: { key: any; icon: string; value: string }[] = [];
   propsArray.forEach((item, index) => {
     if (props[item] !== undefined) {
@@ -28,7 +24,7 @@ getUserProps = (props) => {
   return re;
 };
 
-getUserState = (props) => {
+const getUserState = (props: GetUserStateProps): Array<{ key: any; icon: string; value: number }> => {
   const re: { key: any; icon: string; value: number }[] = [];
   stateArray.forEach((item, index) => {
     if (props[item] !== undefined) {

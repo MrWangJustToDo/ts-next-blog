@@ -1,19 +1,15 @@
 import { State } from "store";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UseBasePageProps, UseBasePageType, UseCurrentStateType } from "types/hook";
-import { useCallback, useState } from "react";
 
-let useCurrentState: UseCurrentStateType;
-
-let useBasePage: UseBasePageType;
-
-useCurrentState = () => {
+const useCurrentState: UseCurrentStateType = () => {
   const dispatch = useDispatch();
   const state = useSelector<State, State>((state) => state);
   return { state, dispatch };
 };
 
-useBasePage = <T>(props: UseBasePageProps<T> = {}) => {
+const useBasePage: UseBasePageType = <T>(props: UseBasePageProps<T> = {}) => {
   const { data, stateSide = "server", stateName, pageLength = 4 } = props;
   if (!data && !stateName) {
     throw new Error("useBasePage need Data");

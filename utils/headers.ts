@@ -1,9 +1,7 @@
 import Cookies from "js-cookie";
 import { GetHeaderType, HeaderProps } from "types/utils";
 
-let getHeader: GetHeaderType;
-
-getHeader = (header = {}) => {
+const getHeader: GetHeaderType = (header = {}) => {
   const resultHeader: HeaderProps = {};
   for (let key in header) {
     if (header[key] === true) {

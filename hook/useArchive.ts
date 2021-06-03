@@ -7,18 +7,14 @@ import { useCurrentState } from "./useBase";
 import { useAutoActionHandler } from "./useAuto";
 import { ArchiveProps, UseArchiveType, UseAutoLoadArchiveType } from "types/hook";
 
-let useArchive: UseArchiveType;
-
-let useAutoLoadArchive: UseAutoLoadArchiveType;
-
-let autoLoadArchive = (loadArchive: Function, archiveData: Object, needUpdate: boolean, setNeedUpdate: Function) => {
+const autoLoadArchive = (loadArchive: Function, archiveData: Object, needUpdate: boolean, setNeedUpdate: Function) => {
   if (Object.keys(archiveData).length && needUpdate) {
     loadArchive({ ...archiveData });
     setNeedUpdate(false);
   }
 };
 
-useArchive = () => {
+const useArchive: UseArchiveType = () => {
   const { state } = useCurrentState();
   const [page, setPage] = useState<number>(1);
   const [bool, setBool] = useState<boolean>(true);
@@ -44,7 +40,7 @@ useArchive = () => {
   return { value, allCount, canLoad, loadMore };
 };
 
-useAutoLoadArchive = ({ canLoad, loadMore, breakPoint }) => {
+const useAutoLoadArchive: UseAutoLoadArchiveType = ({ canLoad, loadMore, breakPoint }) => {
   const loadMoreCallback = useCallback<() => void>(
     throttle(() => {
       if (document.body.offsetHeight - (document.scrollingElement?.scrollTop || 0) < breakPoint) {

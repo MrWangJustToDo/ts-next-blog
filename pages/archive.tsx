@@ -10,9 +10,7 @@ import { animateFadein, getClass } from "utils/class";
 import { setDataSucess_client } from "store/reducer/client/action";
 import { getDataAction_Server, getDataSucess_Server } from "store/reducer/server/action";
 
-let Archive: MyNextComponent;
-
-Archive = () => {
+const Archive: MyNextComponent = () => {
   return (
     <div className={getClass(animateFadein, "container-md my-5")}>
       <ArchiveContent />

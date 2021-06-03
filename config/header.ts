@@ -1,8 +1,6 @@
 import { HeaderContentType } from "types/config";
 
-let HeaderContent: HeaderContentType;
-
-HeaderContent = [
+const HeaderContent: HeaderContentType = [
   { value: "首页", hrefTo: "/", icon: "ri-home-heart-fill" },
   { value: "分类", hrefTo: "/type", icon: "ri-lightbulb-flash-fill" },
   { value: "标签", hrefTo: "/tag", icon: "ri-price-tag-fill" },

@@ -21,19 +21,7 @@ import {
   UseAutoLoadRandomImgType,
 } from "types/hook";
 
-let useAutoActionHandler: UseAutoActionHandlerType;
-
-let useAutoSetHeaderHeight: UseAutoSetHeaderHeightType;
-
-let useAutoLoadCheckcodeImg: UseAutoLoadCheckcodeImgType;
-
-let useAutoShowAndHide: UseAutoShowAndHideType;
-
-let useAutoSetHeight: UseAutoSetHeightType;
-
-let useAutoLoadRandomImg: UseAutoLoadRandomImgType;
-
-useAutoActionHandler = <T, K>(
+const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
   { action, timmer, actionState = true, once = true, delayTime, rightNow = false, currentRef, addListener, removeListener }: UseAutoActionHandlerProps<T, K>,
   ...deps: any[]
 ) => {
@@ -71,7 +59,7 @@ useAutoActionHandler = <T, K>(
   }, [action, timmer, actionState, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps]);
 };
 
-useAutoSetHeaderHeight = <T extends HTMLElement>(breakPoint: number = 1000) => {
+const useAutoSetHeaderHeight: UseAutoSetHeaderHeightType = <T extends HTMLElement>(breakPoint: number = 1000) => {
   const ref = useRef<T>(null);
   const [bool, setBool] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(0);
@@ -103,7 +91,7 @@ useAutoSetHeaderHeight = <T extends HTMLElement>(breakPoint: number = 1000) => {
   return { ref, height };
 };
 
-useAutoLoadCheckcodeImg = <T extends HTMLImageElement>({ imgUrl, strUrl, state = true }: UseAutoLoadCheckcodeImgProps) => {
+const useAutoLoadCheckcodeImg: UseAutoLoadCheckcodeImgType = <T extends HTMLImageElement>({ imgUrl, strUrl, state = true }: UseAutoLoadCheckcodeImgProps) => {
   const ref = useRef<T>(null);
   const loadActionCallback = useCallback<() => void>(
     debounce(
@@ -133,7 +121,7 @@ useAutoLoadCheckcodeImg = <T extends HTMLImageElement>({ imgUrl, strUrl, state =
   return ref;
 };
 
-useAutoShowAndHide = <T extends HTMLElement>(breakPoint: number) => {
+const useAutoShowAndHide: UseAutoShowAndHideType = <T extends HTMLElement>(breakPoint: number) => {
   const [value, setValue] = useState<boolean>(false);
   const autoSetValueHandler = useCallback<() => void>(
     throttle(() => {
@@ -157,7 +145,7 @@ useAutoShowAndHide = <T extends HTMLElement>(breakPoint: number) => {
   return ref;
 };
 
-useAutoSetHeight = <T extends HTMLElement>(props: UseAutoSetHeightProps<T> = {}) => {
+const useAutoSetHeight: UseAutoSetHeightType = <T extends HTMLElement>(props: UseAutoSetHeightProps<T> = {}) => {
   const { forWardRef, maxHeight = 9999, deps = [] } = props;
   const ref = useRef<T>(null);
   const currentRef = forWardRef ? forWardRef : ref;
@@ -192,7 +180,7 @@ useAutoSetHeight = <T extends HTMLElement>(props: UseAutoSetHeightProps<T> = {})
   return [currentRef, height];
 };
 
-useAutoLoadRandomImg = ({ imgUrl, initUrl }) => {
+const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl }) => {
   const fail = useFailToast();
   const { bool, show, hide } = useBool();
   const ref = useRef<HTMLImageElement>(null);

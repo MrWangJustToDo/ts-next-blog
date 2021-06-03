@@ -10,10 +10,13 @@ import style from "./index.module.scss";
 const Toast: ToastType = ({ title, currentTime, contentState, content, showState = false, closeHandler, autoCloseSecond = 0 }) => {
   const [currentTimeString, setCurrentTimeString] = useState(momentTo(currentTime || new Date()));
 
-  useAutoActionHandler({ delayTime: 60 * 1000, action: () => setCurrentTimeString(momentTo(currentTime || new Date())), timmer: true, once: false });
-
+  // 自动关闭
   useAutoActionHandler({ delayTime: autoCloseSecond, action: closeHandler!, timmer: autoCloseSecond > 0, once: true });
 
+  // 自动更新时间显示
+  useAutoActionHandler({ delayTime: 60 * 1000, action: () => setCurrentTimeString(momentTo(currentTime || new Date())), timmer: true, once: false });
+
+  // 显示动画
   const ref = useShowAndHideAnimate<HTMLDivElement>({
     state: showState,
     showClassName: "fadeInRight",

@@ -5,19 +5,9 @@ import { getUserByUserId } from "server/database/get";
 import { catchHandler, fail, transformHandler } from "server/middleware/apiHandler";
 import { TransformHandlerType } from "types/server";
 
-let initDBConnect: TransformHandlerType;
-
-let initSession: TransformHandlerType;
-
-let decodeURI: TransformHandlerType;
-
-let serverLog: TransformHandlerType;
-
-let initUser: TransformHandlerType;
-
 var db: sqlite.Database;
 
-initDBConnect = transformHandler(
+const initDBConnect: TransformHandlerType = transformHandler(
   catchHandler(
     async ({ req, next }) => {
       if (!db) {
@@ -26,8 +16,8 @@ initDBConnect = transformHandler(
           driver: sqlite3.Database,
         });
       }
-      if (!req.db!) {
-        req.db! = db;
+      if (!req.db) {
+        req.db = db;
       }
       next();
     },
@@ -36,7 +26,7 @@ initDBConnect = transformHandler(
   )
 );
 
-initSession = transformHandler(
+const initSession: TransformHandlerType = transformHandler(
   catchHandler(
     ({ req, next }) => {
       if (!req.session.views) {
@@ -49,14 +39,14 @@ initSession = transformHandler(
   )
 );
 
-decodeURI = transformHandler(
+const decodeURI: TransformHandlerType = transformHandler(
   catchHandler(({ req, next }) => {
     req.url = decodeURIComponent(req.url);
     next();
   })
 );
 
-serverLog = transformHandler(
+const serverLog: TransformHandlerType = transformHandler(
   catchHandler(({ req, next }) => {
     if (!req.url.startsWith("/_next") && !req.url.startsWith("/__next")) {
       log(`method: ${req.method} request url: ${req.url}`, "normal");
@@ -65,7 +55,7 @@ serverLog = transformHandler(
   })
 );
 
-initUser = transformHandler(
+const initUser: TransformHandlerType = transformHandler(
   catchHandler(
     async ({ req, next }) => {
       // 从签名cookie中找出该用户的信息并挂在req对象上以供后续的中间件访问

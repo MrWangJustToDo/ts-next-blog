@@ -1,10 +1,6 @@
 import { AddModuleType } from "types/config";
 
-let addModule: AddModuleType;
-
-let manageLength: number;
-
-addModule = {
+const addModule: AddModuleType = {
   input: {
     regexp: /^[^\s]{2,7}$/,
     success: "格式正确",
@@ -12,6 +8,6 @@ addModule = {
   },
 };
 
-manageLength = 4;
+const manageLength = 4;
 
 export { addModule, manageLength };

@@ -4,11 +4,7 @@ import { ServerError } from "server/utils/error";
 import { TransformHandlerType } from "types/server";
 import { catchHandler, fail, transformHandler } from "server/middleware/apiHandler";
 
-let generateToken: TransformHandlerType;
-
-let detectionToken: TransformHandlerType;
-
-generateToken = transformHandler(
+const generateToken: TransformHandlerType = transformHandler(
   catchHandler(
     ({ req, res, next }) => {
       if (!req.session) {
@@ -26,7 +22,7 @@ generateToken = transformHandler(
   )
 );
 
-detectionToken = transformHandler(
+const detectionToken: TransformHandlerType = transformHandler(
   catchHandler(({ req, next }) => {
     if (!req.session) {
       throw new ServerError("session not generate!", 500);

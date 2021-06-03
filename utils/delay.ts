@@ -1,19 +1,13 @@
 import { log } from "./log";
 import { Cancel, Delay, KeyMap, ResolveMap, TimeoutMap } from "types/utils";
 
-let timeoutMap: TimeoutMap;
-let resolveMap: ResolveMap;
-let cancel: Cancel;
-let delay: Delay;
-let keyMap: KeyMap;
-
-timeoutMap = {};
-resolveMap = {};
-keyMap = {};
+const timeoutMap: TimeoutMap = {};
+const resolveMap: ResolveMap = {};
+const keyMap: KeyMap = {};
 let keyLength = 0;
 const maxKeyLength = 200;
 
-cancel = (key) => {
+const cancel: Cancel = (key) => {
   if (timeoutMap[key]) {
     const length = timeoutMap[key].length;
     timeoutMap[key] = timeoutMap[key].map((id) => id && clearTimeout(id)).slice(length);
@@ -33,7 +27,7 @@ cancel = (key) => {
   }
 };
 
-delay = (time, action, key) => {
+const delay: Delay = (time, action, key) => {
   if (key === undefined) {
     return new Promise((resolve) => {
       setTimeout(() => {

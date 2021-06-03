@@ -1,12 +1,6 @@
 import { ApiRequestResult, AutoTransformDataType, FormChild, FormSerializeType, GetCurrentAvatar, ResultProps } from "types/utils";
 
-let autoTransformData: AutoTransformDataType;
-
-let getCurrentAvatar: GetCurrentAvatar;
-
-let formSerialize: FormSerializeType;
-
-autoTransformData = <T, F>(data: ResultProps<T, F>) => {
+const autoTransformData: AutoTransformDataType = <T, F>(data: ResultProps<T, F>) => {
   if (data.code !== undefined && data.state && data.data) {
     return (<ApiRequestResult<T>>data).data;
   } else {
@@ -14,7 +8,7 @@ autoTransformData = <T, F>(data: ResultProps<T, F>) => {
   }
 };
 
-getCurrentAvatar = (avatar, gender) => {
+const getCurrentAvatar: GetCurrentAvatar = (avatar, gender) => {
   if (avatar && avatar.length > 0) {
     return avatar;
   } else {
@@ -29,7 +23,7 @@ getCurrentAvatar = (avatar, gender) => {
   }
 };
 
-formSerialize = (element: HTMLFormElement) => {
+const formSerialize: FormSerializeType = (element: HTMLFormElement) => {
   const re: { [props: string]: string | Array<string> } = {};
   const arr = ["button", "file", "reset", "submit"];
   if (element.localName === "form") {
@@ -91,12 +85,12 @@ const parseToString = (obj: { [props: string]: any } | Array<any> | string | num
   let re = "";
   if (Array.isArray(obj)) {
     re = "".padEnd(indent) + "[\n";
-    re += "".padEnd(indent + 2) + obj.map((it) => typeof it === 'object' ? parseToString(it, indent + 2) : it.toString()).join(",\n");
+    re += "".padEnd(indent + 2) + obj.map((it) => (typeof it === "object" ? parseToString(it, indent + 2) : it.toString())).join(",\n");
     re += "".padEnd(indent) + "]\n";
   } else if (typeof obj === "object") {
     re = "".padEnd(indent) + "{\n";
     for (let key in obj) {
-      re += "".padEnd(indent + 2) + `${key}: ${typeof obj[key] === 'object' ? parseToString(obj[key], indent + 2) : obj[key].toString()},\n`;
+      re += "".padEnd(indent + 2) + `${key}: ${typeof obj[key] === "object" ? parseToString(obj[key], indent + 2) : obj[key].toString()},\n`;
     }
     re = "".padEnd(indent) + re.slice(0, -1) + "}\n";
   } else {

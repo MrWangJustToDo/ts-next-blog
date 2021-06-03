@@ -3,10 +3,7 @@ import "moment/locale/zh-cn";
 import { log } from "./log";
 import { TimeToString } from "types/utils";
 
-let momentTo: TimeToString;
-let calendar: TimeToString;
-
-momentTo = (time) => {
+const momentTo: TimeToString = (time) => {
   if (typeof time === "string") {
     time = new Date(time);
   }
@@ -19,7 +16,7 @@ momentTo = (time) => {
   }
 };
 
-calendar = (time) => {
+const calendar: TimeToString = (time) => {
   if (typeof time === "string") {
     time = new Date(time);
   }

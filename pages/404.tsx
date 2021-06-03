@@ -2,9 +2,7 @@ import Link from "next/link";
 import { animateFadein, getClass } from "utils/class";
 import { MyNextComponent } from "./_app";
 
-let NotFound: MyNextComponent;
-
-NotFound = () => {
+const NotFound: MyNextComponent = () => {
   return (
     <div className={getClass(animateFadein, "container-md my-5")}>
       <div className="jumbotron my-3 small">

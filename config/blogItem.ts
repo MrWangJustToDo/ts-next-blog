@@ -1,8 +1,6 @@
 import { BlogContentItem } from "types/config";
 
-let blogContentArray: Array<BlogContentItem>;
-
-blogContentArray = [
+const blogContentArray: Array<BlogContentItem> = [
   { icon: "ri-thumb-up-line", content: "点赞" },
   { icon: "ri-star-line", content: "收藏" },
   { icon: "ri-eye-line", content: "观看" },

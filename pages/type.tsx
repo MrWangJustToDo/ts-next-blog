@@ -7,9 +7,7 @@ import { autoDispatchTockenHandler } from "config/ssr";
 import { animateFadein, getClass } from "utils/class";
 import { getDataAction_Server, getDataSucess_Server } from "store/reducer/server/action";
 
-let Type: MyNextComponent;
-
-Type = () => {
+const Type: MyNextComponent = () => {
   return (
     <div className={getClass(animateFadein, "container-md my-5")}>
       <TypeContent />

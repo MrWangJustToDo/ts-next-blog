@@ -26,9 +26,7 @@ const mark = new Mark({
   },
 });
 
-let addIdForHeads: AddIdForHeadsType;
-
-addIdForHeads = (className) => {
+const addIdForHeads: AddIdForHeadsType = (className) => {
   if (className) {
     const headings = document.querySelector(className)?.querySelectorAll("h1, h2, h3, h4, h5, h6, h7") || [];
     const headingMap: { [props: string]: number } = {};

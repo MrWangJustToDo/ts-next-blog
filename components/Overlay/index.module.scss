@@ -1,9 +1,14 @@
-.mobileModal {
+.modalContainer {
   position: absolute;
+  width: 100%;
+  height: 100%;
   left: 0;
   bottom: 0;
+  overflow: hidden;
+}
+
+.mobileModal {
   width: 100%;
-  overflow: auto;
   background-color: #fff;
   border-radius: 1.2rem 1.2rem 0 0;
 }

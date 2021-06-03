@@ -8,8 +8,6 @@ import { getHeader } from "./headers";
 import { transformPath } from "./path";
 import { AutoRequestProps, AutoRequestType, CreateRequestType, QueryProps } from "types/utils";
 
-let createRequest: CreateRequestType;
-
 const cacheResult = new Cache<string, any>(5000);
 
 const autoParse = (params: string | any) => {
@@ -40,7 +38,7 @@ const autoAssignParams = (oldParams: string | false | object | undefined, newPar
   }
 };
 
-createRequest = (props: AutoRequestProps = {}) => {
+const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
   const { method, path, apiPath, query, data, header, cache = true } = props;
 
   const tempPath = apiPath ? apiPath : path;

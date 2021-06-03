@@ -6,9 +6,7 @@ import { animateFadein, flexCenter, getClass } from "utils/class";
 
 type LoginType = ((props: { isLogin: boolean }) => JSX.Element) & { container?: boolean; title?: string };
 
-let Login: LoginType;
-
-Login = ({ isLogin }) => {
+const Login: LoginType = ({ isLogin }) => {
   return <div className={getClass("container-md h-100", animateFadein, flexCenter)}>{isLogin ? <ReLoginContent /> : <LoginContent />}</div>;
 };
 

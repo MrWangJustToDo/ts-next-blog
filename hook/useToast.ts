@@ -6,12 +6,7 @@ import { UseToastPropsType, UseToastPushType, UseContentToastType } from "types/
 
 const ToastPushContext = createContext<UseToastPushType>(() => {});
 
-let useToastProps: UseToastPropsType;
-let useCustomizeToast: () => UseToastPushType;
-let useFailToast: UseContentToastType;
-let useSucessToast: UseContentToastType;
-
-useToastProps = (init = []) => {
+const useToastProps: UseToastPropsType = (init = []) => {
   const [toast, setToast] = useState<ToastProps[]>(init);
   const filter = useCallback(() => setToast((lastState) => lastState.filter(({ showState }) => showState === true)), []);
   const update = useCallback(() => setToast((lastState) => [...lastState]), []);
@@ -31,13 +26,13 @@ useToastProps = (init = []) => {
   return { toast, push };
 };
 
-useCustomizeToast = () => {
+const useCustomizeToast = (): UseToastPushType => {
   const push = useContext(ToastPushContext);
   const customizeToast = useCallback<UseToastPushType>((props) => push(props), []);
   return customizeToast;
 };
 
-useFailToast = () => {
+const useFailToast: UseContentToastType = () => {
   const push = useContext(ToastPushContext);
   const failToast = useCallback<(content: string) => Promise<void>>(
     (content) => Promise.resolve(push({ title: "message", content, contentState: toastState.fail, autoCloseSecond: 3000 })),
@@ -46,7 +41,7 @@ useFailToast = () => {
   return failToast;
 };
 
-useSucessToast = () => {
+const useSucessToast: UseContentToastType = () => {
   const push = useContext(ToastPushContext);
   const failToast = useCallback<(content: string) => Promise<void>>(
     (content) => Promise.resolve(push({ title: "message", content, contentState: toastState.success, autoCloseSecond: 3000 })),

@@ -2,9 +2,7 @@ import AboutContainer from "containers/About";
 import { animateFadein, getClass } from "utils/class";
 import { MyNextComponent } from "./_app";
 
-let About: MyNextComponent;
-
-About = () => {
+const About: MyNextComponent = () => {
   return (
     <div className={getClass("my-5 container", animateFadein)}>
       <AboutContainer />

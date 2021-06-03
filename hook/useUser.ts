@@ -14,18 +14,8 @@ import { useFailToast, useSucessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
 import { UserProps, UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType, UseUserRequest } from "types/hook";
 
-let useAutoLogin: UseAutoLoginType;
-
-let useCurrentUser: UseCurrentUserType;
-
-let useLogin: UseLoginType;
-
-let useLogout: UseLogoutType;
-
-let useUserRequest: UseUserRequest;
-
 // 自动登录
-useAutoLogin = () => {
+const useAutoLogin: UseAutoLoginType = () => {
   const { dispatch } = useCurrentState();
   const loginRequest = useMemo(() => createRequest({ header: { apiToken: true }, apiPath: apiName.autoLogin, cache: false }), []);
   const autoLoginCallback = useCallback(
@@ -46,13 +36,13 @@ useAutoLogin = () => {
 };
 
 // 获取当前登录对象
-useCurrentUser = () => {
+const useCurrentUser: UseCurrentUserType = () => {
   const { state } = useCurrentState();
   return state.client[actionName.currentUser]["data"];
 };
 
 // 登录
-useLogin = () => {
+const useLogin: UseLoginType = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const failToast = useFailToast();
@@ -86,7 +76,7 @@ useLogin = () => {
 };
 
 // 登出
-useLogout = () => {
+const useLogout: UseLogoutType = () => {
   const router = useRouter();
   const failToast = useFailToast();
   const successToast = useSucessToast();
@@ -117,7 +107,7 @@ useLogout = () => {
 };
 
 // 自动绑定当前用户的request
-useUserRequest = (props = {}) => {
+const useUserRequest: UseUserRequest = (props = {}) => {
   const { method, data, path, apiPath, header, cache } = props;
   const stringdata = autoStringify(data);
   const stringHeader = autoStringify(header);

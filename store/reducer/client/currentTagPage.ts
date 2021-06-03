@@ -6,13 +6,9 @@ import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<number>;
 
-let initState: CurrentState;
-let reducer: Reducer<CurrentState>;
-let actionReducerMap: StateActionMapType<number>;
+const initState: CurrentState = { data: 1, error: null, loaded: false, loading: true };
 
-initState = { data: 1, error: null, loaded: false, loading: true };
-
-reducer = (state: CurrentState = initState, action: StateAction<number>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<number>) => {
   let actionReducer = actionReducerMap[action.type];
   if (actionReducer) {
     return actionReducer(state, action);
@@ -21,7 +17,7 @@ reducer = (state: CurrentState = initState, action: StateAction<number>) => {
   }
 };
 
-actionReducerMap = {
+const actionReducerMap: StateActionMapType<number> = {
   [clientAction.SETDATALOADING(actionName.currentTagPage)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = 1;

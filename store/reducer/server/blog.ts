@@ -12,13 +12,9 @@ type BlogContentArray = {
 
 type CurrentState = State<BlogContentArray>;
 
-let initState: CurrentState;
-let reducer: Reducer<CurrentState>;
-let actionReducerMap: StateActionMapType<BlogContentArray>;
+const initState: CurrentState = { data: {}, error: null, loaded: false, loading: true };
 
-initState = { data: {}, error: null, loaded: false, loading: true };
-
-reducer = (state: CurrentState = initState, action: StateAction<BlogContentArray>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<BlogContentArray>) => {
   if (action.type === HYDRATE) {
     if (Object.keys(state.data).length) {
       if (Object.keys(action.payload.server[apiName.blog]["data"]).length > Object.keys(state.data).length) {
@@ -38,7 +34,7 @@ reducer = (state: CurrentState = initState, action: StateAction<BlogContentArray
   }
 };
 
-actionReducerMap = {
+const actionReducerMap: StateActionMapType<BlogContentArray> = {
   [serverAction.GETDATALOADING(apiName.blog)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};

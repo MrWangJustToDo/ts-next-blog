@@ -7,13 +7,9 @@ import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<BlogContentProps[]>;
 
-let initState: CurrentState;
-let reducer: Reducer<CurrentState>;
-let actionReducerMap: StateActionMapType<BlogContentProps[]>;
+const initState: CurrentState = { data: [], error: null, loaded: false, loading: false };
 
-initState = { data: [], error: null, loaded: false, loading: false };
-
-reducer = (state: CurrentState = initState, action: StateAction<BlogContentProps[]>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<BlogContentProps[]>) => {
   let actionReducer = actionReducerMap[action.type];
   if (actionReducer) {
     return actionReducer(state, action);
@@ -22,7 +18,7 @@ reducer = (state: CurrentState = initState, action: StateAction<BlogContentProps
   }
 };
 
-actionReducerMap = {
+const actionReducerMap: StateActionMapType<BlogContentProps[]> = {
   [clientAction.SETDATALOADING(actionName.currentResult)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = [];

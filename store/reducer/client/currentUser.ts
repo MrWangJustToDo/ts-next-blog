@@ -7,13 +7,9 @@ import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<UserProps>;
 
-let initState: CurrentState;
-let reducer: Reducer<CurrentState>;
-let actionReducerMap: StateActionMapType<UserProps>;
+const initState: CurrentState = { data: {}, error: null, loading: true, loaded: false };
 
-initState = { data: {}, error: null, loading: true, loaded: false };
-
-reducer = (state: CurrentState = initState, action: StateAction<UserProps>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<UserProps>) => {
   let actionReducer = actionReducerMap[action.type];
   if (actionReducer) {
     return actionReducer(state, action);
@@ -22,7 +18,7 @@ reducer = (state: CurrentState = initState, action: StateAction<UserProps>) => {
   }
 };
 
-actionReducerMap = {
+const actionReducerMap: StateActionMapType<UserProps> = {
   [clientAction.SETDATALOADING(actionName.currentUser)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};

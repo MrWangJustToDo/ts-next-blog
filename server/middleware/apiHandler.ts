@@ -19,7 +19,7 @@ import {
 
 const cache = new Cache<string, any>();
 
-let success = <T>({ res, statuCode = 200, resDate }: ApiResponseProps<T>): ApiResponseData<T> | void => {
+const success = <T>({ res, statuCode = 200, resDate }: ApiResponseProps<T>): ApiResponseData<T> | void => {
   resDate.code = resDate.code || 0;
   resDate.state = resDate.state || "获取成功";
   resDate.time = new Date().toLocaleString();
@@ -27,7 +27,7 @@ let success = <T>({ res, statuCode = 200, resDate }: ApiResponseProps<T>): ApiRe
   return resDate;
 };
 
-let fail = <T>({ res, statuCode = 404, resDate, methodName }: ApiResponseProps<T> & { methodName?: string }): void => {
+const fail = <T>({ res, statuCode = 404, resDate, methodName }: ApiResponseProps<T> & { methodName?: string }): void => {
   if (methodName && process.env.NODE_ENV === "development") {
     resDate["methodName"] = `method: ${methodName} 出现错误`;
   } else {
@@ -39,13 +39,13 @@ let fail = <T>({ res, statuCode = 404, resDate, methodName }: ApiResponseProps<T
   res.status(statuCode).json(resDate);
 };
 
-let transformHandler = (requestHandler: RequestHandlerType) => {
+const transformHandler = (requestHandler: RequestHandlerType) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     return await requestHandler({ req, res, next });
   };
 };
 
-let catchHandler = (requestHandler: RequestHandlerType, errorHandler?: ErrorHandlerType) => {
+const catchHandler = (requestHandler: RequestHandlerType, errorHandler?: ErrorHandlerType) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     try {
       return await requestHandler({ req, res, next });
@@ -64,7 +64,7 @@ let catchHandler = (requestHandler: RequestHandlerType, errorHandler?: ErrorHand
   };
 };
 
-let cacheHandler = (requestHandler: RequestHandlerType, time: number | undefined, cacheConfig: CacheConfigProps) => {
+const cacheHandler = (requestHandler: RequestHandlerType, time: number | undefined, cacheConfig: CacheConfigProps) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     const currentCacheConfig = assign(cacheConfig, req.config?.cache);
     const key = currentCacheConfig.cacheKey
@@ -111,7 +111,7 @@ let cacheHandler = (requestHandler: RequestHandlerType, time: number | undefined
   };
 };
 
-let checkcodeHandler = (requestHandler: RequestHandlerType, check: boolean | undefined, checkCodeConfig: CheckCodeConfigProps) => {
+const checkcodeHandler = (requestHandler: RequestHandlerType, check: boolean | undefined, checkCodeConfig: CheckCodeConfigProps) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     const currentCheckCodeConfig = assign(checkCodeConfig, req.config?.check);
     const needCheck = currentCheckCodeConfig.needCheck ? currentCheckCodeConfig.needCheck : check;
@@ -134,7 +134,7 @@ let checkcodeHandler = (requestHandler: RequestHandlerType, check: boolean | und
   };
 };
 
-let checkParamsHandler = (requestHandler: RequestHandlerType, checkParamsConfig: CheckParamsConfigProps) => {
+const checkParamsHandler = (requestHandler: RequestHandlerType, checkParamsConfig: CheckParamsConfigProps) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     const currentCheckParamsConfig = assign(checkParamsConfig, req.config?.params);
     const currentFromQuery = currentCheckParamsConfig.fromQuery;
@@ -157,7 +157,7 @@ let checkParamsHandler = (requestHandler: RequestHandlerType, checkParamsConfig:
   };
 };
 
-let userHandler = (requestHandler: RequestHandlerType, strict: boolean | undefined, userConfig: UserConfigProps) => {
+const userHandler = (requestHandler: RequestHandlerType, strict: boolean | undefined, userConfig: UserConfigProps) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     const currentUserConfig = assign(userConfig, req.config?.user);
     const needCheck = currentUserConfig.needCheck;
@@ -178,7 +178,7 @@ let userHandler = (requestHandler: RequestHandlerType, strict: boolean | undefin
   };
 };
 
-let autoRequestHandler = ({
+const autoRequestHandler = ({
   requestHandler,
   errorHandler,
   strict,

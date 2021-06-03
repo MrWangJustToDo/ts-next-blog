@@ -12,13 +12,9 @@ type ArchiveProps = {
 
 type CurrentState = State<ArchiveProps>;
 
-let initState: CurrentState;
-let reducer: Reducer<CurrentState>;
-let actionReducerMap: StateActionMapType<ArchiveProps>;
+const initState: CurrentState = { data: {}, error: null, loaded: false, loading: true };
 
-initState = { data: {}, error: null, loaded: false, loading: true };
-
-reducer = (state: CurrentState = initState, action: StateAction<ArchiveProps>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<ArchiveProps>) => {
   // 合并服务器上的client部分数据
   if (action.type === HYDRATE) {
     return { ...action.payload.client[actionName.currentArchive] };
@@ -31,7 +27,7 @@ reducer = (state: CurrentState = initState, action: StateAction<ArchiveProps>) =
   }
 };
 
-actionReducerMap = {
+const actionReducerMap: StateActionMapType<ArchiveProps> = {
   [clientAction.SETDATALOADING(actionName.currentArchive)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};

@@ -8,13 +8,9 @@ import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<TypeProps[]>;
 
-let initState: CurrentState;
-let reducer: Reducer<CurrentState>;
-let actionReducerMap: StateActionMapType<TypeProps[]>;
+const initState: CurrentState = { data: [], error: null, loaded: false, loading: true };
 
-initState = { data: [], error: null, loaded: false, loading: true };
-
-reducer = (state: CurrentState = initState, action: StateAction<TypeProps[]>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<TypeProps[]>) => {
   if (action.type === HYDRATE) {
     if (state.data.length) {
       if (state.data.length < action.payload.server[apiName.type]["data"].length) {
@@ -34,7 +30,7 @@ reducer = (state: CurrentState = initState, action: StateAction<TypeProps[]>) =>
   }
 };
 
-actionReducerMap = {
+const actionReducerMap: StateActionMapType<TypeProps[]> = {
   [serverAction.GETDATALOADING(apiName.type)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = [];

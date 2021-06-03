@@ -10,11 +10,7 @@ import { setDataSucess_client } from "store/reducer/client/action";
 import { getDataAction_Server, getDataSucess_Server } from "store/reducer/server/action";
 import { BlogContentType } from "types/containers";
 
-type BlogContentComponent = BlogContentType & { title?: string };
-
-let BlogContent: BlogContentComponent;
-
-BlogContent = (props) => {
+const BlogContent: BlogContentType & { title?: string } = (props) => {
   return (
     <>
       <div className={getClass(animateFadein, "container-md my-5")}>
@@ -34,7 +30,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
       params: { id },
     } = etc;
     store.dispatch(setDataSucess_client({ name: actionName.currentBlogId, data: id }));
-    // 加载数据并且存储在session中
     store.dispatch(getDataAction_Server({ name: apiName.blog }));
     // end the saga
     store.dispatch(END);

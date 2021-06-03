@@ -10,9 +10,7 @@ enum mainRight {
   recommend,
 }
 
-let mainRightHeader: MainRightHeader;
-
-mainRightHeader = {
+const mainRightHeader: MainRightHeader = {
   [mainRight.type]: { icon: "ri-lightbulb-flash-fill", content: "分类", hrefTo: "/type" },
   [mainRight.tag]: { icon: "ri-price-tag-3-fill", content: "标签", hrefTo: "/tag" },
   [mainRight.recommend]: { icon: "ri-bookmark-fill", content: "推荐" },

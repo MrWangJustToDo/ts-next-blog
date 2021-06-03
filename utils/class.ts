@@ -1,20 +1,7 @@
 import { GetArray, GetClass, GetItem, TransformArray, AnimateCSSType, HandleClassActionType } from "types/utils";
 
-let transformArray: TransformArray;
-let getClass: GetClass;
-let animateFadein: GetArray<string>;
-let animateFadeout: GetArray<string>;
-let animateZoomin: GetArray<string>;
-let animateZoomout: GetArray<string>;
-let flexCenter: GetItem<string>;
-let flexStart: GetItem<string>;
-let flexEnd: GetItem<string>;
-let flexBetween: GetItem<string>;
-let flexAround: GetItem<string>;
-let flexBottom: GetItem<string>;
-
 // 自动处理数组
-transformArray = (arr) =>
+const transformArray: TransformArray = (arr) =>
   arr.reduce<string[]>((pre, current) => {
     if (Array.isArray(current)) {
       return pre.concat(transformArray(current));
@@ -38,21 +25,21 @@ transformArray = (arr) =>
   }, []);
 
 // 自动处理类名
-getClass = (...res) => transformArray(res).join(" ");
+const getClass: GetClass = (...res) => transformArray(res).join(" ");
 
 // animate
-animateFadein = () => ["animate__animated", "animate__fadeIn", "animate__faster"];
-animateFadeout = () => ["animate__animated", "animate__fadeOut", "animate__faster"];
-animateZoomin = () => ["animate__animated", "animate__zoomIn", "animate__faster"];
-animateZoomout = () => ["animate__animated", "animate__zoomOut", "animate__faster"];
+const animateFadein: GetArray<string> = () => ["animate__animated", "animate__fadeIn", "animate__faster"];
+const animateFadeout: GetArray<string> = () => ["animate__animated", "animate__fadeOut", "animate__faster"];
+const animateZoomin: GetArray<string> = () => ["animate__animated", "animate__zoomIn", "animate__faster"];
+const animateZoomout: GetArray<string> = () => ["animate__animated", "animate__zoomOut", "animate__faster"];
 
 // flex
-flexCenter = () => "d-flex justify-content-center align-items-center";
-flexStart = () => "d-flex justify-content-start align-items-center";
-flexEnd = () => "d-flex justify-content-end align-items-center";
-flexBetween = () => "d-flex justify-content-between align-items-center";
-flexAround = () => "d-flex justify-content-around align-items-center";
-flexBottom = () => "d-flex justify-content-center align-items-end";
+const flexCenter: GetItem<string> = () => "d-flex justify-content-center align-items-center";
+const flexStart: GetItem<string> = () => "d-flex justify-content-start align-items-center";
+const flexEnd: GetItem<string> = () => "d-flex justify-content-end align-items-center";
+const flexBetween: GetItem<string> = () => "d-flex justify-content-between align-items-center";
+const flexAround: GetItem<string> = () => "d-flex justify-content-around align-items-center";
+const flexBottom: GetItem<string> = () => "d-flex justify-content-center align-items-end";
 
 const animateCSS: AnimateCSSType = ({ element, animation, prefix = "animate__" }) =>
   new Promise((resolve) => {

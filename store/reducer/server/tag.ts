@@ -8,13 +8,9 @@ import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<TagProps[]>;
 
-let initState: CurrentState;
-let reducer: Reducer<CurrentState>;
-let actionReducerMap: StateActionMapType<TagProps[]>;
+const initState: CurrentState = { data: [], error: null, loaded: false, loading: true };
 
-initState = { data: [], error: null, loaded: false, loading: true };
-
-reducer = (state: CurrentState = initState, action: StateAction<TagProps[]>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<TagProps[]>) => {
   if (action.type === HYDRATE) {
     if (state.data.length) {
       if (state.data.length < action.payload.server[apiName.tag]["data"].length) {
@@ -33,7 +29,7 @@ reducer = (state: CurrentState = initState, action: StateAction<TagProps[]>) => 
   }
 };
 
-actionReducerMap = {
+const actionReducerMap: StateActionMapType<TagProps[]> = {
   [serverAction.GETDATALOADING(apiName.tag)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = [];

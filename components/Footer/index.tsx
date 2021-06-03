@@ -9,7 +9,7 @@ import style from "./index.module.scss";
 
 const Footer: SimpleElement = () => {
   return (
-    <footer className={getClass(style.footFont, "bg-dark text-center user-select-none")}>
+    <footer id="footer" className={getClass(style.footFont, "bg-dark text-center user-select-none")}>
       <div className="container-md">
         <div className="row py-2 py-lg-4">
           <FootContainerCardMe />

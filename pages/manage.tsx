@@ -6,9 +6,7 @@ import { animateFadein, getClass } from "utils/class";
 
 type ManageType = ((props: { isLogin: boolean; userId: string }) => JSX.Element) & { title?: string };
 
-let Manage: ManageType;
-
-Manage = ({ isLogin, userId }) => {
+const Manage: ManageType = ({ isLogin, userId }) => {
   return <div className={getClass(animateFadein, "container-md my-5")}>{isLogin ? <ManageContent userId={userId} /> : <NotLogin />}</div>;
 };
 
@@ -19,7 +17,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
   autoDispatchTockenHandler(async ({ req }) => ({
     props: {
       isLogin: !!req.session["userCache"],
-      userId: req.session["userCache"].userId,
+      userId: req.session["userCache"]?.userId || null,
     },
   }))
 );

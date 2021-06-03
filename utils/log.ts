@@ -1,21 +1,22 @@
 import chalk from "chalk";
 
 const log = (message: string | Error, lev: "normal" | "warn" | "error") => {
+  const side = (process as any).browser ? "client" : "server";
   if (lev === "error") {
-    if (!(process as any).browser) {
+    if (side === "server") {
       if (message instanceof Error) {
         throw message;
       } else {
         throw new Error(message);
       }
     } else {
-      console.log(`[${new Date().toISOString()}]`,chalk.red(message.toString()));
+      console.log(`[client]`, chalk.red(message.toString()));
     }
   } else if (lev === "warn") {
-    console.log(`[${new Date().toISOString()}]`, chalk.green(message.toString()));
+    console.log(`[${side}]`, chalk.green(message.toString()));
   } else {
     if (process.env.NODE_ENV === "development") {
-      console.log(`[${new Date().toISOString()}]`, message);
+      console.log(`[${side}]`, message);
     }
   }
 };

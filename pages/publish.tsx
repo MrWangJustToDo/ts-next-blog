@@ -6,9 +6,7 @@ import { autoDispatchTockenHandler } from "config/ssr";
 
 type PublishType = ((props: { isLogin: boolean }) => JSX.Element) & { title?: string };
 
-let Publish: PublishType;
-
-Publish = ({ isLogin }) => {
+const Publish: PublishType = ({ isLogin }) => {
   return <div className={getClass(animateFadein, "container-md my-5")}>{isLogin ? <PublishContent /> : <NotLogin />}</div>;
 };
 

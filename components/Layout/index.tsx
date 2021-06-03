@@ -15,7 +15,7 @@ const Layout = ({ title, container = true, children }: { title?: string; contain
     <>
       <LoadingBar />
       <Head title={title} />
-      <div className={getClass("d-flex flex-column", animateFadein)} style={{ minWidth: "320px" }}>
+      <div className={getClass("d-flex flex-column")} style={{ minWidth: "320px" }}>
         <ModuleManager
           children={
             <>

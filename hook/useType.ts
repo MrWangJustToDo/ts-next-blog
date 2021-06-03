@@ -7,9 +7,7 @@ import { useCurrentState } from "./useBase";
 import { setDataSucess_client } from "store/reducer/client/action";
 import { TypeProps, UseTypeType } from "types/hook";
 
-let useType: UseTypeType;
-
-let autoChangeType = (type: TypeProps[], currentType: string, changeCurrentType: Function, needChange: boolean) => {
+const autoChangeType = (type: TypeProps[], currentType: string, changeCurrentType: Function, needChange: boolean) => {
   useEffect(() => {
     if (needChange && currentType === "" && type.length) {
       changeCurrentType(type[0].typeContent);
@@ -17,7 +15,7 @@ let autoChangeType = (type: TypeProps[], currentType: string, changeCurrentType:
   }, [needChange, currentType, changeCurrentType, type]);
 };
 
-let autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
+const autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
   useEffect(() => {
     if (allPage > 0 && currentPage > allPage) {
       dispatch(setDataSucess_client({ name: actionName.currentTypePage, data: allPage }));
@@ -25,7 +23,7 @@ let autoChangePage = (allPage: number, currentPage: number, dispatch: (props: An
   }, [allPage, currentPage]);
 };
 
-useType = (props = {}) => {
+const useType: UseTypeType = (props = {}) => {
   let { blogs, needInitType = false } = props;
   const { state, dispatch } = useCurrentState();
   // 所有type

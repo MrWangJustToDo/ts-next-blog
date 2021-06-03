@@ -7,15 +7,9 @@ import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<string[]>;
 
-let initState: CurrentState;
+const initState: CurrentState = { data: [], error: null, loaded: false, loading: true };
 
-let reducer: Reducer<CurrentState>;
-
-let actionReducerMap: StateActionMapType<string[]>;
-
-initState = { data: [], error: null, loaded: false, loading: true };
-
-reducer = (state: CurrentState = initState, action: StateAction<string[]>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<string[]>) => {
   if (action.type === HYDRATE) {
     // 同步服务器上的currentId数据
     return { ...action.payload.client[actionName.currentAssent] };
@@ -28,7 +22,7 @@ reducer = (state: CurrentState = initState, action: StateAction<string[]>) => {
   }
 };
 
-actionReducerMap = {
+const actionReducerMap: StateActionMapType<string[]> = {
   [clientAction.SETDATALOADING(actionName.currentAssent)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = [];

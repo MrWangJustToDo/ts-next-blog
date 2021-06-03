@@ -5,9 +5,7 @@ import { ApiRequestResult, LoadImgType } from "types/utils";
 
 const request = createRequest();
 
-let loadImg: LoadImgType;
-
-loadImg = ({ imgUrl, strUrl, imgElement, state = true }) => {
+const loadImg: LoadImgType = ({ imgUrl, strUrl, imgElement, state = true }) => {
   if (state) {
     return new Promise<HTMLImageElement>((resolve) => {
       imgElement.setAttribute("src", transformPath({ apiPath: imgUrl, query: { time: String(Date.now()) } }));
