@@ -10,7 +10,7 @@ const BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImagType
 
   return (
     <div className={getClass("row", flexCenter)}>
-      <label htmlFor="putcheck" className="col-2 col-form-label text-center text-truncate" title="验证码">
+      <label htmlFor="putcheck" className="col-2 col-form-label text-left px-0 text-truncate" title="验证码">
         验证码:
       </label>
       <img ref={imgRef} className="col-4 col-md-3 border rounded" height="38" alt="验证码" />

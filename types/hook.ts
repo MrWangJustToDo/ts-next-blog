@@ -380,7 +380,7 @@ interface UsePutToCheckcodeModuleBody {
   ) => JSX.Element;
 }
 interface UsePutToCheckcodeModuleProps {
-  className: string;
+  className?: string;
   blogId: string;
   body: UsePutToCheckcodeModuleBody;
 }

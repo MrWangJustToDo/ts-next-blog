@@ -68,7 +68,6 @@ const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = <T extends MyInputE
       if (!!ele.value.length) {
         open({
           head: "验证码",
-          // body: body(request({ data: { content: ele.value } }))(ref)(successCallback),
           body: body({ request: request({ data: { content: ele.value } }), ref, successCallback }),
           className,
         });

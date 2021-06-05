@@ -16,7 +16,8 @@ import { UserProps, UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogou
 
 // 自动登录
 const useAutoLogin: UseAutoLoginType = () => {
-  const { dispatch } = useCurrentState();
+  const { dispatch, state } = useCurrentState();
+  const user = state.client[actionName.currentUser]["data"];
   const loginRequest = useMemo(() => createRequest({ header: { apiToken: true }, apiPath: apiName.autoLogin, cache: false }), []);
   const autoLoginCallback = useCallback(
     () =>
@@ -32,7 +33,7 @@ const useAutoLogin: UseAutoLoginType = () => {
         .catch(() => dispatch(setDataFail_client({ name: actionName.currentUser, data: {} }))),
     []
   );
-  useAutoActionHandler({ timmer: true, once: false, rightNow: true, delayTime: 1000 * 60 * 10, action: autoLoginCallback });
+  useAutoActionHandler({ timmer: true, once: false, rightNow: true, delayTime: 1000 * 60 * 10, action: autoLoginCallback, actionState: Boolean(user) });
 };
 
 // 获取当前登录对象

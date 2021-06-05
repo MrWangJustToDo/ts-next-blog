@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import BlogHead from "components/BlogHead";
-import { useUpdateBlogRead } from "hook/useBlog";
+// import { useUpdateBlogRead } from "hook/useBlog";
 import BlogContentImg from "./blogContentImg";
 import BlogContentType_Tag from "./blogContentType&Tag";
 import BlogContentBody from "./blogContentBody";

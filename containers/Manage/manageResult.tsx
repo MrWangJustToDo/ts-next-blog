@@ -28,7 +28,11 @@ const ManageResult: ManageUserIdType = ({ userId }) => {
       revalidateOnFocus={false}
       apiPath={apiName.userHome}
       query={{ userId }}
-      loaded={(data) => <ManageResultAll {...data} />}
+      loaded={(data) => (
+        <div className={getClass(animateFadein)}>
+          <ManageResultAll {...data} />
+        </div>
+      )}
     />
   );
 

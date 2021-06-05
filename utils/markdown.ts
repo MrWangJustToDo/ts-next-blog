@@ -19,7 +19,11 @@ const mark = new Mark({
             `${p}<span class='d-inline-block text-center border-right pr-2 mr-2 border-dark' style='min-width: ${minWidth}em; line-height: 1.5'>${
               idx + 1
             }</span>${c}\n`,
-          `<div class='overflow-hidden w-100 border-bottom border-dark mb-2'><span style='opacity: 0'>1</span><b class='text-info position-absolute' style='left: 10px'>${lang}</b></div>`
+          `<div class='overflow-hidden w-100 mb-2' style='font-size: 0px'>
+            <div style='opacity: 0; font-size: 16px'>1</div>
+            <b class='position-absolute text-info' style='left: 10px; font-size: 16px; top: 4px'>${lang}</b>
+            <div class='position-absolute w-100 border-bottom border-dark' style='left: 0'></div>
+          </div>`
         );
         return `<pre class="rounded position-relative"><code class="hljs ${lang} p-2" style='font-size: 16px'>${html}</code></pre>`;
       } catch (__) {}

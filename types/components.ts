@@ -25,10 +25,20 @@ type Color =
   | "dark";
 
 interface SimpleElement {
-  (): JSX.Element;
+  (): React.ReactNode;
 }
 
 export type { SimpleElement };
+
+/* AnimationList */
+interface AnimationListType {
+  (props: { children: React.ReactNode | ReactNode[]; showClassName?: string }): React.ReactElement;
+}
+interface AnimationItemType {
+  (props: { children: React.ReactNode; nextIndex: number; showState: boolean; showClassName?: string; next: (index: number) => void }): React.ReactElement;
+}
+
+export type { AnimationListType, AnimationItemType };
 
 /* === BlogItem === */
 interface BlogItemType {
@@ -488,7 +498,7 @@ export type { TagType };
 /* === Toast === */
 import { toastState } from "config/toast";
 import { InputProps } from "./config";
-import React, { ReactElement, RefObject } from "react";
+import React, { ReactElement, ReactNode, RefObject } from "react";
 
 interface ToastProps {
   title: string;

@@ -4,8 +4,6 @@ import BlogContentCheckcodeModule from "./blogContentCheckcodeModule";
 import { UsePutToCheckcodeModuleBody } from "types/hook";
 import { BlogContentMessagePutType } from "types/containers";
 
-import style from "./index.module.scss";
-
 const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
   const body = useCallback<UsePutToCheckcodeModuleBody>(
     ({ request, ref, successCallback }) =>
@@ -17,7 +15,6 @@ const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
   const { ref, submit, canSubmit } = usePutToCheckcodeModule<HTMLTextAreaElement>({
     body,
     blogId,
-    className: style.imgCheck,
   });
 
   return (

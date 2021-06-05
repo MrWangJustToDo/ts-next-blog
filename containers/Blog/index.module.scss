@@ -24,15 +24,8 @@
   }
 }
 
-.imgCheck {
-  @include mobile {
-    width: 360px;
-  }
-}
-
 .replayModule {
   @include mobile {
-    // max-width: 400px;
     font-size: 14px;
   }
 }
@@ -40,7 +33,6 @@
 .checkcodeRow {
   @include mobile {
     font-size: 14px;
-    // height: 1.2em;
     & > * {
       height: 32px;
     }
