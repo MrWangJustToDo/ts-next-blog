@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { momentTo } from "utils/time";
-import { flexBetween, flexCenter, getClass } from "utils/class";
+import { flexBetween, flexCenter, getClass } from "utils/dom";
 import { ArchiveContentType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let ArchiveContent: ArchiveContentType;
-
-ArchiveContent = ({ year, blogProps }) => {
+const ArchiveContent: ArchiveContentType = ({ year, blogProps }) => {
   return (
     <>
       <h3 className="text-center display-5 my-3">{year}</h3>

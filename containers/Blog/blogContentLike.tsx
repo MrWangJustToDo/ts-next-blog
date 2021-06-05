@@ -1,14 +1,12 @@
 import LoadRender from "components/LoadRender";
 import BlogContentLikeToPayModule from "./blogContentLikeToPayModule";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { BlogContentType } from "types/containers";
 import { useLikeToPayModule } from "hook/useBlog";
 import { apiName } from "config/api";
 import { AuthorProps } from "types/hook";
 
-let BlogContentLike: BlogContentType;
-
-BlogContentLike = ({ userId, blogPriseState }) => {
+const BlogContentLike: BlogContentType = ({ userId, blogPriseState }) => {
   const body = (
     <LoadRender<AuthorProps>
       apiPath={apiName.author}

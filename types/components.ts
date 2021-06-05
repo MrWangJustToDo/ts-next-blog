@@ -148,7 +148,7 @@ export type { CardHeadType };
 interface CheckBoxProps {
   init?: boolean;
   type?: "radio" | "checkbox";
-  style?: { [props: string]: string };
+  _style?: { [props: string]: string };
   className?: string;
   fieldName: string;
 }
@@ -300,7 +300,7 @@ export type { HeadContainerListType };
 /* === Hover === */
 /* animate */
 interface AnimateType {
-  (props: { children?: ReactElement; show: boolean }): JSX.Element;
+  (props: { children?: ReactElement; forwardRef: RefObject<HTMLDivElement> }): JSX.Element;
 }
 
 export type { AnimateType };
@@ -448,9 +448,11 @@ interface OverlayProps {
   head: JSX.Element | string;
   body: ((closeHandler: () => void) => JSX.Element) | JSX.Element;
   foot?: JSX.Element;
+  height?: number;
   className?: string;
   showState?: boolean;
   closeHandler?: () => void;
+  clear?: () => void;
 }
 
 interface OverlayType {

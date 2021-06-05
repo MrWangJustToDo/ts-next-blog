@@ -26,12 +26,12 @@ const useLoad: UseLoadType = ({ height = 1.5, present = 0, forwardRef }) => {
           let next = state.current.present! + (Math.random() + count - Math.random());
           next = next < 99.5 ? next : 99.5;
           ele.style.cssText =
-            "z-index: 1;" +
+            "z-index: 999;" +
             "top: 0;" +
             `height: ${state.current.height}px;` +
             `transform-origin: 0 0;` +
             `transform: scale(${next / 100}, 1);` +
-            `filter: drop-shadow(2px 2px 2px rgba(200, 200, 200, 0.4))`;
+            `filter: drop-shadow(2px 2px 2px rgba(200, 200, 200, 0.65))`;
           state.current.present = next;
         }, 60);
         return () => clearInterval(id);

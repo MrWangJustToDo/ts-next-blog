@@ -6,7 +6,7 @@ import { MyNextComponent } from "./_app";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { autoDispatchTockenHandler } from "config/ssr";
-import { animateFadein, getClass } from "utils/class";
+import { animateFadein, getClass } from "utils/dom";
 import { setDataSucess_client } from "store/reducer/client/action";
 import { getDataAction_Server, getDataSucess_Server } from "store/reducer/server/action";
 

@@ -14,11 +14,7 @@ import { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWithReplayType 
 
 import style from "./index.module.scss";
 
-let BlogContentPrimaryMessage: BlogContentPrimaryMessageType;
-
-let BlogContentPrimaryMessageWithReplay: BlogContentPrimaryMessageWithReplayType;
-
-BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
+const BlogContentPrimaryMessageWithReplay: BlogContentPrimaryMessageWithReplayType = ({ messages, replay }) => {
   const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageData } = useBasePage<PrimaryMessageProps>({
     pageLength: primaryMessageLength,
     data: messages,
@@ -51,20 +47,22 @@ BlogContentPrimaryMessageWithReplay = ({ messages, replay }) => {
   );
 };
 
-BlogContentPrimaryMessage = ({ messages }) => {
+const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages }) => {
   const body = useCallback<UseMessageToReplayModuleBody<PrimaryMessageProps>>(
-    ({ request, props }) => (closeHandler) => (
-      <>
-        <PrimaryMessage {...props} withReplay={false} withChildren={false} />
-        <BlogContentReplayModule
-          request={request}
-          closeHandler={closeHandler}
-          primaryCommentId={props.commentId}
-          toUserId={props.fromUserId!}
-          toIp={props.fromIp}
-        />
-      </>
-    ),
+    ({ request, props }) =>
+      (closeHandler) =>
+        (
+          <>
+            <PrimaryMessage {...props} withReplay={false} withChildren={false} />
+            <BlogContentReplayModule
+              request={request}
+              closeHandler={closeHandler}
+              primaryCommentId={props.commentId}
+              toUserId={props.fromUserId!}
+              toIp={props.fromIp}
+            />
+          </>
+        ),
     []
   );
 

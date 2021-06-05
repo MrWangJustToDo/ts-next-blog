@@ -1,6 +1,6 @@
 import { calendar } from "utils/time";
 import { getCurrentAvatar } from "utils/data";
-import { flexBetween, flexCenter, getClass } from "utils/class";
+import { flexBetween, flexCenter, getClass } from "utils/dom";
 import { BlogContentType } from "types/containers";
 
 const BlogHeadLeft: BlogContentType = ({ gender, avatar, username, blogModifyState, blogModifyDate, blogReadCount }) => {

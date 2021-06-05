@@ -1,5 +1,5 @@
 import { MouseEvent, useCallback } from "react";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { DropSelectItemType } from "types/components";
 
 import style from "./index.module.scss";

@@ -1,14 +1,15 @@
 import { useMemo } from "react";
 import { useBodyLock } from "hook/useOverlay";
 import { useShowAndHideAnimate } from "hook/useAnimate";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { OverlayType } from "types/components";
 
-const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, className = "" }) => {
-  const ref = useShowAndHideAnimate<HTMLDivElement>({
+const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, className = "", clear }) => {
+  const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({
     state: showState || false,
     showClassName: "fadeInDown",
     hideClassName: "fadeOutDown",
+    hideDone: clear,
   });
 
   useBodyLock({ ref });

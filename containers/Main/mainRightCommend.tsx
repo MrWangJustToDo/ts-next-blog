@@ -4,9 +4,7 @@ import { mainRightHeader } from "config/hoom";
 import { useCommend } from "hook/useHome";
 import { MainRightCommendType } from "types/containers";
 
-let MainRightCommend: MainRightCommendType;
-
-MainRightCommend = ({ index }) => {
+const MainRightCommend: MainRightCommendType = ({ index }) => {
   const { commendBlogs } = useCommend();
 
   const { icon, content, hrefTo } = mainRightHeader[index];

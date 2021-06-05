@@ -4,9 +4,7 @@ import ManageAddTagButton from "./manageAddTagButton";
 import ManageAddTypeButton from "./manageAddTypeButton";
 import { SimpleElement } from "types/components";
 
-let ManageRight: SimpleElement;
-
-ManageRight = () => {
+const ManageRight: SimpleElement = () => {
   return (
     <div className="col-md-4">
       <div className="card mt-4 mt-md-0">

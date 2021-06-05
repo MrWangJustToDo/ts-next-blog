@@ -1,12 +1,10 @@
 import Image from "next/image";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { BlogContentImgType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let BlogContentImg: BlogContentImgType;
-
-BlogContentImg = ({ src }) => {
+const BlogContentImg: BlogContentImgType = ({ src }) => {
   return (
     <li className="list-group-item">
       <div className="card-body">

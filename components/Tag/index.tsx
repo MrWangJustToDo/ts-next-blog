@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useTag } from "hook/useTag";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { TagType } from "types/components";
 
 import style from "./index.module.scss";

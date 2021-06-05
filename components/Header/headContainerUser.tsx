@@ -5,7 +5,7 @@ import { useRouter } from "next/dist/client/router";
 import { useCurrentUser, useLogout } from "hook/useUser";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { getCurrentAvatar } from "utils/data";
-import { animateFadein, flexCenter, getClass } from "utils/class";
+import { animateFadein, flexCenter, getClass } from "utils/dom";
 
 import style from "./index.module.scss";
 
@@ -16,14 +16,14 @@ const HeadContainerUser = () => {
 
   const { username, avatar, gender, userId } = useCurrentUser();
 
-  const { bool, switchBoolThrottle, hideDebounceState } = useBool();
+  const { bool, switchBoolDebounce, hideDebounceState } = useBool();
 
   const logoutCallback = useCallback(() => {
     logout();
     hideDebounceState();
   }, [logout, hideDebounceState]);
 
-  const ref = useShowAndHideAnimate<HTMLDivElement>({
+  const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({
     state: bool,
     showClassName: "flipInX",
     hideClassName: "flipOutX",
@@ -31,7 +31,7 @@ const HeadContainerUser = () => {
 
   return userId ? (
     <div className={getClass("d-inline-block", style.headUser, bool ? style.headUserActive : "")}>
-      <div className={getClass("bg-dark", animateFadein, flexCenter, style.userPanel)} onClick={switchBoolThrottle}>
+      <div className={getClass("bg-dark", animateFadein, flexCenter, style.userPanel)} onClick={switchBoolDebounce}>
         <img className="rounded-circle" src={getCurrentAvatar(avatar, gender)} alt="头像" height="30" width="30" />
         <span className={getClass("mx-2 text-info", style.username)}>{username}</span>
       </div>

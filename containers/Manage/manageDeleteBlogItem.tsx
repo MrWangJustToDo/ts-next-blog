@@ -3,7 +3,7 @@ import Link from "next/link";
 import { mutate } from "swr";
 import { apiName } from "config/api";
 import { useUserRequest } from "hook/useUser";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { useFilterResult, useManageToDeleteModule } from "hook/useManage";
 import { WithWriteBlogItem as SearchResult, BlogItem } from "components/BlogItem";
 import ManageDeleteModule from "./manageDeleteModule";
@@ -12,9 +12,7 @@ import { UseManageToDeleteModuleBody } from "types/hook";
 
 import style from "./index.module.scss";
 
-let ManageDeleteBlogItem: BlogContentType;
-
-ManageDeleteBlogItem = (props) => {
+const ManageDeleteBlogItem: BlogContentType = (props) => {
   const filter = useFilterResult({ currentBlogId: props.blogId! });
 
   const request = useUserRequest({
@@ -30,7 +28,9 @@ ManageDeleteBlogItem = (props) => {
   }, [filter]);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ request, item, successCallback }) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
+    ({ request, item, successCallback }) =>
+      (close) =>
+        <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
     []
   );
 

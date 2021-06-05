@@ -96,9 +96,7 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     const currentData = data !== false ? autoParse(data) : undefined;
 
-    let requestPromise: Promise<AxiosResponse<T>>;
-
-    requestPromise = instance({
+    const requestPromise: Promise<AxiosResponse<T>> = instance({
       method: currentMethod,
       headers: currentHeader,
       url: relativePath,

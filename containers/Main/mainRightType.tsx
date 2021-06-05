@@ -7,9 +7,7 @@ import { useType } from "hook/useType";
 import { TypeProps } from "types/hook";
 import { MainRightTypeType } from "types/containers";
 
-let MainRightType: MainRightTypeType;
-
-MainRightType = ({ index }) => {
+const MainRightType: MainRightTypeType = ({ index }) => {
   const { type, changeCurrentType } = useType({ needInitType: true });
 
   const { icon, content, hrefTo } = mainRightHeader[index];

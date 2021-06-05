@@ -8,14 +8,12 @@ import BlogContentLike from "./blogContentLike";
 import BlogContentMessagePut from "./blogContentMessagePut";
 import { BlogContentType } from "types/containers";
 
-let Blog: BlogContentType;
-
 const BlogContentMessage = dynamic(() => import("./blogContentMessage"));
 
-Blog = (props) => {
+const Blog: BlogContentType = (props) => {
   const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId, blogOriginState, blogPriseState, blogCommentState, userId } = props;
 
-  useUpdateBlogRead(blogId!);
+  // useUpdateBlogRead(blogId!);
 
   return (
     <div className="card user-select-none">

@@ -10,9 +10,7 @@ import PublishImage from "./publishImage";
 import PublishSubmit from "./publishSubmit";
 import { SimpleElement } from "types/components";
 
-let Publish: SimpleElement;
-
-Publish = () => {
+const Publish: SimpleElement = () => {
   const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true } }), []);
 
   const [ref, submit] = usePublish({ request, id: editorId });

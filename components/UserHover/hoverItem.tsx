@@ -4,7 +4,7 @@ import LoadRender from "components/LoadRender";
 import { apiName } from "config/api";
 import { getUserProps, getUserState } from "config/hover";
 import { getCurrentAvatar } from "utils/data";
-import { getClass, flexAround, flexBetween, flexCenter } from "utils/class";
+import { getClass, flexAround, flexBetween, flexCenter } from "utils/dom";
 import { UserExProps, UserHoverItemType } from "types/components";
 
 import style from "./index.module.scss";

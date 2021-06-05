@@ -4,9 +4,7 @@ import DeleteType from "./manageDeleteTypeItem";
 import { SimpleElement } from "types/components";
 import { TypeProps } from "types/hook";
 
-let ManageType: SimpleElement;
-
-ManageType = () => {
+const ManageType: SimpleElement = () => {
   return (
     <div className="card-body">
       <LoadRender<TypeProps[]>

@@ -11,4 +11,37 @@
   width: 100%;
   background-color: #fff;
   border-radius: 1.2rem 1.2rem 0 0;
+  overflow: hidden;
+  filter: drop-shadow(0 0 0.75rem rgba(100, 100, 100, 0.6));
+}
+
+.mobileHead {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(220, 220, 220, 0.6);
+}
+
+.indicator {
+  width: 18px;
+  height: 4px;
+  border-radius: 99px;
+  background-color: rgba(100, 100, 100, 0.6);
+  &:not(:first-of-type) {
+    margin-left: 2px;
+  }
+}
+
+.close {
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mobileContent {
+  margin-top: 40px;
 }

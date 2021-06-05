@@ -13,11 +13,13 @@ const mark = new Mark({
       try {
         const transformValue = hljs.highlight(lang, str, true).value;
         const transformArr = transformValue.split(/\n/).slice(0, -1);
-        const minWidth = String(transformArr.length).length - 0.7;
+        const minWidth = String(transformArr.length).length - 0.4;
         const html = transformArr.reduce(
           (p: string, c: string, idx: number) =>
-            `${p}<span class='d-inline-block text-center border-right pr-2 mr-2 border-dark' style='min-width: ${minWidth}em'>${idx + 1}</span>${c}\n`,
-          `<div class='overflow-hidden w-100'><span style='opacity: 0'>1</span><b class='text-info position-absolute' style='left: 10px'>${lang}</b></div>`
+            `${p}<span class='d-inline-block text-center border-right pr-2 mr-2 border-dark' style='min-width: ${minWidth}em; line-height: 1.5'>${
+              idx + 1
+            }</span>${c}\n`,
+          `<div class='overflow-hidden w-100 border-bottom border-dark mb-2'><span style='opacity: 0'>1</span><b class='text-info position-absolute' style='left: 10px'>${lang}</b></div>`
         );
         return `<pre class="rounded position-relative"><code class="hljs ${lang} p-2" style='font-size: 16px'>${html}</code></pre>`;
       } catch (__) {}

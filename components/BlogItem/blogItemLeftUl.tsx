@@ -2,7 +2,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { blogContentArray } from "config/blogItem";
 import { getCurrentAvatar } from "utils/data";
-import { getClass, flexEnd, flexStart } from "utils/class";
+import { getClass, flexEnd, flexStart } from "utils/dom";
 import { BlogItemType } from "types/components";
 
 import style from "./index.module.scss";
@@ -13,7 +13,7 @@ const BlogItemLeftUl: BlogItemType = (props) => {
   const { blogAssentCount, blogCollectCount, blogReadCount, avatar, gender, username } = props;
 
   const arr = [blogAssentCount, blogCollectCount, blogReadCount];
-  
+
   return (
     <ul className={getClass(style.ulStyle, "list-unstyled d-table text-center mb-3 mb-lg-0")}>
       <li className="d-table-cell align-middle">

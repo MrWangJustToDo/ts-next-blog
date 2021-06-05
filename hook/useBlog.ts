@@ -26,27 +26,7 @@ import {
 
 import "tocbot/dist/tocbot.css";
 
-let useBlogMenu: UseBlogMenuType;
-
-let useAutoScrollTop: UseAutoScrollType;
-
-let useAutoScrollBottom: UseAutoScrollType;
-
-let useLinkToImg: UseLinkToImgType;
-
-let useEditor: UseEditorType;
-
-let usePublish: UsePublishType;
-
-let useInputToImageModule: UseInputToImageModuleType;
-
-let useUpdateBlog: UsePublishType;
-
-let useUpdateBlogRead: UseUpdateBlogReadType;
-
-let useLikeToPayModule: UseLikeToPayModuleType;
-
-useBlogMenu = (className) => {
+const useBlogMenu: UseBlogMenuType = (className) => {
   const [bool, setBool] = useState<boolean>(false);
   useEffect(() => {
     const added = addIdForHeads(className);
@@ -69,7 +49,7 @@ useBlogMenu = (className) => {
   return bool;
 };
 
-useAutoScrollTop = <T extends HTMLElement>() => {
+const useAutoScrollTop: UseAutoScrollType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
   const scrollTopCallback = useCallback<() => void>(() => {
     window.scrollTo({
@@ -93,7 +73,7 @@ useAutoScrollTop = <T extends HTMLElement>() => {
   return ref;
 };
 
-useAutoScrollBottom = <T extends HTMLElement>() => {
+const useAutoScrollBottom: UseAutoScrollType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
   const scrollTopCallback = useCallback<() => void>(() => {
     window.scrollTo({
@@ -117,7 +97,7 @@ useAutoScrollBottom = <T extends HTMLElement>() => {
   return ref;
 };
 
-useLinkToImg = <T extends HTMLElement>() => {
+const useLinkToImg: UseLinkToImgType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
   useEffect(() => {
     actionHandler<T, void, void>(ref.current, (ele) => toCanvas(ele, location.href));
@@ -125,7 +105,7 @@ useLinkToImg = <T extends HTMLElement>() => {
   return ref;
 };
 
-useEditor = (id) => {
+const useEditor: UseEditorType = (id) => {
   const mdId = `#editor_${id}_md`;
   // 创建DOM观察者对象，观察DOM的class变化，执行对应的操作
   const observer = new MutationObserver(function (mutationsList) {
@@ -182,7 +162,7 @@ useEditor = (id) => {
   }, []);
 };
 
-usePublish = ({ request, id }) => {
+const usePublish: UsePublishType = ({ request, id }) => {
   const router = useRouter();
   const fail = useFailToast();
   const success = useSucessToast();
@@ -222,7 +202,7 @@ usePublish = ({ request, id }) => {
   return [ref, submit];
 };
 
-useInputToImageModule = ({ body, className, appendHandler, inputRef }) => {
+const useInputToImageModule: UseInputToImageModuleType = ({ body, className, appendHandler, inputRef }) => {
   const open = useOverlayOpen();
   const select = useCallback<() => void>(() => {
     open({ head: "选择图片，点击刷新", body: body(appendHandler)(inputRef), className });
@@ -230,7 +210,7 @@ useInputToImageModule = ({ body, className, appendHandler, inputRef }) => {
   return select;
 };
 
-useUpdateBlog = ({ request, id }) => {
+const useUpdateBlog: UsePublishType = ({ request, id }) => {
   const router = useRouter();
   const fail = useFailToast();
   const success = useSucessToast();
@@ -262,7 +242,7 @@ useUpdateBlog = ({ request, id }) => {
   return [ref, submit];
 };
 
-useUpdateBlogRead = (blogId) => {
+const useUpdateBlogRead: UseUpdateBlogReadType = (blogId) => {
   const fail = useFailToast();
   const success = useSucessToast();
   useEffect(() => {
@@ -282,7 +262,7 @@ useUpdateBlogRead = (blogId) => {
   }, [blogId]);
 };
 
-useLikeToPayModule = ({ body, className }) => {
+const useLikeToPayModule: UseLikeToPayModuleType = ({ body, className }) => {
   const opne = useOverlayOpen();
   const click = useCallback(() => {
     opne({ head: "感谢", body, className });

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import debounce from "lodash/debounce";
 import throttle from "lodash/throttle";
 import { log } from "utils/log";
@@ -25,10 +25,13 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
   { action, timmer, actionState = true, once = true, delayTime, rightNow = false, currentRef, addListener, removeListener }: UseAutoActionHandlerProps<T, K>,
   ...deps: any[]
 ) => {
+  const actionStateRef = useRef<boolean>();
+  actionStateRef.current = actionState;
   useEffect(() => {
+    // 定时器
     if (timmer) {
       const actionCallback = () => {
-        if (actionState) action();
+        if (actionStateRef.current) action();
       };
       if (delayTime === undefined) {
         log("timmer delayTime not set ---> useAutoActionHandler", "warn");
@@ -45,10 +48,11 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
         return () => clearInterval(id);
       }
     } else if (addListener) {
+      // 事件监听
       if (!removeListener) {
         throw new Error("every addListener need a removeListener! ---> useAutoActionHandler");
       } else {
-        if (actionState) {
+        if (actionStateRef.current) {
           if (rightNow) action();
           const currentEle = currentRef?.current;
           addListener(action, currentEle!);
@@ -56,7 +60,7 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
         }
       }
     }
-  }, [action, timmer, actionState, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps]);
+  }, [action, timmer, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps]);
 };
 
 const useAutoSetHeaderHeight: UseAutoSetHeaderHeightType = <T extends HTMLElement>(breakPoint: number = 1000) => {
@@ -141,7 +145,7 @@ const useAutoShowAndHide: UseAutoShowAndHideType = <T extends HTMLElement>(break
     addListener: addListenerCallback,
     removeListener: removeListenerCallback,
   });
-  const ref = useShowAndHideAnimate<T>({ state: value, showClassName: "slideInRight", hideClassName: "slideOutRight" });
+  const { animateRef: ref } = useShowAndHideAnimate<T>({ state: value, showClassName: "slideInRight", hideClassName: "slideOutRight" });
   return ref;
 };
 
@@ -184,11 +188,11 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl }) => 
   const fail = useFailToast();
   const { bool, show, hide } = useBool();
   const ref = useRef<HTMLImageElement>(null);
+  const request = useMemo(() => createRequest({ apiPath: imgUrl, header: { apiToken: true }, cache: false }), [imgUrl]);
   const loadSrc = useCallback<() => void>(
     debounce(
       () => {
         hide();
-        const request = createRequest({ apiPath: imgUrl, header: { apiToken: true }, cache: false });
         const getImgUrl = () =>
           request.run<ApiRequestResult<string>>().then(({ data }) => {
             if (Array.isArray(data)) {
@@ -198,8 +202,7 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl }) => 
             }
           });
         const url = ref.current?.src;
-        let getUniqueImg: () => Promise<string>;
-        getUniqueImg = () => getImgUrl().then((newUrl) => (newUrl === url ? getUniqueImg() : newUrl));
+        const getUniqueImg = (): Promise<string> => getImgUrl().then((newUrl) => (newUrl === url ? getUniqueImg() : newUrl));
         // 保证前后两次加载的图片路径不一致
         getUniqueImg()
           .then((url) => (actionHandler<HTMLImageElement, string, void>(ref.current, (ele) => (ele.src = "")), url))
@@ -209,7 +212,7 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl }) => 
       800,
       { leading: true }
     ),
-    [imgUrl]
+    [request]
   );
 
   const addListenerCallback = useCallback<(action: () => void) => void>(

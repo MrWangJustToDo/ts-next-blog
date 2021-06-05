@@ -6,9 +6,7 @@ import { apiName } from "config/api";
 import { useTag } from "hook/useTag";
 import { MainRightTagType, TagProps } from "types/containers";
 
-let MainRightTag: MainRightTagType;
-
-MainRightTag = ({ index }) => {
+const MainRightTag: MainRightTagType = ({ index }) => {
   const { tag, changeCurrentTag } = useTag({ needInitTag: true });
 
   const { icon, content, hrefTo } = mainRightHeader[index];

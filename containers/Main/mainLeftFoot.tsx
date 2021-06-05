@@ -2,9 +2,7 @@ import PageFoot from "components/PageFoot";
 import { useHome } from "hook/useHome";
 import { SimpleElement } from "types/components";
 
-let MainLeftFoot: SimpleElement;
-
-MainLeftFoot = () => {
+const MainLeftFoot: SimpleElement = () => {
   let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage } = useHome();
 
   return (

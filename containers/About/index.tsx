@@ -2,9 +2,7 @@ import AboutLeft from "./aboutLeft";
 import AboutRight from "./aboutRight";
 import { SimpleElement } from "types/components";
 
-let About: SimpleElement;
-
-About = () => {
+const About: SimpleElement = () => {
   return (
     <div className="mx-lg-4 row">
       <AboutLeft />

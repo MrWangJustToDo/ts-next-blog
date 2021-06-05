@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useType } from "hook/useType";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { TypeType } from "types/components";
 
 const Type: TypeType = ({ typeCount, typeContent, className = "", hoverAble = true }) => {

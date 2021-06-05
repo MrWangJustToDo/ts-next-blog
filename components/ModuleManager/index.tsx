@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import Toast from "components/Toast";
 import { DeskTopOverlay, MobileOverlay } from "components/Overlay";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { useMediaQuery } from "hook/useMediaQuery";
 import { useToastProps, ToastPushContext } from "hook/useToast";
 import { useOverlayProps, OverlayOpenContext } from "hook/useOverlay";
@@ -37,7 +37,7 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
             className={getClass("w-100 overflow-auto", flexCenter, style.cover, overlay && overlay.showState ? style.cover_active : "")}
             style={{ height: deskTop ? "100%" : "0", pointerEvents: deskTop ? "auto" : "none" }}
             data-modal="desktop"
-            data-show={deskTop}
+            data-show={Boolean(deskTop)}
           >
             {overlay && !state && <DeskTopOverlay {...overlay} />}
           </div>
@@ -45,7 +45,7 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
             className={getClass("w-100 position-relative", style.cover, overlay && overlay.showState ? style.cover_active : "")}
             style={{ height: mobile ? "100%" : "0", pointerEvents: mobile ? "auto" : "none" }}
             data-modal="mobile"
-            data-show={mobile}
+            data-show={Boolean(mobile)}
           >
             {overlay && state && <MobileOverlay {...overlay} />}
           </div>

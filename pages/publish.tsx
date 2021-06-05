@@ -1,7 +1,7 @@
 import { wrapper } from "store";
 import NotLogin from "containers/NotLogin";
 import PublishContent from "containers/Publish";
-import { animateFadein, getClass } from "utils/class";
+import { animateFadein, getClass } from "utils/dom";
 import { autoDispatchTockenHandler } from "config/ssr";
 
 type PublishType = ((props: { isLogin: boolean }) => JSX.Element) & { title?: string };

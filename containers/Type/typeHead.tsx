@@ -1,11 +1,9 @@
 import { useType } from "hook/useType";
 import { WithChangeType as TypeItem } from "components/Type";
-import { flexBetween, flexCenter, getClass } from "utils/class";
+import { flexBetween, flexCenter, getClass } from "utils/dom";
 import { SimpleElement } from "types/components";
 
-let TypeHead: SimpleElement;
-
-TypeHead = () => {
+const TypeHead: SimpleElement = () => {
   const { type, currentType } = useType();
 
   return (

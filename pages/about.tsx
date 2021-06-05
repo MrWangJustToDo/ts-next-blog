@@ -1,5 +1,5 @@
 import AboutContainer from "containers/About";
-import { animateFadein, getClass } from "utils/class";
+import { animateFadein, getClass } from "utils/dom";
 import { MyNextComponent } from "./_app";
 
 const About: MyNextComponent = () => {

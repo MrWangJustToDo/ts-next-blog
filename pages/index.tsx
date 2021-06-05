@@ -4,7 +4,7 @@ import Main from "containers/Main";
 import { MyNextComponent } from "./_app";
 import { apiName } from "config/api";
 import { autoDispatchTockenHandler } from "config/ssr";
-import { animateFadein, getClass } from "utils/class";
+import { animateFadein, getClass } from "utils/dom";
 import { getDataAction_Server, getDataSucess_Server } from "store/reducer/server/action";
 
 const Home: MyNextComponent = () => {

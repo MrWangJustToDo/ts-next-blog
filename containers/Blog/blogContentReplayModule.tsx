@@ -1,17 +1,13 @@
 import { apiName } from "config/api";
 import Button from "components/Button";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { useAutoLoadCheckcodeImg } from "hook/useAuto";
 import { useReplayModuleToSubmit } from "hook/useMessage";
 import { BlogContentReplayModuleType, BlogContentReplayModuleWithImagType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let BlogContentReplayModule: BlogContentReplayModuleType;
-
-let BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImagType;
-
-BlogContentReplayModuleWithImag = ({ request, closeHandler, imgRef, primaryCommentId, toIp, toUserId }) => {
+const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImagType = ({ request, closeHandler, imgRef, primaryCommentId, toIp, toUserId }) => {
   const { input1, input2, submit, canSubmit } = useReplayModuleToSubmit<HTMLTextAreaElement, HTMLInputElement>({
     request,
     closeHandler,
@@ -35,7 +31,7 @@ BlogContentReplayModuleWithImag = ({ request, closeHandler, imgRef, primaryComme
   );
 };
 
-BlogContentReplayModule = ({ request, closeHandler, primaryCommentId, toIp, toUserId }) => {
+const BlogContentReplayModule: BlogContentReplayModuleType = ({ request, closeHandler, primaryCommentId, toIp, toUserId }) => {
   const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
 
   return <BlogContentReplayModuleWithImag request={request} closeHandler={closeHandler} imgRef={imgRef} {...{ primaryCommentId, toIp, toUserId }} />;

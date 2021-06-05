@@ -1,12 +1,10 @@
 import { apiName } from "config/api";
 import LoadRender from "components/LoadRender";
-import DeleteTag from './manageDeleteTagItem';
+import DeleteTag from "./manageDeleteTagItem";
 import { SimpleElement } from "types/components";
 import { TagProps } from "types/containers";
 
-let ManageTag: SimpleElement;
-
-ManageTag = () => {
+const ManageTag: SimpleElement = () => {
   return (
     <div className="card-body">
       <LoadRender<TagProps[]>

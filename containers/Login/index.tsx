@@ -5,14 +5,12 @@ import LoginPassword from "./loginPassword";
 import LoginCheckcode from "./loginCheckcode";
 import LoginSubmit from "./loginSubmit";
 import { useLogin } from "hook/useUser";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-let Login: SimpleElement;
-
-Login = () => {
+const Login: SimpleElement = () => {
   const formRef = useLogin();
 
   const [username, setUsername] = useState<boolean>(false);

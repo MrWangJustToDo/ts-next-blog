@@ -1,13 +1,11 @@
 import { apiName } from "config/api";
 import { useAutoLoadCheckcodeImg, useAutoSetHeight } from "hook/useAuto";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { LoginCheckCodeType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let LoginCheckCode: LoginCheckCodeType;
-
-LoginCheckCode = ({ show }) => {
+const LoginCheckCode: LoginCheckCodeType = ({ show }) => {
   const [ref, height] = useAutoSetHeight<HTMLDivElement>();
 
   const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr, state: show });

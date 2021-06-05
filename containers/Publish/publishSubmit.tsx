@@ -2,9 +2,7 @@ import Button from "components/Button";
 import { useRouter } from "next/dist/client/router";
 import { PublishSubmitType } from "types/containers";
 
-let PublishSubmit: PublishSubmitType;
-
-PublishSubmit = ({ submit }) => {
+const PublishSubmit: PublishSubmitType = ({ submit }) => {
   const router = useRouter();
 
   return (

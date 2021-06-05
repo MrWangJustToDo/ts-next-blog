@@ -3,9 +3,7 @@ import Link from "next/link";
 import { Tag } from "components/Tag";
 import { MainRightTagItemType } from "types/containers";
 
-let MainRightTagItem: MainRightTagItemType;
-
-MainRightTagItem = ({ tagName, tagCount, changeCurrentTag }) => {
+const MainRightTagItem: MainRightTagItemType = ({ tagName, tagCount, changeCurrentTag }) => {
   const clickHandler = useCallback(() => changeCurrentTag(tagName), [tagName]);
 
   return (

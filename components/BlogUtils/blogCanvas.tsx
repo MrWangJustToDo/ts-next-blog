@@ -1,4 +1,4 @@
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { useBool } from "hook/useData";
 import { useLinkToImg } from "hook/useBlog";
 import { useShowAndHideAnimate } from "hook/useAnimate";
@@ -9,7 +9,7 @@ import style from "./index.module.scss";
 const BlogCanvas: SimpleElement = () => {
   const canvasRef = useLinkToImg<HTMLCanvasElement>();
 
-  const { bool, switchBoolState } = useBool();
+  const { bool, switchBoolDebounce } = useBool();
 
   useShowAndHideAnimate<HTMLCanvasElement>({
     state: bool,
@@ -20,7 +20,7 @@ const BlogCanvas: SimpleElement = () => {
 
   return (
     <>
-      <button type="button" className="btn btn-secondary" onClick={switchBoolState}>
+      <button type="button" className="btn btn-secondary" onClick={switchBoolDebounce}>
         <i className="ri-smartphone-line" />
       </button>
       <canvas ref={canvasRef} className={getClass("position-absolute border rounded", style.canvasContent)} style={{ display: "none" }} />

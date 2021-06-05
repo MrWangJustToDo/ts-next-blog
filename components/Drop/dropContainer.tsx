@@ -1,4 +1,4 @@
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { useAutoSetHeight } from "hook/useAuto";
 import { DropContainerType } from "types/components";
 

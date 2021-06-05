@@ -1,10 +1,6 @@
 import { BlogOriginProps, BlogStateType } from "types/config";
 
-let blogOrigin: BlogOriginProps;
-let blogState: BlogStateType;
-let editorId: string;
-
-blogOrigin = [
+const blogOrigin: BlogOriginProps = [
   {
     name: "原创",
     value: "0",
@@ -19,7 +15,7 @@ blogOrigin = [
   },
 ];
 
-blogState = [
+const blogState: BlogStateType = [
   {
     fieldName: "blogState",
     name: "状态",
@@ -54,6 +50,6 @@ blogState = [
   },
 ];
 
-editorId = "blogEditor";
+const editorId = "blogEditor";
 
 export { blogOrigin, blogState, editorId };

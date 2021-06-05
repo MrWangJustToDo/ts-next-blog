@@ -3,9 +3,7 @@ import MainLeftFoot from "./mainLeftFoot";
 import MainLeftContent from "./mainLeftContent";
 import { SimpleElement } from "types/components";
 
-let MainLeft: SimpleElement;
-
-MainLeft = () => {
+const MainLeft: SimpleElement = () => {
   return (
     <div className="col-md-8 user-select-none">
       <div className="card">

@@ -81,22 +81,26 @@ const getRandom = (start: number, end?: number): number => {
   return ((Math.random() * (end - start + 1)) | 0) + start;
 };
 
-const parseToString = (obj: { [props: string]: any } | Array<any> | string | number, indent: number = 0): string => {
+const parseToString = (obj: { [props: string]: any } | Array<any> | string | number, preString: string = ""): string => {
   let re = "";
-  if (Array.isArray(obj)) {
-    re = "".padEnd(indent) + "[\n";
-    re += "".padEnd(indent + 2) + obj.map((it) => (typeof it === "object" ? parseToString(it, indent + 2) : it.toString())).join(",\n");
-    re += "".padEnd(indent) + "]\n";
-  } else if (typeof obj === "object") {
-    re = "".padEnd(indent) + "{\n";
-    for (let key in obj) {
-      re += "".padEnd(indent + 2) + `${key}: ${typeof obj[key] === "object" ? parseToString(obj[key], indent + 2) : obj[key].toString()},\n`;
+  if (typeof obj === "object") {
+    if (Array.isArray(obj)) {
+      re += preString + "[\n";
+      obj.forEach((item) => {
+        re += preString + parseToString(item, preString + "".padEnd(2)) + "\n";
+      });
+      re += preString + "]\n";
+    } else {
+      for (let key in obj) {
+        re += preString + "{\n";
+        re += parseToString(key, preString + "".padEnd(1)) + ":" + parseToString(obj[key], preString + "".padEnd(2)) + "\n";
+        re += preString + "}\n";
+      }
     }
-    re = "".padEnd(indent) + re.slice(0, -1) + "}\n";
+    return re;
   } else {
-    re = "".padEnd(indent) + obj.toString();
+    return preString + obj;
   }
-  return re;
 };
 
 export { autoTransformData, getCurrentAvatar, formSerialize, getRandom, parseToString };

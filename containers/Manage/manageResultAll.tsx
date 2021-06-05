@@ -5,9 +5,7 @@ import { useBasePage } from "hook/useBase";
 import { BlogContentProps } from "types/hook";
 import { ManageResultType } from "types/containers";
 
-let ManageResultAll: ManageResultType;
-
-ManageResultAll = (props) => {
+const ManageResultAll: ManageResultType = (props) => {
   const { currentPage, currentPageData, increaseAble, increasePage, decreaseAble, decreasePage } = useBasePage<BlogContentProps>({
     data: props,
     stateSide: "server",

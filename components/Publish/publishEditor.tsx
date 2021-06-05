@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useEditor } from "hook/useBlog";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { markNOLineNumber } from "utils/markdown";
 import { BlogContentType } from "types/containers";
 

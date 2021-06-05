@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CardHeadType } from "types/components";
-import { flexBetween, flexCenter, getClass } from "utils/class";
+import { flexBetween, flexCenter, getClass } from "utils/dom";
 
 const CardHead: CardHeadType = ({ icon, content, hrefTo }) => {
   return (

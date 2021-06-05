@@ -6,11 +6,7 @@ import { useCurrentState } from "./useBase";
 import { setDataSucess_client } from "store/reducer/client/action";
 import { UseHomeType, UseCommendType, BlogContentProps } from "types/hook";
 
-let useHome: UseHomeType;
-
-let useCommend: UseCommendType;
-
-useHome = () => {
+const useHome: UseHomeType = () => {
   const { state, dispatch } = useCurrentState();
   // 首页全部数据
   const blogs = state.server[apiName.home]["data"];
@@ -29,7 +25,7 @@ useHome = () => {
   return { currentPage, allPage, blogs, currentPageBlogs, increaseAble, decreaseAble, increasePage, decreasePage };
 };
 
-useCommend = () => {
+const useCommend: UseCommendType = () => {
   const { state } = useCurrentState();
   const blogs = state.server[apiName.home]["data"];
   const commendBlogs = (blogs as BlogContentProps[]).filter(({ blogState }) => Number(blogState) === 3);

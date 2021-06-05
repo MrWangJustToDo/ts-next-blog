@@ -1,5 +1,5 @@
 import { State } from "store";
-import { RefObject } from "react";
+import { MutableRefObject, RefObject } from "react";
 import { AnyAction } from "redux";
 import { apiName } from "config/api";
 import { InputProps } from "./config";
@@ -60,17 +60,25 @@ type BlogContentProps = UserProps & BlogProps & TypeProps & TagProps;
 export type { UserProps, TypeProps, TagProps, BlogProps, BlogContentProps };
 
 /* useAnimate */
+type animateCallback = () => void | Promise<void>;
 interface UseShowAndHideAnimateProps<T> {
   state: boolean;
   forWardRef?: RefObject<T>;
   showClassName?: string;
   hideClassName?: string;
+  startShow?: animateCallback;
+  startHide?: animateCallback;
+  showDone?: animateCallback;
+  hideDone?: animateCallback;
+}
+interface UseShowAndHideAnimateReture<T> {
+  animateRef: RefObject<T>;
 }
 interface UseShowAndHideAnimateType {
-  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>): RefObject<T>;
+  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>): UseShowAndHideAnimateReture<T>;
 }
 
-export type { UseShowAndHideAnimateProps, UseShowAndHideAnimateType };
+export type { UseShowAndHideAnimateProps, UseShowAndHideAnimateType, animateCallback };
 
 /* useArchive */
 interface ArchiveProps {
@@ -230,20 +238,18 @@ export type {
 /* useData */
 interface UseBoolResult {
   bool: boolean;
-  boolState: boolean;
+  boolState: MutableRefObject<boolean>;
   switchBool: () => void;
-  switchBoolThrottle: () => void;
-  switchBoolState: () => void;
+  switchBoolDebounce: () => void;
   show: () => void;
   showThrottle: () => void;
-  showState: () => void;
+  showThrottleState: () => void;
   hide: () => void;
   hideDebounce: () => void;
   hideDebounceState: () => void;
-  hideDebounceNoState: () => void;
 }
 interface UseBoolType {
-  (props?: { init?: boolean; stateChangeTimeStep?: number; key?: string }): UseBoolResult;
+  (props?: { init?: boolean }): UseBoolResult;
 }
 interface UseArrayType {
   <T>(init: T[]): [T[], (val: T) => void, (val: T) => void, (val: T) => void, (val: T) => void];
@@ -451,8 +457,11 @@ interface UseOverlayPropsType {
 interface UseBodyLockType {
   (props: { ref: RefObject<HTMLElement> }): void;
 }
+interface UseOverlayBodyType {
+  (props: { body: JSX.Element | ((handler: () => void) => JSX.Element); closeHandler?: () => void }): JSX.Element;
+}
 
-export type { UseOverlayPropsType, UseOverlayOpenType, UseBodyLockType };
+export type { UseOverlayPropsType, UseOverlayOpenType, UseBodyLockType, UseOverlayBodyType };
 
 /* useType */
 interface UseTypeResult {

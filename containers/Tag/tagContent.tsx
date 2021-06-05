@@ -3,15 +3,13 @@ import { PrimaryMessage } from "components/BlogMessage";
 import { WithReadBlogItem as TagContentItem } from "components/BlogItem";
 import { useTag } from "hook/useTag";
 import { apiName } from "config/api";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { TagContentType } from "types/containers";
 import { PrimaryMessageProps } from "types/components";
 
 import style from "./index.module.scss";
 
-let TagContent: TagContentType;
-
-TagContent = ({ blogs }) => {
+const TagContent: TagContentType = ({ blogs }) => {
   const { currentPageBlogs } = useTag({ blogs, needInitTag: true });
 
   return (

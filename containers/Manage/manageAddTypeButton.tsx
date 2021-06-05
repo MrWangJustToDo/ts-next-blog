@@ -6,15 +6,13 @@ import { useManageToAddModule } from "hook/useManage";
 import { SimpleElement } from "types/components";
 import { UseManageToAddModuleBody } from "types/hook";
 
-let ManageAddTypeButton: SimpleElement;
-
-ManageAddTypeButton = () => {
+const ManageAddTypeButton: SimpleElement = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.addType });
 
   const body = useCallback<UseManageToAddModuleBody>(
-    ({ requestApiName, request, judgeApiName }) => (closeHandler) => (
-      <ManageAddModule requestApiName={requestApiName} fieldname="typeContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />
-    ),
+    ({ requestApiName, request, judgeApiName }) =>
+      (closeHandler) =>
+        <ManageAddModule requestApiName={requestApiName} fieldname="typeContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />,
     []
   );
 

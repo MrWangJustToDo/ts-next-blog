@@ -1,5 +1,7 @@
 import { GetArray, GetClass, GetItem, TransformArray, AnimateCSSType, HandleClassActionType } from "types/utils";
 
+const bgId = "blog-BG";
+
 // 自动处理数组
 const transformArray: TransformArray = (arr) =>
   arr.reduce<string[]>((pre, current) => {
@@ -41,6 +43,7 @@ const flexBetween: GetItem<string> = () => "d-flex justify-content-between align
 const flexAround: GetItem<string> = () => "d-flex justify-content-around align-items-center";
 const flexBottom: GetItem<string> = () => "d-flex justify-content-center align-items-end";
 
+// 动画
 const animateCSS: AnimateCSSType = ({ element, animation, prefix = "animate__" }) =>
   new Promise((resolve) => {
     const classNames = [`${prefix}animated`, `${prefix}faster`, `${prefix}${animation}`];
@@ -56,11 +59,65 @@ const animateCSS: AnimateCSSType = ({ element, animation, prefix = "animate__" }
     element.addEventListener("animationend", handleAnimationEnd, { once: true });
   });
 
-const handleCssAction: HandleClassActionType = ({ element, classNames, type }) => {
-  if (type === "add") {
-    element.classList.add(...classNames.filter(Boolean));
-  } else {
-    element.classList.remove(...classNames.filter(Boolean));
+const handleCssAction: HandleClassActionType = ({ element, classNames, type }) =>
+  type === "add" ? element.classList.add(...classNames.filter(Boolean)) : element.classList.remove(...classNames.filter(Boolean));
+
+const applyRootStyles = (rootId: string) => {
+  const body = document.querySelector("body") as HTMLBodyElement;
+  const root = document.querySelector(`#${rootId}`) as HTMLDivElement;
+
+  if (root) {
+    const p = 24;
+    const h = window.innerHeight;
+    const s = (h - p) / h;
+    body.style.backgroundColor = "#000";
+    root.style.overflow = "hidden";
+    root.style.willChange = "transform";
+    root.style.transition = "transform 200ms linear";
+    root.style.transform = `translateY(calc(env(safe-area-inset-top) + ${p / 2}px)) scale(${s})`; // prettier-ignore
+    root.style.borderTopRightRadius = "10px";
+    root.style.borderTopLeftRadius = "10px";
+    root.style.filter = "blur(0.8px)";
+
+    // Add highlighed overlay to emphasize the modality effect
+    const highlight = document.createElement("div");
+    highlight.setAttribute("aria-hidden", "true");
+    highlight.id = bgId;
+    highlight.style.position = "absolute";
+    highlight.style.top = "0px";
+    highlight.style.left = "0px";
+    highlight.style.bottom = "0px";
+    highlight.style.right = "0px";
+    highlight.style.opacity = "0";
+    highlight.style.transition = "opacity 200ms linear";
+    highlight.style.backgroundColor = "rgba(150, 150, 150, 0.1)";
+
+    root.appendChild(highlight);
+    requestAnimationFrame(() => (highlight.style.opacity = "1"));
+  }
+};
+
+const cleanupRootStyles = (rootId: string) => {
+  const body = document.querySelector("body") as HTMLBodyElement;
+  const root = document.getElementById(rootId) as HTMLDivElement;
+  const highlight = document.getElementById(bgId) as HTMLDivElement;
+
+  function onTransitionEnd() {
+    root.style.removeProperty("overflow");
+    root.style.removeProperty("will-change");
+    root.style.removeProperty("transition");
+    body.style.removeProperty("background-color");
+    highlight.parentNode?.removeChild(highlight);
+  }
+
+  if (root && highlight) {
+    // Start animating back
+    root.style.removeProperty("border-top-right-radius");
+    root.style.removeProperty("border-top-left-radius");
+    root.style.removeProperty("transform");
+    root.style.removeProperty("filter");
+    highlight.style.opacity = "0";
+    root.addEventListener("transitionend", onTransitionEnd, { once: true });
   }
 };
 
@@ -78,4 +135,6 @@ export {
   flexBottom,
   animateCSS,
   handleCssAction,
+  applyRootStyles,
+  cleanupRootStyles,
 };

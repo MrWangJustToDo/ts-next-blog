@@ -4,7 +4,7 @@ import Header from "components/Header";
 import LoadingBar from "components/LoadingBar";
 import ModuleManager from "components/ModuleManager";
 import { useAutoLogin } from "hook/useUser";
-import { animateFadein, getClass } from "utils/class";
+import { getClass } from "utils/dom";
 
 const Footer = dynamic(() => import("../Footer"));
 
@@ -15,19 +15,15 @@ const Layout = ({ title, container = true, children }: { title?: string; contain
     <>
       <LoadingBar />
       <Head title={title} />
-      <div className={getClass("d-flex flex-column")} style={{ minWidth: "320px" }}>
-        <ModuleManager
-          children={
-            <>
-              {container && <Header />}
-              <div className="position-relative" style={{ minHeight: "calc(100vh - 120px)", zIndex: 1 }}>
-                {children}
-              </div>
-              {container && <Footer />}
-            </>
-          }
-        />
-      </div>
+      <ModuleManager>
+        <div className={getClass("d-flex flex-column")} style={{ minWidth: "320px" }}>
+          {container && <Header />}
+          <div className="position-relative" style={{ minHeight: "calc(100vh - 120px)", zIndex: 1 }}>
+            {children}
+          </div>
+          {container && <Footer />}
+        </div>
+      </ModuleManager>
     </>
   );
 };

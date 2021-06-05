@@ -1,8 +1,6 @@
 import { SimpleElement } from "types/components";
 
-let AboutRightAbout: SimpleElement;
-
-AboutRightAbout = () => {
+const AboutRightAbout: SimpleElement = () => {
   return (
     <li className="list-group-item">
       <div className="small">

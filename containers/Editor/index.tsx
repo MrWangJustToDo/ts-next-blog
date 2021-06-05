@@ -8,9 +8,7 @@ import { useUserRequest } from "hook/useUser";
 import { useUpdateBlog } from "hook/useBlog";
 import { BlogContentType } from "types/containers";
 
-let Editor: BlogContentType;
-
-Editor = (props) => {
+const Editor: BlogContentType = (props) => {
   const request = useUserRequest({ method: "post", header: { apiToken: true }, data: { oldProps: props } });
 
   const [ref, submit] = useUpdateBlog({ request, id: props.blogId! });

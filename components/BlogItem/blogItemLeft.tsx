@@ -1,12 +1,12 @@
 import BlogItemLeftUl from "./blogItemLeftUl";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { BlogItemType } from "types/components";
 
 const BlogItemLeft: BlogItemType = (props) => {
   const { blogTitle, typeContent, blogPreview } = props;
-  
+
   return (
-    <div className="col-lg-8">
+    <div className="col-lg-8 col-sm-7">
       <h5 className={getClass("card-title font-weight-bold", flexBetween)}>
         <div>{blogTitle}</div>
         <div className="small">

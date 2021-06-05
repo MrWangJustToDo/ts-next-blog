@@ -6,13 +6,11 @@ import { BlogContentMessagePutType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let BlogContentMessagePut: BlogContentMessagePutType;
-
-BlogContentMessagePut = ({ blogId }) => {
+const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
   const body = useCallback<UsePutToCheckcodeModuleBody>(
-    ({ request, ref, successCallback }) => (closeHandler) => (
-      <BlogContentCheckcodeModule request={request} closeHandler={closeHandler} messageRef={ref} successCallback={successCallback} />
-    ),
+    ({ request, ref, successCallback }) =>
+      (closeHandler) =>
+        <BlogContentCheckcodeModule request={request} closeHandler={closeHandler} messageRef={ref} successCallback={successCallback} />,
     []
   );
 

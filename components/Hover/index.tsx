@@ -1,18 +1,27 @@
-import React, { useRef } from "react";
-import { getClass } from "utils/class";
+import React from "react";
+import { getClass } from "utils/dom";
 import { useBool } from "hook/useData";
+import { useShowAndHideAnimate } from "hook/useAnimate";
 import Animate from "./animate";
 import { HoverType } from "types/components";
 
 const Hover: HoverType = ({ className = "", children, hoverItem }) => {
-  const key = useRef(String(Date.now()));
+  const { bool, boolState, showThrottleState, hideDebounceState } = useBool();
 
-  const { bool, showState, hideDebounceNoState } = useBool({ stateChangeTimeStep: 600, key: key.current });
+  const { animateRef } = useShowAndHideAnimate<HTMLDivElement>({
+    state: bool,
+    showDone: () => {
+      boolState.current = true;
+    },
+    hideDone: () => {
+      boolState.current = true;
+    },
+  });
 
   return (
-    <div onMouseEnter={showState} onMouseLeave={hideDebounceNoState} className={getClass("position-relative", className)}>
+    <div onMouseEnter={showThrottleState} onMouseLeave={hideDebounceState} className={getClass("position-relative", className)}>
       {children}
-      <Animate show={bool}>{hoverItem}</Animate>
+      <Animate forwardRef={animateRef}>{hoverItem}</Animate>
     </div>
   );
 };

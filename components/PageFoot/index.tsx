@@ -1,4 +1,4 @@
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { FootPageType } from "types/components";
 
 const FootPage: FootPageType = ({ page, increaseAble, decreaseAble, increasePage, decreasePage, className = "" }) => {

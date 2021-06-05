@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import Loading from "components/Loading";
 import { useBool } from "hook/useData";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { ButtonType } from "types/components";
 
 const Button: ButtonType = ({ request, type = "button", disable = false, value = "确定", initState = true, className = "", style = {}, loadingColor }) => {
@@ -11,7 +11,7 @@ const Button: ButtonType = ({ request, type = "button", disable = false, value =
     hide();
     request().then(show).catch(show);
   }, [request]);
-  
+
   return (
     <button
       className={getClass("btn position-relative", flexCenter, className)}

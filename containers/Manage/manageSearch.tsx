@@ -9,9 +9,7 @@ import { TypeProps } from "types/hook";
 import { TagProps } from "types/containers";
 import { DropItemProps, SimpleElement } from "types/components";
 
-let ManageSearch: SimpleElement;
-
-ManageSearch = () => {
+const ManageSearch: SimpleElement = () => {
   const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true }, cache: false }), []);
 
   const [ref, search] = useSearch({ request });

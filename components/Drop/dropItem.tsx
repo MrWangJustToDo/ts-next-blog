@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { DropItemType } from "types/components";
 
 import style from "./index.module.scss";

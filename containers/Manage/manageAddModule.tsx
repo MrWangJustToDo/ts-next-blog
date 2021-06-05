@@ -6,9 +6,7 @@ import { addModule } from "config/manage";
 import { useAddRequest } from "hook/useManage";
 import { ManageAddModuleType } from "types/containers";
 
-let ManageAddModule: ManageAddModuleType;
-
-ManageAddModule = ({ request, judgeApiName, fieldname, requestApiName, closeHandler }) => {
+const ManageAddModule: ManageAddModuleType = ({ request, judgeApiName, fieldname, requestApiName, closeHandler }) => {
   const [bool, setBool] = useState<boolean>(true);
 
   const successCallback = useCallback(() => {

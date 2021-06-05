@@ -1,5 +1,5 @@
 import HeadContent from "config/header";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { useHeaderItem } from "hook/useHeader";
 import { useAutoSetHeaderHeight } from "hook/useAuto";
 import HeadContainerItem from "./headContainerItem";

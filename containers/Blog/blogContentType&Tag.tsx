@@ -1,10 +1,8 @@
 import { blogOrigin } from "config/publish";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { BlogContentType } from "types/containers";
 
-let Index: BlogContentType;
-
-Index = ({ typeContent, tagContent, blogOriginState }) => {
+const Index: BlogContentType = ({ typeContent, tagContent, blogOriginState }) => {
   return (
     <li className="list-group-item">
       <div className={getClass("card-body small", flexBetween)}>

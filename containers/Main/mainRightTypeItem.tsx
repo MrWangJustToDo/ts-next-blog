@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { useCallback } from "react";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { MainRightTypeItemType } from "types/containers";
 
-let MainRightTypeItem: MainRightTypeItemType;
-
-MainRightTypeItem = ({ typeName, typeCount, changeCurrentType }) => {
+const MainRightTypeItem: MainRightTypeItemType = ({ typeName, typeCount, changeCurrentType }) => {
   const clickHandler = useCallback(() => changeCurrentType(typeName), [typeName]);
 
   return (

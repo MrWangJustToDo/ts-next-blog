@@ -1,8 +1,6 @@
 import { BlogContentLikeToPayModuleType } from "types/containers";
 
-let BlogContentLikeToPayModule: BlogContentLikeToPayModuleType;
-
-BlogContentLikeToPayModule = ({ aliUrl, wchatUrl }) => {
+const BlogContentLikeToPayModule: BlogContentLikeToPayModuleType = ({ aliUrl, wchatUrl }) => {
   return (
     <div className="d-flex justify-content-center">
       <div className="bg-white">

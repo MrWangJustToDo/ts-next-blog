@@ -6,15 +6,13 @@ import { useManageToAddModule } from "hook/useManage";
 import { SimpleElement } from "types/components";
 import { UseManageToAddModuleBody } from "types/hook";
 
-let ManageAddTagButton: SimpleElement;
-
-ManageAddTagButton = () => {
+const ManageAddTagButton: SimpleElement = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.addTag });
 
   const body = useCallback<UseManageToAddModuleBody>(
-    ({ request, requestApiName, judgeApiName }) => (closeHandler) => (
-      <ManageAddModule requestApiName={requestApiName} fieldname="tagContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />
-    ),
+    ({ request, requestApiName, judgeApiName }) =>
+      (closeHandler) =>
+        <ManageAddModule requestApiName={requestApiName} fieldname="tagContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />,
     []
   );
 

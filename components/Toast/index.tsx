@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAutoActionHandler } from "hook/useAuto";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { momentTo } from "utils/time";
-import { flexBetween, flexCenter, getClass } from "utils/class";
+import { flexBetween, flexCenter, getClass } from "utils/dom";
 import { ToastType } from "types/components";
 
 import style from "./index.module.scss";
@@ -17,7 +17,7 @@ const Toast: ToastType = ({ title, currentTime, contentState, content, showState
   useAutoActionHandler({ delayTime: 60 * 1000, action: () => setCurrentTimeString(momentTo(currentTime || new Date())), timmer: true, once: false });
 
   // 显示动画
-  const ref = useShowAndHideAnimate<HTMLDivElement>({
+  const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({
     state: showState,
     showClassName: "fadeInRight",
     hideClassName: "fadeOutRight",

@@ -1,4 +1,4 @@
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { LoadingType } from "types/components";
 
 import style from "./index.module.scss";

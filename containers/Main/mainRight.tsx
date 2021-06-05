@@ -4,9 +4,7 @@ import MainRightTag from "./mainRightTag";
 import MainRightCommend from "./mainRightCommend";
 import { SimpleElement } from "types/components";
 
-let MainRight: SimpleElement;
-
-MainRight = () => {
+const MainRight: SimpleElement = () => {
   return (
     <div className="col-md-4 user-select-none">
       <MainRightType index={mainRight.type} />

@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { SimpleElement } from "types/components";
 
-let NotLogin: SimpleElement;
-
-NotLogin = () => {
+const NotLogin: SimpleElement = () => {
   return (
     <div className="jumbotron my-3 small">
       <h1 className="display-4">访问错误！</h1>

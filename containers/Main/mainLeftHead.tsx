@@ -1,10 +1,8 @@
 import { useHome } from "hook/useHome";
 import { SimpleElement } from "types/components";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 
-let MainLeftHead: SimpleElement;
-
-MainLeftHead = () => {
+const MainLeftHead: SimpleElement = () => {
   let { allPage } = useHome();
 
   return (

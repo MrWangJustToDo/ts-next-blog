@@ -1,5 +1,5 @@
 import { useArray, useBool } from "hook/useData";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import DropItem from "./dropItem";
 import DropContainer from "./dropContainer";
 import DropSelectItem from "./dropSelectItem";
@@ -19,11 +19,11 @@ const Drop: DropType = <T extends ValueType>({
 }: DropProps<T>) => {
   const [indexArr, _1, _2, onlyOne, switchItem] = useArray<number>(initData);
 
-  const { bool, switchBoolState } = useBool({ stateChangeTimeStep: 500 });
+  const { bool, switchBoolDebounce } = useBool();
 
   return (
     <div
-      onClick={switchBoolState}
+      onClick={switchBoolDebounce}
       className={getClass("position-relative text-info border user-select-none", flexCenter, styleCss.drop, className)}
       style={style}
     >

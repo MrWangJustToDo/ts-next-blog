@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useCallback } from "react";
 import { useHeaderItem } from "hook/useHeader";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { HeadContainerItemType } from "types/components";
 
 import style from "./index.module.scss";
@@ -12,7 +12,7 @@ const HeadContainerItem: HeadContainerItemType = ({ value = "head", hrefTo = "/"
   const clickHandler = useCallback(() => {
     changeCurrentHeader(hrefTo);
   }, [hrefTo]);
-  
+
   return (
     <li className={getClass(style.nav_hover, "nav-item px-lg-3", currentHeader === hrefTo ? style.nav_active : "")}>
       <Link href={hrefTo}>

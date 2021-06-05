@@ -2,9 +2,7 @@ import Button from "components/Button";
 import { useDeleteRequest } from "hook/useManage";
 import { ManageDeleteModuleType } from "types/containers";
 
-let ManageDeleteModule: ManageDeleteModuleType;
-
-ManageDeleteModule = ({ request, item, close, successCallback }) => {
+const ManageDeleteModule: ManageDeleteModuleType = ({ request, item, close, successCallback }) => {
   const click = useDeleteRequest({ request, close, successCallback });
 
   return (

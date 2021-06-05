@@ -27,19 +27,7 @@ import {
   UsePutToCheckcodeModuleProps,
 } from "types/hook";
 
-let useChildMessage: UseChildMessageType;
-
-let useJudgeInputValue: UseJudgeInputValueType;
-
-let usePutToCheckcodeModule: UsePutToCheckcodeModuleType;
-
-let useCheckcodeModuleToSubmit: UseCheckcodeModuleToSubmitType;
-
-let useMessageToReplayModule: UseMessageToReplayModuleType;
-
-let useReplayModuleToSubmit: UseReplayModuleToSubmitType;
-
-useChildMessage = (props) => {
+const useChildMessage: UseChildMessageType = (props) => {
   const [page, setPage] = useState<number>(1);
   const [messageProps, setMessageProps] = useState<ChildMessageProps[]>([]);
   const more = page * childMessageLength < props.length;
@@ -48,7 +36,7 @@ useChildMessage = (props) => {
   return { messageProps, more, loadMore };
 };
 
-useJudgeInputValue = <T extends MyInputELement>(ref: RefObject<T>) => {
+const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(ref: RefObject<T>) => {
   const [bool, setBool] = useState<boolean>(false);
   const judgeValue = useCallback<() => void>(
     () => actionHandler<T, void, void>(ref.current, (ele) => (!!ele.value.length ? setBool(true) : setBool(false))),
@@ -70,7 +58,7 @@ useJudgeInputValue = <T extends MyInputELement>(ref: RefObject<T>) => {
   return bool;
 };
 
-usePutToCheckcodeModule = <T extends MyInputELement>({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps) => {
+const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = <T extends MyInputELement>({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps) => {
   const ref = useRef<T>(null);
   const open = useOverlayOpen();
   const request = useUserRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId } });
@@ -91,7 +79,12 @@ usePutToCheckcodeModule = <T extends MyInputELement>({ blogId, body, className =
   return { ref, submit, canSubmit };
 };
 
-useCheckcodeModuleToSubmit = <T extends MyInputELement>({ request, closeHandler, messageRef, successCallback }: UseCheckcodeModuleToSubmitProps) => {
+const useCheckcodeModuleToSubmit: UseCheckcodeModuleToSubmitType = <T extends MyInputELement>({
+  request,
+  closeHandler,
+  messageRef,
+  successCallback,
+}: UseCheckcodeModuleToSubmitProps) => {
   const ref = useRef<T>(null);
   const pushFail = useFailToast();
   const pushSucess = useSucessToast();
@@ -126,7 +119,7 @@ useCheckcodeModuleToSubmit = <T extends MyInputELement>({ request, closeHandler,
   return { ref, submit, canSubmit };
 };
 
-useMessageToReplayModule = <T extends {}>({ body, className }: UseMessageToReplayModuleProps<T>) => {
+const useMessageToReplayModule: UseMessageToReplayModuleType = <T extends {}>({ body, className }: UseMessageToReplayModuleProps<T>) => {
   const open = useOverlayOpen();
   const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage });
   const replay = useCallback<(props: T) => void>(
@@ -138,7 +131,7 @@ useMessageToReplayModule = <T extends {}>({ body, className }: UseMessageToRepla
   return replay;
 };
 
-useReplayModuleToSubmit = <T extends MyInputELement, F extends MyInputELement>({
+const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <T extends MyInputELement, F extends MyInputELement>({
   request,
   closeHandler,
   successCallback,
@@ -152,9 +145,10 @@ useReplayModuleToSubmit = <T extends MyInputELement, F extends MyInputELement>({
   const blogId = state.client[actionName.currentBlogId]["data"];
   const pushFail = useFailToast();
   const pushSucess = useSucessToast();
-  const flashData = useCallback(() => mutate(transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId }, needPre: false })), [
-    primaryCommentId,
-  ]);
+  const flashData = useCallback(
+    () => mutate(transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId }, needPre: false })),
+    [primaryCommentId]
+  );
   const submit = useCallback(
     () =>
       request({

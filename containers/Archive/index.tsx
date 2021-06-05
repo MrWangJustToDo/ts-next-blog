@@ -4,9 +4,7 @@ import Loading from "components/Loading";
 import { useArchive, useAutoLoadArchive } from "hook/useArchive";
 import { SimpleElement } from "types/components";
 
-let Archive: SimpleElement;
-
-Archive = () => {
+const Archive: SimpleElement = () => {
   const { value, canLoad, loadMore } = useArchive();
 
   useAutoLoadArchive({ canLoad, loadMore, breakPoint: 600 });

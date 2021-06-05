@@ -1,20 +1,27 @@
-import { useMemo, useRef, useCallback } from "react";
-import { motion, PanInfo, useMotionValue, AnimatePresence, animate } from "framer-motion";
+import { useRef, useCallback, useEffect } from "react";
+import { motion, PanInfo, useMotionValue, AnimatePresence, animate, useTransform } from "framer-motion";
+import { useBodyLock, useModalEffect, useOverlayBody } from "hook/useOverlay";
+import { getClass } from "utils/dom";
 import { OverlayType } from "types/components";
-import { flexBetween, getClass } from "utils/class";
-import { useBodyLock, useModalEffect } from "hook/useOverlay";
 
 import style from "./index.module.scss";
 
-const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, className = "" }) => {
-  // 大致理解实现了  内容不可drag  用于获取drag的数据  通过context应用到外围的parent上
-  // 照着这个思路实现一下
-
-  // 初步实现了一下  还需要继续研究
-
+const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, className = "", clear, height = 90 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const stateRef = useRef<boolean>(Boolean(showState));
+
+  useEffect(() => {
+    stateRef.current = Boolean(showState);
+  });
+
   const indicatorRotation = useMotionValue(0);
+
+  const indicator1Transform = useTransform(indicatorRotation, (r) => `translateX(2px) rotate(${r}deg)`);
+
+  const indicator2Transform = useTransform(indicatorRotation, (r) => `translateX(-2px) rotate(${-1 * r}deg)`);
 
   const y = useMotionValue(typeof window !== "undefined" ? window.innerHeight : 0);
 
@@ -29,63 +36,75 @@ const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, class
 
   const handleDragEnd = useCallback(
     (_, { velocity }: PanInfo) => {
-      // if (velocity.y > 500) {
-      // User flicked the sheet down
-      // } else {
-      // Update the spring value so that the sheet is animated to the snap point
-      animate(y, 0, { type: "spring", ...{ stiffness: 300, damping: 30, mass: 0.2 } });
-
-      // Reset indicator rotation after dragging
-      indicatorRotation.set(0);
-      // }
+      if (velocity.y > 500) {
+        closeHandler && closeHandler();
+      } else {
+        const modal = modalRef.current as HTMLDivElement;
+        const contentHeight = modal.getBoundingClientRect().height;
+        if (y.get() / contentHeight > 0.6) {
+          closeHandler && closeHandler();
+        } else {
+          animate(y, 0, { type: "spring", ...{ stiffness: 300, damping: 30, mass: 0.2 } });
+        }
+        indicatorRotation.set(0);
+      }
     },
     [indicatorRotation]
   );
 
-  useModalEffect(true, "content");
-
-  const bodyContent = useMemo(() => {
-    if (typeof body === "function" && closeHandler) {
-      return body(closeHandler);
-    } else {
-      return body;
+  const animationComplete = useCallback(() => {
+    if (!stateRef.current && clear) {
+      clear();
     }
-  }, [body]);
+  }, [clear]);
+
+  useModalEffect(Boolean(showState), "content");
 
   useBodyLock({ ref });
+
+  const bodyContent = useOverlayBody({ body, closeHandler });
 
   return (
     <div ref={ref} className={style.modalContainer}>
       <AnimatePresence>
-        <motion.div
-          style={{ height: "100%" }}
-          key="1"
-          drag="y"
-          dragConstraints={{ bottom: 0, top: 0 }}
-          dragElastic={0}
-          dragMomentum={false}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-        >
-          <motion.div className={getClass("position-absolute")} style={{ height: "80%", bottom: 0, width: "100%" }}>
-            <motion.div
-              style={{ height: "100%", y }}
-              initial={{ y: window.innerHeight }}
-              animate={{ y: 0, transition: { type: "tween" } }}
-              exit={{ y: window.innerHeight }}
-              className={getClass("card m-auto user-select-none", style.mobileModal, className)}
-            >
-              <div className={getClass("card-header", flexBetween)}>
-                {head}
-                <button className="close" style={{ outline: "none" }} onClick={closeHandler}>
-                  <i className="ri-close-line small ml-4" />
-                </button>
-              </div>
-              <div className="card-body">{bodyContent}</div>
-              {foot && <div className="card-footer">{foot}</div>}
+        {showState ? (
+          <motion.div
+            key="1"
+            drag="y"
+            style={{ height: "100%", width: "100%" }}
+            dragConstraints={{ bottom: 0, top: 0 }}
+            dragElastic={0}
+            dragMomentum={false}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
+          >
+            <motion.div className={getClass("position-absolute")} style={{ height: `${height}%`, bottom: 0, width: "100%" }}>
+              <motion.div
+                layout
+                ref={modalRef}
+                style={{ height: "100%", y }}
+                initial={{ y: window.innerHeight }}
+                animate={{ y: 0, transition: { type: "tween" } }}
+                exit={{ y: window.innerHeight }}
+                className={getClass("user-select-none position-absolute", style.mobileModal, className)}
+                onAnimationComplete={animationComplete}
+              >
+                <div className={getClass("position-fixed w-100", style.mobileHead)}>
+                  <motion.span className={getClass(style.indicator)} style={{ transform: indicator1Transform }} />
+                  <motion.span className={getClass(style.indicator)} style={{ transform: indicator2Transform }} />
+                  <button className={getClass("close", style.close)} style={{ outline: "none" }} onClick={closeHandler}>
+                    <i className="ri-close-line" />
+                  </button>
+                </div>
+                <div className={getClass(style.mobileContent, "p-4")}>
+                  {head}
+                  {bodyContent}
+                  {foot ? { foot } : null}
+                </div>
+              </motion.div>
             </motion.div>
           </motion.div>
-        </motion.div>
+        ) : null}
       </AnimatePresence>
     </div>
   );

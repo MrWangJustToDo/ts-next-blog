@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getClass, flexCenter } from "utils/class";
+import { getClass, flexCenter } from "utils/dom";
 import { FootContainerContentItemType } from "types/components";
 
 import style from "./index.module.scss";

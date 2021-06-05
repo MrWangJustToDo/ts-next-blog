@@ -7,9 +7,7 @@ import { apiName } from "config/api";
 import { BlogContentProps } from "types/hook";
 import { SimpleElement } from "types/components";
 
-let Type: SimpleElement;
-
-Type = () => {
+const Type: SimpleElement = () => {
   const { blogs } = useHome();
 
   return (

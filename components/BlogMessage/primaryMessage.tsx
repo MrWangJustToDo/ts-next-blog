@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useCallback, useMemo } from "react";
 import UserHover from "components/UserHover";
 import { momentTo } from "utils/time";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { getCurrentAvatar } from "utils/data";
 import { PrimaryMessageType } from "types/components";
 
@@ -42,10 +42,10 @@ const PrimaryMessage: PrimaryMessageType = (props) => {
           <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{username ? username : fromIp}</span>
           <span className="float-right badge badge-primary align-middle">{modifyState ? "更新于：" : "回复于：" + momentTo(modifyDate)}</span>
         </h5>
-        <p className="mb-0 mb-md-3">{content}</p>
+        <p className="mb-2 mb-md-3">{content}</p>
         {withReplay && (
           <button className={getClass("btn btn-outline-info", style.replay)} onClick={replayCallback}>
-            replay
+            回复
           </button>
         )}
         {withChildren && children}

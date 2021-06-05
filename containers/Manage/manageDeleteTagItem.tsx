@@ -4,16 +4,14 @@ import { Tag as TagItem } from "components/Tag";
 import { useUserRequest } from "hook/useUser";
 import { useManageToDeleteModule } from "hook/useManage";
 import { apiName } from "config/api";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import ManageDeleteModule from "./manageDeleteModule";
 import { UseManageToDeleteModuleBody } from "types/hook";
 import { ManageDeleteTagItemType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let ManageDeleteTagItem: ManageDeleteTagItemType;
-
-ManageDeleteTagItem = ({ tagId, tagContent, tagCount }) => {
+const ManageDeleteTagItem: ManageDeleteTagItemType = ({ tagId, tagContent, tagCount }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteTag, data: { deleteTag: tagId } });
 
   const body = useCallback<UseManageToDeleteModuleBody>(

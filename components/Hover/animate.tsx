@@ -1,14 +1,11 @@
-import { useShowAndHideAnimate } from "hook/useAnimate";
 import { AnimateType } from "types/components";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 
 import style from "./index.module.scss";
 
-const Animate: AnimateType = ({ children, show }) => {
-  const ref = useShowAndHideAnimate<HTMLDivElement>({ state: show });
-
+const Animate: AnimateType = ({ children, forwardRef }) => {
   return (
-    <div ref={ref} className={getClass("overflow-hidden", style.animatePanel)} style={{ display: "none" }}>
+    <div ref={forwardRef} className={getClass("overflow-hidden", style.animatePanel)} style={{ display: "none" }}>
       {children}
       <div className={getClass("bg-white position-absolute", style.hoverTriangle)} />
       <div className={getClass("w-100", style.hoverHolder)} />

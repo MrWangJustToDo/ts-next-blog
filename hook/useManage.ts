@@ -23,19 +23,7 @@ import {
   UseSearchType,
 } from "types/hook";
 
-let useSearch: UseSearchType;
-
-let useManageToAddModule: UseManageToAddModuleType;
-
-let useAddRequest: UseAddRequestType;
-
-let useJudgeInput: UseJudgeInputType;
-
-let useManageToDeleteModule: UseManageToDeleteModuleType;
-
-let useDeleteRequest: UseDeleteRequestType;
-
-useSearch = ({ request }) => {
+const useSearch: UseSearchType = ({ request }) => {
   const fail = useFailToast();
   const dispatch = useDispatch();
   const success = useSucessToast();
@@ -73,7 +61,7 @@ useSearch = ({ request }) => {
   return [ref, search];
 };
 
-useManageToAddModule = ({ title, body, request, className, judgeApiName, requestApiName }) => {
+const useManageToAddModule: UseManageToAddModuleType = ({ title, body, request, className, judgeApiName, requestApiName }) => {
   const open = useOverlayOpen();
   const click = useCallback(
     () => open({ head: title, body: body({ request, requestApiName, judgeApiName }), className }),
@@ -82,7 +70,7 @@ useManageToAddModule = ({ title, body, request, className, judgeApiName, request
   return click;
 };
 
-useAddRequest = ({ request, successCallback }) => {
+const useAddRequest: UseAddRequestType = ({ request, successCallback }) => {
   const ref = useRef<HTMLInputElement>(null);
   const fail = useFailToast();
   const success = useSucessToast();
@@ -106,7 +94,7 @@ useAddRequest = ({ request, successCallback }) => {
   return [ref, doRequest];
 };
 
-useJudgeInput = ({ option, forWardRef, judgeApiName, successClassName, failClassName, loadingClassName }) => {
+const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, successClassName, failClassName, loadingClassName }) => {
   const ref = useRef<HTMLInputElement>(null);
   const currentRef = forWardRef !== undefined ? forWardRef : ref;
   const fail = useRef<{ current: string }>({ current: option.fail });
@@ -181,13 +169,13 @@ useJudgeInput = ({ option, forWardRef, judgeApiName, successClassName, failClass
   return [currentRef, bool];
 };
 
-useManageToDeleteModule = ({ title, body, request, item, successCallback }) => {
+const useManageToDeleteModule: UseManageToDeleteModuleType = ({ title, body, request, item, successCallback }) => {
   const open = useOverlayOpen();
   const click = useCallback(() => open({ head: title, body: body({ request, item, successCallback }) }), [body, request, successCallback]);
   return click;
 };
 
-useDeleteRequest = ({ request, close, successCallback }) => {
+const useDeleteRequest: UseDeleteRequestType = ({ request, close, successCallback }) => {
   const fail = useFailToast();
   const success = useSucessToast();
   const doRequest = useCallback(

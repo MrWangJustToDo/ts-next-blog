@@ -3,15 +3,13 @@ import { PrimaryMessage } from "components/BlogMessage";
 import { WithReadBlogItem as TypeContentItem } from "components/BlogItem";
 import { useType } from "hook/useType";
 import { apiName } from "config/api";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { TypeContentType } from "types/containers";
 import { PrimaryMessageProps } from "types/components";
 
 import style from "./index.module.scss";
 
-let TypeContent: TypeContentType;
-
-TypeContent = ({ blogs }) => {
+const TypeContent: TypeContentType = ({ blogs }) => {
   const { currentPageBlogs } = useType({ blogs, needInitType: true });
 
   return (

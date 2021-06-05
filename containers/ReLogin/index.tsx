@@ -1,12 +1,10 @@
 import { useCallback } from "react";
 import { useLogout } from "hook/useUser";
 import { useRouter } from "next/dist/client/router";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { SimpleElement } from "types/components";
 
-let ReLogin: SimpleElement;
-
-ReLogin = () => {
+const ReLogin: SimpleElement = () => {
   const logout = useLogout();
 
   const router = useRouter();

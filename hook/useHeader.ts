@@ -5,9 +5,7 @@ import { useCurrentState } from "./useBase";
 import { setDataSucess_client } from "store/reducer/client/action";
 import { UseHeaderItemType } from "types/hook";
 
-let useHeaderItem: UseHeaderItemType;
-
-let autoChangeHeader = (item: string, currentHeader: string, changeCurrentItem: Function, needChange: boolean) => {
+const autoChangeHeader = (item: string, currentHeader: string, changeCurrentItem: Function, needChange: boolean) => {
   useEffect(() => {
     if (needChange && item !== currentHeader) {
       changeCurrentItem(item);
@@ -15,7 +13,7 @@ let autoChangeHeader = (item: string, currentHeader: string, changeCurrentItem: 
   }, [item, changeCurrentItem, currentHeader, needChange]);
 };
 
-useHeaderItem = (props = {}) => {
+const useHeaderItem: UseHeaderItemType = (props = {}) => {
   const { needInitHead = false } = props;
   const { route } = useRouter();
   const { state, dispatch } = useCurrentState();

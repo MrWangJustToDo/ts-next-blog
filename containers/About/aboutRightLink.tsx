@@ -1,8 +1,6 @@
 import { SimpleElement } from "types/components";
 
-let AboutRightLink: SimpleElement;
-
-AboutRightLink = () => {
+const AboutRightLink: SimpleElement = () => {
   return (
     <li className="list-group-item">
       <a className="text-secondary mx-2 d-inline-block" href="https://github.com/MrWangJustToDo/" style={{ height: "22px", width: "22px" }}>

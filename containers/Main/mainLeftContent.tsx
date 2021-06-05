@@ -2,9 +2,7 @@ import { useHome } from "hook/useHome";
 import { WithReadBlogItem as MainLeftItem } from "components/BlogItem";
 import { SimpleElement } from "types/components";
 
-let MainLeftContent: SimpleElement;
-
-MainLeftContent = () => {
+const MainLeftContent: SimpleElement = () => {
   const { currentPageBlogs } = useHome();
 
   return (

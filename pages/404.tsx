@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { animateFadein, getClass } from "utils/class";
+import { animateFadein, getClass } from "utils/dom";
 import { MyNextComponent } from "./_app";
 
 const NotFound: MyNextComponent = () => {

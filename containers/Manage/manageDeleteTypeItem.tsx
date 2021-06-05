@@ -4,20 +4,20 @@ import { Type as TypeItem } from "components/Type";
 import { useUserRequest } from "hook/useUser";
 import { useManageToDeleteModule } from "hook/useManage";
 import { apiName } from "config/api";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import ManageDeleteModule from "./manageDeleteModule";
 import { UseManageToDeleteModuleBody } from "types/hook";
 import { ManageDeleteTypeItemType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let ManageDeleteTypeItem: ManageDeleteTypeItemType;
-
-ManageDeleteTypeItem = ({ typeId, typeContent, typeCount }) => {
+const ManageDeleteTypeItem: ManageDeleteTypeItemType = ({ typeId, typeContent, typeCount }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId } });
 
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ request, item, successCallback }) => (close) => <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
+    ({ request, item, successCallback }) =>
+      (close) =>
+        <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
     []
   );
 

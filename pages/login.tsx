@@ -2,7 +2,7 @@ import { wrapper } from "store";
 import LoginContent from "containers/Login";
 import ReLoginContent from "containers/ReLogin";
 import { autoDispatchTockenHandler } from "config/ssr";
-import { animateFadein, flexCenter, getClass } from "utils/class";
+import { animateFadein, flexCenter, getClass } from "utils/dom";
 
 type LoginType = ((props: { isLogin: boolean }) => JSX.Element) & { container?: boolean; title?: string };
 

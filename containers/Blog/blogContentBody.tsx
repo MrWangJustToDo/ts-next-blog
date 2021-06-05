@@ -2,9 +2,7 @@ import { useMemo } from "react";
 import { mark } from "utils/markdown";
 import { BlogContentType } from "types/containers";
 
-let BlogContentBody: BlogContentType;
-
-BlogContentBody = ({ blogTitle, blogContent }) => {
+const BlogContentBody: BlogContentType = ({ blogTitle, blogContent }) => {
   const html = useMemo(() => mark.render(blogContent || ""), [blogContent]);
   return (
     <li className="list-group-item">

@@ -1,4 +1,4 @@
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { HeadContainerTagNavBtnType } from "types/components";
 
 import style from "./index.module.scss";

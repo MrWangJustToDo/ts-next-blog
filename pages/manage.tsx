@@ -2,7 +2,7 @@ import { wrapper } from "store";
 import NotLogin from "containers/NotLogin";
 import ManageContent from "containers/Manage";
 import { autoDispatchTockenHandler } from "config/ssr";
-import { animateFadein, getClass } from "utils/class";
+import { animateFadein, getClass } from "utils/dom";
 
 type ManageType = ((props: { isLogin: boolean; userId: string }) => JSX.Element) & { title?: string };
 

@@ -118,7 +118,7 @@ interface AutoRequestType {
 
 export type { AutoRequestProps, ApiRequestResult, CreateRequestType, AutoRequestType };
 
-/* class */
+/* dom */
 type Arguments = string | string[] | (() => string)[] | (() => string) | (() => string[]);
 
 interface TransformArray {

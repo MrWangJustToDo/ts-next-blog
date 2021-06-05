@@ -1,4 +1,4 @@
-import { getClass, flexCenter } from "utils/class";
+import { getClass, flexCenter } from "utils/dom";
 import FootContainerYiYan from "./footContainerYiYan";
 import FootContainerCardMe from "./footContainerCardMe";
 import FootContainerRecommend from "./footContainerRecommend";

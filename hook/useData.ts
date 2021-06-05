@@ -1,15 +1,16 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import debounce from "lodash/debounce";
 import throttle from "lodash/throttle";
-import { cancel, delay } from "utils/delay";
 import { UseBoolType, UseArrayType } from "types/hook";
 
 const timeStep: number = 200;
 
 const useBool: UseBoolType = (props = {}) => {
-  const { init = false, stateChangeTimeStep = 400, key = "useBool" } = props;
+  const { init = false } = props;
+  const boolState = useRef<boolean>(true);
   const [bool, setBool] = useState<boolean>(init);
-  const [boolState, setBoolState] = useState<boolean>(true);
+  const boolRef = useRef<boolean>(init);
+  boolRef.current = bool;
   const show = useCallback(() => setBool(true), []);
   const hide = useCallback(() => setBool(false), []);
   const switchBool = useCallback(() => setBool((last) => !last), []);
@@ -21,60 +22,43 @@ const useBool: UseBoolType = (props = {}) => {
     debounce(() => setBool(false), timeStep),
     []
   );
-  const switchBoolThrottle = useCallback(
-    throttle(() => setBool((last) => !last), timeStep, { leading: true }),
+  const switchBoolDebounce = useCallback(
+    debounce(() => setBool((last) => !last), timeStep),
     []
   );
-  const showState = useCallback(() => {
-    if (boolState) {
-      setBool(true);
-      setBoolState(false);
-      cancel(key);
-      delay(stateChangeTimeStep, () => setBoolState(true), key);
-    }
-  }, [boolState, key]);
-  const hideDebounceNoState = useCallback(
-    debounce(() => {
-      setBool(false);
-      if (boolState) {
-        setBoolState(false);
-        cancel(key);
-        delay(stateChangeTimeStep, () => setBoolState(true), key);
-      }
-    }, timeStep),
-    [boolState, key]
+  const showThrottleState = useCallback(
+    throttle(
+      () => {
+        if (!boolRef.current && boolState.current) {
+          setBool(true);
+          boolState.current = false;
+        }
+      },
+      timeStep,
+      { leading: true }
+    ),
+    []
   );
   const hideDebounceState = useCallback(
     debounce(() => {
-      if (boolState) {
+      if (boolRef.current && boolState.current) {
         setBool(false);
-        setBoolState(false);
-        cancel(key);
-        delay(stateChangeTimeStep, () => setBoolState(true), key);
+        boolState.current = false;
       }
     }, timeStep),
-    [boolState, key]
+    []
   );
-  const switchBoolState = useCallback(() => {
-    if (boolState) {
-      setBoolState(false);
-      setBool((last) => !last);
-      delay(stateChangeTimeStep, () => setBoolState(true));
-    }
-  }, [boolState]);
   return {
     bool,
-    boolState,
     show,
     hide,
+    boolState,
     switchBool,
     showThrottle,
     hideDebounce,
-    switchBoolThrottle,
-    showState,
+    switchBoolDebounce,
+    showThrottleState,
     hideDebounceState,
-    switchBoolState,
-    hideDebounceNoState,
   };
 };
 

@@ -1,7 +1,7 @@
 import CardPage from "components/PageFoot";
 import Loading from "components/Loading";
 import ManageDeleteBlogItem from "./manageDeleteBlogItem";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { useBasePage } from "hook/useBase";
 import { manageLength } from "config/manage";
 import { BlogContentProps } from "types/hook";

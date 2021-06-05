@@ -1,5 +1,5 @@
 // 博客显示的一些工具
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { useAutoShowAndHide } from "hook/useAuto";
 import { useAutoScrollTop, useAutoScrollBottom } from "hook/useBlog";
 import BlogMenu from "./blogMenu";

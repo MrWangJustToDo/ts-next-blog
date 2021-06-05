@@ -1,16 +1,14 @@
 import Link from "next/link";
 import BlogItemLeft from "./blogItemLeft";
 import BlogItemRight from "./blogItemRight";
-import { getClass, flexAround } from "utils/class";
+import { getClass, flexAround } from "utils/dom";
 import { BlogItemType } from "types/components";
-
-import style from "./index.module.scss";
 
 const BlogItem: BlogItemType = (props) => {
   const { blogImgLink, className = "", _style = {} } = props;
 
   return (
-    <div className={getClass("card-body row flex-wrap-reverse border-bottom", flexAround, style.blogItem, className)} style={_style}>
+    <div className={getClass("card-body row flex-wrap-reverse border-bottom px-sm-0 px-lg-2 m-0", flexAround, className)} style={_style}>
       <BlogItemLeft {...props} />
       <BlogItemRight src={blogImgLink!} />
     </div>

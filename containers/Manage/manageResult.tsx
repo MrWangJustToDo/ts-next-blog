@@ -1,7 +1,7 @@
 import LoadRender from "components/LoadRender";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
-import { animateFadein, getClass } from "utils/class";
+import { animateFadein, getClass } from "utils/dom";
 import ManageResultAll from "./manageResultAll";
 import ManageResultSearch from "./manageResultSearch";
 import { useBool } from "hook/useData";
@@ -11,10 +11,8 @@ import { ManageUserIdType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let ManageResult: ManageUserIdType;
-
-ManageResult = ({ userId }) => {
-  const { bool, switchBoolState } = useBool();
+const ManageResult: ManageUserIdType = ({ userId }) => {
+  const { bool, switchBoolDebounce } = useBool();
 
   const { state } = useCurrentState();
 
@@ -44,7 +42,7 @@ ManageResult = ({ userId }) => {
     <div className="card mt-4">
       <div className="card-header">
         {!bool ? "所有数据" : "搜索结果"}
-        <a className={getClass("small text-info float-right", style.swatchLink)} onClick={switchBoolState}>
+        <a className={getClass("small text-info float-right", style.swatchLink)} onClick={switchBoolDebounce}>
           <span>{!bool ? "去到搜索" : "去到所有"}</span>
         </a>
       </div>

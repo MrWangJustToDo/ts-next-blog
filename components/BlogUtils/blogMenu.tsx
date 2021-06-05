@@ -1,4 +1,4 @@
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { useBool } from "hook/useData";
 import { useBlogMenu } from "hook/useBlog";
 import { useShowAndHideAnimate } from "hook/useAnimate";
@@ -9,9 +9,9 @@ import style from "./index.module.scss";
 const BlogMenu: SimpleElement = () => {
   const seted = useBlogMenu(".blog-content");
 
-  const { bool, switchBoolThrottle } = useBool();
+  const { bool, switchBoolDebounce } = useBool();
 
-  const ref = useShowAndHideAnimate<HTMLDivElement>({
+  const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({
     state: bool && seted,
     showClassName: "lightSpeedInRight",
     hideClassName: "lightSpeedOutRight",
@@ -19,7 +19,7 @@ const BlogMenu: SimpleElement = () => {
 
   return (
     <>
-      <button type="button" className="btn btn-info" onClick={switchBoolThrottle}>
+      <button type="button" className="btn btn-info" onClick={switchBoolDebounce}>
         目录
       </button>
       <div ref={ref} className={getClass("position-absolute mb-2 py-1 border rounded", style.menuContent)} style={{ display: "none" }}>

@@ -1,8 +1,6 @@
 import { LoginType } from "types/config";
 
-let login: LoginType;
-
-login = {
+const login: LoginType = {
   username: {
     regexp: /^\w{2,7}$/,
     success: "格式正确",

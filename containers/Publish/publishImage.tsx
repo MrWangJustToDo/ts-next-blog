@@ -1,14 +1,12 @@
 import { ChangeEvent, RefObject, useCallback, useRef, useState } from "react";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { useInputToImageModule } from "hook/useBlog";
 import PublishImageModule from "./publishImageModule";
 import { BlogContentType } from "types/containers";
 
 import style from "./index.module.scss";
 
-let PublishImage: BlogContentType;
-
-PublishImage = ({ blogImgLink }) => {
+const PublishImage: BlogContentType = ({ blogImgLink }) => {
   const ref = useRef<HTMLInputElement>(null);
 
   const [val, setVal] = useState<string>(blogImgLink || "");

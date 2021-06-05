@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useJudgeInput } from "hook/useManage";
-import { getClass } from "utils/class";
+import { getClass } from "utils/dom";
 import { InputEleType } from "types/components";
 
 import style from "./index.module.scss";
@@ -33,7 +33,7 @@ const Input: InputEleType = ({
       changeState(bool);
     }
   }, [changeState, bool]);
-  
+
   return (
     <div className={getClass("position-relative", outerClassName)}>
       <input ref={ref} className={getClass("form-control", innerClassName)} name={name} type={type || "text"} placeholder={placeHolder} data-check={bool} />

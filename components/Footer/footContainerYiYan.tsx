@@ -1,4 +1,4 @@
-import { getClass, flexCenter } from "utils/class";
+import { getClass, flexCenter } from "utils/dom";
 import LoadRender from "components/LoadRender";
 import { SimpleElement, YiYanComponent } from "types/components";
 

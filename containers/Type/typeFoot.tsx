@@ -2,10 +2,8 @@ import PageFoot from "components/PageFoot";
 import { useType } from "hook/useType";
 import { TypeContentType } from "types/containers";
 
-let TypeFoot: TypeContentType;
-
-TypeFoot = ({ blogs }) => {
-  let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageBlogs } = useType(blogs);
+const TypeFoot: TypeContentType = ({ blogs }) => {
+  let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageBlogs } = useType({ blogs });
 
   return currentPageBlogs.length ? (
     <PageFoot

@@ -2,9 +2,7 @@ import ManageSearch from "./manageSearch";
 import ManageResult from "./manageResult";
 import { ManageUserIdType } from "types/containers";
 
-let ManageLeft: ManageUserIdType;
-
-ManageLeft = ({ userId }) => {
+const ManageLeft: ManageUserIdType = ({ userId }) => {
   return (
     <div className="col-md-8 user-select-none">
       <ManageSearch />

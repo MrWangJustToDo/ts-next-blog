@@ -1,15 +1,11 @@
 import { apiName } from "config/api";
 import Button from "components/Button";
-import { flexCenter, getClass } from "utils/class";
+import { flexCenter, getClass } from "utils/dom";
 import { useAutoLoadCheckcodeImg } from "hook/useAuto";
 import { useCheckcodeModuleToSubmit } from "hook/useMessage";
 import { BlogContentCheckcodeModuleWithImagType, BlogContentCheckcodeModuleType } from "types/containers";
 
-let BlogContentCheckcodeModule: BlogContentCheckcodeModuleType;
-
-let BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImagType;
-
-BlogContentCheckcodeModuleWithImag = ({ request, closeHandler, imgRef, messageRef, successCallback }) => {
+const BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImagType = ({ request, closeHandler, imgRef, messageRef, successCallback }) => {
   const { ref, submit, canSubmit } = useCheckcodeModuleToSubmit<HTMLInputElement>({ request, closeHandler, messageRef, successCallback });
 
   return (
@@ -26,7 +22,7 @@ BlogContentCheckcodeModuleWithImag = ({ request, closeHandler, imgRef, messageRe
   );
 };
 
-BlogContentCheckcodeModule = ({ request, closeHandler, messageRef, successCallback }) => {
+const BlogContentCheckcodeModule: BlogContentCheckcodeModuleType = ({ request, closeHandler, messageRef, successCallback }) => {
   const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
 
   return (

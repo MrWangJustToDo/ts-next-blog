@@ -2,9 +2,7 @@ import Input from "components/Input";
 import { login } from "config/user";
 import { LoginInputType } from "types/containers";
 
-let LoginUsername: LoginInputType;
-
-LoginUsername = ({ setState }) => {
+const LoginUsername: LoginInputType = ({ setState }) => {
   return (
     <div className="form-group row align-items-center position-relative">
       <label htmlFor="username" className="col-sm-3 col-form-label">

@@ -1,13 +1,11 @@
 import { useTag } from "hook/useTag";
 import { WithChangeTag as TagItem } from "components/Tag";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-let TagHead: SimpleElement;
-
-TagHead = () => {
+const TagHead: SimpleElement = () => {
   const { tag, currentTag } = useTag();
 
   return (

@@ -1,4 +1,4 @@
-import { getClass, flexCenter } from "utils/class";
+import { getClass, flexCenter } from "utils/dom";
 import { footContentLength, footRecommendContent } from "config/footer";
 import FootContainerContentItem from "./footContainerContentItem";
 import { FootContainerRecommendType } from "types/components";

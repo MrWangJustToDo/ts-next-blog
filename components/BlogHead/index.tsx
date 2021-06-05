@@ -1,5 +1,5 @@
 import { BlogContentType } from "types/containers";
-import { flexBetween, getClass } from "utils/class";
+import { flexBetween, getClass } from "utils/dom";
 import BlogHeadLeft from "./blogHeadLeft";
 import BlogHeadRight from "./blogHeadRight";
 
