@@ -1,6 +1,5 @@
 import LoadRender from "components/LoadRender";
 import MainRightHead from "components/CardHead";
-import AnimationList from "components/AnimationList";
 import MainRightTagItem from "./mainRightTagItem";
 import { mainRightHeader } from "config/hoom";
 import { apiName } from "config/api";
@@ -23,11 +22,11 @@ const MainRightTag: MainRightTagType = ({ index }) => {
           revalidateOnFocus={false}
           initialData={tag}
           loaded={(data) => (
-            <AnimationList showClassName="lightSpeedInRight">
+            <>
               {data.map(({ tagId, tagContent, tagCount }) => (
                 <MainRightTagItem key={tagId} tagName={tagContent!} tagCount={tagCount!} changeCurrentTag={changeCurrentTag} />
               ))}
-            </AnimationList>
+            </>
           )}
         />
       </div>

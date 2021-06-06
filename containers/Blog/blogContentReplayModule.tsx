@@ -20,7 +20,7 @@ const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImagType = ({ 
     <>
       <textarea className="w-100 my-2 border rounded" placeholder="请输入留言" style={{ minHeight: "100px" }} ref={input1} />
       <div className={getClass("row px-3", flexBetween, style.checkcodeRow)}>
-        <label htmlFor="putcheck" className="col-2 col-form-label text-truncate" title="验证码">
+        <label htmlFor="putcheck" className="col-2 col-form-label text-truncate px-0" title="验证码">
           验证码:
         </label>
         <img ref={imgRef} className="col-4 col-md-3 border rounded" height="38" alt="验证码" />

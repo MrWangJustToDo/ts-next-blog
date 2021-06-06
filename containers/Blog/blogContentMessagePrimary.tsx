@@ -53,7 +53,7 @@ const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages }) 
       (closeHandler) =>
         (
           <>
-            <PrimaryMessage {...props} withReplay={false} withChildren={false} />
+            <PrimaryMessage {...props} withReplay={false} withChildren={false} withHover={false} />
             <BlogContentReplayModule
               request={request}
               closeHandler={closeHandler}

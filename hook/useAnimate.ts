@@ -34,7 +34,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
     const showDoneCallback = callbackRef.current.showDone;
     if (!state) {
       // hide
-      Promise.resolve(() => startHideCallback && startHideCallback())
+      Promise.resolve(startHideCallback && startHideCallback())
         .then(() =>
           delay<void>(0, () =>
             actionHandler<T, void | Promise<void>, Promise<void>>(currentRef.current, (ele) => {
@@ -58,12 +58,14 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
         .then(() => delay(0, () => hideDoneCallback && hideDoneCallback()));
     } else {
       // show
-      Promise.resolve(() => startShowCallback && startShowCallback())
+      Promise.resolve(startShowCallback && startShowCallback())
         .then(() =>
           delay<void>(0, () =>
             actionHandler<T, void, void>(currentRef.current, (ele) => {
-              ele.style.display = "block";
-              ele.dataset.show = "true";
+              if (ele.style.display === "none") {
+                ele.style.display = "block";
+                ele.dataset.show = "true";
+              }
             })
           )
         )

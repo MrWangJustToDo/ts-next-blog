@@ -44,4 +44,6 @@
 
 .mobileContent {
   margin-top: 40px;
+  overflow: auto;
+  height: calc(100% - 40px);
 }

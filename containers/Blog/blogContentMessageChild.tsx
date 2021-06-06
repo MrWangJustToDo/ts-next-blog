@@ -35,7 +35,7 @@ const BlogContentChildMessage: BlogContentChildMessageType = ({ messages, primar
       (closeHandler) =>
         (
           <>
-            <ChildMessage {...props} withReplay={false} withChildren={false} />
+            <ChildMessage {...props} withReplay={false} withChildren={false} withHover={false} />
             <BlogContentReplayModule
               request={request}
               closeHandler={closeHandler}

@@ -1,6 +1,5 @@
 import LoadRender from "components/LoadRender";
 import MainRightHead from "components/CardHead";
-import AnimationList from "components/AnimationList";
 import MainRightTypeItem from "./mainRightTypeItem";
 import { mainRightHeader } from "config/hoom";
 import { apiName } from "config/api";
@@ -25,11 +24,11 @@ const MainRightType: MainRightTypeType = ({ index }) => {
             revalidateOnFocus={false}
             initialData={type}
             loaded={(data) => (
-              <AnimationList showClassName="fadeIn">
+              <>
                 {data.map(({ typeId, typeContent, typeCount }) => (
                   <MainRightTypeItem key={typeId} typeName={typeContent!} typeCount={typeCount!} changeCurrentType={changeCurrentType} />
                 ))}
-              </AnimationList>
+              </>
             )}
           />
         </div>

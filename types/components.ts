@@ -25,7 +25,7 @@ type Color =
   | "dark";
 
 interface SimpleElement {
-  (): React.ReactNode;
+  (): React.ReactElement;
 }
 
 export type { SimpleElement };
