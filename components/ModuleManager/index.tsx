@@ -32,23 +32,23 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
             {children}
           </div>
         </OverlayOpenContext.Provider>
-        <div id="overlay" className="position-fixed h-100 w-100" style={{ left: 0, top: 0, zIndex: 200, pointerEvents: "none" }}>
-          <div
-            className={getClass("w-100 overflow-auto", flexCenter, style.cover, overlay && overlay.showState ? style.cover_active : "")}
-            style={{ height: deskTop ? "100%" : "0", pointerEvents: deskTop ? "auto" : "none" }}
-            data-modal="desktop"
-            data-show={Boolean(deskTop)}
-          >
-            {overlay && !state && <DeskTopOverlay {...overlay} />}
-          </div>
-          <div
-            className={getClass("w-100 position-relative", style.cover, overlay && overlay.showState ? style.cover_active : "")}
-            style={{ height: mobile ? "100%" : "0", pointerEvents: mobile ? "auto" : "none" }}
-            data-modal="mobile"
-            data-show={Boolean(mobile)}
-          >
-            {overlay && state && <MobileOverlay {...overlay} />}
-          </div>
+        <div
+          id="desktop-overlay"
+          className={getClass("position-fixed w-100 h-100", flexCenter, style.cover, overlay && overlay.showState ? style.cover_active : "")}
+          style={{ pointerEvents: deskTop ? "auto" : "none", zIndex: deskTop ? 2 : -1 }}
+          data-modal="desktop"
+          data-show={Boolean(deskTop)}
+        >
+          {overlay && !state && <DeskTopOverlay {...overlay} />}
+        </div>
+        <div
+          id="mobile-overlay"
+          className={getClass("position-fixed w-100 h-100", style.cover, overlay && overlay.showState ? style.cover_active : "")}
+          style={{ pointerEvents: mobile ? "auto" : "none", zIndex: mobile ? 2 : -1 }}
+          data-modal="mobile"
+          data-show={Boolean(mobile)}
+        >
+          {overlay && state && <MobileOverlay {...overlay} />}
         </div>
       </ToastPushContext.Provider>
     </>

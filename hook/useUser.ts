@@ -33,7 +33,14 @@ const useAutoLogin: UseAutoLoginType = () => {
         .catch(() => dispatch(setDataFail_client({ name: actionName.currentUser, data: {} }))),
     []
   );
-  useAutoActionHandler({ timmer: true, once: false, rightNow: true, delayTime: 1000 * 60 * 10, action: autoLoginCallback, actionState: Boolean(user) });
+  useAutoActionHandler({
+    timmer: Boolean(user.userId),
+    once: false,
+    rightNow: true,
+    delayTime: 1000 * 60 * 10,
+    action: autoLoginCallback,
+    actionState: Boolean(user.userId),
+  });
 };
 
 // 获取当前登录对象

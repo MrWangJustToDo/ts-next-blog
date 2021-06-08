@@ -69,6 +69,7 @@ const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = <T extends MyInputE
         open({
           head: "验证码",
           body: body({ request: request({ data: { content: ele.value } }), ref, successCallback }),
+          height: 60,
           className,
         });
       }

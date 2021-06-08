@@ -65,7 +65,7 @@ const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, class
   const bodyContent = useOverlayBody({ body, closeHandler });
 
   return (
-    <div ref={ref} className={style.modalContainer}>
+    <div className={style.modalContainer}>
       <AnimatePresence>
         {showState ? (
           <motion.div
@@ -89,17 +89,14 @@ const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, class
                 className={getClass("user-select-none position-absolute", style.mobileModal, className)}
                 onAnimationComplete={animationComplete}
               >
-                <div className={getClass("position-fixed w-100", style.mobileHead)}>
+                <div className={getClass("w-100", style.mobileHead)}>
                   <motion.span className={getClass(style.indicator)} style={{ transform: indicator1Transform }} />
                   <motion.span className={getClass(style.indicator)} style={{ transform: indicator2Transform }} />
-                  <button className={getClass("close", style.close)} style={{ outline: "none" }} onClick={closeHandler}>
-                    <i className="ri-close-line" />
-                  </button>
                 </div>
-                <div className={getClass(style.mobileContent, "p-4")}>
+                <div ref={ref} className={getClass(style.mobileContent, "p-4")}>
                   {head}
                   {bodyContent}
-                  {foot ? { foot } : null}
+                  {foot}
                 </div>
               </motion.div>
             </motion.div>
