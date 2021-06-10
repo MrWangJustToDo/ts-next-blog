@@ -39,7 +39,7 @@ const useAutoLogin: UseAutoLoginType = () => {
     rightNow: true,
     delayTime: 1000 * 60 * 10,
     action: autoLoginCallback,
-    actionState: Boolean(user.userId),
+    // actionState: Boolean(user.userId),
   });
 };
 

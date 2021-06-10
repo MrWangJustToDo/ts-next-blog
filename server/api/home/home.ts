@@ -5,7 +5,8 @@ import { BlogContentProps } from "types/hook";
 // 获取首页数据
 const getHomeAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const data = await getHome({ db: req.db! });
+    const data = (await getHome({ db: req.db! })) as BlogContentProps[];
+    data.sort(({ blogCreateDate: d1 }, { blogCreateDate: d2 }) => (new Date(d1!).getTime() > new Date(d2!).getTime() ? -1 : 1));
     return success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getHomeAction" } }),
@@ -57,7 +58,8 @@ const getBlogsByParams = autoRequestHandler({
 const getUserHomeAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { userId } = req.query;
-    const data = await getHomeByUserId({ db: req.db!, userId: userId as string });
+    const data = (await getHomeByUserId({ db: req.db!, userId: userId as string })) as BlogContentProps[];
+    data.sort(({ blogCreateDate: d1 }, { blogCreateDate: d2 }) => (new Date(d1!).getTime() > new Date(d2!).getTime() ? -1 : 1));
     success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getUserHomeAction" } }),

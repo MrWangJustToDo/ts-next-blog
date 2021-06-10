@@ -59,6 +59,10 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
           return () => removeListener(action, currentEle!);
         }
       }
+    } else if (rightNow) {
+      if (actionStateRef.current) {
+        action();
+      }
     }
   }, [action, timmer, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps]);
 };

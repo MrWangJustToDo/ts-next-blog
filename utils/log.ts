@@ -4,7 +4,7 @@ import PrettyError from "pretty-error";
 const pre = new PrettyError();
 
 const log = (message: string | Error, lev: "normal" | "warn" | "error") => {
-  const side = (process as any).browser ? "client" : "server";
+  const side = typeof window !== "undefined" ? "client" : "server";
   if (lev === "error") {
     if (side === "server") {
       if (message instanceof Error) {

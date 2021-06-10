@@ -10,6 +10,8 @@ import { AutoRequestProps, AutoRequestType, CreateRequestType, QueryProps } from
 
 const cacheResult = new Cache<string, any>(5000);
 
+const isBrowser = typeof window !== "undefined";
+
 const autoParse = (params: string | any) => {
   if (typeof params === "string") {
     return JSON.parse(params);
@@ -82,7 +84,7 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
       ? transformPath({ path: targetPath, query: targetQuery })
       : transformPath({ apiPath: targetPath as apiName, query: targetQuery });
 
-    if ((process as any).browser && cache) {
+    if (isBrowser && cache) {
       const target = cacheResult.get(relativePath);
       if (target) {
         log(`get data from cache, key: ${relativePath}, path: ${targetPath}, apiName: ${apiPath}`, "normal");
@@ -92,7 +94,7 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     const currentMethod = method || "get";
 
-    const currentHeader = header !== false && (process as any).browser ? getHeader(autoParse(header)) : autoParse(header);
+    const currentHeader = header !== false && isBrowser ? getHeader(autoParse(header)) : autoParse(header);
 
     const currentData = data !== false ? autoParse(data) : undefined;
 
@@ -103,7 +105,7 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
       data: currentData,
     });
 
-    if ((process as any).browser && cache) {
+    if (isBrowser && cache) {
       return requestPromise.then((res) => res.data).then((resData) => (cacheResult.set(relativePath, resData), resData));
     } else {
       return requestPromise.then((res) => res.data);

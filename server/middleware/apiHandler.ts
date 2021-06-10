@@ -95,14 +95,14 @@ const cacheHandler = (requestHandler: RequestHandlerType, time: number | undefin
     if (needCache) {
       const cacheValue = cache.get(key);
       if (cacheValue) {
-        log(`get response data from cache. method: ${req.method} url: ${req.originalUrl} key: ${key}`, "normal");
+        log(`get response data from cache. method: ${req.method}, url: ${req.originalUrl}, key: ${key}`, "normal");
         success({ res, resDate: cacheValue });
       } else {
         const actionValue = await requestHandler({ req, res, next });
         if (!!actionValue) {
           cache.set(key, actionValue, cacheTime);
         } else {
-          log(`nothing to return, so nothing to cache. method: ${req.method} url: ${req.originalUrl}`, "warn");
+          log(`nothing to return, so nothing to cache. method: ${req.method}, url: ${req.originalUrl}`, "warn");
         }
       }
     } else {

@@ -67,11 +67,10 @@ const LoadRender: LoadRenderType = <T>({
     return () => cancel(currentPath!);
   }, [method, currentQuery, currentRequestData, delayTime, currentPath]);
 
-  const defaultFetcher = useMemo(() => createRequest({ method, query: false, data: currentRequestData, header: currentHeaderToken, apiPath }), [
-    apiPath,
-    currentRequestData,
-    currentHeaderToken,
-  ]);
+  const defaultFetcher = useMemo(
+    () => createRequest({ method, query: false, data: currentRequestData, header: currentHeaderToken, apiPath }),
+    [apiPath, currentRequestData, currentHeaderToken]
+  );
 
   const currentFetcher = fetcher ? fetcher : defaultFetcher.run;
 
@@ -106,6 +105,5 @@ const LoadRender: LoadRenderType = <T>({
 
   return loadingEle;
 };
-
 
 export default LoadRender;

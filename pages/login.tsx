@@ -18,7 +18,7 @@ Login.title = "登录";
 export const getServerSideProps = wrapper.getServerSideProps(
   autoDispatchTockenHandler(async ({ req }) => ({
     props: {
-      isLogin: !!req.session["userCache"],
+      isLogin: req.session["userCache"],
     },
   }))
 );

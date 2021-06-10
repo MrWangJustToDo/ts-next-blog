@@ -1,5 +1,5 @@
 import mergeWith from "lodash/mergeWith";
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from "lodash/cloneDeep";
 import { TagProps } from "types/containers";
 import { BlogContentProps, TypeProps } from "types/hook";
 

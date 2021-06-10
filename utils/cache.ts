@@ -88,7 +88,7 @@ class Cache<T, K> {
       }
       tryKeys.push(newKey);
     }
-    log(`error, nothing need to delete. keys: ${tryKeys.join(",")}`, "error");
+    log(`error, nothing need to delete. keys: ${tryKeys.join(", ")}`, "error");
   };
 }
 

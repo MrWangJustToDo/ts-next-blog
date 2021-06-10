@@ -49,7 +49,7 @@ const decodeURI: TransformHandlerType = transformHandler(
 const serverLog: TransformHandlerType = transformHandler(
   catchHandler(({ req, next }) => {
     if (!req.url.startsWith("/_next") && !req.url.startsWith("/__next")) {
-      log(`method: ${req.method} request url: ${req.url}`, "normal");
+      log(`method: ${req.method}, request url: ${req.url}`, "normal");
     }
     next();
   })

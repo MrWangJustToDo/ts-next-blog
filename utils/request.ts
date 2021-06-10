@@ -6,6 +6,7 @@ import { PendingType, RemovePendingType } from "types/utils";
 const pending: Array<PendingType> = [];
 const retryCount: number = 3;
 const retryDelay: number = 1000;
+const isBrowser = typeof window !== "undefined";
 
 const CancelToken = axios.CancelToken;
 const instance = axios.create({
@@ -37,7 +38,7 @@ const removePending: RemovePendingType = (config) => {
 // 添加请求拦截器
 instance.interceptors.request.use(
   (request) => {
-    if ((process as any).browser) {
+    if (isBrowser) {
       removePending(request);
       request.cancelToken = new CancelToken((c) => {
         pending.push({ url: request.url, method: request.method, params: request.params, data: request.data, cancel: c });
@@ -53,7 +54,7 @@ instance.interceptors.request.use(
 // 添加响应拦截器
 instance.interceptors.response.use(
   (response) => {
-    if ((process as any).browser) {
+    if (isBrowser) {
       removePending(response.config);
     }
     return response;

@@ -14,7 +14,7 @@ const ReLogin: SimpleElement = () => {
   }, [router, logout]);
 
   return (
-    <div className="jumbotron my-5" style={{ minWidth: "600px" }}>
+    <div className="jumbotron my-5">
       <h1 className="display-4">访问错误！</h1>
       <p className="lead">当前已经是登录状态，不能重复登录！</p>
       <hr className="my-4" />
