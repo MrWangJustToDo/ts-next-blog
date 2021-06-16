@@ -38,3 +38,9 @@
     }
   }
 }
+
+.blogContent {
+  @include mobile {
+    margin: 0 -1.2rem;
+  }
+}

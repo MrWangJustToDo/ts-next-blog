@@ -17,6 +17,7 @@ enum apiName {
   autoLogin = "autoLogin", // 自动登录
   // 图片信息
   image = "image", // 获取图片
+  allImage = "allImage", // 获取一个图片数组
   captcha = "captcha", // 获取验证码图片
   captchaStr = "captchaStr", // 获取验证码文本
   // 博客信息
@@ -62,6 +63,7 @@ const accessApi: AccessType = {
   [apiName.author]: { disable: false, token: false },
   // 图片信息
   [apiName.image]: { disable: false, token: false },
+  [apiName.allImage]: { disable: false },
   [apiName.captcha]: { disable: false, token: false },
   [apiName.captchaStr]: { disable: false, token: false },
   // 首页信息

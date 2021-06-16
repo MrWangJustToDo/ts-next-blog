@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { mark } from "utils/markdown";
 import { BlogContentType } from "types/containers";
 
+import style from './index.module.scss';
+
 const BlogContentBody: BlogContentType = ({ blogTitle, blogContent }) => {
   const html = useMemo(() => mark.render(blogContent || ""), [blogContent]);
   return (
@@ -9,7 +11,7 @@ const BlogContentBody: BlogContentType = ({ blogTitle, blogContent }) => {
       <div className="card-body typo">
         <h1 className="font-weight-bold text-center">{blogTitle}</h1>
         <br />
-        <div className="blog-content" dangerouslySetInnerHTML={{ __html: html }} />
+        <div className={style.blogContent} dangerouslySetInnerHTML={{ __html: html }} />
       </div>
     </li>
   );
