@@ -94,7 +94,7 @@ const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, class
                   <motion.span className={getClass(style.indicator)} style={{ transform: indicator2Transform }} />
                 </div>
                 <div ref={ref} className={getClass(style.mobileContent, "p-4")}>
-                  {head}
+                  <div className="mb-3">{head}</div>
                   {bodyContent}
                   {foot}
                 </div>

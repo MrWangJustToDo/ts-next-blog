@@ -24,7 +24,7 @@ const PublishType: BlogContentType = ({ typeId }) => {
             return { name: typeContent, value: typeId! };
           });
           const init = typeId !== undefined && data.length ? [typeId].map((it) => data.findIndex(({ value }) => value === it)) : [];
-          return <Drop<string> fieldName="typeId" className="form-control" placeHolder="添加分类" data={data} initData={init} />;
+          return <Drop<string> maxHeight={200} fieldName="typeId" className="form-control" placeHolder="添加分类" data={data} initData={init} />;
         }}
       />
     </div>

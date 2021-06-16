@@ -63,7 +63,7 @@ const accessApi: AccessType = {
   [apiName.author]: { disable: false, token: false },
   // 图片信息
   [apiName.image]: { disable: false, token: false },
-  [apiName.allImage]: { disable: false },
+  [apiName.allImage]: { disable: false, token: true },
   [apiName.captcha]: { disable: false, token: false },
   [apiName.captchaStr]: { disable: false, token: false },
   // 首页信息

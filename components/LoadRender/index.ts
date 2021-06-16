@@ -12,7 +12,7 @@ import { useCurrentState } from "hook/useBase";
 import { getDataSucess_Server } from "store/reducer/server/action";
 import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType } from "types/components";
 
-const getCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath, needinitialData }) => {
+const useCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath, needinitialData }) => {
   const { state, dispatch } = useCurrentState();
 
   if (initialData) return { initialData, dispatch };
@@ -22,7 +22,7 @@ const getCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath
   return { dispatch };
 };
 
-const autoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiPath, currentData, dispatch }) => {
+const useAutoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiPath, currentData, dispatch }) => {
   useEffect(() => {
     if (needUpdate && apiPath && !isEqual(initialData, currentData)) {
       log(`start update store from loadrender, apiPath: ${apiPath}`, "normal");
@@ -74,7 +74,7 @@ const LoadRender: LoadRenderType = <T>({
 
   const currentFetcher = fetcher ? fetcher : defaultFetcher.run;
 
-  const { initialData: currentInitialData, dispatch } = getCurrentInitialData({ initialData, apiPath, needinitialData });
+  const { initialData: currentInitialData, dispatch } = useCurrentInitialData({ initialData, apiPath, needinitialData });
 
   const currentRequestKey = query ? transformPath({ path, apiPath, query, needPre: false }) : currentPath!;
 
@@ -86,7 +86,7 @@ const LoadRender: LoadRenderType = <T>({
 
   const currentData = data ? autoTransformData(data) : null;
 
-  autoUpdateState<T>({ needUpdate, initialData: currentInitialData, apiPath, currentData, dispatch });
+  useAutoUpdateState<T>({ needUpdate, initialData: currentInitialData, apiPath, currentData, dispatch });
 
   if (error) return loadError(error.toString());
 

@@ -33,10 +33,10 @@ const detectionToken: TransformHandlerType = transformHandler(
       // 挂载config
       req.config = config;
       // 开发环境无需验证
-      if (process.env.NODE_ENV !== "production") {
-        next();
-        return;
-      }
+      // if (process.env.NODE_ENV !== "production") {
+      //   next();
+      //   return;
+      // }
       // 当前路径无效
       if (disable) {
         throw new ServerError("路径不存在", 404);
@@ -44,8 +44,8 @@ const detectionToken: TransformHandlerType = transformHandler(
       if (method.toLowerCase() !== req.method.toLowerCase()) {
         throw new ServerError(`方法不支持: ${req.method.toLowerCase()}`, 405);
       }
-      if (token && req.headers.apiToken !== req.session.apiToken) {
-        throw new ServerError("token检测失败", 401);
+      if (token && req.headers.apitoken !== req.session.apiToken) {
+        throw new ServerError(`token检测失败, client: ${req.headers.apitoken} -- server: ${req.session.apiToken}`, 401);
       }
       next();
     } else {

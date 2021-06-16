@@ -3,7 +3,7 @@ import Loading from "components/Loading";
 import { useAutoLoadRandomImg } from "hook/useAuto";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { apiName } from "config/api";
-import { getClass } from "utils/dom";
+import { flexCenter, getClass } from "utils/dom";
 import { actionHandler } from "utils/action";
 import { PublishImageModuleType } from "types/containers";
 
@@ -21,16 +21,18 @@ const PublishImageModule: PublishImageModuleType = ({ closeHandler, appendHandle
 
   return (
     <div className="container">
-      <div className={getClass("position-relative", style.imgContainer)}>
-        <Loading className={getClass("position-absolute", style.imgLoding)} _style={{ display: bool ? "none" : "block" }} />
-        <img
-          className={getClass("position-absolute border rounded", style.imgItem)}
-          ref={ref}
-          title="点击切换"
-          alt="图片信息"
-          width="400"
-          style={{ display: "none" }}
-        />
+      <div className={getClass(flexCenter)}>
+        <div className={getClass("position-relative", style.imgContainer)}>
+          <Loading className={getClass("position-absolute", style.imgLoding)} _style={{ display: bool ? "none" : "block" }} />
+          <img
+            className={getClass("position-absolute border rounded", style.imgItem)}
+            ref={ref}
+            title="点击切换"
+            alt="图片信息"
+            width="100%"
+            style={{ display: "none" }}
+          />
+        </div>
       </div>
       <div className="form-row my-3 flex-row-reverse">
         <button className="btn btn-secondary btn-sm mx-2" type="button" onClick={clickCallback}>

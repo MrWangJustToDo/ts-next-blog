@@ -9,6 +9,7 @@ const AboutLeft: SimpleElement = () => {
     <div className="col-md-8">
       <div className="border rounded">
         <LoadRender<{ relativeUrl: string }[]>
+          token
           revalidateOnFocus={false}
           apiPath={apiName.allImage}
           loaded={(data) => (
