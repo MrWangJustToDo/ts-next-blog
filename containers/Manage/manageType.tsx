@@ -9,6 +9,7 @@ const ManageType: SimpleElement = () => {
     <div className="card-body">
       <LoadRender<TypeProps[]>
         needUpdate
+        cacheTime={5000}
         needinitialData
         apiPath={apiName.type}
         revalidateOnFocus={false}

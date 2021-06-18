@@ -20,7 +20,7 @@ const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, class
     } else {
       return body;
     }
-  }, [body]);
+  }, [body, closeHandler]);
 
   return (
     <div ref={ref} className={getClass("card m-auto user-select-none", className)} style={{ display: "none" }}>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import useSWR from "swr";
 import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
@@ -10,19 +11,21 @@ import { autoTransformData } from "utils/data";
 import { autoStringify, createRequest } from "utils/fetcher";
 import { useCurrentState } from "hook/useBase";
 import { getDataSucess_Server } from "store/reducer/server/action";
-import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType } from "types/components";
+import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType, RenderProps, RenderType } from "types/components";
 
 const useCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath, needinitialData }) => {
-  const { state, dispatch } = useCurrentState();
+  const { state } = useCurrentState();
 
-  if (initialData) return { initialData, dispatch };
+  if (initialData) return { currentInitialData: initialData };
 
-  if (apiPath && needinitialData) return { initialData: state.server[apiPath]["data"], dispatch };
+  if (apiPath && needinitialData) return { currentInitialData: state.server[apiPath]["data"] };
 
-  return { dispatch };
+  return { currentInitialData: null };
 };
 
-const useAutoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiPath, currentData, dispatch }) => {
+const useAutoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiPath, currentData }) => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (needUpdate && apiPath && !isEqual(initialData, currentData)) {
       log(`start update store from loadrender, apiPath: ${apiPath}`, "normal");
@@ -31,11 +34,55 @@ const useAutoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiP
   }, [needUpdate, apiPath, initialData, currentData]);
 };
 
+const Render: RenderType = <T>({
+  currentPath,
+  currentFetcher,
+  currentInitialData,
+  loading,
+  loaded,
+  loadError,
+  delayTime,
+  revalidateOnMount,
+  revalidateOnFocus,
+  placeholder,
+  needUpdate,
+  apiPath,
+}: RenderProps<T>) => {
+  const [loadingEle, setLoadingEle] = useState<JSX.Element | null>(null);
+
+  const { data, error }: { data?: any; error?: any } = useSWR(currentPath, currentFetcher, {
+    initialData: currentInitialData,
+    revalidateOnMount,
+    revalidateOnFocus,
+  });
+
+  useEffect(() => {
+    delay(delayTime, () => setLoadingEle(loading({ _style: placeholder, className: "p-4" })), currentPath);
+    return () => cancel(currentPath!);
+  }, [delayTime, currentPath]);
+
+  const currentData = data ? autoTransformData(data) : null;
+
+  useAutoUpdateState<T>({ needUpdate, initialData: currentInitialData, apiPath, currentData });
+
+  if (error) return loadError(error.toString());
+
+  if (currentInitialData || currentData) {
+    // make soure not flash if data loaded
+    cancel(currentPath);
+
+    return loaded(currentData ? currentData : currentInitialData);
+  }
+
+  return loadingEle;
+};
+
 const LoadRender: LoadRenderType = <T>({
   method,
   path,
   apiPath,
   query,
+  cacheTime,
   fetcher,
   requestData,
   initialData,
@@ -52,58 +99,37 @@ const LoadRender: LoadRenderType = <T>({
 }: LoadRenderProps<T>) => {
   if (!path && !apiPath) throw new Error("loadrender error, path undefined!");
 
-  const [loadingEle, setLoadingEle] = useState<JSX.Element | null>(null);
-
   const currentPath = apiPath ? apiPath : path;
-
-  const currentQuery = autoStringify(query);
 
   const currentRequestData = autoStringify(requestData);
 
-  const currentHeaderToken = token ? JSON.stringify({ apiToken: token }) : false;
-
-  useEffect(() => {
-    delay(delayTime, () => setLoadingEle(loading({ _style: placeholder, className: "p-4" })), currentPath);
-    return () => cancel(currentPath!);
-  }, [method, currentQuery, currentRequestData, delayTime, currentPath]);
+  const currentHeaderToken = token ? autoStringify({ apiToken: token }) : false;
 
   const defaultFetcher = useMemo(
-    () => createRequest({ method, query: false, data: currentRequestData, header: currentHeaderToken, apiPath }),
-    [apiPath, currentRequestData, currentHeaderToken]
+    () => createRequest({ method, query: false, data: currentRequestData, header: currentHeaderToken, apiPath, cacheTime }),
+    [apiPath, currentRequestData, currentHeaderToken, cacheTime]
   );
 
   const currentFetcher = fetcher ? fetcher : defaultFetcher.run;
 
-  const { initialData: currentInitialData, dispatch } = useCurrentInitialData({ initialData, apiPath, needinitialData });
+  const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needinitialData });
 
-  const currentRequestKey = query ? transformPath({ path, apiPath, query, needPre: false }) : currentPath!;
+  const currentRequestPath = query ? transformPath({ path, apiPath, query, needPre: false }) : currentPath!;
 
-  const { data, error }: { data?: any; error?: any } = useSWR(currentRequestKey, currentFetcher, {
-    initialData: currentInitialData,
-    revalidateOnMount,
+  return Render({
+    loadError,
+    loaded,
+    loading,
+    delayTime,
+    apiPath,
+    needUpdate,
+    placeholder,
     revalidateOnFocus,
+    revalidateOnMount,
+    currentInitialData,
+    currentFetcher,
+    currentPath: currentRequestPath,
   });
-
-  const currentData = data ? autoTransformData(data) : null;
-
-  useAutoUpdateState<T>({ needUpdate, initialData: currentInitialData, apiPath, currentData, dispatch });
-
-  if (error) return loadError(error.toString());
-
-  if (currentData) {
-    // make soure not flash if data loaded
-    cancel(currentPath!);
-
-    return loaded(currentData);
-  }
-
-  if (initialData) {
-    cancel(currentPath!);
-
-    return loaded(initialData);
-  }
-
-  return loadingEle;
 };
 
 export default LoadRender;

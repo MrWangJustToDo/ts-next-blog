@@ -98,11 +98,13 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
   const ref = useRef<HTMLInputElement>(null);
   const currentRef = forWardRef !== undefined ? forWardRef : ref;
   const fail = useRef<{ current: string }>({ current: option.fail });
+  const loadingRef = useRef<boolean>(false);
   const success = useRef<string>(option.success);
   // 输入验证成败
   const [bool, setBool] = useState<boolean>(false);
   // 验证中状态
   const [loading, setLoading] = useState<boolean>(false);
+  loadingRef.current = loading;
   const judge = useCallback(
     debounce(() => {
       // 多次尝试的状态分离
@@ -149,13 +151,13 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
     [option, judgeApiName]
   );
   const start = useCallback(() => {
-    if (!loading) {
+    if (!loadingRef.current) {
       setLoading(true);
       // 重新开始状态
       fail.current = { current: option.fail };
       loadingAction({ element: currentRef.current!, loadingClassName });
     }
-  }, [loading]);
+  }, []);
   const addListenerCallback = useCallback<(action: () => void) => void>(
     (action) => actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.addEventListener("input", action)),
     []

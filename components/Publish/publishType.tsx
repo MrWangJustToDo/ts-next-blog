@@ -16,6 +16,7 @@ const PublishType: BlogContentType = ({ typeId }) => {
         </span>
       </div>
       <LoadRender<TypeProps[]>
+        cacheTime={5000}
         needinitialData
         apiPath={apiName.type}
         revalidateOnFocus={false}

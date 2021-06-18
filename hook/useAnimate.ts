@@ -50,7 +50,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
                   })
                 );
               } else {
-                log("aleardy hide, do not need animate", "normal");
+                log("aleardy hide, do not need animate to hide", "normal");
               }
             })
           )

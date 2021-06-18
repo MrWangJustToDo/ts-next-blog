@@ -389,7 +389,6 @@ export type { BarType };
 /* === LoadRender */
 import { Method } from "axios";
 import { QueryProps } from "./utils";
-import { AnyAction } from "redux";
 
 /* index */
 interface LoadRenderProps<T> {
@@ -397,6 +396,7 @@ interface LoadRenderProps<T> {
   token?: boolean;
   method?: Method;
   apiPath?: apiName;
+  cacheTime?: number;
   delayTime?: number;
   query?: QueryProps;
   requestData?: object;
@@ -416,6 +416,25 @@ interface LoadRenderType {
   <T>(props: LoadRenderProps<T>): JSX.Element | null;
 }
 
+interface RenderProps<T> {
+  currentPath: string | "";
+  currentFetcher: (...args: any) => any;
+  currentInitialData?: T;
+  loading: (props: LoadingProps) => JSX.Element;
+  loaded: (props: T) => JSX.Element | null;
+  loadError: (props: any) => JSX.Element;
+  delayTime: number;
+  revalidateOnMount: boolean;
+  revalidateOnFocus: boolean;
+  placeholder?: { [props: string]: string };
+  needUpdate: boolean;
+  apiPath?: apiName;
+}
+
+interface RenderType {
+  <T>(props: RenderProps<T>): JSX.Element | null;
+}
+
 interface GetCurrentInitialDataProps<T> {
   initialData?: T;
   needinitialData?: boolean;
@@ -423,11 +442,10 @@ interface GetCurrentInitialDataProps<T> {
 }
 
 interface GetCurrentInitialDataType {
-  <T>(props: GetCurrentInitialDataProps<T>): { initialData?: T; dispatch: (props: AnyAction) => void };
+  <T>(props: GetCurrentInitialDataProps<T>): { currentInitialData?: T; };
 }
 
 interface AutoUpdateStateProps<T> {
-  dispatch: (props: AnyAction) => void;
   needUpdate?: boolean;
   apiPath?: apiName;
   initialData?: T;
@@ -438,7 +456,7 @@ interface AutoUpdateStateType {
   <T>(props: AutoUpdateStateProps<T>): void;
 }
 
-export type { LoadRenderProps, LoadRenderType, GetCurrentInitialDataType, AutoUpdateStateType };
+export type { LoadRenderProps, LoadRenderType, RenderProps, RenderType, GetCurrentInitialDataType, AutoUpdateStateType };
 
 /* loading */
 interface LoadingProps {

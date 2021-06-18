@@ -3,7 +3,7 @@ import { transformPath } from "./path";
 import { autoTransformData } from "./data";
 import { ApiRequestResult, LoadImgType } from "types/utils";
 
-const request = createRequest();
+const request = createRequest({ cache: false });
 
 const loadImg: LoadImgType = ({ imgUrl, strUrl, imgElement, state = true }) => {
   if (state) {
@@ -12,7 +12,7 @@ const loadImg: LoadImgType = ({ imgUrl, strUrl, imgElement, state = true }) => {
       imgElement.addEventListener("load", () => resolve(imgElement));
     }).then((imgEle) =>
       request
-        .run<ApiRequestResult<string>>(transformPath({ apiPath: strUrl, query: { time: String(Date.now()) } }))
+        .run<ApiRequestResult<string>>(strUrl)
         .then((data) => autoTransformData<string, {}>(data))
         .then((value) => imgEle.setAttribute("title", <string>value))
     );

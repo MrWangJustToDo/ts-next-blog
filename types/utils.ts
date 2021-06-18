@@ -101,6 +101,7 @@ interface AutoRequestProps {
   header?: HeaderProps | string | false;
   data?: object | string | false;
   cache?: boolean;
+  cacheTime?: number;
 }
 interface ApiRequestResult<T> {
   code: number;

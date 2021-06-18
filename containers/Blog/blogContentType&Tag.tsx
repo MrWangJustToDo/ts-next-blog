@@ -16,8 +16,8 @@ const Index: BlogContentType = ({ typeContent, tagContent, blogOriginState }) =>
         <div>
           {tagContent &&
             tagContent.length &&
-            tagContent.map((item) => (
-              <span key={Math.random()} className="badge m-1 badge-pill badge-info">
+            tagContent.map((item, i) => (
+              <span key={i} className="badge m-1 badge-pill badge-info">
                 {item}
               </span>
             ))}

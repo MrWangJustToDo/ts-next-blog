@@ -20,6 +20,7 @@ const ManageSearch: SimpleElement = () => {
         <input type="text" className="form-control m-2" placeholder="标题" name="blogTitle" />
         <LoadRender<TypeProps[]>
           needUpdate
+          cacheTime={5000}
           needinitialData
           revalidateOnFocus={false}
           apiPath={apiName.type}
@@ -30,6 +31,7 @@ const ManageSearch: SimpleElement = () => {
         />
         <LoadRender<TagProps[]>
           needUpdate
+          cacheTime={5000}
           needinitialData
           revalidateOnFocus={false}
           apiPath={apiName.tag}

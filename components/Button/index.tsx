@@ -9,7 +9,7 @@ const Button: ButtonType = ({ request, type = "button", disable = false, value =
 
   const requestCallback = useCallback(() => {
     hide();
-    request().then(show).catch(show);
+    Promise.resolve().then(request).then(show).catch(show);
   }, [request]);
 
   return (

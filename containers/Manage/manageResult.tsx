@@ -20,28 +20,6 @@ const ManageResult: ManageUserIdType = ({ userId }) => {
 
   const loading = state.client[actionName.currentResult]["loading"];
 
-  const allData = (
-    <LoadRender<BlogContentProps[]>
-      token
-      needUpdate
-      needinitialData
-      revalidateOnFocus={false}
-      apiPath={apiName.userHome}
-      query={{ userId }}
-      loaded={(data) => (
-        <div className={getClass(animateFadein)}>
-          <ManageResultAll {...data} />
-        </div>
-      )}
-    />
-  );
-
-  const searchData = (
-    <div className={getClass(animateFadein)}>
-      <ManageResultSearch data={data} loading={loading} />
-    </div>
-  );
-
   return (
     <div className="card mt-4">
       <div className="card-header">
@@ -50,7 +28,25 @@ const ManageResult: ManageUserIdType = ({ userId }) => {
           <span>{!bool ? "去到搜索" : "去到所有"}</span>
         </a>
       </div>
-      {!bool ? allData : searchData}
+      {!bool ? (
+        <LoadRender<BlogContentProps[]>
+          token
+          needUpdate
+          needinitialData
+          revalidateOnFocus={false}
+          apiPath={apiName.userHome}
+          query={{ userId }}
+          loaded={(data) => (
+            <div className={getClass(animateFadein)}>
+              <ManageResultAll {...data} />
+            </div>
+          )}
+        />
+      ) : (
+        <div className={getClass(animateFadein)}>
+          <ManageResultSearch data={data} loading={loading} />
+        </div>
+      )}
     </div>
   );
 };

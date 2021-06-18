@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import tocbot from "tocbot";
 import { toCanvas } from "qrcode";
@@ -245,8 +245,8 @@ const useUpdateBlog: UsePublishType = ({ request, id }) => {
 const useUpdateBlogRead: UseUpdateBlogReadType = (blogId) => {
   const fail = useFailToast();
   const success = useSucessToast();
+  const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.addBlogRead, data: { blogId } }), [blogId]);
   useEffect(() => {
-    const request = createRequest({ method: "post", apiPath: apiName.addBlogRead, data: { blogId } });
     delay(1000, () => {
       request
         .run<ApiRequestResult<string>>()
@@ -259,7 +259,7 @@ const useUpdateBlogRead: UseUpdateBlogReadType = (blogId) => {
         })
         .catch((e) => fail(`更新阅读次数出错, ${e.toString()}`));
     });
-  }, [blogId]);
+  }, [request]);
 };
 
 const useLikeToPayModule: UseLikeToPayModuleType = ({ body, className }) => {
