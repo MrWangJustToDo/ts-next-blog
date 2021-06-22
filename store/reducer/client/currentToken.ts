@@ -1,5 +1,6 @@
 import { produce } from "immer";
 import { Reducer } from "redux";
+import { HYDRATE } from "next-redux-wrapper";
 import { clientAction } from "./action";
 import { actionName } from "config/action";
 import { State, StateAction, StateActionMapType } from "types/store";
@@ -9,6 +10,9 @@ type CurrentState = State<string>;
 const initState: CurrentState = { data: "", error: null, loading: true, loaded: false };
 
 const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<string>) => {
+  if (action.type === HYDRATE) {
+    return action.payload.client[actionName.currentToken];
+  }
   let actionReducer = actionReducerMap[action.type];
   if (actionReducer) {
     return actionReducer(state, action);

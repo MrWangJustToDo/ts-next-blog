@@ -1,7 +1,9 @@
 import { ServerError } from "server/utils/error";
+import { createRequest } from "utils/fetcher";
 import { insertUser } from "server/database/insert";
 import { getAuthorByUserId, getUserByUser, getUserByUserId, getUsersExByUserId } from "server/database/get";
 import { autoRequestHandler, success, fail, transformHandler, catchHandler } from "server/middleware/apiHandler";
+import { IpaddressProps } from "types/hook";
 
 // 用户登录请求
 const loginAction = autoRequestHandler({
@@ -35,6 +37,16 @@ const autoLoginAction = transformHandler(
     } else {
       fail({ res, statuCode: 200, resDate: { state: "自动登录失败" } });
     }
+  })
+);
+
+const autoGetIp = transformHandler(
+  catchHandler(({ req, res }) => {
+    const request = createRequest({ path: process.env.NEXT_PUBLIC_IPADDRESS, header: req.headers, data: req.body });
+    request
+      .run<IpaddressProps>()
+      .then((data) => success({ res, resDate: { data } }))
+      .catch((e) => fail({ res, resDate: { data: e.toString() } }));
   })
 );
 
@@ -95,4 +107,4 @@ const getAuthorByUserIdAction = autoRequestHandler({
   paramsConfig: { fromQuery: ["userId"] },
 });
 
-export { loginAction, logoutAction, autoLoginAction, registerAction, getUserByUserIdAction, getUserExByUserIdAction, getAuthorByUserIdAction };
+export { loginAction, logoutAction, autoLoginAction, autoGetIp, registerAction, getUserByUserIdAction, getUserExByUserIdAction, getAuthorByUserIdAction };

@@ -1,5 +1,6 @@
 import { AxiosRequestConfig, Method } from "axios";
 import { apiName } from "config/api";
+import { IncomingHttpHeaders } from "http";
 import { RefObject } from "react";
 
 /* delay */
@@ -98,7 +99,7 @@ interface AutoRequestProps {
   path?: string;
   apiPath?: apiName;
   query?: QueryProps | string | false;
-  header?: HeaderProps | string | false;
+  header?: IncomingHttpHeaders | HeaderProps | string | false;
   data?: object | string | false;
   cache?: boolean;
   cacheTime?: number;

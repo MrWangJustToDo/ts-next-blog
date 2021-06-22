@@ -10,6 +10,7 @@ enum apiName {
   type = "type", // 获取type页面数据apiName
   tag = "tag", // 获取tag页面数据apiName
   // 用户信息
+  ip = "ip",
   login = "login", // 登录
   author = "author",
   logout = "logout", // 登出
@@ -56,6 +57,7 @@ const cacheApi = [apiName.home, apiName.userEx, apiName.user, apiName.type, apiN
 // 响应配置
 const accessApi: AccessType = {
   // 用户信息
+  [apiName.ip]: { disable: false, method: "get", token: false },
   [apiName.autoLogin]: { disable: false, token: false },
   [apiName.login]: { disable: false, token: false, method: "post" },
   [apiName.logout]: { disable: false, token: false },

@@ -12,12 +12,12 @@ import { useCurrentState } from "./useBase";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSucessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
-import { UserProps, UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType, UseUserRequest } from "types/hook";
+import { UserProps, UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType, UseUserRequest, IpaddressProps } from "types/hook";
 
 // 自动登录
 const useAutoLogin: UseAutoLoginType = () => {
   const { dispatch, state } = useCurrentState();
-  const user = state.client[actionName.currentUser]["data"];
+  const { userId } = <UserProps>state.client[actionName.currentUser]["data"];
   const loginRequest = useMemo(() => createRequest({ header: { apiToken: true }, apiPath: apiName.autoLogin, cache: false }), []);
   const autoLoginCallback = useCallback(
     () =>
@@ -34,12 +34,33 @@ const useAutoLogin: UseAutoLoginType = () => {
     []
   );
   useAutoActionHandler({
-    timmer: Boolean(user.userId),
+    timmer: Boolean(userId),
     once: false,
     rightNow: true,
     delayTime: 1000 * 60 * 10,
     action: autoLoginCallback,
-    // actionState: Boolean(user.userId),
+  });
+};
+
+const useAutoGetIp = () => {
+  const { dispatch, state } = useCurrentState();
+  const { country } = <IpaddressProps>state.client[actionName.currentUser]["data"];
+  const getIp = useMemo(() => createRequest({ header: { apiToken: true }, apiPath: apiName.ip, cache: false }), []);
+  const autoGetIpCallback = useCallback(() => {
+    getIp
+      .run<ApiRequestResult<IpaddressProps>>()
+      .then(({ code, data }) => {
+        if (code === 0) {
+          dispatch(setDataSucess_client({ name: actionName.currentIp, data }));
+        } else {
+          dispatch(setDataFail_client({ name: actionName.currentIp, data: {} }));
+        }
+      })
+      .catch(() => {});
+  }, []);
+  useAutoActionHandler({
+    rightNow: !country,
+    action: autoGetIpCallback,
   });
 };
 
@@ -135,4 +156,4 @@ const useUserRequest: UseUserRequest = (props = {}) => {
   );
 };
 
-export { useAutoLogin, useCurrentUser, useLogin, useLogout, useUserRequest };
+export { useAutoLogin, useAutoGetIp, useCurrentUser, useLogin, useLogout, useUserRequest };

@@ -7,6 +7,18 @@ import { AutoRequestProps, AutoRequestType } from "./utils";
 import { ChildMessageProps, LoadingBarProps, OverlayProps, ToastProps } from "./components";
 import { actionName } from "config/action";
 
+// from http://ip-api.com/json/
+interface IpaddressProps {
+  country?: string;
+  countryCode?: string;
+  region?: string;
+  city?: string;
+  lat?: number;
+  lon?: number;
+  timezone?: string;
+  query?: string;
+}
+
 interface UserProps {
   ip?: string;
   userId?: string;
@@ -55,9 +67,9 @@ interface BlogProps {
   blogCommentState?: number;
 }
 
-type BlogContentProps = UserProps & BlogProps & TypeProps & TagProps;
+type BlogContentProps = UserProps & BlogProps & TypeProps & TagProps & IpaddressProps;
 
-export type { UserProps, TypeProps, TagProps, BlogProps, BlogContentProps };
+export type { UserProps, TypeProps, TagProps, BlogProps, BlogContentProps, IpaddressProps };
 
 /* useAnimate */
 type animateCallback = () => void | Promise<void>;
