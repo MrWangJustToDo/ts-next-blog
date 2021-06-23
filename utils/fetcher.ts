@@ -41,7 +41,7 @@ const autoAssignParams = (oldParams: string | false | object | undefined, newPar
 };
 
 const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
-  const { method, path, apiPath, query, data, header, cache = true, cacheTime } = props;
+  const { method, path, apiPath, query, data, header, cache = true, cacheKey, cacheTime } = props;
 
   const tempPath = apiPath ? apiPath : path;
 
@@ -60,6 +60,8 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     const newCache = props.cache === false ? false : cache;
 
+    const newCacheKey = props.cacheKey || cacheKey;
+
     const newCacheTime = props.cacheTime || cacheTime;
 
     return createRequest({
@@ -70,7 +72,8 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
       data: newData,
       header: newHeader,
       cache: newCache,
-      cacheTime: newCacheTime
+      cacheKey: newCacheKey,
+      cacheTime: newCacheTime,
     });
   };
 
@@ -83,14 +86,16 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     const targetQuery = autoAssignParams(query, currentQuery);
 
-    const relativePath = targetPath.startsWith("http")
+    const targetRelativePath = targetPath.startsWith("http")
       ? transformPath({ path: targetPath, query: targetQuery })
       : transformPath({ apiPath: targetPath as apiName, query: targetQuery });
 
+    const targetCacheKey = cacheKey || targetRelativePath;
+
     if (isBrowser && cache) {
-      const target = cacheResult.get(relativePath);
+      const target = cacheResult.get(targetCacheKey);
       if (target) {
-        log(`get data from cache, key: ${relativePath}, path: ${targetPath}, apiName: ${apiPath}`, "normal");
+        log(`get data from cache, key: ${targetCacheKey}, path: ${targetPath}, apiName: ${apiPath}`, "normal");
         return Promise.resolve(<T>target);
       }
     }
@@ -104,16 +109,19 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
     const requestPromise: Promise<AxiosResponse<T>> = instance({
       method: currentMethod,
       headers: currentHeader,
-      url: relativePath,
+      url: targetRelativePath,
       data: currentData,
     });
 
     if (isBrowser && cache) {
-      return requestPromise.then((res) => res.data).then((resData) => (cacheResult.set(relativePath, resData, cacheTime), resData));
+      return requestPromise.then((res) => res.data).then((resData) => (cacheResult.set(targetCacheKey, resData, cacheTime), resData));
     } else {
       return requestPromise.then((res) => res.data);
     }
   };
+
+  autoRequest.cache = cacheResult;
+
   return autoRequest;
 };
 

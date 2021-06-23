@@ -16,30 +16,31 @@ const ManageDeleteBlogItem: BlogContentType = (props) => {
   const filter = useFilterResult({ currentBlogId: props.blogId! });
 
   const request = useUserRequest({
+    cache: false,
     method: "delete",
+    header: { apiToken: true },
     apiPath: apiName.deleteBlog,
     data: { blogId: props.blogId, typeId: props.typeId, tagId: props.tagId },
-    header: { apiToken: true },
   });
 
-  const successCallback = useCallback(() => {
-    mutate(apiName.home);
+  const successHandler = useCallback(() => {
     filter();
-  }, [filter]);
+    mutate(apiName.home);
+  }, []);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ request, item, successCallback }) =>
-      (close) =>
-        <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
+    ({ request, deleteItem, successHandler }) =>
+      (closeHandler) =>
+        <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
     []
   );
 
   const click = useManageToDeleteModule({
     title: "确认删除博客",
-    item: <BlogItem {...props} className={getClass("border rounded m-2", style.deleteBlogItem)} />,
+    deleteItem: <BlogItem {...props} className={getClass("border rounded m-2", style.deleteBlogItem)} />,
     body,
     request,
-    successCallback,
+    successHandler,
   });
 
   return (

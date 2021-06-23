@@ -1,7 +1,8 @@
-import { AxiosRequestConfig, Method } from "axios";
-import { apiName } from "config/api";
+// import { RefObject } from "react";
 import { IncomingHttpHeaders } from "http";
-import { RefObject } from "react";
+import { AxiosRequestConfig, Method } from "axios";
+import { Cache } from "utils/cache";
+import { apiName } from "config/api";
 
 /* delay */
 interface Cancel {
@@ -29,13 +30,7 @@ interface ActionHandlerType {
 
 interface JudgeActioProps<T> {
   element: T;
-  judge: boolean | Promise<boolean> | (() => boolean) | (() => Promise<boolean>);
-  successClassName: string;
-  successMessage: RefObject<string>;
-  failClassName: string;
-  failMessage: RefObject<{ current: string }>;
-  successCallback?: () => void;
-  failCallback?: () => void;
+  judge: () => Promise<{ className: string; message: string; needHandle?: boolean }>;
 }
 
 interface JudgeActionType {
@@ -102,6 +97,7 @@ interface AutoRequestProps {
   header?: IncomingHttpHeaders | HeaderProps | string | false;
   data?: object | string | false;
   cache?: boolean;
+  cacheKey?: string;
   cacheTime?: number;
 }
 interface ApiRequestResult<T> {
@@ -116,6 +112,7 @@ interface CreateRequestType {
 interface AutoRequestType {
   (props?: AutoRequestProps): AutoRequestType;
   run: <T>(path?: string, query?: QueryProps | string) => Promise<T>;
+  cache: Cache<string, any>;
 }
 
 export type { AutoRequestProps, ApiRequestResult, CreateRequestType, AutoRequestType };

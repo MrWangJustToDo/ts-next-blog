@@ -7,44 +7,53 @@ import { apiName } from "config/api";
 import { getClass } from "utils/dom";
 import ManageDeleteModule from "./manageDeleteModule";
 import { UseManageToDeleteModuleBody } from "types/hook";
-import { ManageDeleteTagItemType } from "types/containers";
+import { ManageDeleteTagButtonType, ManageDeleteTagItemType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const ManageDeleteTagItem: ManageDeleteTagItemType = ({ tagId, tagContent, tagCount }) => {
+const ManageDeleteTagButton: ManageDeleteTagButtonType = ({ deleteItem, tagId }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteTag, data: { deleteTag: tagId } });
 
+  const successHandler = useCallback(() => {
+    request.cache.deleteRightNow(apiName.tag);
+    mutate(apiName.tag);
+  }, [request]);
+
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ request, item, successCallback }) =>
-      (close) =>
-        <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
+    ({ request, deleteItem, successHandler }) =>
+      (closeHandler) =>
+        <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
     []
   );
 
-  const successCallback = useCallback(() => mutate(apiName.tag), []);
-
   const click = useManageToDeleteModule({
     title: "确认删除",
-    item: (
+    deleteItem: (
       <div className="text-center">
         <hr />
-        <TagItem hoverAble={false} key={tagId} tagContent={tagContent!} tagCount={tagCount!} />
+        {deleteItem}
         <hr />
       </div>
     ),
     body,
     request,
-    successCallback,
+    successHandler,
   });
 
   return (
+    <i
+      className={getClass("position-absolute ri-close-circle-fill", style.closeIcon)}
+      style={{ left: "calc(100% - 8px)", bottom: "calc(100% - 8px)" }}
+      onClick={click}
+    />
+  );
+};
+
+const ManageDeleteTagItem: ManageDeleteTagItemType = ({ tagId, tagContent, tagCount }) => {
+  return (
     <div className="m-2 position-relative">
       <TagItem hoverAble={false} key={tagId} tagContent={tagContent!} tagCount={tagCount!} />
-      <i
-        className={getClass("position-absolute ri-close-circle-fill", style.closeIcon)}
-        style={{ left: "calc(100% - 8px)", bottom: "calc(100% - 8px)" }}
-        onClick={click}
-      />
+      <ManageDeleteTagButton deleteItem={<TagItem hoverAble={false} key={tagId} tagContent={tagContent!} tagCount={tagCount!} />} tagId={tagId!} />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { ActionHandlerType, JudgeActionType, JudgeActioProps, LoadingActionProps, LoadingActionType } from "types/utils";
+import { log } from "./log";
 
 const actionHandler: ActionHandlerType = (element, action, otherAction) => {
   if (element) {
@@ -15,40 +16,19 @@ const removeElements = (element: HTMLElement) =>
     Array.from(eles).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove())
   );
 
-const judgeAction: JudgeActionType = async <T extends HTMLElement>({
-  element,
-  judge,
-  successClassName,
-  successMessage,
-  failClassName,
-  failMessage,
-  successCallback,
-  failCallback,
-}: JudgeActioProps<T>) => {
-  const judgeResult = typeof judge === "function" ? await judge() : judge;
+const judgeAction: JudgeActionType = async <T extends HTMLElement>({ element, judge }: JudgeActioProps<T>) => {
   removeElements(element);
-  const span = document.createElement("span");
-  span.setAttribute("toast", "true");
-  if (judgeResult) {
-    span.textContent = successMessage.current;
-    const successClassNameArr = successClassName.split(" ");
-    span.classList.add(...successClassNameArr);
-    if (successCallback) {
-      successCallback();
-    }
+  const { message, className, needHandle = true } = (await judge()) || {};
+  if (needHandle) {
+    const span = document.createElement("span");
+    span.setAttribute("toast", "true");
+
+    span.textContent = message;
+    span.classList.add(...className.split(" "));
+    actionHandler<T, void, void>(element, (ele) => ele.parentElement?.appendChild(span));
   } else {
-    if (typeof failMessage.current === "object") {
-      span.textContent = failMessage.current?.current || "fail";
-    } else {
-      span.textContent = failMessage.current;
-    }
-    const failClassNameArr = failClassName.split(" ");
-    span.classList.add(...failClassNameArr);
-    if (failCallback) {
-      failCallback();
-    }
+    log(`cancel current state from judgeAction`, "normal");
   }
-  actionHandler<T, void, void>(element, (ele) => ele.parentElement?.appendChild(span));
 };
 
 const loadingAction: LoadingActionType = <T extends HTMLElement>({ element, loadingClassName }: LoadingActionProps<T>) => {

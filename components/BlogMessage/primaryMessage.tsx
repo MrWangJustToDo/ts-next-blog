@@ -21,6 +21,8 @@ const PrimaryMessage: PrimaryMessageType = (props) => {
     replayHandler,
     withHover = true,
     withReplay = true,
+    withUpdate = true,
+    withDelete = true,
     withChildren = true,
   } = props;
 
@@ -43,11 +45,14 @@ const PrimaryMessage: PrimaryMessageType = (props) => {
           <span className="float-right badge badge-primary align-middle">{modifyState ? "更新于：" : "回复于：" + momentTo(modifyDate)}</span>
         </h5>
         <p className="mb-2 mb-md-3">{content}</p>
-        {withReplay && (
-          <button className={getClass("btn btn-outline-info", style.replay)} onClick={replayCallback}>
-            回复
-          </button>
-        )}
+        <div>
+          {withReplay && (
+            <button className={getClass("btn btn-outline-info", style.replay)} onClick={replayCallback}>
+              回复
+            </button>
+          )}
+          <button className={"btn btn-sm btn-outline-danger"}>更新</button>
+        </div>
         {withChildren && children}
       </div>
     </div>

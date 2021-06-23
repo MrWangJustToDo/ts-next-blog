@@ -1,27 +1,19 @@
 import { useCallback } from "react";
+import { mutate } from "swr";
 import { apiName } from "config/api";
 import ManageAddModule from "./manageAddModule";
 import { useUserRequest } from "hook/useUser";
 import { useManageToAddModule } from "hook/useManage";
 import { SimpleElement } from "types/components";
-import { UseManageToAddModuleBody } from "types/hook";
+import { ManageAddButtonBody, ManageAddButtonTypes } from "types/containers";
 
-const ManageAddTypeButton: SimpleElement = () => {
-  const request = useUserRequest({ method: "post", apiPath: apiName.addType });
-
-  const body = useCallback<UseManageToAddModuleBody>(
-    ({ requestApiName, request, judgeApiName }) =>
-      (closeHandler) =>
-        <ManageAddModule requestApiName={requestApiName} fieldname="typeContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} />,
-    []
-  );
-
+const ManageAddTypeButton: ManageAddButtonTypes = ({ request, successHandler, body }) => {
   const click = useManageToAddModule({
+    body,
     request,
     title: "添加分类",
+    successHandler,
     judgeApiName: apiName.checkType,
-    requestApiName: apiName.type,
-    body,
   });
 
   return (
@@ -31,4 +23,22 @@ const ManageAddTypeButton: SimpleElement = () => {
   );
 };
 
-export default ManageAddTypeButton;
+const ManageAddTypeButtonWrapper: SimpleElement = () => {
+  const request = useUserRequest({ method: "post", apiPath: apiName.addType, cache: false });
+
+  const successHandler = useCallback(() => {
+    request.cache.deleteRightNow(apiName.type);
+    mutate(apiName.type);
+  }, [request]);
+
+  const body = useCallback<ManageAddButtonBody>(
+    ({ request, judgeApiName, successHandler }) =>
+      (closeHandler) =>
+        <ManageAddModule fieldname="typeContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} successHandler={successHandler} />,
+    []
+  );
+
+  return <ManageAddTypeButton request={request} body={body} successHandler={successHandler} />;
+};
+
+export default ManageAddTypeButtonWrapper;

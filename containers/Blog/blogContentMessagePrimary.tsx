@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import PageFoot from "components/PageFoot";
 import LoadRender from "components/LoadRender";
 import { PrimaryMessage } from "components/BlogMessage";
@@ -24,15 +24,17 @@ const BlogContentPrimaryMessageWithReplay: BlogContentPrimaryMessageWithReplayTy
     <>
       <div className="card-body">
         {currentPageData.map((item) => (
-          <PrimaryMessage key={item.commentId} {...item} replayHandler={replay}>
-            <LoadRender<ChildMessageProps[]>
-              token
-              revalidateOnFocus={false}
-              apiPath={apiName.childMessage}
-              query={{ primaryCommentId: String(item.commentId) }}
-              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} primaryCommentId={item.commentId} /> : null)}
-            />
-          </PrimaryMessage>
+          <div key={item.commentId}>
+            <PrimaryMessage {...item} replayHandler={replay}>
+              <LoadRender<ChildMessageProps[]>
+                token
+                revalidateOnFocus={false}
+                apiPath={apiName.childMessage}
+                query={{ primaryCommentId: String(item.commentId) }}
+                loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} primaryCommentId={item.commentId} /> : null)}
+              />
+            </PrimaryMessage>
+          </div>
         ))}
       </div>
       <PageFoot

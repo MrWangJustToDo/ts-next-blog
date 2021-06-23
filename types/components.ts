@@ -77,6 +77,8 @@ interface PrimaryMessageProps {
   children?: JSX.Element;
 
   withReplay?: boolean;
+  withUpdate?: boolean;
+  withDelete?: boolean;
   withChildren?: boolean;
   withHover?: boolean;
 
@@ -388,7 +390,7 @@ export type { BarType };
 
 /* === LoadRender */
 import { Method } from "axios";
-import { QueryProps } from "./utils";
+import { AutoRequestType, QueryProps } from "./utils";
 
 /* index */
 interface LoadRenderProps<T> {
@@ -403,8 +405,7 @@ interface LoadRenderProps<T> {
   initialData?: T;
   needUpdate?: boolean;
   needinitialData?: boolean;
-  fetcher?: (...args: any) => any;
-  loaded: (props: T) => JSX.Element | null;
+  loaded: (props: T, currentRequestKey: string, currentDeleteCache: () => void, fetcher: AutoRequestType) => JSX.Element | null;
   loading?: (props: LoadingProps) => JSX.Element;
   loadError?: (props: any) => JSX.Element;
   placeholder?: { [props: string]: string };
@@ -417,22 +418,33 @@ interface LoadRenderType {
 }
 
 interface RenderProps<T> {
-  currentPath: string | "";
-  currentFetcher: (...args: any) => any;
+  currentRequestPath: string | "";
   currentInitialData?: T;
+  currentRequest: AutoRequestType;
+  loaded: (props: T, currentRequestKey: string, currentDeleteCache: () => void, fetcher: AutoRequestType) => JSX.Element | null;
   loading: (props: LoadingProps) => JSX.Element;
-  loaded: (props: T) => JSX.Element | null;
   loadError: (props: any) => JSX.Element;
   delayTime: number;
   revalidateOnMount: boolean;
   revalidateOnFocus: boolean;
   placeholder?: { [props: string]: string };
-  needUpdate: boolean;
   apiPath?: apiName;
+  needUpdate: boolean;
 }
 
 interface RenderType {
   <T>(props: RenderProps<T>): JSX.Element | null;
+}
+
+interface UseLoadingProps {
+  loading: (props: LoadingProps) => JSX.Element;
+  placeholder?: { [props: string]: string };
+  delayTime: number;
+  currentRequestPath: string;
+}
+
+interface UseLoadingType {
+  (props: UseLoadingProps): JSX.Element | null;
 }
 
 interface GetCurrentInitialDataProps<T> {
@@ -442,7 +454,7 @@ interface GetCurrentInitialDataProps<T> {
 }
 
 interface GetCurrentInitialDataType {
-  <T>(props: GetCurrentInitialDataProps<T>): { currentInitialData?: T; };
+  <T>(props: GetCurrentInitialDataProps<T>): { currentInitialData?: T };
 }
 
 interface AutoUpdateStateProps<T> {
@@ -456,7 +468,7 @@ interface AutoUpdateStateType {
   <T>(props: AutoUpdateStateProps<T>): void;
 }
 
-export type { LoadRenderProps, LoadRenderType, RenderProps, RenderType, GetCurrentInitialDataType, AutoUpdateStateType };
+export type { LoadRenderProps, LoadRenderType, RenderProps, RenderType, GetCurrentInitialDataType, AutoUpdateStateType, UseLoadingType };
 
 /* loading */
 interface LoadingProps {

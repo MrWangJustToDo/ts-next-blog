@@ -7,44 +7,53 @@ import { apiName } from "config/api";
 import { getClass } from "utils/dom";
 import ManageDeleteModule from "./manageDeleteModule";
 import { UseManageToDeleteModuleBody } from "types/hook";
-import { ManageDeleteTypeItemType } from "types/containers";
+import { ManageDeleteTypeButtonType, ManageDeleteTypeItemType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const ManageDeleteTypeItem: ManageDeleteTypeItemType = ({ typeId, typeContent, typeCount }) => {
+const ManageDeleteTypeButton: ManageDeleteTypeButtonType = ({ deleteItem, typeId }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId } });
 
+  const successHandler = useCallback(() => {
+    request.cache.deleteRightNow(apiName.type);
+    mutate(apiName.type);
+  }, [request]);
+
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ request, item, successCallback }) =>
-      (close) =>
-        <ManageDeleteModule item={item} request={request} close={close} successCallback={successCallback} />,
+    ({ request, deleteItem, successHandler }) =>
+      (closeHandler) =>
+        <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
     []
   );
 
-  const successCallback = useCallback(() => mutate(apiName.type), []);
-
   const click = useManageToDeleteModule({
     title: "确认删除",
-    item: (
+    deleteItem: (
       <div className="text-center">
         <hr />
-        <TypeItem key={typeId} typeContent={typeContent!} typeCount={typeCount!} hoverAble={false} />
+        {deleteItem}
         <hr />
       </div>
     ),
     body,
     request,
-    successCallback,
+    successHandler,
   });
 
   return (
+    <i
+      className={getClass("position-absolute ri-close-circle-fill", style.closeIcon)}
+      style={{ left: "calc(100% - 8px)", bottom: "calc(100% - 8px)" }}
+      onClick={click}
+    />
+  );
+};
+
+const ManageDeleteTypeItem: ManageDeleteTypeItemType = ({ typeId, typeContent, typeCount }) => {
+  return (
     <div className="m-2 position-relative">
       <TypeItem key={typeId} typeContent={typeContent!} typeCount={typeCount!} hoverAble={false} />
-      <i
-        className={getClass("position-absolute ri-close-circle-fill", style.closeIcon)}
-        style={{ left: "calc(100% - 10px)", bottom: "calc(100% - 12px)" }}
-        onClick={click}
-      />
+      <ManageDeleteTypeButton deleteItem={<TypeItem key={typeId} typeContent={typeContent!} typeCount={typeCount!} hoverAble={false} />} typeId={typeId!} />
     </div>
   );
 };

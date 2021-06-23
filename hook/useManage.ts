@@ -61,11 +61,11 @@ const useSearch: UseSearchType = ({ request }) => {
   return [ref, search];
 };
 
-const useManageToAddModule: UseManageToAddModuleType = ({ title, body, request, className, judgeApiName, requestApiName }) => {
+const useManageToAddModule: UseManageToAddModuleType = ({ title, body, request, className, judgeApiName, successHandler }) => {
   const open = useOverlayOpen();
   const click = useCallback(
-    () => open({ head: title, body: body({ request, requestApiName, judgeApiName }), className }),
-    [request, judgeApiName, requestApiName]
+    () => open({ head: title, body: body({ request, successHandler, judgeApiName }), className }),
+    [request, judgeApiName, successHandler]
   );
   return click;
 };
@@ -96,67 +96,76 @@ const useAddRequest: UseAddRequestType = ({ request, successCallback }) => {
 
 const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, successClassName, failClassName, loadingClassName }) => {
   const ref = useRef<HTMLInputElement>(null);
-  const currentRef = forWardRef !== undefined ? forWardRef : ref;
-  const fail = useRef<{ current: string }>({ current: option.fail });
-  const loadingRef = useRef<boolean>(false);
-  const success = useRef<string>(option.success);
-  // 输入验证成败
-  const [bool, setBool] = useState<boolean>(false);
-  // 验证中状态
+  const handleRef = useRef<{ needHandle: { state: boolean } }>({ needHandle: { state: true } });
+  const [state, setState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  loadingRef.current = loading;
+  const currentRef = forWardRef !== undefined ? forWardRef : ref;
   const judge = useCallback(
     debounce(() => {
-      // 多次尝试的状态分离
-      const current = fail.current;
+      // 分离状态
+      const currentNeedHandle = handleRef.current;
       judgeAction<HTMLInputElement>({
         element: currentRef.current!,
-        judge: () => <Promise<boolean>>actionHandler<boolean, Promise<boolean>, Promise<boolean>>(
+        judge: () => <Promise<{ className: string; message: string; state: boolean }>>actionHandler<
+            boolean,
+            Promise<{ className: string; message: string; state: boolean }>,
+            Promise<{ className: string; message: string; state: boolean }>
+          >(
             option.regexp.test(currentRef.current!.value),
-            () => <Promise<boolean>>actionHandler<apiName, Promise<boolean>, Promise<boolean>>(
-                judgeApiName,
-                (apiname) =>
-                  createRequest({ apiPath: apiname, method: "post", data: { [currentRef.current!.name]: currentRef.current!.value }, cache: false })
-                    .run<ApiRequestResult<string>>()
-                    .then(({ code, data }) => {
-                      if (code === 0) {
-                        return true;
-                      } else {
-                        current.current = data.toString();
-                        return false;
-                      }
-                    })
-                    .catch((e) => {
-                      current.current = e.toString();
-                      return false;
-                    }),
-                () => Promise.resolve(true)
+            () =>
+              <Promise<{ className: string; message: string; state: boolean }>>(
+                actionHandler<
+                  apiName,
+                  Promise<{ className: string; message: string; state: boolean }>,
+                  Promise<{ className: string; message: string; state: boolean }>
+                >(
+                  judgeApiName,
+                  (apiname) =>
+                    createRequest({ apiPath: apiname, method: "post", data: { [currentRef.current!.name]: currentRef.current!.value }, cache: false })
+                      .run<ApiRequestResult<string>>()
+                      .then(({ code, data }) => {
+                        if (code === 0) {
+                          return { className: successClassName, message: option.success, state: true };
+                        } else {
+                          return { className: failClassName, message: data.toString(), state: false };
+                        }
+                      })
+                      .catch((e) => {
+                        return { className: failClassName, message: e.toString(), state: false };
+                      }),
+                  () => Promise.resolve({ className: successClassName, message: option.success, state: true })
+                )
               ),
-            () => Promise.resolve(false)
-          ),
-        successMessage: success,
-        successClassName,
-        successCallback: () => {
-          setBool(true);
-          setLoading(false);
-        },
-        failMessage: fail,
-        failClassName,
-        failCallback: () => {
-          setBool(false);
-          setLoading(false);
-        },
+            () => Promise.resolve({ className: failClassName, message: option.fail, state: false })
+          ).then((data) => {
+            if (data && currentNeedHandle.needHandle) {
+              const { state } = data;
+              if (state) {
+                setState(true);
+              } else {
+                setState(false);
+              }
+              setLoading(false);
+            }
+            return data;
+          }),
       });
     }, 800),
     [option, judgeApiName]
   );
   const start = useCallback(() => {
-    if (!loadingRef.current) {
-      setLoading(true);
-      // 重新开始状态
-      fail.current = { current: option.fail };
-      loadingAction({ element: currentRef.current!, loadingClassName });
-    }
+    setLoading((last) => {
+      if (last) {
+        return last;
+      } else {
+        loadingAction({ element: currentRef.current!, loadingClassName });
+        return true;
+      }
+    });
+    // 取消上一个状态
+    handleRef.current.needHandle.state = false;
+    // 重新开始状态
+    handleRef.current = { needHandle: { state: true } };
   }, []);
   const addListenerCallback = useCallback<(action: () => void) => void>(
     (action) => actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.addEventListener("input", action)),
@@ -168,16 +177,16 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
   );
   useAutoActionHandler({ action: start, addListener: addListenerCallback, removeListener: removeListenerCallback });
   useAutoActionHandler({ action: judge, addListener: addListenerCallback, removeListener: removeListenerCallback });
-  return [currentRef, bool];
+  return [currentRef, state, loading];
 };
 
-const useManageToDeleteModule: UseManageToDeleteModuleType = ({ title, body, request, item, successCallback }) => {
+const useManageToDeleteModule: UseManageToDeleteModuleType = ({ title, body, request, deleteItem, successHandler }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body({ request, item, successCallback }) }), [body, request, successCallback]);
+  const click = useCallback(() => open({ head: title, body: body({ request, deleteItem, successHandler }) }), [title, body, request, successHandler]);
   return click;
 };
 
-const useDeleteRequest: UseDeleteRequestType = ({ request, close, successCallback }) => {
+const useDeleteRequest: UseDeleteRequestType = ({ request, closeHandler, successHandler }) => {
   const fail = useFailToast();
   const success = useSucessToast();
   const doRequest = useCallback(
@@ -186,17 +195,15 @@ const useDeleteRequest: UseDeleteRequestType = ({ request, close, successCallbac
         .run<ApiRequestResult<string>>()
         .then(({ code, data }) => {
           if (code === 0) {
-            if (successCallback) {
-              successCallback();
-            }
-            close();
+            successHandler();
+            closeHandler();
             return success("删除成功");
           } else {
             return fail(`删除失败${data}`);
           }
         })
         .catch((e) => fail(`删除出错：${e.toString()}`)),
-    [request, close, successCallback]
+    [request, closeHandler, successHandler]
   );
   return doRequest;
 };

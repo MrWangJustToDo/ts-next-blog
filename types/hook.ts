@@ -2,10 +2,11 @@ import { State } from "store";
 import { MutableRefObject, RefObject } from "react";
 import { AnyAction } from "redux";
 import { apiName } from "config/api";
+import { actionName } from "config/action";
 import { InputProps } from "./config";
+import { ManageAddButtonBody } from "./containers";
 import { AutoRequestProps, AutoRequestType } from "./utils";
 import { ChildMessageProps, LoadingBarProps, OverlayProps, ToastProps } from "./components";
-import { actionName } from "config/action";
 
 // from http://ip-api.com/json/
 interface IpaddressProps {
@@ -311,16 +312,11 @@ export type { UseLoadType };
 interface UseSearchType {
   (props: { request: AutoRequestType }): [RefObject<HTMLFormElement>, () => Promise<void>];
 }
-interface UseManageToAddModuleBody {
-  ({ request, judgeApiName, requestApiName }: { request: AutoRequestType; judgeApiName: apiName; requestApiName: apiName }): (
-    closeHandler: () => void
-  ) => JSX.Element;
-}
 interface UseManageToAddModuleProps {
   title: string;
-  body: UseManageToAddModuleBody;
+  body: ManageAddButtonBody;
+  successHandler: () => void;
   judgeApiName: apiName;
-  requestApiName: apiName;
   request: AutoRequestType;
   className?: string;
 }
@@ -343,16 +339,18 @@ interface UseJudgeInputProps {
   loadingClassName: string;
 }
 interface UseJudgeInputType {
-  (props: UseJudgeInputProps): [RefObject<HTMLInputElement>, boolean];
+  (props: UseJudgeInputProps): [RefObject<HTMLInputElement>, boolean, boolean];
 }
 interface UseManageToDeleteModuleBody {
-  ({ request, item, successCallback }: { request: AutoRequestType; item: JSX.Element; successCallback: () => void }): (close: () => void) => JSX.Element;
+  ({ request, deleteItem, successHandler }: { request: AutoRequestType; deleteItem: JSX.Element; successHandler: () => void }): (
+    closeHandler: () => void
+  ) => JSX.Element;
 }
 interface UseManageToDeleteModuleProps {
   title: string;
-  item: JSX.Element;
+  deleteItem: JSX.Element;
   request: AutoRequestType;
-  successCallback: () => void;
+  successHandler: () => void;
   body: UseManageToDeleteModuleBody;
 }
 interface UseManageToDeleteModuleType {
@@ -360,8 +358,8 @@ interface UseManageToDeleteModuleType {
 }
 interface UseDeleteRequestProps {
   request: AutoRequestType;
-  successCallback: () => void;
-  close: () => void;
+  closeHandler: () => void;
+  successHandler: () => void;
 }
 interface UseDeleteRequestType {
   (props: UseDeleteRequestProps): () => Promise<void>;
@@ -369,7 +367,6 @@ interface UseDeleteRequestType {
 
 export type {
   UseSearchType,
-  UseManageToAddModuleBody,
   UseManageToAddModuleType,
   UseAddRequestType,
   UseJudgeInputType,

@@ -137,7 +137,7 @@ const useLogout: UseLogoutType = () => {
 
 // 自动绑定当前用户的request
 const useUserRequest: UseUserRequest = (props = {}) => {
-  const { method, data, path, apiPath, header, cache } = props;
+  const { method, data, path, apiPath, header, cache, cacheKey, cacheTime } = props;
   const stringdata = autoStringify(data);
   const stringHeader = autoStringify(header);
   const user = useCurrentUser();
@@ -151,8 +151,10 @@ const useUserRequest: UseUserRequest = (props = {}) => {
         apiPath,
         header: stringHeader,
         query: { userId: user.userId! },
+        cacheKey,
+        cacheTime,
       }),
-    [user.userId, stringdata, path, apiPath, stringHeader, method, cache]
+    [user.userId, stringdata, path, apiPath, stringHeader, method, cache, cacheTime, cacheKey]
   );
 };
 

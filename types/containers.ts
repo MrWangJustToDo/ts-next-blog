@@ -231,19 +231,35 @@ export type { PublishSubmitType };
 
 /* === Manage === */
 
-interface ManageUserIdType {
-  (props:{userId: string}): JSX.Element;
+interface ManageAddButtonBody {
+  ({ request, judgeApiName, successHandler }: { request: AutoRequestType; judgeApiName: apiName; successHandler: () => void }): (
+    closeHandler: () => void
+  ) => JSX.Element;
 }
 
-export type {ManageUserIdType}
+interface ManageAddButtonProps {
+  request: AutoRequestType;
+  successHandler: () => void;
+  body: ManageAddButtonBody;
+}
+
+interface ManageAddButtonTypes {
+  (props: ManageAddButtonProps): JSX.Element;
+}
+
+interface ManageUserIdType {
+  (props: { userId: string }): JSX.Element;
+}
+
+export type { ManageAddButtonBody, ManageAddButtonTypes, ManageUserIdType };
 
 /* manageAddModule */
 interface ManageAddModuleProps {
   fieldname: string;
   judgeApiName: apiName;
   request: AutoRequestType;
-  requestApiName: apiName;
   closeHandler: () => void;
+  successHandler: () => void;
 }
 
 interface ManageAddModuleType {
@@ -263,22 +279,28 @@ export type { ManageResultType };
 interface ManageDeleteTagItemType {
   (props: TagProps): JSX.Element;
 }
+interface ManageDeleteTagButtonType {
+  ({ tagId, deleteItem }: { tagId: string; deleteItem: JSX.Element }): JSX.Element;
+}
 
-export type { ManageDeleteTagItemType };
+export type { ManageDeleteTagItemType, ManageDeleteTagButtonType };
 
 /* manageDeleteTypeItem */
 interface ManageDeleteTypeItemType {
   (props: TypeProps): JSX.Element;
 }
+interface ManageDeleteTypeButtonType {
+  ({ typeId, deleteItem }: { typeId: string; deleteItem: JSX.Element }): JSX.Element;
+}
 
-export type { ManageDeleteTypeItemType };
+export type { ManageDeleteTypeItemType, ManageDeleteTypeButtonType };
 
 /* manageDeleteModule */
 interface ManageDeleteModuleProps {
   request: AutoRequestType;
-  item: JSX.Element;
-  close: () => void;
-  successCallback: () => void;
+  deleteItem: JSX.Element;
+  closeHandler: () => void;
+  successHandler: () => void;
 }
 
 interface ManageDeleteModuleType {

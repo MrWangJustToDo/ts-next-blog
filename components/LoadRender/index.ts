@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
 import isEqual from "lodash/isEqual";
@@ -11,7 +11,7 @@ import { autoTransformData } from "utils/data";
 import { autoStringify, createRequest } from "utils/fetcher";
 import { useCurrentState } from "hook/useBase";
 import { getDataSucess_Server } from "store/reducer/server/action";
-import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType, RenderProps, RenderType } from "types/components";
+import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType, RenderProps, RenderType, UseLoadingType } from "types/components";
 
 const useCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath, needinitialData }) => {
   const { state } = useCurrentState();
@@ -27,16 +27,27 @@ const useAutoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiP
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (needUpdate && apiPath && !isEqual(initialData, currentData)) {
+    if (needUpdate && apiPath && currentData && !isEqual(initialData, currentData)) {
       log(`start update store from loadrender, apiPath: ${apiPath}`, "normal");
       dispatch(getDataSucess_Server({ name: apiPath, data: currentData }));
     }
   }, [needUpdate, apiPath, initialData, currentData]);
 };
 
+const useLoading: UseLoadingType = ({ loading, placeholder, delayTime, currentRequestPath }) => {
+  const [loadingEle, setLoadingEle] = useState<JSX.Element | null>(null);
+
+  useEffect(() => {
+    delay(delayTime, () => setLoadingEle(loading({ _style: placeholder, className: "p-4" })), currentRequestPath);
+    return () => cancel(currentRequestPath);
+  }, [delayTime, currentRequestPath]);
+
+  return loadingEle;
+};
+
 const Render: RenderType = <T>({
-  currentPath,
-  currentFetcher,
+  currentRequest,
+  currentRequestPath,
   currentInitialData,
   loading,
   loaded,
@@ -48,52 +59,48 @@ const Render: RenderType = <T>({
   needUpdate,
   apiPath,
 }: RenderProps<T>) => {
-  const [loadingEle, setLoadingEle] = useState<JSX.Element | null>(null);
+  const loadingEle = useLoading({ loading, placeholder, delayTime, currentRequestPath });
 
-  const { data, error }: { data?: any; error?: any } = useSWR(currentPath, currentFetcher, {
+  const { data, error }: { data?: any; error?: any } = useSWR(currentRequestPath, currentRequest.run, {
     initialData: currentInitialData,
     revalidateOnMount,
     revalidateOnFocus,
   });
 
-  useEffect(() => {
-    delay(delayTime, () => setLoadingEle(loading({ _style: placeholder, className: "p-4" })), currentPath);
-    return () => cancel(currentPath!);
-  }, [delayTime, currentPath]);
-
-  const currentData = data ? autoTransformData(data) : null;
+  const currentData = data ? autoTransformData<T, any>(data) : null;
 
   useAutoUpdateState<T>({ needUpdate, initialData: currentInitialData, apiPath, currentData });
+
+  const currentDeleteCache = useCallback(() => currentRequest.cache.deleteRightNow(currentRequestPath), [currentRequest, currentRequestPath]);
 
   if (error) return loadError(error.toString());
 
   if (currentInitialData || currentData) {
     // make soure not flash if data loaded
-    cancel(currentPath);
+    cancel(currentRequestPath);
 
-    return loaded(currentData ? currentData : currentInitialData);
+    return loaded(currentData ? currentData : currentInitialData, currentRequestPath, currentDeleteCache, currentRequest);
   }
 
   return loadingEle;
 };
 
 const LoadRender: LoadRenderType = <T>({
-  method,
   path,
-  apiPath,
   query,
+  method,
+  apiPath,
   cacheTime,
-  fetcher,
   requestData,
   initialData,
   loaded,
+  loading = Loading,
+  loadError = loadingError,
   placeholder,
   token = false,
   delayTime = 260,
-  loading = Loading,
   needUpdate = false,
   needinitialData = false,
-  loadError = loadingError,
   revalidateOnMount = true,
   revalidateOnFocus = true,
 }: LoadRenderProps<T>) => {
@@ -105,18 +112,16 @@ const LoadRender: LoadRenderType = <T>({
 
   const currentHeaderToken = token ? autoStringify({ apiToken: token }) : false;
 
-  const defaultFetcher = useMemo(
-    () => createRequest({ method, query: false, data: currentRequestData, header: currentHeaderToken, apiPath, cacheTime }),
-    [apiPath, currentRequestData, currentHeaderToken, cacheTime]
-  );
+  const currentRequestPath = query ? transformPath({ path, apiPath, query, needPre: false }) : currentPath!;
 
-  const currentFetcher = fetcher ? fetcher : defaultFetcher.run;
+  const currentRequest = useMemo(
+    () => createRequest({ method, query: false, data: currentRequestData, header: currentHeaderToken, apiPath, cacheTime, cacheKey: currentRequestPath }),
+    [apiPath, currentRequestData, currentHeaderToken, currentRequestPath, cacheTime]
+  );
 
   const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needinitialData });
 
-  const currentRequestPath = query ? transformPath({ path, apiPath, query, needPre: false }) : currentPath!;
-
-  return Render({
+  return Render<T>({
     loadError,
     loaded,
     loading,
@@ -126,9 +131,9 @@ const LoadRender: LoadRenderType = <T>({
     placeholder,
     revalidateOnFocus,
     revalidateOnMount,
+    currentRequest,
     currentInitialData,
-    currentFetcher,
-    currentPath: currentRequestPath,
+    currentRequestPath,
   });
 };
 

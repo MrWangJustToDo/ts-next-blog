@@ -2,14 +2,14 @@ import { produce } from "immer";
 import { Reducer } from "redux";
 import { clientAction } from "./action";
 import { actionName } from "config/action";
-import { UserProps } from "types/hook";
+import { UserProps, IpaddressProps } from "types/hook";
 import { State, StateAction, StateActionMapType } from "types/store";
 
-type CurrentState = State<UserProps>;
+type CurrentState = State<UserProps & IpaddressProps>;
 
 const initState: CurrentState = { data: {}, error: null, loading: true, loaded: false };
 
-const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<UserProps>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<UserProps & IpaddressProps>) => {
   let actionReducer = actionReducerMap[action.type];
   if (actionReducer) {
     return actionReducer(state, action);
@@ -18,7 +18,7 @@ const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action:
   }
 };
 
-const actionReducerMap: StateActionMapType<UserProps> = {
+const actionReducerMap: StateActionMapType<UserProps & IpaddressProps> = {
   [clientAction.SETDATALOADING(actionName.currentUser)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};
