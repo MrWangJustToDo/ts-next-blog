@@ -5,16 +5,11 @@ const transformPath: TransformPathType = ({ path, apiPath, query, needPre = true
   if (!path && !apiPath) {
     log(`transform path not exist`, "warn");
     return "";
+  } else if (path && apiPath) {
+    log(`multiple path discover. path: ${path}, apiPath: ${apiPath}`, "error");
   }
   let currentPath = "";
-  if (path) {
-    if (!path.startsWith("http")) {
-      log(`Incomplete path! third part request, path : ${path}`, "warn");
-    } else {
-      log(`third part link : ${path}`, "normal");
-    }
-    currentPath = path;
-  } else if (apiPath) {
+  if (apiPath) {
     currentPath = apiPath;
     if (!currentPath.startsWith("/")) {
       currentPath = "/" + apiPath;
@@ -28,6 +23,13 @@ const transformPath: TransformPathType = ({ path, apiPath, query, needPre = true
         currentPath = "http://" + currentPath;
       }
     }
+  } else if (path) {
+    if (!path.startsWith("http")) {
+      log(`Incomplete path! third part link, path : ${path}`, "warn");
+    } else {
+      log(`third part link, path ${path}`, "normal");
+    }
+    currentPath = path;
   }
   if (query) {
     if (!currentPath.includes("?")) {

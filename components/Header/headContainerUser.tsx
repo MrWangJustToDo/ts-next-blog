@@ -16,12 +16,11 @@ const HeadContainerUser = () => {
 
   const { username, avatar, gender, userId } = useCurrentUser();
 
-  const { bool, switchBoolDebounce, hideDebounceState } = useBool();
+  const { bool, switchBoolDebounce, hideDebounce } = useBool();
 
   const logoutCallback = useCallback(() => {
-    logout();
-    hideDebounceState();
-  }, [logout, hideDebounceState]);
+    logout().then(hideDebounce);
+  }, [logout, hideDebounce]);
 
   const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({
     state: bool,
@@ -39,12 +38,12 @@ const HeadContainerUser = () => {
         <div className={getClass("position-absolute", style.hoverTriangle)} />
         <div className={getClass("position-absolute d-flex", style.controlPanel)}>
           <Link href="/publish">
-            <a className="small text-info text-decoration-none text-nowrap" onClick={hideDebounceState}>
+            <a className="small text-info text-decoration-none text-nowrap" onClick={hideDebounce}>
               写博客
             </a>
           </Link>
           <Link href="/manage">
-            <a className="small text-info text-decoration-none text-nowrap" onClick={hideDebounceState}>
+            <a className="small text-info text-decoration-none text-nowrap" onClick={hideDebounce}>
               管理
             </a>
           </Link>

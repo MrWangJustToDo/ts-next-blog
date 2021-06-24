@@ -1,4 +1,3 @@
-// import { RefObject } from "react";
 import { IncomingHttpHeaders } from "http";
 import { AxiosRequestConfig, Method } from "axios";
 import { Cache } from "utils/cache";
@@ -57,7 +56,7 @@ interface PendingType {
   cancel: Function;
 }
 interface RemovePendingType {
-  (props: AxiosRequestConfig): void;
+  (props: AxiosRequestConfig, isRequest?: boolean): void;
 }
 
 export type { PendingType, RemovePendingType };
@@ -97,7 +96,6 @@ interface AutoRequestProps {
   header?: IncomingHttpHeaders | HeaderProps | string | false;
   data?: object | string | false;
   cache?: boolean;
-  cacheKey?: string;
   cacheTime?: number;
 }
 interface ApiRequestResult<T> {
@@ -111,8 +109,10 @@ interface CreateRequestType {
 }
 interface AutoRequestType {
   (props?: AutoRequestProps): AutoRequestType;
-  run: <T>(path?: string, query?: QueryProps | string) => Promise<T>;
+  run: <T>() => Promise<T>;
   cache: Cache<string, any>;
+  cacheKey: string;
+  deleteCache: () => void;
 }
 
 export type { AutoRequestProps, ApiRequestResult, CreateRequestType, AutoRequestType };

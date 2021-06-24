@@ -5,16 +5,19 @@ import { PrimaryMessage } from "components/BlogMessage";
 import { apiName } from "config/api";
 import { primaryMessageLength } from "config/message";
 import { useBasePage } from "hook/useBase";
-import { useMessageToReplayModule } from "hook/useMessage";
+import { useUserRequest } from "hook/useUser";
+import { useMessageToReplayModule, useMessageToDeleteModule, useMessageToUpdateModule } from "hook/useMessage";
 import BlogContentChildMessage from "./blogContentMessageChild";
 import BlogContentReplayModule from "./blogContentReplayModule";
-import { UseMessageToReplayModuleBody } from "types/hook";
+import BlogContentDeleteModule from "./blogContentDeleteModule";
+import BlogContentUpdateModule from "./blogContentUpdateModule";
+import { UseMessageToModuleBody } from "types/hook";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
-import { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWithReplayType } from "types/containers";
+import { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWrapperType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const BlogContentPrimaryMessageWithReplay: BlogContentPrimaryMessageWithReplayType = ({ messages, replay }) => {
+const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, primaryReplay, primaryDelete, primaryUpdate }) => {
   const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageData } = useBasePage<PrimaryMessageProps>({
     pageLength: primaryMessageLength,
     data: messages,
@@ -24,17 +27,23 @@ const BlogContentPrimaryMessageWithReplay: BlogContentPrimaryMessageWithReplayTy
     <>
       <div className="card-body">
         {currentPageData.map((item) => (
-          <div key={item.commentId}>
-            <PrimaryMessage {...item} replayHandler={replay}>
-              <LoadRender<ChildMessageProps[]>
-                token
-                revalidateOnFocus={false}
-                apiPath={apiName.childMessage}
-                query={{ primaryCommentId: String(item.commentId) }}
-                loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} primaryCommentId={item.commentId} /> : null)}
-              />
-            </PrimaryMessage>
-          </div>
+          <PrimaryMessage
+            {...item}
+            key={item.commentId}
+            replayHandler={primaryReplay}
+            withDelete
+            deleteHandler={primaryDelete}
+            withUpdate
+            updateHandler={primaryUpdate}
+          >
+            <LoadRender<ChildMessageProps[]>
+              token
+              revalidateOnFocus={false}
+              apiPath={apiName.childMessage}
+              query={{ primaryCommentId: item.commentId }}
+              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} /> : null)}
+            />
+          </PrimaryMessage>
         ))}
       </div>
       <PageFoot
@@ -49,31 +58,76 @@ const BlogContentPrimaryMessageWithReplay: BlogContentPrimaryMessageWithReplayTy
   );
 };
 
-const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages }) => {
-  const body = useCallback<UseMessageToReplayModuleBody<PrimaryMessageProps>>(
-    ({ request, props }) =>
+const BlogContentPrimaryMessageReplay = () => {
+  const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage, cache: false });
+
+  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
+    ({ props }) =>
       (closeHandler) =>
         (
           <>
-            <PrimaryMessage {...props} withReplay={false} withChildren={false} withHover={false} />
-            <BlogContentReplayModule
-              request={request}
-              closeHandler={closeHandler}
-              primaryCommentId={props.commentId}
-              toUserId={props.fromUserId!}
-              toIp={props.fromIp}
-            />
+            <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+            <BlogContentReplayModule request={request} closeHandler={closeHandler} props={props} />
           </>
         ),
     []
   );
 
-  const replay = useMessageToReplayModule<PrimaryMessageProps>({
+  const primaryReplay = useMessageToReplayModule<PrimaryMessageProps>({
     body,
     className: style.replayModule,
   });
 
-  return <BlogContentPrimaryMessageWithReplay messages={messages} replay={replay} />;
+  return primaryReplay;
 };
 
-export default BlogContentPrimaryMessage;
+const BlogContentPrimaryMessageDelete = () => {
+  const request = useUserRequest({ method: "delete", apiPath: apiName.deletePrimaryMessage, cache: false, header: { apiToken: true } });
+
+  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
+    ({ props }) =>
+      (closeHandler) =>
+        (
+          <>
+            <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+            <BlogContentDeleteModule<PrimaryMessageProps> request={request} closeHandler={closeHandler} props={props} />
+          </>
+        ),
+    []
+  );
+
+  const primaryDelete = useMessageToDeleteModule<PrimaryMessageProps>({ body, className: style.deleteModule });
+
+  return primaryDelete;
+};
+
+const BlogContentPrimaryMessageUpdate = () => {
+  const request = useUserRequest({ method: "post", apiPath: apiName.updatePrimaryMessage, cache: false, header: { apiToken: true } });
+
+  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
+    ({ props }) =>
+      (closeHandler) => {
+        return (
+          <>
+            <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+            <BlogContentUpdateModule request={request} props={props} closeHandler={closeHandler} />
+          </>
+        );
+      },
+    []
+  );
+
+  const primaryUpdate = useMessageToUpdateModule({ body, className: style.updateModule });
+
+  return primaryUpdate;
+};
+
+const BlogContentPrimaryMessageWrapper: BlogContentPrimaryMessageWrapperType = ({ messages }) => {
+  const primaryReplay = BlogContentPrimaryMessageReplay();
+  const primaryDelete = BlogContentPrimaryMessageDelete();
+  const primaryUpdate = BlogContentPrimaryMessageUpdate();
+
+  return <BlogContentPrimaryMessage messages={messages} primaryReplay={primaryReplay} primaryDelete={primaryDelete} primaryUpdate={primaryUpdate} />;
+};
+
+export default BlogContentPrimaryMessageWrapper;

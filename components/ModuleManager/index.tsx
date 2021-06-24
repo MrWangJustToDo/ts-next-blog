@@ -21,14 +21,14 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
   );
   return (
     <>
-      <div id="toast" className="position-fixed" style={{ right: "10px", top: "15px", zIndex: 999 }} data-show={toast.length > 0}>
+      <div id="page-toast" className="position-fixed" style={{ right: "10px", top: "15px", zIndex: 999 }} data-show={toast.length > 0}>
         {toast.map((props) => (
           <Toast key={props.currentTime?.getTime()} {...props} />
         ))}
       </div>
       <ToastPushContext.Provider value={push}>
         <OverlayOpenContext.Provider value={open}>
-          <div id="content" style={{ backgroundColor: "#fff" }}>
+          <div id="page-content" style={{ backgroundColor: "#fff" }}>
             {children}
           </div>
         </OverlayOpenContext.Provider>

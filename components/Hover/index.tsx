@@ -6,7 +6,7 @@ import Animate from "./animate";
 import { HoverType } from "types/components";
 
 const Hover: HoverType = ({ className = "", children, hoverItem }) => {
-  const { bool, boolState, showThrottleState, hideDebounceState } = useBool();
+  const { bool, boolState, showThrottleState, hideDebounce } = useBool();
 
   const { animateRef } = useShowAndHideAnimate<HTMLDivElement>({
     state: bool,
@@ -19,7 +19,7 @@ const Hover: HoverType = ({ className = "", children, hoverItem }) => {
   });
 
   return (
-    <div onMouseEnter={showThrottleState} onMouseLeave={hideDebounceState} className={getClass("position-relative", className)}>
+    <div onMouseEnter={showThrottleState} onMouseLeave={hideDebounce} className={getClass("position-relative", className)}>
       {children}
       <Animate forwardRef={animateRef}>{hoverItem}</Animate>
     </div>

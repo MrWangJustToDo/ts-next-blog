@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
 import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
 import loadingError from "./loadingError";
 import { log } from "utils/log";
-import { transformPath } from "utils/path";
 import { cancel, delay } from "utils/delay";
 import { autoTransformData } from "utils/data";
 import { autoStringify, createRequest } from "utils/fetcher";
@@ -34,20 +33,19 @@ const useAutoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiP
   }, [needUpdate, apiPath, initialData, currentData]);
 };
 
-const useLoading: UseLoadingType = ({ loading, placeholder, delayTime, currentRequestPath }) => {
+const useLoading: UseLoadingType = ({ loading, placeholder, delayTime, cancelKey }) => {
   const [loadingEle, setLoadingEle] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
-    delay(delayTime, () => setLoadingEle(loading({ _style: placeholder, className: "p-4" })), currentRequestPath);
-    return () => cancel(currentRequestPath);
-  }, [delayTime, currentRequestPath]);
+    delay(delayTime, () => setLoadingEle(loading({ _style: placeholder, className: "p-4" })), cancelKey);
+    return () => cancel(cancelKey);
+  }, [delayTime, cancelKey]);
 
   return loadingEle;
 };
 
 const Render: RenderType = <T>({
   currentRequest,
-  currentRequestPath,
   currentInitialData,
   loading,
   loaded,
@@ -59,9 +57,10 @@ const Render: RenderType = <T>({
   needUpdate,
   apiPath,
 }: RenderProps<T>) => {
-  const loadingEle = useLoading({ loading, placeholder, delayTime, currentRequestPath });
+  const loadingEle = useLoading({ loading, placeholder, delayTime, cancelKey: currentRequest.cacheKey });
 
-  const { data, error }: { data?: any; error?: any } = useSWR(currentRequestPath, currentRequest.run, {
+  // only need key
+  const { data, error } = useSWR<T>(currentRequest.cacheKey, currentRequest.run, {
     initialData: currentInitialData,
     revalidateOnMount,
     revalidateOnFocus,
@@ -71,15 +70,13 @@ const Render: RenderType = <T>({
 
   useAutoUpdateState<T>({ needUpdate, initialData: currentInitialData, apiPath, currentData });
 
-  const currentDeleteCache = useCallback(() => currentRequest.cache.deleteRightNow(currentRequestPath), [currentRequest, currentRequestPath]);
-
   if (error) return loadError(error.toString());
 
   if (currentInitialData || currentData) {
     // make soure not flash if data loaded
-    cancel(currentRequestPath);
+    cancel(currentRequest.cacheKey);
 
-    return loaded(currentData ? currentData : currentInitialData, currentRequestPath, currentDeleteCache, currentRequest);
+    return loaded(currentData ? currentData : currentInitialData, currentRequest);
   }
 
   return loadingEle;
@@ -106,17 +103,24 @@ const LoadRender: LoadRenderType = <T>({
 }: LoadRenderProps<T>) => {
   if (!path && !apiPath) throw new Error("loadrender error, path undefined!");
 
-  const currentPath = apiPath ? apiPath : path;
-
   const currentRequestData = autoStringify(requestData);
 
-  const currentHeaderToken = token ? autoStringify({ apiToken: token }) : false;
+  const currentHeader = autoStringify({ apiToken: token });
 
-  const currentRequestPath = query ? transformPath({ path, apiPath, query, needPre: false }) : currentPath!;
+  const currentQuery = autoStringify(query);
 
   const currentRequest = useMemo(
-    () => createRequest({ method, query: false, data: currentRequestData, header: currentHeaderToken, apiPath, cacheTime, cacheKey: currentRequestPath }),
-    [apiPath, currentRequestData, currentHeaderToken, currentRequestPath, cacheTime]
+    () =>
+      createRequest({
+        path,
+        method,
+        apiPath,
+        cacheTime,
+        query: currentQuery,
+        data: currentRequestData,
+        header: currentHeader,
+      }),
+    [apiPath, path, currentRequestData, currentHeader, cacheTime, currentQuery]
   );
 
   const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needinitialData });
@@ -133,7 +137,6 @@ const LoadRender: LoadRenderType = <T>({
     revalidateOnMount,
     currentRequest,
     currentInitialData,
-    currentRequestPath,
   });
 };
 

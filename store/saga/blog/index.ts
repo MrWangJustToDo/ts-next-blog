@@ -10,7 +10,10 @@ export function* getBlogData() {
   const apiToken = state.client[actionName.currentToken]["data"];
   const id = state.client[actionName.currentBlogId]["data"];
   try {
-    let { code, state, data } = yield call(createRequest({ header: { apiToken }, query: { blogId: id } }).run, apiName.blog);
+    let { code, state, data } = yield call(
+      (apiName: apiName) => createRequest({ header: { apiToken }, query: { blogId: id }, apiPath: apiName }).run(),
+      apiName.blog
+    );
     if (code === 0) {
       yield put(getDataSucess_Server({ name: apiName.blog, data: { [id]: data } }));
     } else {

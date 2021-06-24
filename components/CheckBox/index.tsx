@@ -4,8 +4,8 @@ import { CheckBoxType } from "types/components";
 
 import style from "./index.module.scss";
 
-const CheckBox: CheckBoxType = ({ fieldName, _style, type = "radio", init, className = "" }) => {
-  const { bool, switchBoolDebounce } = useBool({ init });
+const CheckBox: CheckBoxType = ({ fieldName, _style, type = "radio", initState, className = "" }) => {
+  const { bool, switchBoolDebounce } = useBool({ init: initState });
 
   return (
     <div className={getClass(className)} style={_style}>

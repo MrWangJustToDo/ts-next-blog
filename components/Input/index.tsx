@@ -12,6 +12,7 @@ const Input: InputEleType = ({
   forWardRef,
   placeHolder,
   changeState,
+  changeLoading,
   judgeApiName,
   outerClassName = "",
   innerClassName = "",
@@ -19,7 +20,7 @@ const Input: InputEleType = ({
   successCalsssName,
   loadingClassName,
 }) => {
-  const [ref, bool] = useJudgeInput({
+  const [ref, state, loading] = useJudgeInput({
     option,
     forWardRef,
     judgeApiName,
@@ -29,14 +30,20 @@ const Input: InputEleType = ({
   });
 
   useEffect(() => {
-    if (changeState && typeof changeState === "function") {
-      changeState(bool);
+    if (changeState) {
+      changeState(state);
     }
-  }, [changeState, bool]);
+  }, [changeState, state]);
+
+  useEffect(() => {
+    if (changeLoading) {
+      changeLoading(loading);
+    }
+  }, [changeLoading, loading]);
 
   return (
     <div className={getClass("position-relative", outerClassName)}>
-      <input ref={ref} className={getClass("form-control", innerClassName)} name={name} type={type || "text"} placeholder={placeHolder} data-check={bool} />
+      <input ref={ref} className={getClass("form-control", innerClassName)} name={name} type={type || "text"} placeholder={placeHolder} data-check={state} />
     </div>
   );
 };

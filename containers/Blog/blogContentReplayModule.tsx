@@ -3,17 +3,21 @@ import Button from "components/Button";
 import { flexBetween, getClass } from "utils/dom";
 import { useAutoLoadCheckcodeImg } from "hook/useAuto";
 import { useReplayModuleToSubmit } from "hook/useMessage";
-import { BlogContentReplayModuleType, BlogContentReplayModuleWithImagType } from "types/containers";
+import { ChildMessageProps, PrimaryMessageProps } from "types/components";
+import { BlogContentReplayModuleProps, BlogContentReplayModuleType, BlogContentReplayModuleWithImageType, WithImgRef } from "types/containers";
 
 import style from "./index.module.scss";
 
-const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImagType = ({ request, closeHandler, imgRef, primaryCommentId, toIp, toUserId }) => {
-  const { input1, input2, submit, canSubmit } = useReplayModuleToSubmit<HTMLTextAreaElement, HTMLInputElement>({
+const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImageType = <T extends PrimaryMessageProps | ChildMessageProps>({
+  props,
+  imgRef,
+  request,
+  closeHandler,
+}: BlogContentReplayModuleProps<T> & WithImgRef) => {
+  const { input1, input2, submit, canSubmit } = useReplayModuleToSubmit<T, HTMLTextAreaElement, HTMLInputElement>({
+    props,
     request,
     closeHandler,
-    primaryCommentId,
-    toIp,
-    toUserId,
   });
 
   return (
@@ -31,10 +35,14 @@ const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImagType = ({ 
   );
 };
 
-const BlogContentReplayModule: BlogContentReplayModuleType = ({ request, closeHandler, primaryCommentId, toIp, toUserId }) => {
+const BlogContentReplayModule: BlogContentReplayModuleType = <T extends PrimaryMessageProps | ChildMessageProps>({
+  props,
+  request,
+  closeHandler,
+}: BlogContentReplayModuleProps<T>) => {
   const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
 
-  return <BlogContentReplayModuleWithImag request={request} closeHandler={closeHandler} imgRef={imgRef} {...{ primaryCommentId, toIp, toUserId }} />;
+  return <BlogContentReplayModuleWithImag request={request} closeHandler={closeHandler} imgRef={imgRef} props={props} />;
 };
 
 export default BlogContentReplayModule;

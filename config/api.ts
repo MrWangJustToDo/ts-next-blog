@@ -28,6 +28,10 @@ enum apiName {
   primaryMessage = "primaryMessage", // 获取主要留言信息
   putChildMessage = "putChildMessage", // 发布次要评论
   putPrimaryMessage = "putPrimaryMessage", // 发布主要评论
+  deleteChildMessage = "deleteChildMessage",
+  deletePrimaryMessage = "deletePrimaryMessage",
+  updateChildMessage = "updateChildMessage",
+  updatePrimaryMessage = "updatePrimaryMessage",
   // 管理信息
   search = "search", // 搜索博客
   updataBlog = "updateBlog", // 更新博客信息
@@ -91,6 +95,8 @@ const accessApi: AccessType = {
   [apiName.deleteTag]: { disable: false, token: false, method: "delete" },
   [apiName.deleteType]: { disable: false, token: false, method: "delete" },
   [apiName.deleteBlog]: { disable: false, token: false, method: "delete" },
+  [apiName.deleteChildMessage]: { disable: false, token: true, method: "delete" },
+  [apiName.deletePrimaryMessage]: { disable: false, token: true, method: "delete" },
   [apiName.updataBlog]: { disable: false, token: false, method: "post" },
   [apiName.publishBlog]: { disable: false, token: false, method: "post" },
 };

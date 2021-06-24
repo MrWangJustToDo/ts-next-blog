@@ -1,16 +1,24 @@
 import { apiName } from "config/api";
 import {
-  getChildMessageByPrimaryIdAction,
   getPrimaryMessageByBlogIdAction,
-  publishChildMessageByPrimaryIdAction,
+  getChildMessageByPrimaryIdAction,
   publishPrimaryMessageByBlogIdAction,
+  publishChildMessageByPrimaryIdAction,
+  deleteChildMessageByCommentIdAction,
+  deletePrimaryMessageByCommentIdAction,
+  updateChildMessageByCommentIdAction,
+  updatePrimaryMessageByCommentIdAction,
 } from "./message";
 
 const messageHandler = {
-  [apiName.primaryMessage]: getPrimaryMessageByBlogIdAction,
   [apiName.childMessage]: getChildMessageByPrimaryIdAction,
-  [apiName.putPrimaryMessage]: publishPrimaryMessageByBlogIdAction,
+  [apiName.primaryMessage]: getPrimaryMessageByBlogIdAction,
   [apiName.putChildMessage]: publishChildMessageByPrimaryIdAction,
+  [apiName.putPrimaryMessage]: publishPrimaryMessageByBlogIdAction,
+  [apiName.deleteChildMessage]: deleteChildMessageByCommentIdAction,
+  [apiName.deletePrimaryMessage]: deletePrimaryMessageByCommentIdAction,
+  [apiName.updateChildMessage]: updateChildMessageByCommentIdAction,
+  [apiName.updatePrimaryMessage]: updatePrimaryMessageByCommentIdAction,
 };
 
 export { messageHandler };

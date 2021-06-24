@@ -6,7 +6,7 @@ import { actionName } from "config/action";
 import { InputProps } from "./config";
 import { ManageAddButtonBody } from "./containers";
 import { AutoRequestProps, AutoRequestType } from "./utils";
-import { ChildMessageProps, LoadingBarProps, OverlayProps, ToastProps } from "./components";
+import { ChildMessageProps, LoadingBarProps, OverlayProps, PrimaryMessageProps, ToastProps } from "./components";
 
 // from http://ip-api.com/json/
 interface IpaddressProps {
@@ -310,14 +310,11 @@ export type { UseLoadType };
 
 /* useManage */
 interface UseSearchType {
-  (props: { request: AutoRequestType }): [RefObject<HTMLFormElement>, () => Promise<void>];
+  (): [RefObject<HTMLFormElement>, () => Promise<void>];
 }
 interface UseManageToAddModuleProps {
   title: string;
   body: ManageAddButtonBody;
-  successHandler: () => void;
-  judgeApiName: apiName;
-  request: AutoRequestType;
   className?: string;
 }
 interface UseManageToAddModuleType {
@@ -384,9 +381,7 @@ interface UseJudgeInputValueType {
   <T extends MyInputELement>(ref: RefObject<T>): boolean;
 }
 interface UsePutToCheckcodeModuleBody {
-  ({ request, ref, successCallback }: { request: AutoRequestType; ref: RefObject<MyInputELement>; successCallback: () => void }): (
-    closeHandler: () => void
-  ) => JSX.Element;
+  ({ request, ref, blogId }: { request: AutoRequestType; ref: RefObject<MyInputELement>; blogId: string }): (closeHandler: () => void) => JSX.Element;
 }
 interface UsePutToCheckcodeModuleProps {
   className?: string;
@@ -401,10 +396,10 @@ interface UsePutToCheckcodeModuleType {
   };
 }
 interface UseCheckcodeModuleToSubmitProps {
+  blogId: string;
   messageRef: RefObject<MyInputELement>;
   request: AutoRequestType;
   closeHandler: () => void;
-  successCallback: () => void;
 }
 interface UseCheckcodeModuleToSubmitType {
   <T extends MyInputELement>(props: UseCheckcodeModuleToSubmitProps): {
@@ -413,28 +408,50 @@ interface UseCheckcodeModuleToSubmitType {
     submit: () => Promise<void>;
   };
 }
-interface UseMessageToReplayModuleBody<T> {
-  ({ request, props }: { request: AutoRequestType; props: T }): (closeHandler: () => void) => JSX.Element;
+interface UseMessageToModuleBody<T> {
+  ({ props }: { props: T }): (closeHandler: () => void) => JSX.Element;
 }
-interface UseMessageToReplayModuleProps<T> {
-  body: UseMessageToReplayModuleBody<T>;
+interface UseMessageToModuleProps<T> {
   className: string;
+  body: UseMessageToModuleBody<T>;
 }
-interface UseMessageToReplayModuleType {
-  <T>(props: UseMessageToReplayModuleProps<T>): (props: T) => void;
+interface UseMessageToModuleType {
+  <T>(props: UseMessageToModuleProps<T>): (props: T) => void;
 }
-interface UseReplayModuleToSubmitProps {
+interface UseReplayModuleToSubmitProps<T> {
+  // toIp: string;
+  // blogId: string;
+  // toUserId?: string;
+  props: T;
   request: AutoRequestType;
+  // primaryCommentId: string;
   closeHandler: () => void;
-  successCallback?: () => void;
-  toIp: string;
-  toUserId: string;
-  primaryCommentId: string;
 }
 interface UseReplayModuleToSubmitType {
-  <T extends MyInputELement, F extends MyInputELement>(props: UseReplayModuleToSubmitProps): {
-    input1: RefObject<T>;
-    input2: RefObject<F>;
+  <T extends PrimaryMessageProps | ChildMessageProps, F extends MyInputELement, O extends MyInputELement>(props: UseReplayModuleToSubmitProps<T>): {
+    input1: RefObject<F>;
+    input2: RefObject<O>;
+    submit: () => Promise<void>;
+    canSubmit: boolean;
+  };
+}
+interface UseDeleteModuleToSubmitProps<T> {
+  request: AutoRequestType;
+  closeHandler: () => void;
+  props: T;
+}
+interface UseDeleteModuleToSubmitType {
+  <T extends PrimaryMessageProps | ChildMessageProps>(props: UseDeleteModuleToSubmitProps<T>): () => Promise<void>;
+}
+interface UseUpdateModuleToSubmitProps<T> {
+  request: AutoRequestType;
+  closeHandler: () => void;
+  props: T;
+}
+interface UseUpdateModuleToSubmitType {
+  <T extends PrimaryMessageProps | ChildMessageProps, F extends MyInputELement, O extends MyInputELement>(props: UseUpdateModuleToSubmitProps<T>): {
+    input1: RefObject<F>;
+    input2: RefObject<O>;
     submit: () => Promise<void>;
     canSubmit: boolean;
   };
@@ -449,11 +466,15 @@ export type {
   UsePutToCheckcodeModuleType,
   UseCheckcodeModuleToSubmitProps,
   UseCheckcodeModuleToSubmitType,
-  UseMessageToReplayModuleBody,
-  UseMessageToReplayModuleProps,
-  UseMessageToReplayModuleType,
+  UseMessageToModuleBody,
+  UseMessageToModuleProps,
+  UseMessageToModuleType,
   UseReplayModuleToSubmitProps,
   UseReplayModuleToSubmitType,
+  UseDeleteModuleToSubmitProps,
+  UseDeleteModuleToSubmitType,
+  UseUpdateModuleToSubmitProps,
+  UseUpdateModuleToSubmitType,
 };
 
 /* useOverlay */

@@ -1,14 +1,14 @@
 import { useCallback } from "react";
-import BlogContentCheckcodeModule from "./blogContentCheckcodeModule";
 import { usePutToCheckcodeModule } from "hook/useMessage";
+import BlogContentCheckcodeModule from "./blogContentCheckcodeModule";
 import { UsePutToCheckcodeModuleBody } from "types/hook";
 import { BlogContentMessagePutType } from "types/containers";
 
 const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
   const body = useCallback<UsePutToCheckcodeModuleBody>(
-    ({ request, ref, successCallback }) =>
+    ({ request, ref, blogId }) =>
       (closeHandler) =>
-        <BlogContentCheckcodeModule request={request} closeHandler={closeHandler} messageRef={ref} successCallback={successCallback} />,
+        <BlogContentCheckcodeModule blogId={blogId} request={request} closeHandler={closeHandler} messageRef={ref} />,
     []
   );
 

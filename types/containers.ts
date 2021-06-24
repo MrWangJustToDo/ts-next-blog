@@ -39,40 +39,50 @@ interface BlogContentMessageType {
 export type { BlogContentMessageType };
 
 /* blogContentPrimaryMessage */
-interface BlogContentPrimaryMessageType {
+interface BlogContentPrimaryMessageWrapperType {
   (props: { messages: PrimaryMessageProps[] }): JSX.Element;
 }
-interface BlogContentPrimaryMessageWithReplayType {
-  (props: { messages: PrimaryMessageProps[]; replay: (props: PrimaryMessageProps) => void }): JSX.Element;
+interface BlogContentPrimaryMessageType {
+  (props: {
+    messages: PrimaryMessageProps[];
+    primaryReplay: (props: PrimaryMessageProps) => void;
+    primaryDelete: (props: PrimaryMessageProps) => void;
+    primaryUpdate: (props: PrimaryMessageProps) => void;
+  }): JSX.Element;
 }
 
-export type { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWithReplayType };
+export type { BlogContentPrimaryMessageWrapperType, BlogContentPrimaryMessageType };
 
 /* blogContentChildMessage */
 interface BlogContentChildMessageType {
-  (props: { messages: ChildMessageProps[]; primaryCommentId: string }): JSX.Element;
+  (props: { messages: ChildMessageProps[] }): JSX.Element;
 }
 interface BlogContentChildMessageWithReplayType {
-  (props: { messages: ChildMessageProps[]; replay: (props: ChildMessageProps) => void }): JSX.Element;
+  (props: {
+    messages: ChildMessageProps[];
+    childReplay: (props: ChildMessageProps) => void;
+    childDelete: (props: ChildMessageProps) => void;
+    childUpdate: (props: ChildMessageProps) => void;
+  }): JSX.Element;
 }
 
 export type { BlogContentChildMessageType, BlogContentChildMessageWithReplayType };
 
 /* blogContentCheckcode */
 interface BlogContentCheckcodeModuleProps {
+  blogId: string;
   request: AutoRequestType;
   closeHandler: () => void;
-  successCallback: () => void;
   messageRef: RefObject<MyInputELement>;
 }
 interface BlogContentCheckcodeModuleType {
   (props: BlogContentCheckcodeModuleProps): JSX.Element;
 }
-interface BlogContentCheckcodeModuleWithImagType {
+interface BlogContentCheckcodeModuleWithImageType {
   (props: BlogContentCheckcodeModuleProps & WithImgRef): JSX.Element;
 }
 
-export type { BlogContentCheckcodeModuleType, BlogContentCheckcodeModuleWithImagType };
+export type { BlogContentCheckcodeModuleType, BlogContentCheckcodeModuleWithImageType };
 
 /* blogContentMessagePut */
 interface BlogContentMessagePutType {
@@ -82,21 +92,52 @@ interface BlogContentMessagePutType {
 export type { BlogContentMessagePutType };
 
 /* blogContentReplayModule */
-interface BlogContentReplayModuleProps {
-  toIp: string;
-  toUserId: string;
-  primaryCommentId: string;
+interface BlogContentReplayModuleProps<T> {
+  props: T;
   request: AutoRequestType;
   closeHandler: () => void;
 }
 interface BlogContentReplayModuleType {
-  (props: BlogContentReplayModuleProps): JSX.Element;
+  <T extends PrimaryMessageProps | ChildMessageProps>(props: BlogContentReplayModuleProps<T>): JSX.Element;
 }
-interface BlogContentReplayModuleWithImagType {
-  (props: BlogContentReplayModuleProps & WithImgRef): JSX.Element;
+interface BlogContentReplayModuleWithImageType {
+  <T extends PrimaryMessageProps | ChildMessageProps>(props: BlogContentReplayModuleProps<T> & WithImgRef): JSX.Element;
 }
 
-export type { BlogContentReplayModuleType, BlogContentReplayModuleWithImagType };
+/* blogContentDeleteModule */
+interface BlogContentDeleteModuleProps<T> {
+  props: T;
+  request: AutoRequestType;
+  closeHandler: () => void;
+}
+interface BlogContentDeleteModuleType {
+  <T extends PrimaryMessageProps | ChildMessageProps>(props: BlogContentDeleteModuleProps<T>): JSX.Element;
+}
+
+/* blogContentUpdateModule */
+interface BlogContentUpdateModuleProps<T> {
+  props: T;
+  request: AutoRequestType;
+  closeHandler: () => void;
+}
+interface BlogContentUpdateModuleType {
+  <T extends PrimaryMessageProps | ChildMessageProps>(props: BlogContentUpdateModuleProps<T>): JSX.Element;
+}
+interface BlogContentUpdateModuleWithImageType {
+  <T extends PrimaryMessageProps | ChildMessageProps>(props: BlogContentUpdateModuleProps<T> & WithImgRef): JSX.Element;
+}
+
+export type {
+  WithImgRef,
+  BlogContentReplayModuleProps,
+  BlogContentReplayModuleType,
+  BlogContentReplayModuleWithImageType,
+  BlogContentDeleteModuleType,
+  BlogContentDeleteModuleProps,
+  BlogContentUpdateModuleProps,
+  BlogContentUpdateModuleType,
+  BlogContentUpdateModuleWithImageType,
+};
 
 /* BlogContentLikeToPayModule */
 interface BlogContentLikeToPayModuleProps {
@@ -232,14 +273,10 @@ export type { PublishSubmitType };
 /* === Manage === */
 
 interface ManageAddButtonBody {
-  ({ request, judgeApiName, successHandler }: { request: AutoRequestType; judgeApiName: apiName; successHandler: () => void }): (
-    closeHandler: () => void
-  ) => JSX.Element;
+  (closeHandler: () => void): JSX.Element;
 }
 
 interface ManageAddButtonProps {
-  request: AutoRequestType;
-  successHandler: () => void;
   body: ManageAddButtonBody;
 }
 

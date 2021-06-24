@@ -24,9 +24,20 @@
   }
 }
 
-.replayModule {
+.replayModule,
+.deleteModule,
+.updateModule {
   @include mobile {
     font-size: 14px;
+  }
+}
+
+.deleteModule {
+  @include desktop {
+    min-width: 500px;
+  }
+  @include mobile {
+    min-width: 340px;
   }
 }
 

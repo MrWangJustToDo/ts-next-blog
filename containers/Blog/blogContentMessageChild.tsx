@@ -1,21 +1,25 @@
 import { useCallback } from "react";
+import { apiName } from "config/api";
 import { getClass } from "utils/dom";
 import { ChildMessage } from "components/BlogMessage";
-import { useChildMessage, useMessageToReplayModule } from "hook/useMessage";
+import { useUserRequest } from "hook/useUser";
+import { useChildMessage, useMessageToDeleteModule, useMessageToReplayModule, useMessageToUpdateModule } from "hook/useMessage";
 import BlogContentReplayModule from "./blogContentReplayModule";
+import BlogContentDeleteModule from "./blogContentDeleteModule";
+import BlogContentUpdateModule from "./blogContentUpdateModule";
 import { ChildMessageProps } from "types/components";
-import { UseMessageToReplayModuleBody } from "types/hook";
+import { UseMessageToModuleBody } from "types/hook";
 import { BlogContentChildMessageType, BlogContentChildMessageWithReplayType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType = ({ messages, replay }) => {
+const BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType = ({ messages, childDelete, childReplay, childUpdate }) => {
   const { messageProps, more, loadMore } = useChildMessage(messages);
 
   return (
     <>
       {messageProps.map((item, index) => (
-        <ChildMessage key={item.commentId} {...item} replayHandler={replay}>
+        <ChildMessage key={item.commentId} {...item} replayHandler={childReplay} withDelete deleteHandler={childDelete} withUpdate updateHandler={childUpdate}>
           {index === messageProps.length - 1 && more ? (
             <button className={getClass("btn btn-info float-right", style.loadMore)} onClick={loadMore}>
               加载更多
@@ -29,31 +33,76 @@ const BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType =
   );
 };
 
-const BlogContentChildMessage: BlogContentChildMessageType = ({ messages, primaryCommentId }) => {
-  const body = useCallback<UseMessageToReplayModuleBody<ChildMessageProps>>(
-    ({ request, props }) =>
+const BlogContentChildMessageReplay = () => {
+  const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage, cache: false });
+
+  const body = useCallback<UseMessageToModuleBody<ChildMessageProps>>(
+    ({ props }) =>
       (closeHandler) =>
         (
           <>
-            <ChildMessage {...props} withReplay={false} withChildren={false} withHover={false} />
-            <BlogContentReplayModule
-              request={request}
-              closeHandler={closeHandler}
-              primaryCommentId={primaryCommentId}
-              toUserId={props.fromUserId}
-              toIp={props.fromIp}
-            />
+            <ChildMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+            <BlogContentReplayModule request={request} closeHandler={closeHandler} props={props} />
           </>
         ),
     []
   );
 
-  const replay = useMessageToReplayModule<ChildMessageProps>({
+  const childReplay = useMessageToReplayModule<ChildMessageProps>({
     body,
     className: style.replayModule,
   });
 
-  return <BlogContentChildMessageWithReplay messages={messages} replay={replay} />;
+  return childReplay;
+};
+
+const BlogContentChildMessageDelete = () => {
+  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteChildMessage, cache: false, header: { apiToken: true } });
+
+  const body = useCallback<UseMessageToModuleBody<ChildMessageProps>>(
+    ({ props }) =>
+      (closeHandler) =>
+        (
+          <>
+            <ChildMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+            <BlogContentDeleteModule<ChildMessageProps> request={request} closeHandler={closeHandler} props={props} />
+          </>
+        ),
+    []
+  );
+
+  const childDelete = useMessageToDeleteModule<ChildMessageProps>({ body, className: style.deleteModule });
+
+  return childDelete;
+};
+
+const BlogContentChildMessageUpdate = () => {
+  const request = useUserRequest({ method: "post", apiPath: apiName.updateChildMessage, cache: false, header: { apiToken: true } });
+
+  const body = useCallback<UseMessageToModuleBody<ChildMessageProps>>(
+    ({ props }) =>
+      (closeHandler) => {
+        return (
+          <>
+            <ChildMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+            <BlogContentUpdateModule request={request} props={props} closeHandler={closeHandler} />
+          </>
+        );
+      },
+    []
+  );
+
+  const childUpdate = useMessageToUpdateModule({ body, className: style.updateModule });
+
+  return childUpdate;
+};
+
+const BlogContentChildMessage: BlogContentChildMessageType = ({ messages }) => {
+  const childReplay = BlogContentChildMessageReplay();
+  const childDelete = BlogContentChildMessageDelete();
+  const childUpdate = BlogContentChildMessageUpdate();
+
+  return <BlogContentChildMessageWithReplay messages={messages} childReplay={childReplay} childDelete={childDelete} childUpdate={childUpdate} />;
 };
 
 export default BlogContentChildMessage;

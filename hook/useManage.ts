@@ -23,7 +23,7 @@ import {
   UseSearchType,
 } from "types/hook";
 
-const useSearch: UseSearchType = ({ request }) => {
+const useSearch: UseSearchType = () => {
   const fail = useFailToast();
   const dispatch = useDispatch();
   const success = useSucessToast();
@@ -34,7 +34,7 @@ const useSearch: UseSearchType = ({ request }) => {
       actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
         if (userId !== undefined) {
           dispatch(setDataLoading_client({ name: actionName.currentResult }));
-          return request({ data: { ...formSerialize(ele), userId }, apiPath: apiName.search })
+          return createRequest({ method: "post", header: { apiToken: true }, cache: false, data: { ...formSerialize(ele), userId }, apiPath: apiName.search })
             .run<ApiRequestResult<BlogContentProps>>()
             .then((res) => {
               if (res) {
@@ -56,17 +56,14 @@ const useSearch: UseSearchType = ({ request }) => {
           return fail(`当前未登录`);
         }
       }),
-    [request, userId]
+    [userId]
   );
   return [ref, search];
 };
 
-const useManageToAddModule: UseManageToAddModuleType = ({ title, body, request, className, judgeApiName, successHandler }) => {
+const useManageToAddModule: UseManageToAddModuleType = ({ title, body, className }) => {
   const open = useOverlayOpen();
-  const click = useCallback(
-    () => open({ head: title, body: body({ request, successHandler, judgeApiName }), className }),
-    [request, judgeApiName, successHandler]
-  );
+  const click = useCallback(() => open({ head: title, body, className }), []);
   return click;
 };
 
@@ -76,19 +73,23 @@ const useAddRequest: UseAddRequestType = ({ request, successCallback }) => {
   const success = useSucessToast();
   const doRequest = useCallback(
     () =>
-      actionHandler<HTMLInputElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
-        return request({ data: { [ele.name]: ele.value } })
-          .run<ApiRequestResult<string>>()
-          .then(({ code, data }) => {
-            if (code === 0) {
-              successCallback();
-              return success(`添加tag成功，${data.toString()}`);
-            } else {
-              return fail(`添加tag失败，请稍候尝试`);
-            }
-          })
-          .catch((e) => fail(`添加tag出错，${e.toString()}`));
-      }),
+      actionHandler<HTMLInputElement, Promise<void>, Promise<void>>(
+        ref.current,
+        (ele) => {
+          return request({ data: { [ele.name]: ele.value } })
+            .run<ApiRequestResult<string>>()
+            .then(({ code, data }) => {
+              if (code === 0) {
+                successCallback();
+                return success(`添加tag成功，${data.toString()}`);
+              } else {
+                return fail(`添加tag失败，请稍候尝试`);
+              }
+            })
+            .catch((e) => fail(`添加tag出错，${e.toString()}`));
+        },
+        () => fail(`当前组件已经卸载`)
+      ),
     [request, successCallback]
   );
   return [ref, doRequest];

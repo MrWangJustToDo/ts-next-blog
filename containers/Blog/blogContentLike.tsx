@@ -1,21 +1,21 @@
+import { apiName } from "config/api";
 import LoadRender from "components/LoadRender";
 import BlogContentLikeToPayModule from "./blogContentLikeToPayModule";
 import { flexCenter, getClass } from "utils/dom";
-import { BlogContentType } from "types/containers";
 import { useLikeToPayModule } from "hook/useBlog";
-import { apiName } from "config/api";
 import { AuthorProps } from "types/hook";
+import { BlogContentType } from "types/containers";
 
 const BlogContentLike: BlogContentType = ({ userId, blogPriseState }) => {
-  const body = (
-    <LoadRender<AuthorProps>
-      apiPath={apiName.author}
-      query={{ userId: userId! }}
-      loaded={({ userAlipay, userWechat }) => <BlogContentLikeToPayModule aliUrl={userAlipay!} wchatUrl={userWechat!} />}
-    />
-  );
-
-  const click = useLikeToPayModule({ body });
+  const click = useLikeToPayModule({
+    body: (
+      <LoadRender<AuthorProps>
+        apiPath={apiName.author}
+        query={{ userId: userId! }}
+        loaded={({ userAlipay, userWechat }) => <BlogContentLikeToPayModule aliUrl={userAlipay!} wchatUrl={userWechat!} />}
+      />
+    ),
+  });
 
   return (
     <li className="list-group-item">

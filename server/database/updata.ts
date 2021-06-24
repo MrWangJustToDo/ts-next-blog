@@ -38,7 +38,7 @@ const updateTableWithParam = async ({
       Sql += ` ${where[key].operator}`;
     }
   }
-  log(`update type sql: ${Sql}, params: ${sqlParam.toString()}`, "normal");
+  log(`update sql: ${Sql} --> params: ${sqlParam.join(', ')}`, "normal");
   return await db.run(Sql, ...sqlParam);
 };
 

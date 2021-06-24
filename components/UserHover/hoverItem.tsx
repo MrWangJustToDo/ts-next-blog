@@ -1,4 +1,3 @@
-// 显示获取到的用户信息
 import Image from "next/image";
 import LoadRender from "components/LoadRender";
 import { apiName } from "config/api";

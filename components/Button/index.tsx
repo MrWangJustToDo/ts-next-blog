@@ -4,7 +4,7 @@ import { useBool } from "hook/useData";
 import { flexCenter, getClass } from "utils/dom";
 import { ButtonType } from "types/components";
 
-const Button: ButtonType = ({ request, type = "button", disable = false, value = "确定", initState = true, className = "", style = {}, loadingColor }) => {
+const Button: ButtonType = ({ request, type = "button", disable = false, value = "确定", initState = true, className = "", _style, loadingColor }) => {
   const { bool, show, hide } = useBool({ init: initState });
 
   const requestCallback = useCallback(() => {
@@ -16,7 +16,7 @@ const Button: ButtonType = ({ request, type = "button", disable = false, value =
     <button
       className={getClass("btn position-relative", flexCenter, className)}
       disabled={!bool || disable}
-      style={style}
+      style={_style}
       onClick={requestCallback}
       title={bool ? value : "loading"}
       type={type}

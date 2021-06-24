@@ -2,11 +2,10 @@ import { AxiosResponse } from "axios";
 import assign from "lodash/assign";
 import { log } from "./log";
 import { Cache } from "./cache";
-import { apiName } from "config/api";
 import { instance } from "./request";
 import { getHeader } from "./headers";
 import { transformPath } from "./path";
-import { AutoRequestProps, AutoRequestType, CreateRequestType, QueryProps } from "types/utils";
+import { AutoRequestProps, AutoRequestType, CreateRequestType } from "types/utils";
 
 const cacheResult = new Cache<string, any>(60000);
 
@@ -41,9 +40,7 @@ const autoAssignParams = (oldParams: string | false | object | undefined, newPar
 };
 
 const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
-  const { method, path, apiPath, query, data, header, cache = true, cacheKey, cacheTime } = props;
-
-  const tempPath = apiPath ? apiPath : path;
+  const { method, path, apiPath, query, data, header, cache = true, cacheTime } = props;
 
   const autoRequest: AutoRequestType = (props: AutoRequestProps = {}) => {
     const newMethod = props.method ? props.method : method;
@@ -60,8 +57,6 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     const newCache = props.cache === false ? false : cache;
 
-    const newCacheKey = props.cacheKey || cacheKey;
-
     const newCacheTime = props.cacheTime || cacheTime;
 
     return createRequest({
@@ -72,30 +67,25 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
       data: newData,
       header: newHeader,
       cache: newCache,
-      cacheKey: newCacheKey,
       cacheTime: newCacheTime,
     });
   };
 
-  autoRequest.run = <T>(currentPath?: string, currentQuery?: QueryProps | string) => {
-    const targetPath = currentPath ? currentPath : tempPath;
+  const cacheKey = transformPath({ path, apiPath, query: autoParse(query) });
 
-    if (!targetPath) {
-      throw new Error("request path should not undefined!!");
-    }
+  autoRequest.cache = cacheResult;
 
-    const targetQuery = autoAssignParams(query, currentQuery);
+  autoRequest.cacheKey = cacheKey;
 
-    const targetRelativePath = targetPath.startsWith("http")
-      ? transformPath({ path: targetPath, query: targetQuery })
-      : transformPath({ apiPath: targetPath as apiName, query: targetQuery });
+  autoRequest.deleteCache = () => autoRequest.cache.deleteRightNow(autoRequest.cacheKey);
 
-    const targetCacheKey = cacheKey || targetRelativePath;
+  autoRequest.run = <T>() => {
+    const targetRelativePath = autoRequest.cacheKey;
 
     if (isBrowser && cache) {
-      const target = cacheResult.get(targetCacheKey);
+      const target = cacheResult.get(targetRelativePath);
       if (target) {
-        log(`get data from cache, key: ${targetCacheKey}, path: ${targetPath}, apiName: ${apiPath}`, "normal");
+        log(`get data from cache, key: ${targetRelativePath}, path: ${path}, apiName: ${apiPath}`, "normal");
         return Promise.resolve(<T>target);
       }
     }
@@ -114,13 +104,11 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
     });
 
     if (isBrowser && cache) {
-      return requestPromise.then((res) => res.data).then((resData) => (cacheResult.set(targetCacheKey, resData, cacheTime), resData));
+      return requestPromise.then((res) => res.data).then((resData) => (cacheResult.set(targetRelativePath, resData, cacheTime), resData));
     } else {
       return requestPromise.then((res) => res.data);
     }
   };
-
-  autoRequest.cache = cacheResult;
 
   return autoRequest;
 };

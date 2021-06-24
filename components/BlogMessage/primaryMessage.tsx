@@ -19,14 +19,20 @@ const PrimaryMessage: PrimaryMessageType = (props) => {
     fromIp,
     children,
     replayHandler,
+    updateHandler,
+    deleteHandler,
     withHover = true,
     withReplay = true,
-    withUpdate = true,
-    withDelete = true,
+    withUpdate = false,
+    withDelete = false,
     withChildren = true,
   } = props;
 
   const replayCallback = useCallback(() => typeof replayHandler === "function" && replayHandler(props), [replayHandler, props]);
+
+  const updateCallback = useCallback(() => typeof updateHandler === "function" && updateHandler(props), [updateHandler, props]);
+
+  const deleteCallback = useCallback(() => typeof deleteHandler === "function" && deleteHandler(props), [deleteHandler, props]);
 
   const src = useMemo(() => getCurrentAvatar(avatar, gender), [avatar, gender]);
 
@@ -42,16 +48,25 @@ const PrimaryMessage: PrimaryMessageType = (props) => {
       <div className="media-body ml-2 ml-md-3 border-bottom rounded pb-1">
         <h5 className="small border-top rounded pt-1">
           <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{username ? username : fromIp}</span>
-          <span className="float-right badge badge-primary align-middle">{modifyState ? "更新于：" : "回复于：" + momentTo(modifyDate)}</span>
+          <span className="float-right badge badge-primary align-middle">{(modifyState ? "更新于：" : "回复于：") + momentTo(modifyDate)}</span>
         </h5>
         <p className="mb-2 mb-md-3">{content}</p>
-        <div>
+        <div className={style.btnContainer}>
           {withReplay && (
             <button className={getClass("btn btn-outline-info", style.replay)} onClick={replayCallback}>
               回复
             </button>
           )}
-          <button className={"btn btn-sm btn-outline-danger"}>更新</button>
+          {withUpdate && (
+            <button className={getClass("btn btn-outline-primary", style.update)} onClick={updateCallback}>
+              更新
+            </button>
+          )}
+          {withDelete && (
+            <button className={getClass("btn btn-outline-danger", style.delete)} onClick={deleteCallback}>
+              删除
+            </button>
+          )}
         </div>
         {withChildren && children}
       </div>

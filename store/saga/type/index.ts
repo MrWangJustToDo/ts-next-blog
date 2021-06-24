@@ -5,7 +5,7 @@ import { getDataSucess_Server, getDataFail_Server } from "store/reducer/server/a
 
 export function* getTypeData() {
   try {
-    let { code, state, data } = yield call(createRequest({ header: { apiToken: true } }).run, apiName.type);
+    let { code, state, data } = yield call((apiName: apiName) => createRequest({ header: { apiToken: true }, apiPath: apiName }).run(), apiName.type);
     if (code === 0) {
       yield put(getDataSucess_Server({ name: apiName.type, data }));
     } else {

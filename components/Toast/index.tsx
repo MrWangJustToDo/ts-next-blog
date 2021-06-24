@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useAutoActionHandler } from "hook/useAuto";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { momentTo } from "utils/time";
@@ -10,11 +10,13 @@ import style from "./index.module.scss";
 const Toast: ToastType = ({ title, currentTime, contentState, content, showState = false, closeHandler, autoCloseSecond = 0 }) => {
   const [currentTimeString, setCurrentTimeString] = useState(momentTo(currentTime || new Date()));
 
+  const updateTime = useCallback(() => setCurrentTimeString(momentTo(currentTime || new Date())), [currentTime]);
+
   // 自动关闭
   useAutoActionHandler({ delayTime: autoCloseSecond, action: closeHandler!, timmer: autoCloseSecond > 0, once: true });
 
   // 自动更新时间显示
-  useAutoActionHandler({ delayTime: 60 * 1000, action: () => setCurrentTimeString(momentTo(currentTime || new Date())), timmer: true, once: false });
+  useAutoActionHandler({ delayTime: 60 * 1000, action: updateTime, timmer: true, once: false });
 
   // 显示动画
   const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({

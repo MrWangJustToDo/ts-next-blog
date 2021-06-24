@@ -2,8 +2,6 @@ import { getRandom } from "utils/data";
 import { createRequest } from "utils/fetcher";
 import { catchHandler, transformHandler, success, fail } from "server/middleware/apiHandler";
 
-const request = createRequest();
-
 // 获取图片请求链接
 const getImagePath = () => {
   const idx = String(getRandom(7));
@@ -18,8 +16,7 @@ const getImagePath = () => {
 const getImagesAction = transformHandler(
   catchHandler(
     async ({ res }) => {
-      const requestUrl = getImagePath();
-      let { images } = await request.run(requestUrl);
+      let { images } = await createRequest({path: getImagePath()}).run();
       images = images.map((item: { [props: string]: string }) => {
         return { ...item, relativeUrl: `${process.env.BINGURL}${item.url}` };
       });
@@ -33,8 +30,7 @@ const getImagesAction = transformHandler(
 const getRandomImageAction = transformHandler(
   catchHandler(
     async ({ res }) => {
-      const requestUrl = getImagePath();
-      const { images } = await request.run(requestUrl);
+      const { images } = await createRequest({path: getImagePath()}).run();
       const [{ relativeUrl }] = images.map((item: { [props: string]: string }) => ({ relativeUrl: `${process.env.BINGURL}${item.url}` }));
       success({ res, resDate: { data: relativeUrl } });
     },

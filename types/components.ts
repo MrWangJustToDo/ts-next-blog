@@ -83,6 +83,8 @@ interface PrimaryMessageProps {
   withHover?: boolean;
 
   replayHandler?: (props: PrimaryMessageProps) => void;
+  updateHandler?: (props: PrimaryMessageProps) => void;
+  deleteHandler?: (props: PrimaryMessageProps) => void;
 }
 
 interface PrimaryMessageType {
@@ -112,11 +114,15 @@ interface ChildMessageProps {
   toUserName?: string;
   children?: JSX.Element;
 
-  withReplay?: boolean;
-  withChildren?: boolean;
   withHover?: boolean;
+  withReplay?: boolean;
+  withUpdate?: boolean;
+  withDelete?: boolean;
+  withChildren?: boolean;
 
   replayHandler?: (props: ChildMessageProps) => void;
+  updateHandler?: (props: ChildMessageProps) => void;
+  deleteHandler?: (props: ChildMessageProps) => void;
 }
 
 interface ChildMessageType {
@@ -133,7 +139,7 @@ interface ButtonProps {
   className?: string;
   initState?: boolean;
   request: () => Promise<void>;
-  style?: { [props: string]: string };
+  _style?: { [props: string]: string };
   loadingColor?: Color;
 }
 
@@ -158,7 +164,7 @@ export type { CardHeadType };
 
 /* === CheckBox === */
 interface CheckBoxProps {
-  init?: boolean;
+  initState?: boolean;
   type?: "radio" | "checkbox";
   _style?: { [props: string]: string };
   className?: string;
@@ -183,7 +189,7 @@ interface DropProps<T> {
   fieldName: string;
   placeHolder?: string;
   maxHeight?: number;
-  style?: { [props: string]: string };
+  _style?: { [props: string]: string };
 }
 interface DropType {
   <T extends ValueType>(props: DropProps<T>): JSX.Element;
@@ -195,9 +201,9 @@ export type { DropType, DropProps, ValueType };
 interface DropItemProps<T> {
   value: T;
   name?: string;
-  index?: number;
-  checkedIndex?: number[];
-  clickHandler?: (props: number) => void;
+  index: number;
+  checkedIndex: number[];
+  clickHandler: (props: number) => void;
 }
 interface DropItemType {
   <T extends ValueType>(props: DropItemProps<T>): JSX.Element;
@@ -338,6 +344,7 @@ interface InputEleProps {
   option: InputProps;
   forWardRef?: RefObject<HTMLInputElement>;
   changeState?: (props: boolean) => void;
+  changeLoading?: (props: boolean) => void;
   placeHolder?: string;
   judgeApiName?: apiName;
   outerClassName?: string;
@@ -405,7 +412,7 @@ interface LoadRenderProps<T> {
   initialData?: T;
   needUpdate?: boolean;
   needinitialData?: boolean;
-  loaded: (props: T, currentRequestKey: string, currentDeleteCache: () => void, fetcher: AutoRequestType) => JSX.Element | null;
+  loaded: (props: T, fetcher: AutoRequestType) => JSX.Element | null;
   loading?: (props: LoadingProps) => JSX.Element;
   loadError?: (props: any) => JSX.Element;
   placeholder?: { [props: string]: string };
@@ -418,10 +425,9 @@ interface LoadRenderType {
 }
 
 interface RenderProps<T> {
-  currentRequestPath: string | "";
   currentInitialData?: T;
   currentRequest: AutoRequestType;
-  loaded: (props: T, currentRequestKey: string, currentDeleteCache: () => void, fetcher: AutoRequestType) => JSX.Element | null;
+  loaded: (props: T, fetcher: AutoRequestType) => JSX.Element | null;
   loading: (props: LoadingProps) => JSX.Element;
   loadError: (props: any) => JSX.Element;
   delayTime: number;
@@ -440,7 +446,7 @@ interface UseLoadingProps {
   loading: (props: LoadingProps) => JSX.Element;
   placeholder?: { [props: string]: string };
   delayTime: number;
-  currentRequestPath: string;
+  cancelKey: string;
 }
 
 interface UseLoadingType {

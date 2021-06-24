@@ -14,7 +14,7 @@ const Drop: DropType = <T extends ValueType>({
   multiple = false,
   fieldName,
   maxHeight,
-  style,
+  _style,
   initData = [],
 }: DropProps<T>) => {
   const [indexArr, _1, _2, onlyOne, switchItem] = useArray<number>(initData);
@@ -25,7 +25,7 @@ const Drop: DropType = <T extends ValueType>({
     <div
       onClick={switchBoolDebounce}
       className={getClass("position-relative text-info border user-select-none", flexCenter, styleCss.drop, className)}
-      style={style}
+      style={_style}
     >
       <input
         readOnly

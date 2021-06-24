@@ -1,9 +1,9 @@
-import LoadRender from "components/LoadRender";
 import { apiName } from "config/api";
+import { flexCenter, getClass } from "utils/dom";
+import LoadRender from "components/LoadRender";
 import BlogContentPrimaryMessage from "./blogContentMessagePrimary";
 import { PrimaryMessageProps } from "types/components";
 import { BlogContentMessageType } from "types/containers";
-import { flexCenter, getClass } from "utils/dom";
 
 const BlogContentMessage: BlogContentMessageType = ({ blogId }) => {
   return (

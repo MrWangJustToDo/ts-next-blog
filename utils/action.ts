@@ -18,14 +18,13 @@ const removeElements = (element: HTMLElement) =>
 
 const judgeAction: JudgeActionType = async <T extends HTMLElement>({ element, judge }: JudgeActioProps<T>) => {
   removeElements(element);
-  const { message, className, needHandle = true } = (await judge()) || {};
+  const { message, className, needHandle = true } = await judge();
   if (needHandle) {
     const span = document.createElement("span");
-    span.setAttribute("toast", "true");
-
     span.textContent = message;
+    span.setAttribute("toast", "true");
     span.classList.add(...className.split(" "));
-    actionHandler<T, void, void>(element, (ele) => ele.parentElement?.appendChild(span));
+    element.parentElement?.append(span);
   } else {
     log(`cancel current state from judgeAction`, "normal");
   }
@@ -35,9 +34,8 @@ const loadingAction: LoadingActionType = <T extends HTMLElement>({ element, load
   removeElements(element);
   const span = document.createElement("span");
   span.setAttribute("toast", "true");
-  const loadingClassNameArr = loadingClassName.split(" ");
-  span.classList.add(...loadingClassNameArr);
-  actionHandler<T, void, void>(element, (ele) => ele.parentElement?.append(span));
+  span.classList.add(...loadingClassName.split(" "));
+  element.parentElement?.append(span);
 };
 
 const getScrollBarSize = () => {

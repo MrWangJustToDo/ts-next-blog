@@ -12,7 +12,7 @@ const PublishState: BlogContentType = (props) => {
           return (
             <div key={idx} className="form-check form-check-inline mr-4">
               <span className="mr-lg-2 mr-1">{name}</span>
-              <Drop<string> fieldName={fieldName} data={value} className="rounded" style={{ minWidth: "120px", zIndex: "1" }} initData={init} />
+              <Drop<string> fieldName={fieldName} data={value} className="rounded" _style={{ minWidth: "120px", zIndex: "1" }} initData={init} />
             </div>
           );
         } else {
@@ -20,7 +20,7 @@ const PublishState: BlogContentType = (props) => {
           return (
             <div key={idx} className="form-check form-check-inline mr-4">
               <span className="mr-lg-2 mr-1">{name ? name : value}</span>
-              <CheckBox fieldName={fieldName} init={init} />
+              <CheckBox fieldName={fieldName} initState={init} />
             </div>
           );
         }

@@ -219,6 +219,10 @@ const getPrimaryByBlogId = async ({ db, blogId }: { db: Database; blogId: string
   return await db.all("SELECT * FROM primaryComment LEFT JOIN users ON primaryComment.fromUserId = users.userId WHERE primaryComment.blogId = ?", blogId);
 };
 
+const getPrimaryByCommentId = async ({ db, commentId }: { db: Database; commentId: string }): Promise<PrimaryMessageProps | undefined> => {
+  return await db.get("SELECT * FROM primaryComment WHERE commentId = ?", commentId);
+};
+
 // 获取子评论
 const getChildByPrimaryId = async ({ db, primaryCommentId }: { db: Database; primaryCommentId: string }): Promise<ChildMessageProps[]> => {
   const childMessage = await db.all(
@@ -237,6 +241,10 @@ const getChildByPrimaryId = async ({ db, primaryCommentId }: { db: Database; pri
   return childMessage;
 };
 
+const getChildByCommentId = async ({ db, commentId }: { db: Database; commentId: string }): Promise<ChildMessageProps | undefined> => {
+  return await db.get("SELECT * FROM childComment WHERE commentId = ?", commentId);
+};
+
 const getChildByBlogId = async ({ db, blogId }: { db: Database; blogId: string }) => {
   return await db.all("SELECT * FROM childComment LEFT JOIN users ON childComment.fromUserId = users.userId WHERE childComment.blogId = ?", blogId);
 };
@@ -251,4 +259,4 @@ export { getTypeByTypeContent, getTagByTagContent, getAliveType, getTagByTagId, 
 
 export { getUserCount, getUsersExByUserId, getBlogsByBlogTitle, getBlogsByTypeId, getBlogsByTagId, getChildByBlogId, getBlogsByBlogTitleAndUserId };
 
-export { getBlogsByTypeIdAndUserId, getBlogsByTagIdAndUserId, getHomeByUserId, getAuthorByUserId };
+export { getBlogsByTypeIdAndUserId, getBlogsByTagIdAndUserId, getHomeByUserId, getAuthorByUserId, getPrimaryByCommentId, getChildByCommentId };

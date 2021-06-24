@@ -1,3 +1,4 @@
+import { log } from "./log";
 import { GetArray, GetClass, GetItem, TransformArray, AnimateCSSType, HandleClassActionType } from "types/utils";
 
 const bgId = "blog-BG";
@@ -22,7 +23,7 @@ const transformArray: TransformArray = (arr) =>
       }
       return pre;
     }
-    console.error("className type error: ", current);
+    log(`className type error, ${current}`, "error");
     return pre;
   }, []);
 

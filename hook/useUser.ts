@@ -121,9 +121,9 @@ const useLogout: UseLogoutType = () => {
             if (code === 0) {
               dispatch(setDataSucess_client({ name: actionName.currentUser, data: {} }));
               successToast("登出成功，即将返回首页");
-              delay(600, () => router.push("/"));
+              return delay(400, () => router.push("/"));
             } else {
-              failToast(`登出失败：${state}`);
+              return failToast(`登出失败：${state}`);
             }
           })
           .catch((e) => failToast(`出现错误：${e.toString()}`))
@@ -137,7 +137,7 @@ const useLogout: UseLogoutType = () => {
 
 // 自动绑定当前用户的request
 const useUserRequest: UseUserRequest = (props = {}) => {
-  const { method, data, path, apiPath, header, cache, cacheKey, cacheTime } = props;
+  const { method, data, path, apiPath, header, cache, cacheTime } = props;
   const stringdata = autoStringify(data);
   const stringHeader = autoStringify(header);
   const user = useCurrentUser();
@@ -151,10 +151,9 @@ const useUserRequest: UseUserRequest = (props = {}) => {
         apiPath,
         header: stringHeader,
         query: { userId: user.userId! },
-        cacheKey,
         cacheTime,
       }),
-    [user.userId, stringdata, path, apiPath, stringHeader, method, cache, cacheTime, cacheKey]
+    [user.userId, stringdata, path, apiPath, stringHeader, method, cache, cacheTime]
   );
 };
 

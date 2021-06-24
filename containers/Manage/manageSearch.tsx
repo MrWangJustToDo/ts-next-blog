@@ -1,18 +1,14 @@
-import { useMemo } from "react";
 import Drop from "components/Drop";
 import Button from "components/Button";
 import LoadRender from "components/LoadRender";
 import { useSearch } from "hook/useManage";
-import { createRequest } from "utils/fetcher";
 import { apiName } from "config/api";
 import { TypeProps } from "types/hook";
 import { TagProps } from "types/containers";
 import { DropItemProps, SimpleElement } from "types/components";
 
 const ManageSearch: SimpleElement = () => {
-  const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true }, cache: false }), []);
-
-  const [ref, search] = useSearch({ request });
+  const [ref, search] = useSearch();
 
   return (
     <div className="card">
@@ -20,7 +16,6 @@ const ManageSearch: SimpleElement = () => {
         <input type="text" className="form-control m-2" placeholder="标题" name="blogTitle" />
         <LoadRender<TypeProps[]>
           needUpdate
-          cacheTime={5000}
           needinitialData
           revalidateOnFocus={false}
           apiPath={apiName.type}
@@ -31,7 +26,6 @@ const ManageSearch: SimpleElement = () => {
         />
         <LoadRender<TagProps[]>
           needUpdate
-          cacheTime={5000}
           needinitialData
           revalidateOnFocus={false}
           apiPath={apiName.tag}

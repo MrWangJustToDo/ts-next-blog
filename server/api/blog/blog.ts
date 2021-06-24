@@ -164,7 +164,14 @@ const deleteBlogByBlogIdAAction = autoRequestHandler({
   errorHandler: ({ res, e, code = 400 }) =>
     fail({ res, statuCode: code, resDate: { state: "删除博客失败", data: e.toString(), methodName: "deleteBlogByBlogIdAAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
-  cacheConfig: { needDelete: [apiName.home, apiName.tag, apiName.type] },
+  cacheConfig: {
+    needDelete: [
+      apiName.home,
+      apiName.tag,
+      apiName.type,
+      ({ req }) => transformPath({ apiPath: apiName.blog, query: { blogId: req.body.blogId }, needPre: false }),
+    ],
+  },
   paramsConfig: { fromQuery: ["userId"], fromBody: ["blogId", "typeId", "tagId"] },
 });
 

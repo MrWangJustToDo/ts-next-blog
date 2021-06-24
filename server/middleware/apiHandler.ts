@@ -41,21 +41,21 @@ const fail = <T>({ res, statuCode = 404, resDate, methodName }: ApiResponseProps
 
 const transformHandler = (requestHandler: RequestHandlerType) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    return await requestHandler({ req, res, next });
+    return await requestHandler({ req, res, next, cache });
   };
 };
 
 const catchHandler = (requestHandler: RequestHandlerType, errorHandler?: ErrorHandlerType) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     try {
-      return await requestHandler({ req, res, next });
+      return await requestHandler({ req, res, next, cache });
     } catch (e) {
       log(e, "error");
       if (errorHandler && typeof errorHandler === "function") {
         if (e instanceof ServerError) {
-          await errorHandler({ req, res, next, e, code: e.code });
+          await errorHandler({ req, res, next, e, code: e.code, cache });
         } else {
-          await errorHandler({ req, res, next, e, code: 404 });
+          await errorHandler({ req, res, next, e, code: 404, cache });
         }
       } else {
         fail({ res, resDate: { state: "访问失败", data: e.toString() } });
@@ -77,9 +77,14 @@ const cacheHandler = (requestHandler: RequestHandlerType, time: number | undefin
     const needDelete = currentCacheConfig.needDelete;
     if (needDelete) {
       if (Array.isArray(needDelete)) {
-        needDelete.forEach((item: string | (({ req }: { req: ExpressRequest }) => string)) => {
+        needDelete.forEach((item: string | (({ req }: { req: ExpressRequest }) => string | string[])) => {
           if (typeof item === "function") {
-            cache.deleteRightNow(item({ req }));
+            const key = item({ req });
+            if (Array.isArray(key)) {
+              key.forEach((i) => cache.deleteRightNow(i));
+            } else {
+              cache.deleteRightNow(key);
+            }
           } else {
             cache.deleteRightNow(item);
           }
@@ -89,7 +94,12 @@ const cacheHandler = (requestHandler: RequestHandlerType, time: number | undefin
       } else if (needDelete === true) {
         cache.deleteRightNow(key);
       } else {
-        cache.deleteRightNow(needDelete({ req }));
+        const key = needDelete({ req });
+        if (Array.isArray(key)) {
+          key.forEach((i) => cache.deleteRightNow(i));
+        } else {
+          cache.deleteRightNow(key);
+        }
       }
     }
     if (needCache) {
@@ -98,7 +108,7 @@ const cacheHandler = (requestHandler: RequestHandlerType, time: number | undefin
         log(`get response data from cache. method: ${req.method}, url: ${req.originalUrl}, key: ${key}`, "normal");
         success({ res, resDate: cacheValue });
       } else {
-        const actionValue = await requestHandler({ req, res, next });
+        const actionValue = await requestHandler({ req, res, next, cache });
         if (!!actionValue) {
           cache.set(key, actionValue, cacheTime);
         } else {
@@ -106,7 +116,7 @@ const cacheHandler = (requestHandler: RequestHandlerType, time: number | undefin
         }
       }
     } else {
-      return await requestHandler({ req, res, next });
+      return await requestHandler({ req, res, next, cache });
     }
   };
 };
@@ -130,7 +140,7 @@ const checkcodeHandler = (requestHandler: RequestHandlerType, check: boolean | u
         }
       }
     }
-    return await requestHandler({ req, res, next });
+    return await requestHandler({ req, res, next, cache });
   };
 };
 
@@ -153,7 +163,7 @@ const checkParamsHandler = (requestHandler: RequestHandlerType, checkParamsConfi
         }
       }
     }
-    return await requestHandler({ req, res, next });
+    return await requestHandler({ req, res, next, cache });
   };
 };
 
@@ -171,9 +181,9 @@ const userHandler = (requestHandler: RequestHandlerType, strict: boolean | undef
           throw new ServerError("登录用户与操作用户不一致", 401);
         }
       }
-      return await requestHandler({ req, res, next });
+      return await requestHandler({ req, res, next, cache });
     } else {
-      return await requestHandler({ req, res, next });
+      return await requestHandler({ req, res, next, cache });
     }
   };
 };

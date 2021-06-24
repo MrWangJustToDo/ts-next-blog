@@ -1,5 +1,6 @@
 import { Database } from "sqlite";
 import { NextFunction, Request, Response } from "express";
+import { Cache } from "utils/cache";
 
 type ExpressRequest = Request & {
   db?: Database;
@@ -30,6 +31,7 @@ interface RequestHandlerProps {
   req: ExpressRequest;
   res: Response;
   next: NextFunction;
+  cache: Cache<string, any>;
 }
 interface RequestHandlerType {
   (props: RequestHandlerProps): Promise<any> | void;
@@ -45,7 +47,11 @@ interface CacheConfigProps {
   cacheKey?: string | (({ req }: { req: ExpressRequest }) => string);
   cacheTime?: number;
   needCache?: boolean;
-  needDelete?: string | Array<string | (({ req }: { req: ExpressRequest }) => string)> | boolean | (({ req }: { req: ExpressRequest }) => string);
+  needDelete?:
+    | string
+    | Array<string | (({ req }: { req: ExpressRequest }) => string | string[])>
+    | boolean
+    | (({ req }: { req: ExpressRequest }) => string | string[]);
 }
 interface CheckCodeConfigProps {
   needCheck?: boolean;

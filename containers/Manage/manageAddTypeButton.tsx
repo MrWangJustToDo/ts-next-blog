@@ -6,14 +6,12 @@ import { useUserRequest } from "hook/useUser";
 import { useManageToAddModule } from "hook/useManage";
 import { SimpleElement } from "types/components";
 import { ManageAddButtonBody, ManageAddButtonTypes } from "types/containers";
+import { createRequest } from "utils/fetcher";
 
-const ManageAddTypeButton: ManageAddButtonTypes = ({ request, successHandler, body }) => {
+const ManageAddTypeButton: ManageAddButtonTypes = ({ body }) => {
   const click = useManageToAddModule({
     body,
-    request,
     title: "添加分类",
-    successHandler,
-    judgeApiName: apiName.checkType,
   });
 
   return (
@@ -27,18 +25,19 @@ const ManageAddTypeButtonWrapper: SimpleElement = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.addType, cache: false });
 
   const successHandler = useCallback(() => {
-    request.cache.deleteRightNow(apiName.type);
-    mutate(apiName.type);
-  }, [request]);
+    const typeRequest = createRequest({ apiPath: apiName.type });
+    typeRequest.deleteCache();
+    mutate(typeRequest.cacheKey);
+  }, []);
 
   const body = useCallback<ManageAddButtonBody>(
-    ({ request, judgeApiName, successHandler }) =>
-      (closeHandler) =>
-        <ManageAddModule fieldname="typeContent" request={request} judgeApiName={judgeApiName} closeHandler={closeHandler} successHandler={successHandler} />,
-    []
+    (closeHandler) => (
+      <ManageAddModule fieldname="typeContent" request={request} judgeApiName={apiName.checkType} closeHandler={closeHandler} successHandler={successHandler} />
+    ),
+    [request, successHandler]
   );
 
-  return <ManageAddTypeButton request={request} body={body} successHandler={successHandler} />;
+  return <ManageAddTypeButton body={body} />;
 };
 
 export default ManageAddTypeButtonWrapper;

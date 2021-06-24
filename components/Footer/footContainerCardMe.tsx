@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { SimpleElement } from "types/components";
 import { getClass, flexCenter } from "utils/dom";
+import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
