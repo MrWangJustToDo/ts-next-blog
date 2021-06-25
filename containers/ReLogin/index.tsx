@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import Button from "components/Button";
 import { useLogout } from "hook/useUser";
 import { useRouter } from "next/dist/client/router";
 import { flexBetween, getClass } from "utils/dom";
@@ -9,9 +10,7 @@ const ReLogin: SimpleElement = () => {
 
   const router = useRouter();
 
-  const reLogin = useCallback(() => {
-    logout().then(router.reload).catch(router.reload);
-  }, [router, logout]);
+  const reLogin = useCallback(() => logout().then(router.reload).catch(router.reload), [router, logout]);
 
   return (
     <div className="jumbotron my-5">
@@ -23,9 +22,7 @@ const ReLogin: SimpleElement = () => {
         <button type="button" className="btn btn-secondary btn-lg" onClick={router.back}>
           返回
         </button>
-        <button type="button" className="btn btn-primary btn-lg" onClick={reLogin}>
-          重新登录
-        </button>
+        <Button className="btn btn-primary btn-lg" request={reLogin} value="重新登录" />
       </div>
     </div>
   );

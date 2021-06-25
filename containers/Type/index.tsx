@@ -17,8 +17,8 @@ const Type: SimpleElement = () => {
         <LoadRender<BlogContentProps[]>
           needUpdate
           needinitialData
-          apiPath={apiName.home}
           initialData={blogs}
+          apiPath={apiName.home}
           revalidateOnFocus={false}
           loaded={(data) => {
             return (

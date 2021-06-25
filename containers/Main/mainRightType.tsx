@@ -19,11 +19,10 @@ const MainRightType: MainRightTypeType = ({ index }) => {
         <div className="list-group">
           <LoadRender<TypeProps[]>
             needUpdate
-            cacheTime={5000}
             needinitialData
+            initialData={type}
             apiPath={apiName.type}
             revalidateOnFocus={false}
-            initialData={type}
             loaded={(data) => (
               <>
                 {data.map(({ typeId, typeContent, typeCount }) => (

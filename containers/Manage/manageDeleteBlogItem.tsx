@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import Link from "next/link";
 import { mutate } from "swr";
 import { apiName } from "config/api";
-import { useUserRequest } from "hook/useUser";
 import { flexCenter, getClass } from "utils/dom";
+import { useUserRequest } from "hook/useUser";
 import { useFilterResult, useManageToDeleteModule } from "hook/useManage";
 import { WithWriteBlogItem as SearchResult, BlogItem } from "components/BlogItem";
 import ManageDeleteModule from "./manageDeleteModule";
@@ -29,18 +29,16 @@ const ManageDeleteBlogItem: BlogContentType = (props) => {
   }, []);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ request, deleteItem, successHandler }) =>
+    ({ deleteItem }) =>
       (closeHandler) =>
         <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
     []
   );
 
   const click = useManageToDeleteModule({
+    body,
     title: "确认删除博客",
     deleteItem: <BlogItem {...props} className={getClass("border rounded m-2", style.deleteBlogItem)} />,
-    body,
-    request,
-    successHandler,
   });
 
   return (

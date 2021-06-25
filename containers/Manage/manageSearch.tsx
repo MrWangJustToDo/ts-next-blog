@@ -21,7 +21,7 @@ const ManageSearch: SimpleElement = () => {
           apiPath={apiName.type}
           loaded={(res) => {
             const data: DropItemProps<string>[] = res.map(({ typeContent, typeId }) => ({ name: typeContent, value: typeId! }));
-            return <Drop<string> style={{ zIndex: "3" }} fieldName="typeId" className="form-control m-2" placeHolder="选择分类" data={data} />;
+            return <Drop<string> _style={{ zIndex: "3" }} fieldName="typeId" className="form-control m-2" placeHolder="选择分类" data={data} />;
           }}
         />
         <LoadRender<TagProps[]>

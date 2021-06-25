@@ -8,7 +8,7 @@ import { getClass } from "utils/dom";
 
 const Footer = dynamic(() => import("../Footer"));
 
-const Layout = ({ title, container = true, children }: { title?: string; container: boolean; children?: object }): JSX.Element => {
+const Layout = ({ title, container = true, children }: { title?: string; container?: boolean; children?: object }): JSX.Element => {
   useAutoLogin();
   useAutoGetIp();
 

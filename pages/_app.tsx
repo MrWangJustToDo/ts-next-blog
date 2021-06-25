@@ -14,7 +14,7 @@ interface MyAppProps extends AppProps {
 
 const WrappedApp: FC<MyAppProps> = ({ Component, pageProps }) => {
   return (
-    <Layout title={Component.title} container={Component.container || true}>
+    <Layout title={Component.title} container={Component.container}>
       <Component {...pageProps} />
     </Layout>
   );

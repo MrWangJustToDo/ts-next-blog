@@ -201,9 +201,9 @@ export type { DropType, DropProps, ValueType };
 interface DropItemProps<T> {
   value: T;
   name?: string;
-  index: number;
-  checkedIndex: number[];
-  clickHandler: (props: number) => void;
+  index?: number;
+  checkedIndex?: number[];
+  clickHandler?: (props: number) => void;
 }
 interface DropItemType {
   <T extends ValueType>(props: DropItemProps<T>): JSX.Element;

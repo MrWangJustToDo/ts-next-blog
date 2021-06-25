@@ -1,8 +1,8 @@
 import { flexEnd, getClass } from "utils/dom";
 import Button from "components/Button";
 import { useDeleteModuleToSubmit } from "hook/useMessage";
-import { BlogContentDeleteModuleProps, BlogContentDeleteModuleType } from "types/containers";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
+import { BlogContentDeleteModuleProps, BlogContentDeleteModuleType } from "types/containers";
 
 const BlogContentDeleteModule: BlogContentDeleteModuleType = <T extends PrimaryMessageProps | ChildMessageProps>({
   props,

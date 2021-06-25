@@ -1,10 +1,11 @@
 import { useCallback } from "react";
 import { mutate } from "swr";
+import { apiName } from "config/api";
 import { Tag as TagItem } from "components/Tag";
+import { getClass } from "utils/dom";
+import { createRequest } from "utils/fetcher";
 import { useUserRequest } from "hook/useUser";
 import { useManageToDeleteModule } from "hook/useManage";
-import { apiName } from "config/api";
-import { getClass } from "utils/dom";
 import ManageDeleteModule from "./manageDeleteModule";
 import { UseManageToDeleteModuleBody } from "types/hook";
 import { ManageDeleteTagButtonType, ManageDeleteTagItemType } from "types/containers";
@@ -12,21 +13,23 @@ import { ManageDeleteTagButtonType, ManageDeleteTagItemType } from "types/contai
 import style from "./index.module.scss";
 
 const ManageDeleteTagButton: ManageDeleteTagButtonType = ({ deleteItem, tagId }) => {
-  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteTag, data: { deleteTag: tagId } });
+  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteTag, data: { deleteTag: tagId }, cache: false });
 
   const successHandler = useCallback(() => {
-    request.cache.deleteRightNow(apiName.tag);
-    mutate(apiName.tag);
+    const tagRequest = createRequest({ apiPath: apiName.tag });
+    tagRequest.deleteCache();
+    mutate(tagRequest.cacheKey);
   }, [request]);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ request, deleteItem, successHandler }) =>
+    ({ deleteItem }) =>
       (closeHandler) =>
         <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
     []
   );
 
   const click = useManageToDeleteModule({
+    body,
     title: "确认删除",
     deleteItem: (
       <div className="text-center">
@@ -35,9 +38,6 @@ const ManageDeleteTagButton: ManageDeleteTagButtonType = ({ deleteItem, tagId })
         <hr />
       </div>
     ),
-    body,
-    request,
-    successHandler,
   });
 
   return (

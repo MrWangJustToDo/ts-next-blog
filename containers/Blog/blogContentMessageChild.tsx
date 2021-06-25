@@ -2,24 +2,33 @@ import { useCallback } from "react";
 import { apiName } from "config/api";
 import { getClass } from "utils/dom";
 import { ChildMessage } from "components/BlogMessage";
-import { useUserRequest } from "hook/useUser";
+import { useCurrentUser, useUserRequest } from "hook/useUser";
 import { useChildMessage, useMessageToDeleteModule, useMessageToReplayModule, useMessageToUpdateModule } from "hook/useMessage";
 import BlogContentReplayModule from "./blogContentReplayModule";
 import BlogContentDeleteModule from "./blogContentDeleteModule";
 import BlogContentUpdateModule from "./blogContentUpdateModule";
-import { ChildMessageProps } from "types/components";
 import { UseMessageToModuleBody } from "types/hook";
+import { ChildMessageProps } from "types/components";
 import { BlogContentChildMessageType, BlogContentChildMessageWithReplayType } from "types/containers";
 
 import style from "./index.module.scss";
 
 const BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType = ({ messages, childDelete, childReplay, childUpdate }) => {
+  const { userId } = useCurrentUser();
   const { messageProps, more, loadMore } = useChildMessage(messages);
 
   return (
     <>
       {messageProps.map((item, index) => (
-        <ChildMessage key={item.commentId} {...item} replayHandler={childReplay} withDelete deleteHandler={childDelete} withUpdate updateHandler={childUpdate}>
+        <ChildMessage
+          key={item.commentId}
+          {...item}
+          replayHandler={childReplay}
+          withDelete={Boolean(userId)}
+          deleteHandler={childDelete}
+          withUpdate={Boolean(userId)}
+          updateHandler={childUpdate}
+        >
           {index === messageProps.length - 1 && more ? (
             <button className={getClass("btn btn-info float-right", style.loadMore)} onClick={loadMore}>
               加载更多

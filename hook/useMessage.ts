@@ -63,7 +63,7 @@ const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(re
 const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = <T extends MyInputELement>({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps) => {
   const ref = useRef<T>(null);
   const open = useOverlayOpen();
-  const request = useUserRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId } });
+  const request = useUserRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId }, cache: false });
   const submit = useCallback(() => {
     actionHandler<T, void, void>(ref.current, (ele) => {
       if (!!ele.value.length) {

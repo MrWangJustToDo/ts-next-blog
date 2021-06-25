@@ -244,7 +244,7 @@ export type { TagContentType };
 interface PublishImageModuleProps {
   inputRef: RefObject<HTMLInputElement>;
   closeHandler: () => void;
-  appendHandler: (url: string) => void;
+  initialUrl?: string;
 }
 
 interface PublishImageModuleType {

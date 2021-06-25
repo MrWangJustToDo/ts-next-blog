@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { mark } from "utils/markdown";
+import { getClass } from "utils/dom";
 import { BlogContentType } from "types/containers";
 
 import style from "./index.module.scss";
-import { getClass } from "utils/dom";
 
 const BlogContentBody: BlogContentType = ({ blogTitle, blogContent }) => {
   const html = useMemo(() => mark.render(blogContent || ""), [blogContent]);

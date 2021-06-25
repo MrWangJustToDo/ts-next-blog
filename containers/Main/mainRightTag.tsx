@@ -17,11 +17,10 @@ const MainRightTag: MainRightTagType = ({ index }) => {
       <div className="card-body">
         <LoadRender<TagProps[]>
           needUpdate
-          cacheTime={5000}
           needinitialData
+          initialData={tag}
           apiPath={apiName.tag}
           revalidateOnFocus={false}
-          initialData={tag}
           loaded={(data) => (
             <>
               {data.map(({ tagId, tagContent, tagCount }) => (

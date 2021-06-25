@@ -10,23 +10,26 @@ import { UseManageToDeleteModuleBody } from "types/hook";
 import { ManageDeleteTypeButtonType, ManageDeleteTypeItemType } from "types/containers";
 
 import style from "./index.module.scss";
+import { createRequest } from "utils/fetcher";
 
 const ManageDeleteTypeButton: ManageDeleteTypeButtonType = ({ deleteItem, typeId }) => {
-  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId } });
+  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId }, cache: false });
 
   const successHandler = useCallback(() => {
-    request.cache.deleteRightNow(apiName.type);
-    mutate(apiName.type);
+    const typeRequest = createRequest({ apiPath: apiName.type });
+    typeRequest.deleteCache();
+    mutate(typeRequest.cacheKey);
   }, [request]);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ request, deleteItem, successHandler }) =>
+    ({ deleteItem }) =>
       (closeHandler) =>
         <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
     []
   );
 
   const click = useManageToDeleteModule({
+    body,
     title: "确认删除",
     deleteItem: (
       <div className="text-center">
@@ -35,9 +38,6 @@ const ManageDeleteTypeButton: ManageDeleteTypeButtonType = ({ deleteItem, typeId
         <hr />
       </div>
     ),
-    body,
-    request,
-    successHandler,
   });
 
   return (

@@ -32,12 +32,6 @@ const detectionToken: TransformHandlerType = transformHandler(
       const { disable = false, token = true, method = "get", config = {} } = accessApi[path];
       // 挂载config
       req.config = config;
-      // 开发环境无需验证
-      // if (process.env.NODE_ENV !== "production") {
-      //   next();
-      //   return;
-      // }
-      // 当前路径无效
       if (disable) {
         throw new ServerError("路径不存在", 404);
       }

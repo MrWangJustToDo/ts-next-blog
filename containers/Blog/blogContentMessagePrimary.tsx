@@ -5,7 +5,7 @@ import { PrimaryMessage } from "components/BlogMessage";
 import { apiName } from "config/api";
 import { primaryMessageLength } from "config/message";
 import { useBasePage } from "hook/useBase";
-import { useUserRequest } from "hook/useUser";
+import { useCurrentUser, useUserRequest } from "hook/useUser";
 import { useMessageToReplayModule, useMessageToDeleteModule, useMessageToUpdateModule } from "hook/useMessage";
 import BlogContentChildMessage from "./blogContentMessageChild";
 import BlogContentReplayModule from "./blogContentReplayModule";
@@ -18,6 +18,7 @@ import { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWrapperType } f
 import style from "./index.module.scss";
 
 const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, primaryReplay, primaryDelete, primaryUpdate }) => {
+  const { userId } = useCurrentUser();
   const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageData } = useBasePage<PrimaryMessageProps>({
     pageLength: primaryMessageLength,
     data: messages,
@@ -31,9 +32,9 @@ const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, pr
             {...item}
             key={item.commentId}
             replayHandler={primaryReplay}
-            withDelete
+            withDelete={Boolean(userId)}
             deleteHandler={primaryDelete}
-            withUpdate
+            withUpdate={Boolean(userId)}
             updateHandler={primaryUpdate}
           >
             <LoadRender<ChildMessageProps[]>

@@ -9,7 +9,6 @@ const ManageTag: SimpleElement = () => {
     <div className="card-body">
       <LoadRender<TagProps[]>
         needUpdate
-        cacheTime={5000}
         needinitialData
         apiPath={apiName.tag}
         revalidateOnFocus={false}

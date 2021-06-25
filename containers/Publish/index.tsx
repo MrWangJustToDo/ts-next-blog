@@ -1,17 +1,18 @@
 import { useMemo } from "react";
+import { apiName } from "config/api";
+import { editorId } from "config/publish";
 import { usePublish } from "hook/useBlog";
 import { createRequest } from "utils/fetcher";
-import { editorId } from "config/publish";
 import PublishHead from "components/Publish/publishHead";
+import PublishState from "components/Publish/publishState";
 import PublishEditor from "components/Publish/publishEditor";
 import PublishTypeTag from "components/Publish/publishType&Tag";
-import PublishState from "components/Publish/publishState";
 import PublishImage from "./publishImage";
 import PublishSubmit from "./publishSubmit";
 import { SimpleElement } from "types/components";
 
 const Publish: SimpleElement = () => {
-  const request = useMemo(() => createRequest({ method: "post", header: { apiToken: true } }), []);
+  const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.publishBlog, header: { apiToken: true }, cache: false }), []);
 
   const [ref, submit] = usePublish({ request, id: editorId });
 

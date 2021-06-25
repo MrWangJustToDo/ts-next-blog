@@ -4,6 +4,8 @@ import { cancel, delay } from "./delay";
 
 const maxTimeStore = 1000 * 60 * 10;
 
+const isBrowser = typeof window !== "undefined";
+
 class Cache<T, K> {
   constructor(readonly maxTime: number = maxTimeStore, readonly store: Map<T, K> = new Map()) {
     if (!store.has || !store.set || !store.delete || !store.get) {
@@ -49,7 +51,7 @@ class Cache<T, K> {
     if (this.store.has(key)) {
       return this.store.get(key);
     } else {
-      log(`warn, not cache yet, nothing to return. key: ${key}`, "warn");
+      log(`warn, not cache yet, nothing to return. key: ${key}${isBrowser ? ", fetch from server" : ""}`, "warn");
       return false;
     }
   };

@@ -181,7 +181,6 @@ const usePublish: UsePublishType = ({ request, id }) => {
             return request({
               data: { ...formSerialize(ele), blogPreview, blogId: getRandom(1000).toString(16) },
               query: { userId },
-              apiPath: apiName.publishBlog,
             })
               .run<ApiRequestResult<string>>()
               .then(({ code, data }) => {
@@ -202,12 +201,13 @@ const usePublish: UsePublishType = ({ request, id }) => {
   return [ref, submit];
 };
 
-const useInputToImageModule: UseInputToImageModuleType = ({ body, className, appendHandler, inputRef }) => {
+const useInputToImageModule: UseInputToImageModuleType = ({ body, className }) => {
   const open = useOverlayOpen();
-  const select = useCallback<() => void>(() => {
-    open({ head: "选择图片，点击刷新", body: body(appendHandler)(inputRef), className });
+  const ref = useRef<HTMLInputElement>(null);
+  const select = useCallback(() => {
+    open({ head: "选择图片，点击刷新", body: body(ref), className });
   }, [body]);
-  return select;
+  return [ref, select];
 };
 
 const useUpdateBlog: UsePublishType = ({ request, id }) => {
@@ -222,11 +222,11 @@ const useUpdateBlog: UsePublishType = ({ request, id }) => {
         ref.current,
         (ele) => {
           const blogPreview = ele.querySelector(htmlId)?.textContent;
-          return request({ data: { newProps: { ...formSerialize(ele), blogPreview, blogId: id } }, apiPath: apiName.updataBlog })
+          return request({ data: { newProps: { ...formSerialize(ele), blogPreview, blogId: id } } })
             .run<ApiRequestResult<string>>()
             .then(({ data, code }) => {
               if (code === 0) {
-                delay(800, () => router.push("/"));
+                delay(400, () => router.push("/"));
                 return success(data.toString());
               } else {
                 return fail(data.toString());
@@ -234,7 +234,7 @@ const useUpdateBlog: UsePublishType = ({ request, id }) => {
             })
             .catch((e) => fail(e.toString()));
         },
-        () => fail(`form元素不存在...`)
+        () => fail(`组件已卸载`)
       ),
     [request, id]
   );

@@ -1,21 +1,25 @@
 import { useCallback } from "react";
 import Loading from "components/Loading";
+import { apiName } from "config/api";
 import { useAutoLoadRandomImg } from "hook/useAuto";
 import { useShowAndHideAnimate } from "hook/useAnimate";
-import { apiName } from "config/api";
-import { flexCenter, getClass } from "utils/dom";
 import { actionHandler } from "utils/action";
+import { flexCenter, getClass } from "utils/dom";
 import { PublishImageModuleType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const PublishImageModule: PublishImageModuleType = ({ closeHandler, appendHandler, inputRef }) => {
-  const [ref, bool] = useAutoLoadRandomImg({ imgUrl: apiName.image, initUrl: inputRef.current?.value });
+const PublishImageModule: PublishImageModuleType = ({ closeHandler, initialUrl, inputRef }) => {
+  const getInitUrl = useCallback(() => inputRef.current?.value, []);
+
+  const [ref, bool] = useAutoLoadRandomImg({ imgUrl: apiName.image, initUrl: initialUrl, getInitUrl });
 
   useShowAndHideAnimate<HTMLImageElement>({ state: bool, forWardRef: ref });
 
   const clickCallback = useCallback(() => {
-    actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => appendHandler(ele.src));
+    actionHandler<HTMLInputElement, void, void>(inputRef.current, (input) =>
+      actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => (input.value = ele.src))
+    );
     closeHandler();
   }, [closeHandler]);
 

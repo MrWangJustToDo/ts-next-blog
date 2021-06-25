@@ -98,6 +98,8 @@ const accessApi: AccessType = {
   [apiName.deleteChildMessage]: { disable: false, token: true, method: "delete" },
   [apiName.deletePrimaryMessage]: { disable: false, token: true, method: "delete" },
   [apiName.updataBlog]: { disable: false, token: false, method: "post" },
+  [apiName.updateChildMessage]: { disable: false, token: true, method: "post" },
+  [apiName.updatePrimaryMessage]: { disable: false, token: true, method: "post" },
   [apiName.publishBlog]: { disable: false, token: false, method: "post" },
 };
 

@@ -79,18 +79,20 @@ const useLogin: UseLoginType = () => {
   const ref = useRef<HTMLFormElement>(null);
   const loginCallback = useCallback<(e?: Event) => void>((e) => {
     e?.preventDefault();
-    createRequest({ method: "post", data: formSerialize(ref.current!), cache: false, apiPath: apiName.login })
-      .run<ApiRequestResult<UserProps>>()
-      .then(({ code, data }) => {
-        if (code === 0 && !Array.isArray(data) && data.userId) {
-          dispatch(setDataSucess_client({ name: actionName.currentUser, data }));
-          successToast("登录成功，将要跳转到首页");
-          delay(1000, () => router.push("/"));
-        } else {
-          failToast(`登录失败：${data}`);
-        }
-      })
-      .catch((e) => failToast(`出现错误：${e.toString()}`));
+    actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
+      return createRequest({ method: "post", data: formSerialize(ele), cache: false, apiPath: apiName.login })
+        .run<ApiRequestResult<UserProps>>()
+        .then(({ code, data }) => {
+          if (code === 0 && !Array.isArray(data) && data.userId) {
+            dispatch(setDataSucess_client({ name: actionName.currentUser, data }));
+            successToast("登录成功，将要跳转到首页");
+            delay(1000, () => router.push("/"));
+          } else {
+            failToast(`登录失败：${data}`);
+          }
+        })
+        .catch((e) => failToast(`出现错误：${e.toString()}`));
+    });
   }, []);
   const addListenerCallback = useCallback<(action: (e?: Event) => void) => void>(
     (action) => actionHandler<HTMLFormElement, void, void>(ref.current, (ele) => ele.addEventListener("submit", action)),

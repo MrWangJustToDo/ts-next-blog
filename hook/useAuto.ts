@@ -28,6 +28,7 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
   const actionStateRef = useRef<boolean>();
   actionStateRef.current = actionState;
   useEffect(() => {
+    const currentRightNow = rightNow && typeof rightNow === "function" ? rightNow() : rightNow;
     // 定时器
     if (timmer) {
       const actionCallback = () => {
@@ -37,9 +38,7 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
         log("timmer delayTime not set ---> useAutoActionHandler", "warn");
         delayTime = 0;
       }
-      if (rightNow) {
-        actionCallback();
-      }
+      if (currentRightNow) actionCallback();
       if (once) {
         const id = setTimeout(actionCallback, delayTime);
         return () => clearTimeout(id);
@@ -53,13 +52,18 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
         throw new Error("every addListener need a removeListener! ---> useAutoActionHandler");
       } else {
         if (actionStateRef.current) {
-          if (rightNow) action();
-          const currentEle = currentRef?.current;
-          addListener(action, currentEle!);
-          return () => removeListener(action, currentEle!);
+          if (currentRightNow) action();
+          if (currentRef?.current) {
+            const ele = currentRef.current;
+            addListener(action, ele);
+            return () => removeListener(action, ele);
+          } else {
+            addListener(action);
+            return () => removeListener(action);
+          }
         }
       }
-    } else if (rightNow) {
+    } else if (currentRightNow) {
       if (actionStateRef.current) {
         action();
       }
@@ -188,11 +192,19 @@ const useAutoSetHeight: UseAutoSetHeightType = <T extends HTMLElement>(props: Us
   return [currentRef, height];
 };
 
-const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl }) => {
+const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getInitUrl }) => {
   const fail = useFailToast();
   const { bool, show, hide } = useBool();
   const ref = useRef<HTMLImageElement>(null);
   const request = useMemo(() => createRequest({ apiPath: imgUrl, header: { apiToken: true }, cache: false }), [imgUrl]);
+  const rightNow = useCallback(() => {
+    if (initUrl) {
+      return false;
+    } else if (getInitUrl) {
+      return !getInitUrl();
+    }
+    return true;
+  }, [initUrl, getInitUrl]);
   const loadSrc = useCallback<() => void>(
     debounce(
       () => {
@@ -236,16 +248,26 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl }) => 
   }, [initUrl]);
 
   useEffect(() => {
+    if (getInitUrl) {
+      const res = getInitUrl();
+      if (res) {
+        actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => (ele.src = res));
+      }
+    }
+  }, [getInitUrl]);
+
+  useEffect(() => {
     actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.addEventListener("load", show));
     () => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.removeEventListener("load", show));
   }, []);
 
   useAutoActionHandler({
     action: loadSrc,
-    rightNow: initUrl ? false : true,
+    rightNow,
     addListener: addListenerCallback,
     removeListener: removeListenerCallback,
   });
+
   return [ref, bool];
 };
 

@@ -113,7 +113,7 @@ interface UseAutoActionHandlerProps<T, K> {
   timmer?: boolean; // 是否使用定时器
   once?: boolean; // 执行一次，for timmer
   delayTime?: number; // 定时器执行时间间隔
-  rightNow?: boolean; // 立即执行，for listner
+  rightNow?: boolean | Function; // 立即执行，for listner
   // 适应React 17 的更新
   currentRef?: RefObject<K>;
   addListener?: (action: (e?: T) => void, ele?: K) => void; // 添加事件监听
@@ -147,6 +147,7 @@ interface UseAutoSetHeightType {
 interface UseAutoLoadRandomImgProps {
   imgUrl: apiName;
   initUrl?: string;
+  getInitUrl?: () => string | undefined;
 }
 interface UseAutoLoadRandomImgType {
   (props: UseAutoLoadRandomImgProps): [RefObject<HTMLImageElement>, boolean];
@@ -221,12 +222,10 @@ interface UseLikeToPayModuleType {
 }
 interface UseInputToImageModuleProps {
   className?: string;
-  inputRef: RefObject<HTMLInputElement>;
-  appendHandler: (url: string) => void;
-  body: (appendHandler: (props: string) => void) => (ref: RefObject<HTMLInputElement>) => (closeHandler: () => void) => JSX.Element;
+  body: (ref: RefObject<HTMLInputElement>) => (closeHandler: () => void) => JSX.Element;
 }
 interface UseInputToImageModuleType {
-  (props: UseInputToImageModuleProps): () => void;
+  (props: UseInputToImageModuleProps): [RefObject<HTMLInputElement>, () => void];
 }
 interface AuthorProps {
   userId?: string;
@@ -339,15 +338,11 @@ interface UseJudgeInputType {
   (props: UseJudgeInputProps): [RefObject<HTMLInputElement>, boolean, boolean];
 }
 interface UseManageToDeleteModuleBody {
-  ({ request, deleteItem, successHandler }: { request: AutoRequestType; deleteItem: JSX.Element; successHandler: () => void }): (
-    closeHandler: () => void
-  ) => JSX.Element;
+  ({ deleteItem }: { deleteItem: JSX.Element }): (closeHandler: () => void) => JSX.Element;
 }
 interface UseManageToDeleteModuleProps {
   title: string;
   deleteItem: JSX.Element;
-  request: AutoRequestType;
-  successHandler: () => void;
   body: UseManageToDeleteModuleBody;
 }
 interface UseManageToDeleteModuleType {
