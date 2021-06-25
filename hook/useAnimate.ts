@@ -8,6 +8,8 @@ import { UseShowAndHideAnimateProps, UseShowAndHideAnimateType } from "types/hoo
 const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>({
   state,
   forWardRef,
+  getElement,
+  mode = "display",
   showClassName = "fadeIn",
   hideClassName = "fadeOut",
   startHide,
@@ -24,9 +26,15 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
   callbackRef.current.showDone = showDone;
   useEffect(() => {
     // init
-    actionHandler<T, void, void>(currentRef.current, (ele) =>
-      ele.classList.remove("animate__animated", `animate__${showClassName}`, `animate__${hideClassName}`)
-    );
+    let element: T | null = null;
+    if (currentRef.current) {
+      element = currentRef.current;
+    } else if (getElement) {
+      element = getElement();
+    }
+    actionHandler<T, void, void>(element, (ele) => {
+      ele.classList.remove("animate__animated", `animate__${showClassName}`, `animate__${hideClassName}`);
+    });
     let needCacel = false;
     const startHideCallback = callbackRef.current.startHide;
     const hideDoneCallback = callbackRef.current.hideDone;
@@ -37,20 +45,20 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
       Promise.resolve(startHideCallback && startHideCallback())
         .then(() =>
           delay<void>(0, () =>
-            actionHandler<T, void | Promise<void>, Promise<void>>(currentRef.current, (ele) => {
-              if (ele.style.display !== "none") {
-                return animateCSS({ element: ele, animation: hideClassName }).then(() =>
-                  actionHandler<T, void, void>(currentRef.current, (ele) => {
-                    if (!needCacel) {
+            actionHandler<T, void | Promise<void>, Promise<void>>(element, (ele) => {
+              if ((mode === "display" && ele.style.display !== "none") || (mode === "opacity" && ele.style.opacity !== "0")) {
+                return animateCSS({ element: ele, animation: hideClassName }).then(() => {
+                  if (!needCacel) {
+                    if (mode === "display") {
                       ele.style.display = "none";
-                      ele.dataset.show = "false";
                     } else {
-                      log("element style change have been cacel", "normal");
+                      ele.style.opacity = "0";
                     }
-                  })
-                );
-              } else {
-                log("aleardy hide, do not need animate to hide", "normal");
+                    ele.dataset.show = "false";
+                  } else {
+                    log("element style change have been cacel", "normal");
+                  }
+                });
               }
             })
           )
@@ -61,15 +69,22 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
       Promise.resolve(startShowCallback && startShowCallback())
         .then(() =>
           delay<void>(0, () =>
-            actionHandler<T, void, void>(currentRef.current, (ele) => {
-              if (ele.style.display === "none") {
-                ele.style.display = "block";
-                ele.dataset.show = "true";
+            actionHandler<T, void, void>(element, (ele) => {
+              if (mode === "display") {
+                if (ele.style.display === "none") {
+                  ele.style.display = "block";
+                  ele.dataset.show = "true";
+                }
+              } else if (mode === "opacity") {
+                if (ele.style.opacity === "0") {
+                  ele.style.opacity = "1";
+                  ele.dataset.show = "true";
+                }
               }
             })
           )
         )
-        .then(() => actionHandler<T, Promise<void>, Promise<void>>(currentRef.current, (ele) => animateCSS({ element: ele, animation: showClassName })))
+        .then(() => actionHandler<T, Promise<void>, Promise<void>>(element, (ele) => animateCSS({ element: ele, animation: showClassName })))
         .then(() => delay(0, () => showDoneCallback && showDoneCallback()));
     }
 

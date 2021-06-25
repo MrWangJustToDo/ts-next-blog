@@ -75,7 +75,9 @@ export type { UserProps, TypeProps, TagProps, BlogProps, BlogContentProps, Ipadd
 /* useAnimate */
 type animateCallback = () => void | Promise<void>;
 interface UseShowAndHideAnimateProps<T> {
+  mode?: "display" | "opacity";
   state: boolean;
+  getElement?: () => T | null;
   forWardRef?: RefObject<T>;
   showClassName?: string;
   hideClassName?: string;

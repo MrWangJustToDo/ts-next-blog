@@ -1,19 +1,40 @@
-import { Children, useCallback, useEffect, useState } from "react";
+import React, { Children, Component, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { findDOMNode } from "react-dom";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { AnimationListType, AnimationItemType } from "types/components";
 
+class Empty extends Component {
+  render() {
+    const { children } = this.props;
+    return children;
+  }
+}
+
 const AnimationItem: AnimationItemType = ({ children, showState, next, showClassName, nextIndex }) => {
-  const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [currentRef, currentChildren] = useMemo(() => {
+    return [ref, React.cloneElement(<Empty>{children}</Empty>, { ref })];
+  }, [children]);
+
+  const getElement = useCallback(() => findDOMNode(currentRef.current) as HTMLElement, []);
+
+  useEffect(() => {
+    const ele = getElement();
+    if (ele) {
+      (ele as HTMLElement).style.opacity = "0";
+    }
+  }, [getElement]);
+
+  useShowAndHideAnimate({
+    mode: "opacity",
+    getElement,
     state: showState,
     showDone: () => next(nextIndex),
     showClassName: showClassName || "lightSpeedInLeft",
   });
 
-  return (
-    <div ref={ref} style={{ display: "none" }}>
-      {children}
-    </div>
-  );
+  return <>{currentChildren}</>;
 };
 
 const AnimationList: AnimationListType = ({ children, showClassName }) => {

@@ -4,8 +4,8 @@ import { GetArray, GetClass, GetItem, TransformArray, AnimateCSSType, HandleClas
 const bgId = "blog-BG";
 
 // 自动处理数组
-const transformArray: TransformArray = (arr) =>
-  arr.reduce<string[]>((pre, current) => {
+const transformArray: TransformArray = (arr) => {
+  return arr.reduce<string[]>((pre, current) => {
     if (Array.isArray(current)) {
       return pre.concat(transformArray(current));
     }
@@ -26,6 +26,7 @@ const transformArray: TransformArray = (arr) =>
     log(`className type error, ${current}`, "error");
     return pre;
   }, []);
+};
 
 // 自动处理类名
 const getClass: GetClass = (...res) => transformArray(res).join(" ");
@@ -45,23 +46,22 @@ const flexAround: GetItem<string> = () => "d-flex justify-content-around align-i
 const flexBottom: GetItem<string> = () => "d-flex justify-content-center align-items-end";
 
 // 动画
-const animateCSS: AnimateCSSType = ({ element, animation, prefix = "animate__" }) =>
-  new Promise((resolve) => {
+const animateCSS: AnimateCSSType = ({ element, animation, prefix = "animate__" }) => {
+  return new Promise((resolve) => {
     const classNames = [`${prefix}animated`, `${prefix}faster`, `${prefix}${animation}`];
-
     handleCssAction({ element, classNames, type: "add" });
-
     function handleAnimationEnd(event: Event) {
       event.stopPropagation();
       handleCssAction({ element, classNames, type: "remove" });
       resolve();
     }
-
     element.addEventListener("animationend", handleAnimationEnd, { once: true });
   });
+};
 
-const handleCssAction: HandleClassActionType = ({ element, classNames, type }) =>
+const handleCssAction: HandleClassActionType = ({ element, classNames, type }) => {
   type === "add" ? element.classList.add(...classNames.filter(Boolean)) : element.classList.remove(...classNames.filter(Boolean));
+};
 
 const applyRootStyles = (rootId: string) => {
   const body = document.querySelector("body") as HTMLBodyElement;

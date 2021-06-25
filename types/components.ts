@@ -32,10 +32,10 @@ export type { SimpleElement };
 
 /* AnimationList */
 interface AnimationListType {
-  (props: { children: React.ReactNode | ReactNode[]; showClassName?: string }): React.ReactElement;
+  (props: { children: ReactChild[]; showClassName?: string }): JSX.Element;
 }
 interface AnimationItemType {
-  (props: { children: React.ReactNode; nextIndex: number; showState: boolean; showClassName?: string; next: (index: number) => void }): React.ReactElement;
+  (props: { children: ReactChild; nextIndex: number; showState: boolean; showClassName?: string; next: (index: number) => void }): JSX.Element;
 }
 
 export type { AnimationListType, AnimationItemType };
@@ -534,7 +534,7 @@ export type { TagType };
 /* === Toast === */
 import { toastState } from "config/toast";
 import { InputProps } from "./config";
-import React, { ReactElement, ReactNode, RefObject } from "react";
+import React, { ReactChild, ReactElement, ReactNode, RefObject } from "react";
 
 interface ToastProps {
   title: string;
