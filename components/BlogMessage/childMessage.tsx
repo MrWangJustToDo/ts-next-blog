@@ -38,7 +38,7 @@ const ChildMessage: ChildMessageType = (props) => {
   const src = useMemo(() => getCurrentAvatar(avatar, gender), [avatar, gender]);
 
   return (
-    <div className="media py-2">
+    <div className={getClass("media py-2", style.childMessage)}>
       {withHover ? (
         <UserHover {...props}>
           <Image src={src} className="rounded" alt="头像" width="38" height="38" />

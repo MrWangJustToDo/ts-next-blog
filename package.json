@@ -45,8 +45,7 @@
     "sqlite3": "^5.0.2",
     "svg-captcha": "^1.4.0",
     "swr": "^0.5.3",
-    "tocbot": "^4.12.2",
-    "yarn": "^1.22.10"
+    "tocbot": "^4.12.2"
   },
   "devDependencies": {
     "@types/body-scroll-lock": "^2.6.1",

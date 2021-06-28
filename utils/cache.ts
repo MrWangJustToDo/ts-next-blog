@@ -71,24 +71,24 @@ class Cache<T, K> {
       let newKey = key as string;
       if (!newKey.startsWith("/")) {
         newKey = "/" + newKey;
+        if (this.store.has(newKey as any)) {
+          cancel(newKey);
+          this.store.delete(newKey as any);
+          log(`force delete data from cache. newKey: ${newKey}`, "warn");
+          return;
+        }
+        tryKeys.push(newKey);
       }
-      if (this.store.has(newKey as any)) {
-        cancel(newKey);
-        this.store.delete(newKey as any);
-        log(`force delete data from cache. newKey: ${newKey}`, "warn");
-        return;
-      }
-      tryKeys.push(newKey);
       if (!newKey.startsWith("/api")) {
         newKey = "/api" + newKey;
+        if (this.store.has(newKey as any)) {
+          cancel(newKey);
+          this.store.delete(newKey as any);
+          log(`force delete data from cache. newKey: ${newKey}`, "warn");
+          return;
+        }
+        tryKeys.push(newKey);
       }
-      if (this.store.has(newKey as any)) {
-        cancel(newKey);
-        this.store.delete(newKey as any);
-        log(`force delete data from cache. newKey: ${newKey}`, "warn");
-        return;
-      }
-      tryKeys.push(newKey);
     }
     log(`error, nothing need to delete. keys: ${tryKeys.join(", ")}`, "error");
   };

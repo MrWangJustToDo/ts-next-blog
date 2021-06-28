@@ -12,6 +12,7 @@
     opacity: 1;
   }
   @include mobile {
+    left: auto;
     right: 8px;
     bottom: 12px;
     & > * {

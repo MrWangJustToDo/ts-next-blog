@@ -43,3 +43,9 @@
     padding: 2px;
   }
 }
+
+.childMessage {
+  @include mobile {
+    margin-left: -20px;
+  }
+}
