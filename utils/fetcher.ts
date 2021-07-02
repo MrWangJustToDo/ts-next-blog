@@ -7,7 +7,7 @@ import { getHeader } from "./headers";
 import { transformPath } from "./path";
 import { AutoRequestProps, AutoRequestType, CreateRequestType } from "types/utils";
 
-const cacheResult = new Cache<string, any>(60000);
+const cacheResult = new Cache<string, Promise<any>>(60000);
 
 const isBrowser = typeof window !== "undefined";
 
@@ -86,7 +86,7 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
       const target = cacheResult.get(targetRelativePath);
       if (target) {
         log(`get data from cache, key: ${targetRelativePath}, path: ${path}, apiName: ${apiPath}`, "normal");
-        return Promise.resolve(<T>target);
+        return target.then((res) => <T>res.data);
       }
     }
 
@@ -104,7 +104,8 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
     });
 
     if (isBrowser && cache) {
-      return requestPromise.then((res) => res.data).then((resData) => (cacheResult.set(targetRelativePath, resData, cacheTime), resData));
+      cacheResult.set(targetRelativePath, requestPromise, cacheTime);
+      return requestPromise.then((res) => res.data);
     } else {
       return requestPromise.then((res) => res.data);
     }

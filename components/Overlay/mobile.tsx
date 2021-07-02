@@ -58,7 +58,7 @@ const Overlay: OverlayType = ({ head, body, foot, closeHandler, showState, class
     }
   }, [clear]);
 
-  useModalEffect(Boolean(showState), "content");
+  useModalEffect(Boolean(showState), "page-content");
 
   useBodyLock({ ref });
 
