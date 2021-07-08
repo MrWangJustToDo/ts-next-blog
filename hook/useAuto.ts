@@ -257,6 +257,13 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
   }, [getInitUrl]);
 
   useEffect(() => {
+    const { current: img } = ref;
+    if (img && img.complete) {
+      show();
+    }
+  }, []);
+
+  useEffect(() => {
     actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.addEventListener("load", show));
     () => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.removeEventListener("load", show));
   }, []);

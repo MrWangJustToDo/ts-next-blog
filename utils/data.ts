@@ -103,4 +103,34 @@ const parseToString = (obj: { [props: string]: any } | Array<any> | string | num
   }
 };
 
-export { autoTransformData, getCurrentAvatar, formSerialize, getRandom, parseToString };
+interface Point {
+  clientX: number;
+  clientY: number;
+}
+
+const pinchHelper = {
+  getDistance: (a: Point, b?: Point): number => {
+    if (!b) return 0;
+    return Math.sqrt((b.clientX - a.clientX) ** 2 + (b.clientY - a.clientY) ** 2);
+  },
+  getMidpoint: (a: Point, b?: Point): Point => {
+    if (!b) return a;
+    return {
+      clientX: (a.clientX + b.clientX) / 2,
+      clientY: (a.clientY + b.clientY) / 2,
+    };
+  },
+  getAbsoluteValue: (value: string | number, max: number): number => {
+    if (typeof value === "number") return value;
+
+    if (value.trimRight().endsWith("%")) {
+      return (max * parseFloat(value)) / 100;
+    }
+    return parseFloat(value);
+  },
+
+  createMatrix: () => new DOMMatrix(),
+  createPoint: () => new DOMPoint(),
+};
+
+export { autoTransformData, getCurrentAvatar, formSerialize, getRandom, parseToString, pinchHelper };
