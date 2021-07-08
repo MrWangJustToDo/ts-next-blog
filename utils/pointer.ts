@@ -1,6 +1,51 @@
-import Pointer, { isPointerEvent } from "./pointer";
+import { pinchHelper } from "utils/data";
 
-export type InputEvent = TouchEvent | PointerEvent | MouseEvent;
+class Pointer {
+  /** x offset from the top of the document */
+  pageX: number;
+  /** y offset from the top of the document */
+  pageY: number;
+  /** x offset from the top of the viewport */
+  clientX: number;
+  /** y offset from the top of the viewport */
+  clientY: number;
+  /** Unique ID for this pointer */
+  id: number = -1;
+  /** The platform object used to create this Pointer */
+  nativePointer: Touch | PointerEvent | MouseEvent;
+
+  constructor(nativePointer: Touch | PointerEvent | MouseEvent) {
+    this.nativePointer = nativePointer;
+    this.pageX = nativePointer.pageX;
+    this.pageY = nativePointer.pageY;
+    this.clientX = nativePointer.clientX;
+    this.clientY = nativePointer.clientY;
+
+    // 触摸事件，单独拿出来?   todo
+    if (self.Touch && nativePointer instanceof Touch) {
+      this.id = nativePointer.identifier;
+    } else if (pinchHelper.isPointerEvent(nativePointer)) {
+      // 统一的指针事件
+      // is PointerEvent
+      this.id = nativePointer.pointerId;
+    }
+  }
+
+  /**
+   * Returns an expanded set of Pointers for high-resolution inputs.
+   * 浏览器合成事件的默认处理   反复合成事件的帧中对应的所有事件
+   * 将段时间的操作中所有的pointerEvent全部拿出来
+   *
+   */
+  getCoalesced(): Pointer[] {
+    if ("getCoalescedEvents" in this.nativePointer) {
+      return this.nativePointer.getCoalescedEvents().map((p) => new Pointer(p));
+    }
+    return [this];
+  }
+}
+
+type InputEvent = TouchEvent | PointerEvent | MouseEvent;
 type StartCallback = (pointer: Pointer, event: InputEvent) => boolean;
 type MoveCallback = (previousPointers: Pointer[], changedPointers: Pointer[], event: InputEvent) => void;
 type EndCallback = (pointer: Pointer, event: InputEvent, cancelled: boolean) => void;
@@ -10,9 +55,6 @@ enum Button {
 }
 
 const noop = () => {};
-
-// const isPointerEvent = (event: any): event is PointerEvent =>
-//   self.PointerEvent && event instanceof PointerEvent;
 
 interface PointerTrackerOptions {
   /**
@@ -44,11 +86,6 @@ interface PointerTrackerOptions {
    * events, for actions such as scrolling.
    */
   end?: EndCallback;
-  /**
-   * Use raw pointer updates? Pointer events are usually synchronised to requestAnimationFrame.
-   * However, if you're targeting a desynchronised canvas, then faster 'raw' updates are better.
-   */
-  rawUpdates?: boolean;
 }
 
 class PointerTracker {
@@ -73,11 +110,10 @@ class PointerTracker {
    * @param element Element to monitor.
    * @param options
    */
-  constructor(private _element: HTMLElement, { start = () => true, move = noop, end = noop /* rawUpdates = false */ }: PointerTrackerOptions = {}) {
+  constructor(private _element: HTMLElement, { start = () => true, move = noop, end = noop }: PointerTrackerOptions = {}) {
     this._startCallback = start;
     this._moveCallback = move;
     this._endCallback = end;
-    // this._rawUpdates = rawUpdates && "onpointerrawupdate" in window;
 
     // Add listeners
     if (self.PointerEvent) {
@@ -133,7 +169,7 @@ class PointerTracker {
 
     // Add listeners for additional events.
     // The listeners may already exist, but no harm in adding them again.
-    if (isPointerEvent(event)) {
+    if (pinchHelper.isPointerEvent(event)) {
       const capturingElement = event.target && "setPointerCapture" in event.target ? event.target : this._element;
 
       capturingElement.setPointerCapture(event.pointerId);
@@ -208,7 +244,7 @@ class PointerTracker {
   private _pointerEnd = (event: PointerEvent | MouseEvent) => {
     if (!this._triggerPointerEnd(new Pointer(event), event)) return;
 
-    if (isPointerEvent(event)) {
+    if (pinchHelper.isPointerEvent(event)) {
       if (this.currentPointers.length) return;
       this._element.removeEventListener("pointermove", this._move);
       this._element.removeEventListener("pointerup", this._pointerEnd);
@@ -230,5 +266,7 @@ class PointerTracker {
     }
   };
 }
+
+export { Pointer };
 
 export default PointerTracker;

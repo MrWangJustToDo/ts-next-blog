@@ -109,6 +109,7 @@ interface Point {
 }
 
 const pinchHelper = {
+  isPointerEvent: (event: any): event is PointerEvent => self.PointerEvent && event instanceof PointerEvent,
   getDistance: (a: Point, b?: Point): number => {
     if (!b) return 0;
     return Math.sqrt((b.clientX - a.clientX) ** 2 + (b.clientY - a.clientY) ** 2);
@@ -128,7 +129,6 @@ const pinchHelper = {
     }
     return parseFloat(value);
   },
-
   createMatrix: () => new DOMMatrix(),
   createPoint: () => new DOMPoint(),
 };

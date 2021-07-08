@@ -7,6 +7,7 @@ import { InputProps } from "./config";
 import { ManageAddButtonBody } from "./containers";
 import { AutoRequestProps, AutoRequestType } from "./utils";
 import { ChildMessageProps, LoadingBarProps, OverlayProps, PrimaryMessageProps, ToastProps } from "./components";
+import { Pointer } from "utils/pointer";
 
 // from http://ip-api.com/json/
 interface IpaddressProps {
@@ -565,3 +566,42 @@ interface UseUserRequest {
 }
 
 export type { UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType, UseUserRequest };
+
+/* usePinch */
+interface UseMatrixType {
+  (): RefObject<DOMMatrix | undefined>;
+}
+
+interface UsePinchProps<T, K> {
+  maxScale?: number;
+  minScale?: number;
+  startScale?: () => void;
+  endScale?: () => void;
+  forWardPinchRef?: RefObject<T>;
+  forWardCoverRef?: RefObject<K>;
+}
+
+interface UsePinchType {
+  <T extends HTMLElement, K extends HTMLElement>(props?: UsePinchProps<T, K>): [RefObject<T>, RefObject<K>, boolean];
+}
+
+interface UseWheelProps {
+  ref: RefObject<HTMLElement | undefined>;
+  action: (event?: WheelEvent) => void;
+}
+
+interface UseWheelType {
+  (props: UseWheelProps): void;
+}
+
+interface UseTouchProps {
+  ref: RefObject<HTMLElement | undefined>;
+  scaleRef: RefObject<boolean>;
+  action: (prePointers: Pointer[], curePointers: Pointer[]) => void;
+}
+
+interface UseTouchTypes {
+  (props: UseTouchProps): void;
+}
+
+export type { UseMatrixType, UsePinchProps, UsePinchType, UseWheelType, UseTouchTypes };
