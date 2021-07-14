@@ -131,6 +131,8 @@ const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(pr
       const { current: item } = targetPinchRef;
       if (!item) return;
 
+      item.setAttribute("draggable", "false");
+
       if (scale > maxScale) return;
 
       if (matrix.current) {
