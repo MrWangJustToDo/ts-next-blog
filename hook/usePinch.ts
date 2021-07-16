@@ -53,6 +53,13 @@ const useTouch: UseTouchTypes = ({ ref, action, scaleRef }) => {
   useEffect(() => {
     const { current: cover } = ref;
     if (cover) {
+      cover.style.touchAction = "none";
+    }
+  }, []);
+
+  useEffect(() => {
+    const { current: cover } = ref;
+    if (cover) {
       const tracker = new PointerTracker(cover, {
         start: () => {
           // We only want to track 2 pointers at most
