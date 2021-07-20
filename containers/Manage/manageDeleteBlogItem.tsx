@@ -38,7 +38,7 @@ const ManageDeleteBlogItem: BlogContentType = (props) => {
   const click = useManageToDeleteModule({
     body,
     title: "确认删除博客",
-    deleteItem: <BlogItem {...props} className={getClass("border rounded m-2", style.deleteBlogItem)} />,
+    deleteItem: <BlogItem {...props} className={getClass("border rounded w-100 m-2", style.deleteBlogItem)} />,
   });
 
   return (

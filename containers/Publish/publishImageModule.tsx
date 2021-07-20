@@ -33,9 +33,9 @@ const PublishImageModule: PublishImageModuleType = ({ closeHandler, initialUrl, 
       <div className={getClass(flexCenter)}>
         <div className={getClass("position-relative", style.imgContainer)}>
           <Loading className={getClass("position-absolute", style.imgLoding)} _style={{ display: bool ? "none" : "block" }} />
-          <div ref={divRef} className={getClass("position-absolute border rounded", style.imgItem)}>
+          <div ref={divRef} className={getClass("w-100 position-absolute", style.imgItem)}>
             <img
-              // className={getClass("position-absolute border rounded", style.imgItem)}
+              className='border rounded'
               draggable="false"
               ref={ref}
               title="点击切换"

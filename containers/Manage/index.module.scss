@@ -41,9 +41,6 @@
 }
 
 .deleteBlogItem {
-  @include mobile {
-    max-width: 320px;
-  }
 
   @include desktop {
     max-width: 600px;

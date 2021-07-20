@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import LoadRender from "components/LoadRender";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
@@ -12,13 +13,19 @@ import { ManageUserIdType } from "types/containers";
 import style from "./index.module.scss";
 
 const ManageResult: ManageUserIdType = ({ userId }) => {
-  const { bool, switchBoolDebounce } = useBool();
+  const { bool, switchBoolDebounce, show } = useBool();
 
   const { state } = useCurrentState();
 
   const data = state.client[actionName.currentResult]["data"];
 
   const loading = state.client[actionName.currentResult]["loading"];
+
+  useEffect(() => {
+    if (!loading && data) {
+      show();
+    }
+  }, [loading, data]);
 
   return (
     <div className="card mt-4">
