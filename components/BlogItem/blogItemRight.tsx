@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "components/Image";
 import { getClass } from "utils/dom";
 import { BlogItemRightType } from "types/components";
 

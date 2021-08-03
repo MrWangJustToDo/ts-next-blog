@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { useCallback, useMemo } from "react";
+import Image from "components/Image";
 import UserHover from "components/UserHover";
 import { momentTo } from "utils/time";
 import { getClass } from "utils/dom";

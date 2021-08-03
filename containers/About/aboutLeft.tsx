@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Slick from "react-slick";
 import { apiName } from "config/api";
 import { usePinch } from "hook/usePinch";
+import Image from "components/Image";
 import LoadRender from "components/LoadRender";
 import { SimpleElement } from "types/components";
 

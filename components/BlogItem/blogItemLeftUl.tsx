@@ -1,5 +1,6 @@
-import Image from "next/image";
+// import Image from "next/image";
 import dynamic from "next/dynamic";
+import Image from "components/Image";
 import { blogContentArray } from "config/blogItem";
 import { getCurrentAvatar } from "utils/data";
 import { getClass, flexEnd, flexStart } from "utils/dom";

@@ -181,9 +181,9 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
   return [currentRef, state, loading];
 };
 
-const useManageToDeleteModule: UseManageToDeleteModuleType = ({ title, body, request, deleteItem, successHandler }) => {
+const useManageToDeleteModule: UseManageToDeleteModuleType = ({ title, body, deleteItem }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body({ request, deleteItem, successHandler }) }), [title, body, request, successHandler]);
+  const click = useCallback(() => open({ head: title, body: body({ deleteItem }) }), [title, body]);
   return click;
 };
 

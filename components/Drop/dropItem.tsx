@@ -5,7 +5,7 @@ import { DropItemType } from "types/components";
 import style from "./index.module.scss";
 
 const DropItem: DropItemType = ({ clickHandler, value, name, index, checkedIndex }) => {
-  const clickCallback = useCallback(() => clickHandler(index), [clickHandler, index]);
+  const clickCallback = useCallback(() => clickHandler && index !== undefined && clickHandler(index), [clickHandler, index]);
 
   return (
     <div

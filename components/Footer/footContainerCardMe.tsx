@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "components/Image";
 import { getClass, flexCenter } from "utils/dom";
 import { SimpleElement } from "types/components";
 

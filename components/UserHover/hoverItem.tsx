@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "components/Image";
 import LoadRender from "components/LoadRender";
 import { apiName } from "config/api";
 import { getUserProps, getUserState } from "config/hover";
