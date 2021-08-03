@@ -7,7 +7,7 @@ const MainLeftContent: SimpleElement = () => {
   const { currentPageBlogs } = useHome();
 
   return (
-    <AnimateIist>
+    <AnimateIist showClassName="fadeInUp">
       {currentPageBlogs.map((props) => (
         <MainLeftItem key={props.blogId} {...props} />
       ))}

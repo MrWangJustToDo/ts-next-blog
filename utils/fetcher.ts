@@ -105,7 +105,9 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     if (isBrowser && cache) {
       cacheResult.set(targetRelativePath, requestPromise, cacheTime);
-      return requestPromise.then((res) => res.data);
+      const re = requestPromise.then((res) => res.data);
+      re.catch(() => cacheResult.deleteRightNow(targetRelativePath));
+      return re;
     } else {
       return requestPromise.then((res) => res.data);
     }
