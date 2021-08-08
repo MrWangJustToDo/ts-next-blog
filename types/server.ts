@@ -67,7 +67,7 @@ interface UserConfigProps {
   checkStrict?: boolean;
 }
 interface AutoRequestHandlerProps {
-  requestHandler: RequestHandlerType;
+  requestHandler?: RequestHandlerType;
   errorHandler?: ErrorHandlerType;
   check?: boolean;
   strict?: boolean;
@@ -76,6 +76,12 @@ interface AutoRequestHandlerProps {
   cacheConfig?: CacheConfigProps;
   userConfig?: UserConfigProps;
   paramsConfig?: CheckParamsConfigProps;
+}
+
+type AutoRequestHandlerMiddlewareProps = AutoRequestHandlerProps & RequestHandlerProps;
+
+interface MiddlewareRequestHandlerType {
+  (): Promise<any | void>;
 }
 
 export type {
@@ -91,6 +97,8 @@ export type {
   CheckParamsConfigProps,
   UserConfigProps,
   AutoRequestHandlerProps,
+  AutoRequestHandlerMiddlewareProps,
+  MiddlewareRequestHandlerType,
 };
 
 /* === Init === */
