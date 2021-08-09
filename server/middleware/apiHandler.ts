@@ -362,6 +362,7 @@ const compose = (...middlewares: ((ctx: AutoRequestHandlerMiddlewareProps, nextM
       if (i <= index) {
         throw new ServerError("compose index error", 500);
       }
+      index = i;
       const fn = middlewares[i] || next;
       if (fn) {
         try {
@@ -371,6 +372,7 @@ const compose = (...middlewares: ((ctx: AutoRequestHandlerMiddlewareProps, nextM
           return Promise.resolve(e);
         }
       } else {
+        log("all middleware done, do not call next", "warn");
         return Promise.resolve();
       }
     }
