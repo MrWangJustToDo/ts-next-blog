@@ -63,7 +63,7 @@ const accessApi: AccessType = {
   // 用户信息
   [apiName.ip]: { disable: false, method: "get", token: false },
   [apiName.autoLogin]: { disable: false, token: false },
-  [apiName.login]: { disable: false, token: false, method: "post" },
+  [apiName.login]: { disable: false, token: false, method: "post", config: { encode: true } },
   [apiName.logout]: { disable: false, token: false },
   [apiName.register]: { disable: false, token: false, method: "post" },
   [apiName.author]: { disable: false, token: false },

@@ -97,6 +97,7 @@ interface AutoRequestProps {
   data?: object | string | false;
   cache?: boolean;
   cacheTime?: number;
+  encode?: boolean;
 }
 interface ApiRequestResult<T> {
   code: number;

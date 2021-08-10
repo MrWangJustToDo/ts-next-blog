@@ -6,7 +6,7 @@ type ExpressRequest = Request & {
   db?: Database;
   session?: any;
   user?: any;
-  config?: { cache?: CacheConfigProps; user?: UserConfigProps; check?: CheckCodeConfigProps; params?: CheckParamsConfigProps };
+  config?: { cache?: CacheConfigProps; user?: UserConfigProps; check?: CheckCodeConfigProps; params?: CheckParamsConfigProps; encode?: boolean };
 };
 
 /* === API === */
@@ -76,6 +76,7 @@ interface AutoRequestHandlerProps {
   cacheConfig?: CacheConfigProps;
   userConfig?: UserConfigProps;
   paramsConfig?: CheckParamsConfigProps;
+  encodeConfig?: boolean;
 }
 
 type AutoRequestHandlerMiddlewareProps = AutoRequestHandlerProps & RequestHandlerProps;

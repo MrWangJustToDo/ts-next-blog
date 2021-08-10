@@ -80,7 +80,7 @@ const useLogin: UseLoginType = () => {
   const loginCallback = useCallback<(e?: Event) => void>((e) => {
     e?.preventDefault();
     actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
-      return createRequest({ method: "post", data: formSerialize(ele), cache: false, apiPath: apiName.login })
+      return createRequest({ method: "post", data: formSerialize(ele), cache: false, apiPath: apiName.login, encode: true })
         .run<ApiRequestResult<UserProps>>()
         .then(({ code, data }) => {
           if (code === 0 && !Array.isArray(data) && data.userId) {

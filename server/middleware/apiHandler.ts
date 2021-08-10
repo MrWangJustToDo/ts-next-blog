@@ -289,6 +289,19 @@ const checkParamsMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewarePro
   return await nextMiddleware();
 };
 
+const decodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
+  const { req, encodeConfig } = ctx;
+  const currentEncodeConfig = encodeConfig || req.config?.encode;
+  if (currentEncodeConfig) {
+    if (typeof req.body.encode === "undefined") {
+      throw new ServerError("当前请求体格式不正确", 400);
+    } else {
+      req.body = JSON.parse(Buffer.from(req.body["encode"], "base64").toString());
+    }
+  }
+  return await nextMiddleware();
+};
+
 const userHandler = (requestHandler: RequestHandlerType, strict: boolean | undefined, userConfig: UserConfigProps) => {
   return async ({ req, res, next }: RequestHandlerProps) => {
     const currentUserConfig = assign(userConfig, req.config?.user);
@@ -383,7 +396,14 @@ const compose = (...middlewares: ((ctx: AutoRequestHandlerMiddlewareProps, nextM
 const autoRequestHandler = (config: AutoRequestHandlerProps) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const ctx = { ...config, req, res, next, cache };
-    const fn = compose(catchMiddlewareHandler, checkParamsMiddlewareHandler, checkcodeMiddlewareHandler, userMiddlewareHandler, cacheMiddlewareHandler);
+    const fn = compose(
+      catchMiddlewareHandler,
+      decodeMiddlewareHandler,
+      checkParamsMiddlewareHandler,
+      checkcodeMiddlewareHandler,
+      userMiddlewareHandler,
+      cacheMiddlewareHandler
+    );
     return await fn(ctx, ctx.requestHandler || next);
   };
 };

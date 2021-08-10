@@ -8,10 +8,7 @@ import { IpaddressProps } from "types/hook";
 // 用户登录请求
 const loginAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const body = req.body || {};
-    if (req.session.captcha !== body.checkcode) {
-      throw new ServerError("验证码验证失败", 401);
-    }
+    const body = req.body;
     const user = await getUserByUser({
       username: body.username,
       password: body.password,
@@ -27,6 +24,8 @@ const loginAction = autoRequestHandler({
     success({ res, resDate: { state: "登录成功", data: user } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "登录失败", data: e.toString(), methodName: "loginAction" } }),
+  paramsConfig: { fromBody: ["username", "password"] },
+  checkCodeConfig: { needCheck: true },
 });
 
 // 自动登录请求

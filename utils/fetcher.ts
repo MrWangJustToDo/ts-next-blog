@@ -40,7 +40,7 @@ const autoAssignParams = (oldParams: string | false | object | undefined, newPar
 };
 
 const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
-  const { method, path, apiPath, query, data, header, cache = true, cacheTime } = props;
+  const { method, path, apiPath, query, data, header, cache = true, encode = false, cacheTime } = props;
 
   const autoRequest: AutoRequestType = (props: AutoRequestProps = {}) => {
     const newMethod = props.method ? props.method : method;
@@ -57,6 +57,8 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     const newCache = props.cache === false ? false : cache;
 
+    const newEncode = props.encode === false ? false : encode;
+
     const newCacheTime = props.cacheTime || cacheTime;
 
     return createRequest({
@@ -67,6 +69,7 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
       data: newData,
       header: newHeader,
       cache: newCache,
+      encode: newEncode,
       cacheTime: newCacheTime,
     });
   };
@@ -94,7 +97,7 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     const currentHeader = header !== false && isBrowser ? getHeader(autoParse(header)) : autoParse(header);
 
-    const currentData = data !== false ? autoParse(data) : undefined;
+    const currentData = data !== false ? (encode ? { encode: btoa(autoStringify(data)!) } : autoParse(data)) : undefined;
 
     const requestPromise: Promise<AxiosResponse<T>> = instance({
       method: currentMethod,

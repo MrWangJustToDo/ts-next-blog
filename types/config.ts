@@ -8,7 +8,7 @@ import { CacheConfigProps, UserConfigProps } from "./server";
 
 /* api */
 interface AccessType {
-  [props: string]: { disable?: boolean; token?: boolean; method?: Method; config?: { cache?: CacheConfigProps; user?: UserConfigProps } };
+  [props: string]: { disable?: boolean; token?: boolean; method?: Method; config?: { cache?: CacheConfigProps; user?: UserConfigProps; encode?: boolean } };
 }
 
 export type { AccessType };
