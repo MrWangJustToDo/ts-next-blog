@@ -146,12 +146,13 @@ const checkcodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps
     if (fromQuery) {
       const checkCode = req.query[fieldName];
       if (checkCode !== req.session.captcha) {
-        throw new ServerError("验证码不正确", 400);
+        throw new ServerError("验证码不正确  query", 400);
       }
     } else {
       const checkCode = req.body[fieldName];
+      console.log(checkCode, req.body);
       if (checkCode !== req.session.captcha) {
-        throw new ServerError("验证码不正确", 400);
+        throw new ServerError("验证码不正确  body", 400);
       }
     }
   }

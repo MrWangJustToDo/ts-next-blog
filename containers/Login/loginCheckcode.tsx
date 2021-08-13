@@ -17,7 +17,7 @@ const LoginCheckCode: LoginCheckCodeType = ({ show }) => {
       </label>
       <div className={getClass("col-sm-9 px-0 mx-0 flex-wrap flex-md-nowrap", flexBetween)}>
         <img className="col-sm-4 border rounded my-2 my-md-0" height="40" ref={imgRef} />
-        <input type="text" className="form-control shadow-none col-sm-7 rounded" name="checkcode" id="checkcode" />
+        <input type="text" className="form-control shadow-none col-sm-7 rounded" name="checkCode" id="checkcode" />
       </div>
     </div>
   );
