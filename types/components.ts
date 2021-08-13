@@ -32,7 +32,7 @@ export type { SimpleElement };
 
 /* AnimationList */
 interface AnimationListType {
-  (props: { children: ReactChild[]; showClassName?: string }): JSX.Element;
+  (props: { children: ReactChild[]; showClassName?: string, delay?:number }): JSX.Element;
 }
 interface AnimationItemType {
   (props: { children: ReactChild; nextIndex: number; showState: boolean; showClassName?: string; next: (index: number) => void }): JSX.Element;

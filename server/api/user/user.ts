@@ -2,7 +2,7 @@ import { ServerError } from "server/utils/error";
 import { createRequest } from "utils/fetcher";
 import { insertUser } from "server/database/insert";
 import { getAuthorByUserId, getUserByUser, getUserByUserId, getUsersExByUserId } from "server/database/get";
-import { autoRequestHandler, success, fail, transformHandler, catchHandler } from "server/middleware/apiHandler";
+import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { IpaddressProps } from "types/hook";
 
 // 用户登录请求
@@ -29,33 +29,33 @@ const loginAction = autoRequestHandler({
 });
 
 // 自动登录请求
-const autoLoginAction = transformHandler(
-  catchHandler(({ req, res }) => {
+const autoLoginAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
     if (req.user) {
       success({ res, resDate: { state: "自动登录成功", data: req.user } });
     } else {
       fail({ res, statuCode: 200, resDate: { state: "自动登录失败" } });
     }
-  })
-);
+  },
+});
 
-const autoGetIp = transformHandler(
-  catchHandler(({ req, res }) => {
+const autoGetIp = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
     const request = createRequest({ path: process.env.NEXT_PUBLIC_IPADDRESS, header: req.headers, data: req.body });
-    request
+    await request
       .run<IpaddressProps>()
       .then((data) => success({ res, resDate: { data } }))
       .catch((e) => fail({ res, resDate: { data: e.toString() } }));
-  })
-);
+  },
+});
 
 // 登出请求
-const logoutAction = transformHandler(
-  catchHandler(({ res }) => {
+const logoutAction = autoRequestHandler({
+  requestHandler: async ({ res }) => {
     res.clearCookie("id");
     success({ res, resDate: { state: "登出成功" } });
-  })
-);
+  },
+});
 
 // 注册请求
 const registerAction = autoRequestHandler({

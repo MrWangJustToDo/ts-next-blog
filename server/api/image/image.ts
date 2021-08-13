@@ -1,6 +1,6 @@
 import { getRandom } from "utils/data";
 import { createRequest } from "utils/fetcher";
-import { catchHandler, transformHandler, success, fail } from "server/middleware/apiHandler";
+import { success, fail, autoRequestHandler } from "server/middleware/apiHandler";
 
 // 获取图片请求链接
 const getImagePath = () => {
@@ -13,29 +13,25 @@ const getImagePath = () => {
 };
 
 // 获取所有随机图片信息
-const getImagesAction = transformHandler(
-  catchHandler(
-    async ({ res }) => {
-      let { images } = await createRequest({path: getImagePath()}).run();
-      images = images.map((item: { [props: string]: string }) => {
-        return { ...item, relativeUrl: `${process.env.BINGURL}${item.url}` };
-      });
-      success({ res, resDate: { data: images } });
-    },
-    ({ res, e }) => fail({ res, resDate: { data: e.toString(), methodName: "getImagesAction" } })
-  )
-);
+const getImagesAction = autoRequestHandler({
+  requestHandler: async ({ res }) => {
+    let { images } = await createRequest({ path: getImagePath() }).run();
+    images = images.map((item: { [props: string]: string }) => {
+      return { ...item, relativeUrl: `${process.env.BINGURL}${item.url}` };
+    });
+    success({ res, resDate: { data: images } });
+  },
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getImagesAction" } }),
+});
 
 // 获取随机图片信息
-const getRandomImageAction = transformHandler(
-  catchHandler(
-    async ({ res }) => {
-      const { images } = await createRequest({path: getImagePath()}).run();
-      const [{ relativeUrl }] = images.map((item: { [props: string]: string }) => ({ relativeUrl: `${process.env.BINGURL}${item.url}` }));
-      success({ res, resDate: { data: relativeUrl } });
-    },
-    ({ res, e }) => fail({ res, resDate: { data: e.toString(), methodName: "getRandomImageAction" } })
-  )
-);
+const getRandomImageAction = autoRequestHandler({
+  requestHandler: async ({ res }) => {
+    const { images } = await createRequest({ path: getImagePath() }).run();
+    const [{ relativeUrl }] = images.map((item: { [props: string]: string }) => ({ relativeUrl: `${process.env.BINGURL}${item.url}` }));
+    success({ res, resDate: { data: relativeUrl } });
+  },
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getRandomImageAction" } }),
+});
 
 export { getImagesAction, getRandomImageAction };

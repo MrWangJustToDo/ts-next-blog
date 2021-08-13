@@ -8,7 +8,7 @@ interface Cancel {
   (key: string): void;
 }
 interface Delay {
-  <T>(time: number, action: () => T, key?: string): Promise<T | void>;
+  <T>(time: number, action?: () => T, key?: string): Promise<T | void>;
 }
 interface TimeoutMap {
   [props: string]: Array<NodeJS.Timeout | void>;

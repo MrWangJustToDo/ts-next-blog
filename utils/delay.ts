@@ -31,7 +31,7 @@ const delay: Delay = (time, action, key) => {
   if (key === undefined) {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(action());
+        resolve(action && action());
       }, time);
     });
   } else {
@@ -48,7 +48,7 @@ const delay: Delay = (time, action, key) => {
       resolveMap[key].push(resolve);
       timeoutMap[key].push(
         setTimeout(() => {
-          resolve(action());
+          resolve(action && action());
         }, time)
       );
     });
