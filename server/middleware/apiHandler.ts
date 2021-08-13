@@ -150,7 +150,6 @@ const checkcodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps
       }
     } else {
       const checkCode = req.body[fieldName];
-      console.log(checkCode, req.body);
       if (checkCode !== req.session.captcha) {
         throw new ServerError("验证码不正确  body", 400);
       }
