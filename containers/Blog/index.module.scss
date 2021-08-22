@@ -55,3 +55,20 @@
     margin: 0 -1.2rem;
   }
 }
+
+.markdown {
+  position: relative;
+  min-width: 60px;
+  display: flow-root;
+  cursor: pointer;
+  & > span {
+    opacity: 0;
+  }
+  & > i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+  }
+}

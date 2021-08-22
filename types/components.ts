@@ -32,7 +32,7 @@ export type { SimpleElement };
 
 /* AnimationList */
 interface AnimationListType {
-  (props: { children: ReactChild[]; showClassName?: string, delay?:number }): JSX.Element;
+  (props: { children: ReactChild[]; showClassName?: string; delay?: number }): JSX.Element;
 }
 interface AnimationItemType {
   (props: { children: ReactChild; nextIndex: number; showState: boolean; showClassName?: string; next: (index: number) => void }): JSX.Element;
@@ -135,12 +135,14 @@ export type { PrimaryMessageType, ChildMessageType, PrimaryMessageProps, ChildMe
 interface ButtonProps {
   type?: "button" | "submit" | "reset";
   value?: string;
+  loading?: boolean;
   disable?: boolean;
   className?: string;
   initState?: boolean;
-  request: () => Promise<void>;
+  request?: () => Promise<void>;
   _style?: { [props: string]: string };
   loadingColor?: Color;
+  children?: ReactChild;
 }
 
 interface ButtonType {

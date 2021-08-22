@@ -5,8 +5,8 @@ import { useAutoLoadCheckcodeImg } from "hook/useAuto";
 import { useCheckcodeModuleToSubmit } from "hook/useMessage";
 import { BlogContentCheckcodeModuleWithImageType, BlogContentCheckcodeModuleType } from "types/containers";
 
-const BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImageType = ({ blogId, request, closeHandler, imgRef, messageRef }) => {
-  const { ref, submit, canSubmit } = useCheckcodeModuleToSubmit<HTMLInputElement>({ request, closeHandler, messageRef, blogId });
+const BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImageType = ({ blogId, request, closeHandler, imgRef, requestCallback }) => {
+  const { ref, submit, canSubmit } = useCheckcodeModuleToSubmit<HTMLInputElement>({ request, closeHandler, requestCallback, blogId });
 
   return (
     <div className={getClass("row", flexCenter)}>
@@ -22,10 +22,10 @@ const BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImageTyp
   );
 };
 
-const BlogContentCheckcodeModule: BlogContentCheckcodeModuleType = ({ blogId, request, closeHandler, messageRef }) => {
+const BlogContentCheckcodeModule: BlogContentCheckcodeModuleType = ({ blogId, request, closeHandler, requestCallback }) => {
   const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
 
-  return <BlogContentCheckcodeModuleWithImag imgRef={imgRef} blogId={blogId} request={request} messageRef={messageRef} closeHandler={closeHandler} />;
+  return <BlogContentCheckcodeModuleWithImag imgRef={imgRef} blogId={blogId} request={request} requestCallback={requestCallback} closeHandler={closeHandler} />;
 };
 
 export default BlogContentCheckcodeModule;

@@ -73,7 +73,7 @@ interface BlogContentCheckcodeModuleProps {
   blogId: string;
   request: AutoRequestType;
   closeHandler: () => void;
-  messageRef: RefObject<MyInputELement>;
+  requestCallback: () => void;
 }
 interface BlogContentCheckcodeModuleType {
   (props: BlogContentCheckcodeModuleProps): JSX.Element;

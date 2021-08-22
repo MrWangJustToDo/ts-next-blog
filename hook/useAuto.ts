@@ -22,7 +22,19 @@ import {
 } from "types/hook";
 
 const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
-  { action, timmer, actionState = true, once = true, delayTime, rightNow = false, currentRef, addListener, removeListener }: UseAutoActionHandlerProps<T, K>,
+  {
+    action,
+    timmer,
+    actionState = true,
+    once = true,
+    delayTime,
+    rightNow = false,
+    currentRef,
+    addListener,
+    removeListener,
+    addListenerCallback,
+    removeListenerCallback,
+  }: UseAutoActionHandlerProps<T, K>,
   ...deps: any[]
 ) => {
   const actionStateRef = useRef<boolean>();
@@ -60,6 +72,23 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
           } else {
             addListener(action);
             return () => removeListener(action);
+          }
+        }
+      }
+    } else if (addListenerCallback) {
+      log("no useCallback autoAction", "normal");
+      if (!removeListenerCallback) {
+        throw new Error("every addListenerCallback need a removeListenerCallback! ---> useAutoActionHandler");
+      } else {
+        if (actionStateRef.current) {
+          if (currentRightNow) action();
+          if (currentRef?.current) {
+            const ele = currentRef.current;
+            addListenerCallback(action, ele);
+            return () => removeListenerCallback(action, ele);
+          } else {
+            addListenerCallback(action);
+            return () => removeListenerCallback(action);
           }
         }
       }

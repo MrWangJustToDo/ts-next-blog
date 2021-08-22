@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef } from "react";
+import { RefObject, useCallback, useEffect, useRef } from "react";
 import { useBool } from "./useData";
 import { useAutoActionHandler } from "./useAuto";
 import { pinchHelper } from "utils/data";
 import { actionHandler } from "utils/action";
 import PointerTracker, { Pointer } from "utils/pointer";
-import { UseMatrixType, UsePinchProps, UsePinchType, UseTouchTypes, UseWheelType } from "types/hook";
+import { UseInitRefTypes, UseMatrixType, UsePinchProps, UsePinchType, UseTouchTypes, UseWheelType } from "types/hook";
 
 interface ApplyChangeOpts {
   panX?: number;
@@ -19,6 +19,28 @@ interface SetTransformOpts {
   x?: number;
   y?: number;
 }
+
+const useInitRef: UseInitRefTypes = <T extends HTMLElement, K extends HTMLElement>({
+  pinchRef,
+  coverRef,
+}: {
+  pinchRef: RefObject<T>;
+  coverRef: RefObject<K>;
+}) => {
+  useEffect(() => {
+    const { current: cover } = coverRef;
+    if (cover) {
+      cover.style.touchAction = "none";
+    }
+  }, []);
+  useEffect(() => {
+    const { current: pinch } = pinchRef;
+    if (pinch) {
+      pinch.setAttribute("draggable", "false");
+      pinch.querySelectorAll("img").forEach((img) => img.setAttribute("draggable", "false"));
+    }
+  }, []);
+};
 
 const useMatrix: UseMatrixType = () => {
   const matrix = useRef<DOMMatrix>();
@@ -49,13 +71,6 @@ const useWheel: UseWheelType = ({ action, ref }) => {
 const useTouch: UseTouchTypes = ({ ref, action, scaleRef }) => {
   const twoFinger = useRef<boolean>(false);
   const pointerTracker = useRef<PointerTracker>();
-
-  useEffect(() => {
-    const { current: cover } = ref;
-    if (cover) {
-      cover.style.touchAction = "none";
-    }
-  }, []);
 
   useEffect(() => {
     const { current: cover } = ref;
@@ -133,12 +148,12 @@ const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(pr
 
   const matrix = useMatrix();
 
+  useInitRef<T, K>({coverRef: targetCoverRef, pinchRef: targetPinchRef})
+
   const updateTransform = useCallback(
     (scale: number, x: number, y: number) => {
       const { current: item } = targetPinchRef;
       if (!item) return;
-
-      item.setAttribute("draggable", "false");
 
       if (scale > maxScale) return;
 

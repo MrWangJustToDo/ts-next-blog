@@ -121,6 +121,8 @@ interface UseAutoActionHandlerProps<T, K> {
   currentRef?: RefObject<K>;
   addListener?: (action: (e?: T) => void, ele?: K) => void; // 添加事件监听
   removeListener?: (action: (e?: T) => void, ele?: K) => void; // 移除事件监听
+  addListenerCallback?: (action: (e?: T) => void, ele?: K) => void; // 添加事件监听  不需要useCallback
+  removeListenerCallback?: (action: (e?: T) => void, ele?: K) => void; // 移除事件监听  不需要useCallback
 }
 interface UseAutoActionHandlerType {
   <T extends Event, K>(props: UseAutoActionHandlerProps<T, K>, ...deps: any[]): void;
@@ -374,12 +376,12 @@ export type {
 interface UseChildMessageType {
   (props: ChildMessageProps[]): { messageProps: ChildMessageProps[]; more: boolean; loadMore: () => void };
 }
-type MyInputELement = HTMLInputElement | HTMLTextAreaElement;
+type MyInputELement = HTMLInputElement | HTMLTextAreaElement | HTMLFormElement;
 interface UseJudgeInputValueType {
-  <T extends MyInputELement>(ref: RefObject<T>): boolean;
+  <T extends MyInputELement>(ref?: RefObject<T>): { canSubmit: boolean; ref?: RefObject<T> };
 }
 interface UsePutToCheckcodeModuleBody {
-  ({ request, ref, blogId }: { request: AutoRequestType; ref: RefObject<MyInputELement>; blogId: string }): (closeHandler: () => void) => JSX.Element;
+  ({ request, requestCallback, blogId }: { request: AutoRequestType; requestCallback: () => void; blogId: string }): (closeHandler: () => void) => JSX.Element;
 }
 interface UsePutToCheckcodeModuleProps {
   className?: string;
@@ -387,17 +389,17 @@ interface UsePutToCheckcodeModuleProps {
   body: UsePutToCheckcodeModuleBody;
 }
 interface UsePutToCheckcodeModuleType {
-  <T extends MyInputELement>(props: UsePutToCheckcodeModuleProps): {
-    ref: RefObject<T>;
+  (props: UsePutToCheckcodeModuleProps): {
+    formRef: RefObject<HTMLFormElement>;
+    textAreaRef?: RefObject<HTMLTextAreaElement>;
     canSubmit: boolean;
-    submit: () => void;
   };
 }
 interface UseCheckcodeModuleToSubmitProps {
   blogId: string;
-  messageRef: RefObject<MyInputELement>;
   request: AutoRequestType;
   closeHandler: () => void;
+  requestCallback: () => void;
 }
 interface UseCheckcodeModuleToSubmitType {
   <T extends MyInputELement>(props: UseCheckcodeModuleToSubmitProps): {
@@ -604,4 +606,8 @@ interface UseTouchTypes {
   (props: UseTouchProps): void;
 }
 
-export type { UseMatrixType, UsePinchProps, UsePinchType, UseWheelType, UseTouchTypes };
+interface UseInitRefTypes {
+  <T extends HTMLElement, K extends HTMLElement>(props: { coverRef: RefObject<K>; pinchRef: RefObject<T> }): void;
+}
+
+export type { UseMatrixType, UsePinchProps, UsePinchType, UseWheelType, UseTouchTypes, UseInitRefTypes };

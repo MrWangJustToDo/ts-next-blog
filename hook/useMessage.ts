@@ -2,7 +2,8 @@ import { RefObject, useCallback, useMemo, useRef, useState } from "react";
 import { mutate } from "swr";
 import { apiName } from "config/api";
 import { childMessageLength } from "config/message";
-import { getRandom } from "utils/data";
+import { log } from "utils/log";
+import { formSerialize, getRandom } from "utils/data";
 import { actionHandler } from "utils/action";
 import { createRequest } from "utils/fetcher";
 import { useUserRequest } from "./useUser";
@@ -38,18 +39,27 @@ const useChildMessage: UseChildMessageType = (props) => {
   return { messageProps, more, loadMore };
 };
 
-const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(ref: RefObject<T>) => {
+const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(forWareRef?: RefObject<T>) => {
+  const ref = useRef<T>(null);
   const [bool, setBool] = useState<boolean>(false);
+  const targetRef = forWareRef || ref;
   const judgeValue = useCallback<() => void>(
-    () => actionHandler<T, void, void>(ref.current, (ele) => (!!ele.value.length ? setBool(true) : setBool(false))),
+    () =>
+      actionHandler<T, void, void>(targetRef.current, (ele) => {
+        if (ele instanceof HTMLFormElement) {
+          log(`element not support autoJudge submit! ${ele}`, "error");
+        } else {
+          !!ele.value.trim().length ? setBool(true) : setBool(false);
+        }
+      }),
     []
   );
   const addListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("input", action)),
+    (action) => actionHandler<T, void, void>(targetRef.current, (ele) => ele.addEventListener("input", action)),
     []
   );
   const removeListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("input", action)),
+    (action) => actionHandler<T, void, void>(targetRef.current, (ele) => ele.removeEventListener("input", action)),
     []
   );
   useAutoActionHandler({
@@ -57,45 +67,69 @@ const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(re
     addListener: addListenerCallback,
     removeListener: removeListenerCallback,
   });
-  return bool;
+  return { canSubmit: bool, ref };
 };
 
-const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = <T extends MyInputELement>({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps) => {
-  const ref = useRef<T>(null);
+const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps) => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const submitRef = useRef<boolean>(false);
   const open = useOverlayOpen();
+  const { ref: textAreaRef, canSubmit } = useJudgeInputValue<HTMLTextAreaElement>();
+  submitRef.current = canSubmit;
   const request = useUserRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId }, cache: false });
-  const submit = useCallback(() => {
-    actionHandler<T, void, void>(ref.current, (ele) => {
-      if (!!ele.value.length) {
+  const submit = useCallback<(e?: Event) => void>((e) => {
+    e?.preventDefault();
+    actionHandler<HTMLFormElement, void, void>(formRef.current, (ele) => {
+      if (submitRef.current) {
+        const requestCallback = () => {
+          actionHandler<HTMLTextAreaElement, void, void>(textAreaRef?.current, (ele) => {
+            ele.value = "";
+          });
+        };
         open({
           head: "验证码",
-          body: body({ request: request({ data: { content: ele.value } }), ref, blogId }),
+          body: body({ request: request({ data: formSerialize(ele as HTMLFormElement) }), requestCallback, blogId }),
           height: 60,
           className,
         });
+      } else {
+        log("can not submit", "warn");
       }
     });
-  }, [body, request]);
-  const canSubmit = useJudgeInputValue<T>(ref);
-  return { ref, submit, canSubmit };
+  }, []);
+
+  useAutoActionHandler<Event, void>({
+    action: submit,
+    addListenerCallback: (action: (e: Event) => void) => {
+      actionHandler<HTMLFormElement, void, void>(formRef.current, (ele) => ele.addEventListener("submit", action));
+    },
+    removeListenerCallback: (action: (e: Event) => void) => {
+      actionHandler<HTMLFormElement, void, void>(formRef.current, (ele) => ele.removeEventListener("submit", action));
+    },
+  });
+
+  return { formRef, textAreaRef, canSubmit };
 };
 
 const useCheckcodeModuleToSubmit: UseCheckcodeModuleToSubmitType = <T extends MyInputELement>({
   blogId,
   request,
-  messageRef,
   closeHandler,
+  requestCallback,
 }: UseCheckcodeModuleToSubmitProps) => {
   const ref = useRef<T>(null);
   const pushFail = useFailToast();
   const pushSucess = useSucessToast();
   const loadingRef = useRef<boolean>(false);
+
   const flashData = useCallback(() => {
     const primaryRequest = createRequest({ apiPath: apiName.primaryMessage, query: { blogId } });
     primaryRequest.deleteCache();
     mutate(primaryRequest.cacheKey);
+    requestCallback();
     setTimeout(closeHandler, 0);
-  }, [blogId, closeHandler]);
+  }, [blogId, closeHandler, requestCallback]);
+
   const submit = useCallback(() => {
     if (loadingRef.current) {
       return pushFail("加载中");
@@ -108,9 +142,6 @@ const useCheckcodeModuleToSubmit: UseCheckcodeModuleToSubmitType = <T extends My
             .then(({ code, data }) => {
               if (code === 0) {
                 flashData();
-                if (messageRef.current) {
-                  messageRef.current.value = "";
-                }
                 return pushSucess("提交成功");
               } else {
                 return pushFail(`提交失败: ${data.toString()}`);
@@ -124,7 +155,7 @@ const useCheckcodeModuleToSubmit: UseCheckcodeModuleToSubmitType = <T extends My
       });
     }
   }, [request]);
-  const canSubmit = useJudgeInputValue<T>(ref);
+  const { canSubmit } = useJudgeInputValue<T>(ref);
   return { ref, submit, canSubmit };
 };
 
@@ -148,6 +179,7 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
   const pushSucess = useSucessToast();
   const loadingRef = useRef<boolean>(false);
   const isChild = Object.prototype.hasOwnProperty.call(props, "primaryCommentId");
+
   const flashData = useCallback(() => {
     const childMessageRequest = createRequest({
       apiPath: apiName.childMessage,
@@ -157,6 +189,7 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
     mutate(childMessageRequest.cacheKey);
     setTimeout(closeHandler, 0);
   }, [isChild, closeHandler]);
+
   const submit = useCallback(() => {
     if (loadingRef.current) {
       return pushFail("加载中");
@@ -186,8 +219,10 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
         .finally(() => (loadingRef.current = false));
     }
   }, [request, closeHandler, flashData]);
-  const canSubmit1 = useJudgeInputValue(input1);
-  const canSubmit2 = useJudgeInputValue(input2);
+
+  const { canSubmit: canSubmit1 } = useJudgeInputValue(input1);
+  const { canSubmit: canSubmit2 } = useJudgeInputValue(input2);
+
   return { input1, input2, submit, canSubmit: canSubmit1 && canSubmit2 };
 };
 
@@ -205,6 +240,7 @@ const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryM
   const pushFail = useFailToast();
   const pushSucess = useSucessToast();
   const loadingRef = useRef<boolean>(false);
+
   const flashData = useCallback(() => {
     if (isChild) {
       // 子评论
@@ -269,6 +305,7 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
   const pushSucess = useSucessToast();
   const loadingRef = useRef<boolean>(false);
   const isChild = Object.prototype.hasOwnProperty.call(props, "primaryCommentId");
+
   const flashData = useCallback(() => {
     if (isChild) {
       // 子评论
@@ -316,14 +353,15 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
     }
   }, []);
 
-  const canSubmit1 = useJudgeInputValue(input1);
-  const canSubmit2 = useJudgeInputValue(input2);
+  const { canSubmit: canSubmit1 } = useJudgeInputValue(input1);
+  const { canSubmit: canSubmit2 } = useJudgeInputValue(input2);
 
   return { input1, input2, submit, canSubmit: canSubmit1 && canSubmit2 };
 };
 
 export {
   useChildMessage,
+  useJudgeInputValue,
   usePutToCheckcodeModule,
   useCheckcodeModuleToSubmit,
   useMessageToReplayModule,
