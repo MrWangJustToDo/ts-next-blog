@@ -14,20 +14,27 @@ const BlogContentUpdateModuleWithImg: BlogContentUpdateModuleWithImageType = <T 
   request,
   closeHandler,
 }: BlogContentUpdateModuleProps<T> & WithImgRef) => {
-  const { input1, input2, submit, canSubmit } = useUpdateModuleToSubmit<T, HTMLTextAreaElement, HTMLInputElement>({ request, props, closeHandler });
+  const { input1, input2, formRef, loading, canSubmit } = useUpdateModuleToSubmit<T, HTMLTextAreaElement, HTMLInputElement>({ request, props, closeHandler });
 
   return (
-    <>
-      <textarea className="w-100 my-2 border rounded" placeholder="请输入新留言" style={{ minHeight: "100px" }} defaultValue={props.content} ref={input1} />
+    <form ref={formRef}>
+      <textarea
+        name="newContent"
+        className="w-100 my-2 border rounded"
+        placeholder="请输入新留言"
+        style={{ minHeight: "100px" }}
+        defaultValue={props.content}
+        ref={input1}
+      />
       <div className={getClass("row px-3", flexBetween, style.checkcodeRow)}>
         <label htmlFor="putcheck" className="col-2 col-form-label text-truncate px-0" title="验证码">
           验证码:
         </label>
         <img ref={imgRef} className="col-4 col-md-3 border rounded" height="38" alt="验证码" />
-        <input ref={input2} className="col-4 col-md-3 form-control" id="putcheck" />
-        <Button className="btn-sm btn-primary" value="更新" request={submit} disable={!canSubmit} />
+        <input name="checkCode" ref={input2} className="col-4 col-md-3 form-control" id="putcheck" />
+        <Button className="btn-sm btn-primary" type="submit" value="更新" loading={loading} disable={!canSubmit} />
       </div>
-    </>
+    </form>
   );
 };
 

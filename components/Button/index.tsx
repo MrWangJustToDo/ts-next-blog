@@ -31,11 +31,11 @@ const Button: ButtonType = ({
       disabled={!bool || disable || loading}
       style={_style}
       onClick={requestCallback}
-      title={bool || !loading ? value : "loading"}
+      title={loading ? "loading" : bool ? value : "loading"}
       type={type}
-      data-enable={bool || !loading}
+      data-enable={loading ? false : bool}
     >
-      <span style={{ color: bool || !loading ? "inherit" : "transparent" }}>{value ? value : children}</span>
+      <span style={{ color: loading ? "transparent" : bool ? "inherit" : "transparent" }}>{value ? value : children}</span>
       {(!bool || loading) && <Loading className="position-absolute" _style={{ width: "15px", height: "15px" }} color={loadingColor} />}
     </button>
   );

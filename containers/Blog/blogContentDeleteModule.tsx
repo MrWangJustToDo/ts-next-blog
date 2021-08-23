@@ -9,12 +9,12 @@ const BlogContentDeleteModule: BlogContentDeleteModuleType = <T extends PrimaryM
   request,
   closeHandler,
 }: BlogContentDeleteModuleProps<T>) => {
-  const click = useDeleteModuleToSubmit<T>({ props, request, closeHandler });
+  const { formRef, loading } = useDeleteModuleToSubmit<T>({ props, request, closeHandler });
 
   return (
-    <div className={getClass("row, px-3", flexEnd)}>
-      <Button className="btn-sm btn-danger" request={click} value="确认删除" />
-    </div>
+    <form className={getClass("row, px-3", flexEnd)} ref={formRef}>
+      <Button className="btn-sm btn-danger" type="submit" loading={loading} value="确认删除" />
+    </form>
   );
 };
 

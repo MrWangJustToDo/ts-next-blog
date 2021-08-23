@@ -118,7 +118,7 @@ const BlogContentPrimaryMessageUpdate = () => {
     []
   );
 
-  const primaryUpdate = useMessageToUpdateModule({ body, className: style.updateModule });
+  const primaryUpdate = useMessageToUpdateModule<PrimaryMessageProps>({ body, className: style.updateModule });
 
   return primaryUpdate;
 };

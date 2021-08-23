@@ -6,19 +6,21 @@ import { useCheckcodeModuleToSubmit } from "hook/useMessage";
 import { BlogContentCheckcodeModuleWithImageType, BlogContentCheckcodeModuleType } from "types/containers";
 
 const BlogContentCheckcodeModuleWithImag: BlogContentCheckcodeModuleWithImageType = ({ blogId, request, closeHandler, imgRef, requestCallback }) => {
-  const { ref, submit, canSubmit } = useCheckcodeModuleToSubmit<HTMLInputElement>({ request, closeHandler, requestCallback, blogId });
+  const { formRef, inputRef, loading, canSubmit } = useCheckcodeModuleToSubmit({ request, closeHandler, requestCallback, blogId });
 
   return (
-    <div className={getClass("row", flexCenter)}>
+    <form ref={formRef} className={getClass("row", flexCenter)}>
       <label htmlFor="putcheck" className="col-2 col-form-label text-left px-0 text-truncate" title="验证码">
         验证码:
       </label>
       <img ref={imgRef} className="col-4 col-md-3 border rounded" height="38" alt="验证码" />
       <div className="col-4">
-        <input className="form-control" id="putcheck" ref={ref} />
+        <input name="checkCode" className="form-control" id="putcheck" ref={inputRef} />
       </div>
-      <Button className="btn-sm btn-outline-info" request={submit} disable={!canSubmit} value={"提交"} />
-    </div>
+      <Button className="btn-sm btn-outline-info" type="submit" loading={loading} disable={!canSubmit}>
+        提交
+      </Button>
+    </form>
   );
 };
 

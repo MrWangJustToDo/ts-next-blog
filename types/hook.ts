@@ -376,7 +376,7 @@ export type {
 interface UseChildMessageType {
   (props: ChildMessageProps[]): { messageProps: ChildMessageProps[]; more: boolean; loadMore: () => void };
 }
-type MyInputELement = HTMLInputElement | HTMLTextAreaElement | HTMLFormElement;
+type MyInputELement = HTMLInputElement | HTMLTextAreaElement;
 interface UseJudgeInputValueType {
   <T extends MyInputELement>(ref?: RefObject<T>): { canSubmit: boolean; ref?: RefObject<T> };
 }
@@ -402,10 +402,11 @@ interface UseCheckcodeModuleToSubmitProps {
   requestCallback: () => void;
 }
 interface UseCheckcodeModuleToSubmitType {
-  <T extends MyInputELement>(props: UseCheckcodeModuleToSubmitProps): {
-    ref: RefObject<T>;
+  (props: UseCheckcodeModuleToSubmitProps): {
+    loading: boolean;
+    formRef: RefObject<HTMLFormElement>;
+    inputRef?: RefObject<HTMLInputElement>;
     canSubmit: boolean;
-    submit: () => Promise<void>;
   };
 }
 interface UseMessageToModuleBody<T> {
@@ -429,9 +430,10 @@ interface UseReplayModuleToSubmitProps<T> {
 }
 interface UseReplayModuleToSubmitType {
   <T extends PrimaryMessageProps | ChildMessageProps, F extends MyInputELement, O extends MyInputELement>(props: UseReplayModuleToSubmitProps<T>): {
-    input1: RefObject<F>;
-    input2: RefObject<O>;
-    submit: () => Promise<void>;
+    input1?: RefObject<F>;
+    input2?: RefObject<O>;
+    formRef: RefObject<HTMLFormElement>;
+    loading: boolean;
     canSubmit: boolean;
   };
 }
@@ -441,7 +443,7 @@ interface UseDeleteModuleToSubmitProps<T> {
   props: T;
 }
 interface UseDeleteModuleToSubmitType {
-  <T extends PrimaryMessageProps | ChildMessageProps>(props: UseDeleteModuleToSubmitProps<T>): () => Promise<void>;
+  <T extends PrimaryMessageProps | ChildMessageProps>(props: UseDeleteModuleToSubmitProps<T>): { formRef: RefObject<HTMLFormElement>; loading: boolean };
 }
 interface UseUpdateModuleToSubmitProps<T> {
   request: AutoRequestType;
@@ -450,9 +452,10 @@ interface UseUpdateModuleToSubmitProps<T> {
 }
 interface UseUpdateModuleToSubmitType {
   <T extends PrimaryMessageProps | ChildMessageProps, F extends MyInputELement, O extends MyInputELement>(props: UseUpdateModuleToSubmitProps<T>): {
-    input1: RefObject<F>;
-    input2: RefObject<O>;
-    submit: () => Promise<void>;
+    input1?: RefObject<F>;
+    input2?: RefObject<O>;
+    formRef: RefObject<HTMLFormElement>;
+    loading: boolean;
     canSubmit: boolean;
   };
 }
