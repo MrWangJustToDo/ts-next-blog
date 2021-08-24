@@ -378,7 +378,7 @@ interface UseChildMessageType {
 }
 type MyInputELement = HTMLInputElement | HTMLTextAreaElement;
 interface UseJudgeInputValueType {
-  <T extends MyInputELement>(ref?: RefObject<T>): { canSubmit: boolean; ref?: RefObject<T> };
+  <T extends MyInputELement>(ref?: RefObject<T>, ...deps: any[]): { canSubmit: boolean; ref?: RefObject<T> };
 }
 interface UsePutToCheckcodeModuleBody {
   ({ request, requestCallback, blogId }: { request: AutoRequestType; requestCallback: () => void; blogId: string }): (closeHandler: () => void) => JSX.Element;
@@ -389,7 +389,7 @@ interface UsePutToCheckcodeModuleProps {
   body: UsePutToCheckcodeModuleBody;
 }
 interface UsePutToCheckcodeModuleType {
-  (props: UsePutToCheckcodeModuleProps): {
+  (props: UsePutToCheckcodeModuleProps, ...deps: any[]): {
     formRef: RefObject<HTMLFormElement>;
     textAreaRef?: RefObject<HTMLTextAreaElement>;
     canSubmit: boolean;

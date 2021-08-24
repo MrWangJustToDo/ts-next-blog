@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { useCallback } from "react";
 import { useEditor } from "hook/useBlog";
 import { getClass } from "utils/dom";
 import { markNOLineNumber } from "utils/markdown";
@@ -16,6 +17,8 @@ const PublishEditor: BlogContentType = ({ blogId, blogContent = "" }) => {
     useEditor(blogId!);
   }
 
+  const mdRender = useCallback<(t: string) => string>((text) => markNOLineNumber.render(text), []);
+
   return (
     <div className={getClass("mb-3", style.editor)}>
       <MdEditor
@@ -23,7 +26,7 @@ const PublishEditor: BlogContentType = ({ blogId, blogContent = "" }) => {
         id={`editor_${blogId}`}
         defaultValue={blogContent}
         style={{ minHeight: "90vh", borderRadius: "3px" }}
-        renderHTML={(text) => markNOLineNumber.render(text)}
+        renderHTML={mdRender}
       />
     </div>
   );

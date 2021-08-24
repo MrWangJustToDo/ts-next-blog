@@ -40,7 +40,7 @@ const useChildMessage: UseChildMessageType = (props) => {
   return { messageProps, more, loadMore };
 };
 
-const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(forWareRef?: RefObject<T>) => {
+const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(forWareRef?: RefObject<T>, ...deps: any[]) => {
   const ref = useRef<T>(null);
   const [bool, setBool] = useState<boolean>(false);
   const targetRef = forWareRef || ref;
@@ -63,21 +63,25 @@ const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(fo
     (action) => actionHandler<T, void, void>(targetRef.current, (ele) => ele.removeEventListener("input", action)),
     []
   );
-  useAutoActionHandler({
-    action: judgeValue,
-    addListener: addListenerCallback,
-    removeListener: removeListenerCallback,
-  });
+  useAutoActionHandler(
+    {
+      rightNow: true,
+      action: judgeValue,
+      addListener: addListenerCallback,
+      removeListener: removeListenerCallback,
+    },
+    ...deps
+  );
   return { canSubmit: bool, ref };
 };
 
-const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps) => {
+const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps, ...deps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const submitRef = useRef<boolean>(false);
   const open = useOverlayOpen();
-  const { ref: textAreaRef, canSubmit } = useJudgeInputValue<HTMLTextAreaElement>();
-  submitRef.current = canSubmit;
+  const { ref: textAreaRef, canSubmit } = useJudgeInputValue<HTMLTextAreaElement>(undefined, ...deps);
   const request = useUserRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId }, cache: false });
+  submitRef.current = canSubmit;
   const submit = useCallback<(e?: Event) => void>((e) => {
     e?.preventDefault();
     actionHandler<HTMLFormElement, void, void>(formRef.current, (ele) => {

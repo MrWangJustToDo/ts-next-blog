@@ -78,6 +78,9 @@ const deleteAllMessageByBlogIdAction = autoRequestHandler({
 const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { blogId, commentId, userId, content } = req.body;
+    if (!content || !content.length) {
+      throw new ServerError("content内容为空", 401);
+    }
     const now = new Date();
     const fromIp = req.ip;
     const createDate = now.toLocaleString();
@@ -111,6 +114,9 @@ const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
 const publishChildMessageByPrimaryIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { primaryCommentId, blogId, commentId, userId, toIp, toUserId, content } = req.body;
+    if (!content || !content.length) {
+      throw new ServerError("content内容为空", 401);
+    }
     const now = new Date();
     const fromIp = req.ip;
     const createDate = now.toLocaleString();
@@ -198,6 +204,9 @@ const updatePrimaryMessageByCommentIdAction = autoRequestHandler({
     if (isChild) {
       throw new ServerError("请求路径错误", 404);
     }
+    if (!newContent || !newContent.length) {
+      throw new ServerError("content内容为空", 401);
+    }
     // 进行更新
     await updateTableWithParam({
       db: req.db!,
@@ -229,6 +238,9 @@ const updateChildMessageByCommentIdAction = autoRequestHandler({
     const { isChild, newContent, commentId } = req.body;
     if (!isChild) {
       throw new ServerError("请求路径错误", 404);
+    }
+    if (!newContent || !newContent.length) {
+      throw new ServerError("content内容为空", 401);
     }
     // 进行更新
     await updateTableWithParam({
