@@ -59,7 +59,7 @@ const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, pr
   );
 };
 
-const BlogContentPrimaryMessageReplay = () => {
+const blogContentPrimaryMessageReplay = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage, cache: false });
 
   const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
@@ -82,7 +82,7 @@ const BlogContentPrimaryMessageReplay = () => {
   return primaryReplay;
 };
 
-const BlogContentPrimaryMessageDelete = () => {
+const blogContentPrimaryMessageDelete = () => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deletePrimaryMessage, cache: false, header: { apiToken: true } });
 
   const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
@@ -102,7 +102,7 @@ const BlogContentPrimaryMessageDelete = () => {
   return primaryDelete;
 };
 
-const BlogContentPrimaryMessageUpdate = () => {
+const blogContentPrimaryMessageUpdate = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.updatePrimaryMessage, cache: false, header: { apiToken: true } });
 
   const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
@@ -124,9 +124,9 @@ const BlogContentPrimaryMessageUpdate = () => {
 };
 
 const BlogContentPrimaryMessageWrapper: BlogContentPrimaryMessageWrapperType = ({ messages }) => {
-  const primaryReplay = BlogContentPrimaryMessageReplay();
-  const primaryDelete = BlogContentPrimaryMessageDelete();
-  const primaryUpdate = BlogContentPrimaryMessageUpdate();
+  const primaryReplay = blogContentPrimaryMessageReplay();
+  const primaryDelete = blogContentPrimaryMessageDelete();
+  const primaryUpdate = blogContentPrimaryMessageUpdate();
 
   return <BlogContentPrimaryMessage messages={messages} primaryReplay={primaryReplay} primaryDelete={primaryDelete} primaryUpdate={primaryUpdate} />;
 };

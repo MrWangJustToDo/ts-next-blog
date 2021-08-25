@@ -77,7 +77,7 @@ const deleteAllMessageByBlogIdAction = autoRequestHandler({
 // 发布主评论
 const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const { blogId, commentId, userId, content } = req.body;
+    const { blogId, commentId, userId, content, isMd } = req.body;
     if (!content || !content.length) {
       throw new ServerError("content内容为空", 401);
     }
@@ -100,6 +100,7 @@ const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
       modifyState,
       childIds,
       childCount,
+      isMd,
     });
     success({ res, resDate: { state: "评论留言成功", data: `时间：${createDate}` } });
   },

@@ -129,9 +129,11 @@ const insertPrimaryComment = async ({
   modifyDate,
   childIds,
   childCount,
+  preview,
+  isMd,
 }: PrimaryMessageProps & { db: Database }) => {
   return await db.run(
-    "INSERT INTO primaryComment VALUES(?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO primaryComment VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
     blogId,
     commentId,
     fromUserId,
@@ -141,7 +143,9 @@ const insertPrimaryComment = async ({
     modifyState,
     modifyDate,
     childIds,
-    childCount
+    childCount,
+    isMd,
+    preview,
   );
 };
 

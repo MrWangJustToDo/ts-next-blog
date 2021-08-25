@@ -10,7 +10,7 @@ import { BlogContentMessagePutType } from "types/containers";
 import style from "./index.module.scss";
 
 const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
-  const { bool, switchBoolDebounce } = useBool({ init: true });
+  const { bool, switchBoolDebounce } = useBool();
 
   const body = useCallback<UsePutToCheckcodeModuleBody>(
     ({ request, requestCallback, blogId }) =>
@@ -19,26 +19,24 @@ const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
     []
   );
 
-  const { formRef, textAreaRef, canSubmit } = usePutToCheckcodeModule(
-    {
-      body,
-      blogId,
-    },
-    bool
-  );
+  const { formRef, textAreaRef, canSubmit } = usePutToCheckcodeModule({
+    body,
+    blogId,
+    isMd: Number(bool),
+  });
 
   return (
     <li className="list-group-item">
       <form ref={formRef}>
         {bool ? (
-          <textarea name="content" className="w-100 my-2 border rounded" placeholder="请输入留言" style={{ minHeight: "100px" }} ref={textAreaRef} />
-        ) : (
           <div className="mb-3">
             <BlogContentMessageMarkdown name="content" />
           </div>
+        ) : (
+          <textarea name="content" className="w-100 my-2 border rounded" placeholder="请输入留言" style={{ minHeight: "100px" }} ref={textAreaRef} />
         )}
         <div className={getClass(flexBetween)}>
-          <button type="submit" className="btn btn-sm btn-primary" disabled={bool ? !canSubmit : false}>
+          <button type="submit" className="btn btn-sm btn-primary" disabled={bool ? false : !canSubmit}>
             新留言
           </button>
           <button
@@ -48,7 +46,7 @@ const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
             onClick={switchBoolDebounce}
           >
             <span>.</span>
-            {bool ? <i className="ri-markdown-line" /> : <i className="ri-file-text-line" />}
+            {bool ? <i className="ri-file-text-line" /> : <i className="ri-markdown-line" />}
           </button>
         </div>
       </form>

@@ -384,8 +384,9 @@ interface UsePutToCheckcodeModuleBody {
   ({ request, requestCallback, blogId }: { request: AutoRequestType; requestCallback: () => void; blogId: string }): (closeHandler: () => void) => JSX.Element;
 }
 interface UsePutToCheckcodeModuleProps {
-  className?: string;
+  isMd?: number;
   blogId: string;
+  className?: string;
   body: UsePutToCheckcodeModuleBody;
 }
 interface UsePutToCheckcodeModuleType {

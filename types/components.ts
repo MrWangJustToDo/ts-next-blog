@@ -66,6 +66,8 @@ interface PrimaryMessageProps {
   modifyDate: string;
   childIds: string;
   childCount: number;
+  preview?: string;
+  isMd?: number;
 
   // 用户相关
   avatar?: string;
@@ -103,6 +105,8 @@ interface ChildMessageProps {
   createDate: string;
   modifyState: number;
   modifyDate: string;
+  preview?: string;
+  isMd?: number;
 
   // 用户相关
   avatar?: string;

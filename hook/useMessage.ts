@@ -75,17 +75,19 @@ const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(fo
   return { canSubmit: bool, ref };
 };
 
-const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, className = "" }: UsePutToCheckcodeModuleProps, ...deps) => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const submitRef = useRef<boolean>(false);
+const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, className = "", isMd = 0 }: UsePutToCheckcodeModuleProps) => {
   const open = useOverlayOpen();
-  const { ref: textAreaRef, canSubmit } = useJudgeInputValue<HTMLTextAreaElement>(undefined, ...deps);
+  const submitRef = useRef<boolean>(false);
+  const mdRef = useRef<number>(Number(isMd));
+  const formRef = useRef<HTMLFormElement>(null);
+  const { ref: textAreaRef, canSubmit } = useJudgeInputValue<HTMLTextAreaElement>(undefined, isMd);
   const request = useUserRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId }, cache: false });
+  mdRef.current = Number(isMd);
   submitRef.current = canSubmit;
   const submit = useCallback<(e?: Event) => void>((e) => {
     e?.preventDefault();
     actionHandler<HTMLFormElement, void, void>(formRef.current, (ele) => {
-      if (submitRef.current) {
+      if (mdRef.current || submitRef.current) {
         const requestCallback = () => {
           actionHandler<HTMLTextAreaElement, void, void>(textAreaRef?.current, (ele) => {
             ele.value = "";
@@ -93,7 +95,7 @@ const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, cl
         };
         open({
           head: "验证码",
-          body: body({ request: request({ data: formSerialize(ele) }), requestCallback, blogId }),
+          body: body({ request: request({ data: { ...formSerialize(ele), isMd: mdRef.current } }), requestCallback, blogId }),
           height: 60,
           className,
         });
