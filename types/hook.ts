@@ -387,6 +387,7 @@ interface UsePutToCheckcodeModuleProps {
   isMd?: number;
   blogId: string;
   className?: string;
+  submitCallback?: () => void;
   body: UsePutToCheckcodeModuleBody;
 }
 interface UsePutToCheckcodeModuleType {

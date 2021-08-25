@@ -75,8 +75,9 @@ const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(fo
   return { canSubmit: bool, ref };
 };
 
-const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, className = "", isMd = 0 }: UsePutToCheckcodeModuleProps) => {
+const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, className = "", isMd = 0, submitCallback }: UsePutToCheckcodeModuleProps) => {
   const open = useOverlayOpen();
+  const htmlId = `#editor_${blogId}_html`;
   const submitRef = useRef<boolean>(false);
   const mdRef = useRef<number>(Number(isMd));
   const formRef = useRef<HTMLFormElement>(null);
@@ -87,11 +88,12 @@ const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, cl
   const submit = useCallback<(e?: Event) => void>((e) => {
     e?.preventDefault();
     actionHandler<HTMLFormElement, void, void>(formRef.current, (ele) => {
-      if (mdRef.current || submitRef.current) {
+      if (submitRef.current) {
         const requestCallback = () => {
           actionHandler<HTMLTextAreaElement, void, void>(textAreaRef?.current, (ele) => {
             ele.value = "";
           });
+          submitCallback && submitCallback();
         };
         open({
           head: "验证码",
