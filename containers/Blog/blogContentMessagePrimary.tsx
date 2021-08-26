@@ -31,6 +31,7 @@ const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, pr
           <PrimaryMessage
             {...item}
             key={item.commentId}
+            previewMod={false}
             replayHandler={primaryReplay}
             withDelete={Boolean(userId)}
             deleteHandler={primaryDelete}
@@ -91,7 +92,7 @@ const blogContentPrimaryMessageDelete = () => {
         (
           <>
             <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
-            <BlogContentDeleteModule<PrimaryMessageProps> request={request} closeHandler={closeHandler} props={props} />
+            <BlogContentDeleteModule request={request} closeHandler={closeHandler} props={props} />
           </>
         ),
     []

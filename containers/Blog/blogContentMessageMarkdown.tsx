@@ -1,24 +1,27 @@
-import dynamic from "next/dynamic";
-import { memo, MutableRefObject, useCallback, useEffect } from "react";
-import Loading from "components/Loading";
+import { memo, MutableRefObject, useCallback, useEffect, useRef } from "react";
+import MdEditor from "react-markdown-editor-lite";
 import { useEditor } from "hook/useBlog";
+import { log } from "utils/log";
 import { markNOLineNumber } from "utils/markdown";
 
 import "react-markdown-editor-lite/lib/index.css";
 
-const MdEditor = dynamic(() => import("react-markdown-editor-lite"), { ssr: false, loading: () => <Loading color="danger" /> });
-
 const BlogContentMessageMarkdown = ({
-  name = "content",
-  initContent,
   forwardRef,
-}: { name?: string; initContent?: string; forwardRef?: MutableRefObject<HTMLTextAreaElement | null> } = {}) => {
+  name = "content",
+  defaultValue = "",
+  className = "",
+}: { name?: string; defaultValue?: string; forwardRef?: MutableRefObject<HTMLTextAreaElement | null>; className?: string } = {}) => {
+  const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    if (forwardRef) {
-      forwardRef.current = document.querySelector(`#editor_${name}_md`);
+    if (forwardRef && ref.current) {
+      forwardRef.current = ref.current.querySelector(`#editor_${name}_md`);
       return () => {
         forwardRef.current = null;
       };
+    } else {
+      log("markdown element handle error", "error");
     }
   }, []);
 
@@ -29,14 +32,16 @@ const BlogContentMessageMarkdown = ({
   const mdRender = useCallback((text) => markNOLineNumber.render(text), []);
 
   return (
-    <MdEditor
-      style={{ minHeight: "40vh", borderRadius: "3px" }}
-      placeholder="请输入内容"
-      name={name}
-      id={`editor_${name}`}
-      defaultValue={initContent}
-      renderHTML={mdRender}
-    />
+    <div ref={ref} className={className} data-ele="markdown">
+      <MdEditor
+        name={name}
+        id={`editor_${name}`}
+        renderHTML={mdRender}
+        placeholder="请输入内容"
+        defaultValue={defaultValue}
+        style={{ minHeight: "40vh", borderRadius: "3px" }}
+      />
+    </div>
   );
 };
 

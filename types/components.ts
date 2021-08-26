@@ -90,7 +90,7 @@ interface PrimaryMessageProps {
 }
 
 interface PrimaryMessageType {
-  (props: PrimaryMessageProps): JSX.Element;
+  (props: PrimaryMessageProps & { previewMod?: boolean }): JSX.Element;
 }
 
 interface ChildMessageProps {

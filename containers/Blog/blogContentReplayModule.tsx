@@ -1,6 +1,9 @@
 import { apiName } from "config/api";
 import Button from "components/Button";
-import { flexBetween, getClass } from "utils/dom";
+import { BlogContentMessageTextArea } from "./blogContentMessagePut";
+import BlogContentMessageMarkdown from "./blogContentMessageMarkdown";
+import { flexBetween, flexCenter, getClass } from "utils/dom";
+import { useBool } from "hook/useData";
 import { useAutoLoadCheckcodeImg } from "hook/useAuto";
 import { useReplayModuleToSubmit } from "hook/useMessage";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
@@ -14,7 +17,9 @@ const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImageType = <T
   request,
   closeHandler,
 }: BlogContentReplayModuleProps<T> & WithImgRef) => {
+  const { bool, switchBoolDebounce } = useBool();
   const { input1, input2, formRef, canSubmit, loading } = useReplayModuleToSubmit<T, HTMLTextAreaElement, HTMLInputElement>({
+    isMd: Number(bool),
     props,
     request,
     closeHandler,
@@ -22,7 +27,24 @@ const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImageType = <T
 
   return (
     <form ref={formRef}>
-      <textarea name="content" className="w-100 my-2 border rounded" placeholder="请输入留言" style={{ minHeight: "100px" }} ref={input1} />
+      <div>
+        <button type="button" className={getClass("btn btn-sm btn-outline-info", flexCenter)} onClick={switchBoolDebounce}>
+          {bool ? (
+            <>
+              <i className="ri-file-text-line" /> <span className="ml-2">go text</span>
+            </>
+          ) : (
+            <>
+              <i className="ri-markdown-line" /> <span className="ml-2">go markdown</span>
+            </>
+          )}
+        </button>
+        {bool ? (
+          <BlogContentMessageMarkdown className="my-2" name="content" forwardRef={input1} />
+        ) : (
+          <BlogContentMessageTextArea name="content" forwardRef={input1} />
+        )}
+      </div>
       <div className={getClass("row px-3", flexBetween, style.checkcodeRow)}>
         <label htmlFor="putcheck" className="col-2 col-form-label text-truncate px-0" title="验证码">
           验证码:

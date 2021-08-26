@@ -1,4 +1,5 @@
-import { MutableRefObject, useCallback, useEffect } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef } from "react";
+import { log } from "utils/log";
 import { flexBetween, getClass } from "utils/dom";
 import { useBool } from "hook/useData";
 import { usePutToCheckcodeModule } from "hook/useMessage";
@@ -9,17 +10,39 @@ import { BlogContentMessagePutType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const BlogContentMessageTextArea = ({ forwardRef, name = "content" }: { forwardRef?: MutableRefObject<HTMLTextAreaElement | null>; name?: string }) => {
+const BlogContentMessageTextArea = ({
+  forwardRef,
+  name = "content",
+  defaultValue = "",
+}: {
+  forwardRef?: MutableRefObject<HTMLTextAreaElement | null>;
+  name?: string;
+  defaultValue?: string;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
   // use effect to handle element
   useEffect(() => {
-    if (forwardRef) {
-      forwardRef.current = document.querySelector("#main_put_message");
+    if (forwardRef && ref.current) {
+      forwardRef.current = ref.current.querySelector(`#${name}`);
       return () => {
         forwardRef.current = null;
       };
+    } else {
+      log("textarea handle element error", "error");
     }
   }, []);
-  return <textarea id="main_put_message" name={name} className="w-100 my-2 border rounded" placeholder="请输入留言" style={{ minHeight: "100px" }} />;
+  return (
+    <div ref={ref} data-ele="textarea">
+      <textarea
+        id={name}
+        name={name}
+        defaultValue={defaultValue}
+        className="w-100 my-2 border rounded"
+        placeholder="请输入留言"
+        style={{ minHeight: "100px" }}
+      />
+    </div>
+  );
 };
 
 const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
@@ -43,9 +66,7 @@ const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
     <li className="list-group-item">
       <form ref={formRef}>
         {bool ? (
-          <div className="mb-3">
-            <BlogContentMessageMarkdown name="content" forwardRef={textAreaRef} />
-          </div>
+          <BlogContentMessageMarkdown className="mb-3" name="content" forwardRef={textAreaRef} />
         ) : (
           <BlogContentMessageTextArea name="content" forwardRef={textAreaRef} />
         )}
@@ -67,5 +88,7 @@ const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
     </li>
   );
 };
+
+export { BlogContentMessageTextArea };
 
 export default BlogContentMessagePut;

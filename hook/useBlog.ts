@@ -109,13 +109,19 @@ const useEditor: UseEditorType = (id) => {
   const mdId = `#editor_${id}_md`;
   // 创建DOM观察者对象，观察DOM的class变化，执行对应的操作
   const observer = new MutationObserver(function (mutationsList) {
+    // 判断当前是否需要进行overflow切换
+    const isOverflow = document.body.style.overflow === "hidden";
     // 遍历出所有的MutationRecord对象
     mutationsList.forEach(function (mutation) {
       if (mutation.attributeName === "class") {
         if ((mutation.target as HTMLDivElement).classList.contains("full")) {
-          document.body.style.overflow = "hidden";
+          if (!isOverflow) {
+            document.body.style.overflow = "hidden";
+          }
         } else {
-          document.body.style.overflow = "auto";
+          if (!isOverflow) {
+            document.body.style.overflow = "auto";
+          }
         }
       }
     });

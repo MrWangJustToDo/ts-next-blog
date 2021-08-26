@@ -34,7 +34,7 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
         </OverlayOpenContext.Provider>
         <div
           id="desktop-overlay"
-          className={getClass("position-fixed w-100 h-100", flexCenter, style.cover, overlay && overlay.showState ? style.cover_active : "")}
+          className={getClass("position-fixed w-100 h-100 overflow-auto py-4", flexCenter, style.cover, overlay && overlay.showState ? style.cover_active : "")}
           style={{ pointerEvents: deskTop ? "auto" : "none", zIndex: deskTop ? 2 : -1 }}
           data-modal="desktop"
           data-show={Boolean(deskTop)}

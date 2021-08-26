@@ -77,7 +77,7 @@ const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(fo
 
 const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, className = "", isMd = 0, submitCallback }: UsePutToCheckcodeModuleProps) => {
   const open = useOverlayOpen();
-  const htmlId = `#editor_${blogId}_html`;
+  const htmlId = `#editor_content_html`;
   const submitRef = useRef<boolean>(false);
   const mdRef = useRef<number>(Number(isMd));
   const formRef = useRef<HTMLFormElement>(null);
@@ -95,12 +95,22 @@ const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, cl
           });
           submitCallback && submitCallback();
         };
-        open({
-          head: "验证码",
-          body: body({ request: request({ data: { ...formSerialize(ele), isMd: mdRef.current } }), requestCallback, blogId }),
-          height: 60,
-          className,
-        });
+        if (mdRef.current) {
+          const preview = ele.querySelector(htmlId)?.textContent;
+          open({
+            head: "验证码",
+            body: body({ request: request({ data: { ...formSerialize(ele), isMd: mdRef.current, preview } }), requestCallback, blogId }),
+            height: 60,
+            className,
+          });
+        } else {
+          open({
+            head: "验证码",
+            body: body({ request: request({ data: { ...formSerialize(ele), isMd: mdRef.current } }), requestCallback, blogId }),
+            height: 60,
+            className,
+          });
+        }
       } else {
         log("can not submit", "warn");
       }
@@ -193,17 +203,20 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
 >({
   props,
   request,
+  isMd = 0,
   closeHandler,
 }: UseReplayModuleToSubmitProps<T>) => {
+  const mdRef = useRef<number>(isMd);
   const pushFail = useFailToast();
   const pushSucess = useSucessToast();
   const { bool, show, hide } = useBool();
   const formRef = useRef<HTMLFormElement>(null);
   const isChild = Object.prototype.hasOwnProperty.call(props, "primaryCommentId");
   const stateRef = useRef<{ loading: boolean; canSubmit: boolean }>({ loading: false, canSubmit: false });
-  const { ref: input1, canSubmit: canSubmit1 } = useJudgeInputValue<F>();
+  const { ref: input1, canSubmit: canSubmit1 } = useJudgeInputValue<F>(undefined, isMd);
   const { ref: input2, canSubmit: canSubmit2 } = useJudgeInputValue<O>();
 
+  mdRef.current = isMd;
   stateRef.current.canSubmit = canSubmit1 && canSubmit2;
 
   const flashData = useCallback(() => {
@@ -235,6 +248,7 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
               toIp: props.fromIp,
               toUserId: props.fromUserId,
               commentId: getRandom(1000).toString(16),
+              isMd: mdRef.current,
             },
           })
             .run<ApiRequestResult<string>>()

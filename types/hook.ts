@@ -422,12 +422,9 @@ interface UseMessageToModuleType {
   <T>(props: UseMessageToModuleProps<T>): (props: T) => void;
 }
 interface UseReplayModuleToSubmitProps<T> {
-  // toIp: string;
-  // blogId: string;
-  // toUserId?: string;
   props: T;
+  isMd?: number;
   request: AutoRequestType;
-  // primaryCommentId: string;
   closeHandler: () => void;
 }
 interface UseReplayModuleToSubmitType {
