@@ -56,7 +56,11 @@ const PrimaryMessage: PrimaryMessageType = (props) => {
           <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{username ? username : fromIp}</span>
           <span className="float-right badge badge-primary align-middle">{(modifyState ? "更新于：" : "回复于：") + momentTo(modifyDate)}</span>
         </h5>
-        {isMd && !previewMod ? <p className="mb-2 mb-md-3 typo" dangerouslySetInnerHTML={{ __html: renderContent }} /> : <p className="mb-2 mb-md-3">{renderContent}</p>}
+        {isMd && !previewMod ? (
+          <p className="mb-2 mb-md-3 typo" style={{ fontSize: "14px" }} dangerouslySetInnerHTML={{ __html: renderContent }} />
+        ) : (
+          <p className="mb-2 mb-md-3">{renderContent}</p>
+        )}
         <div className={style.btnContainer}>
           {withReplay && (
             <button className={getClass("btn btn-outline-info", style.replay)} onClick={replayCallback}>

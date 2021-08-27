@@ -130,7 +130,7 @@ interface ChildMessageProps {
 }
 
 interface ChildMessageType {
-  (props: ChildMessageProps): JSX.Element;
+  (props: ChildMessageProps & { previewMod?: boolean }): JSX.Element;
 }
 
 export type { PrimaryMessageType, ChildMessageType, PrimaryMessageProps, ChildMessageProps };

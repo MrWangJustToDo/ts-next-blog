@@ -240,17 +240,31 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
         return actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(formRef.current, (ele) => {
           show();
           stateRef.current.loading = true;
-          return request({
-            data: {
-              ...formSerialize(ele),
-              blogId: props.blogId,
-              primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : props.commentId,
-              toIp: props.fromIp,
-              toUserId: props.fromUserId,
-              commentId: getRandom(1000).toString(16),
-              isMd: mdRef.current,
-            },
-          })
+          const requestPromise = mdRef.current
+            ? request({
+                data: {
+                  ...formSerialize(ele),
+                  preview: ele.querySelector("#editor_content_html")?.textContent,
+                  blogId: props.blogId,
+                  primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : props.commentId,
+                  toIp: props.fromIp,
+                  toUserId: props.fromUserId,
+                  commentId: getRandom(1000).toString(16),
+                  isMd: mdRef.current,
+                },
+              })
+            : request({
+                data: {
+                  ...formSerialize(ele),
+                  blogId: props.blogId,
+                  primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : props.commentId,
+                  toIp: props.fromIp,
+                  toUserId: props.fromUserId,
+                  commentId: getRandom(1000).toString(16),
+                  isMd: mdRef.current,
+                },
+              });
+          return requestPromise
             .run<ApiRequestResult<string>>()
             .then(({ code, data }) => {
               if (code === 0) {
@@ -418,15 +432,28 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
       return actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(formRef.current, (ele) => {
         show();
         stateRef.current.loading = true;
-        return request({
-          data: {
-            ...formSerialize(ele),
-            isChild,
-            blogId: props.blogId,
-            commentId: props.commentId,
-            primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
-          },
-        })
+        const requestPromise = props.isMd
+          ? request({
+              data: {
+                ...formSerialize(ele),
+                isMd: props.isMd,
+                preview: ele.querySelector("#editor_newContent_html")?.textContent,
+                isChild,
+                blogId: props.blogId,
+                commentId: props.commentId,
+                primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
+              },
+            })
+          : request({
+              data: {
+                ...formSerialize(ele),
+                isChild,
+                blogId: props.blogId,
+                commentId: props.commentId,
+                primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
+              },
+            });
+        return requestPromise
           .run<ApiRequestResult<string>>()
           .then(({ code, data }) => {
             if (code === 0) {

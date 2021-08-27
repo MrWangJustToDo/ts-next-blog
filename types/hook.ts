@@ -111,7 +111,8 @@ export type { ArchiveProps, UseArchiveType, UseAutoLoadArchiveType };
 
 /* useAuto */
 interface UseAutoActionHandlerProps<T, K> {
-  action: (e?: T) => void;
+  action?: (e?: T) => void;
+  actionCallback?: (e?: T) => void; // action 不需要useCallback
   actionState?: boolean; // 当前需要执行的状态，在事件监听回调中用于判断是否还需要绑定监听，在定时器中用于判断本次action是否需要执行
   timmer?: boolean; // 是否使用定时器
   once?: boolean; // 执行一次，for timmer
@@ -445,9 +446,9 @@ interface UseDeleteModuleToSubmitType {
   <T extends PrimaryMessageProps | ChildMessageProps>(props: UseDeleteModuleToSubmitProps<T>): { formRef: RefObject<HTMLFormElement>; loading: boolean };
 }
 interface UseUpdateModuleToSubmitProps<T> {
-  request: AutoRequestType;
-  closeHandler: () => void;
   props: T;
+  closeHandler: () => void;
+  request: AutoRequestType;
 }
 interface UseUpdateModuleToSubmitType {
   <T extends PrimaryMessageProps | ChildMessageProps, F extends MyInputELement, O extends MyInputELement>(props: UseUpdateModuleToSubmitProps<T>): {

@@ -24,6 +24,7 @@ import {
 const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
   {
     action,
+    actionCallback,
     timmer,
     actionState = true,
     once = true,
@@ -37,14 +38,20 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
   }: UseAutoActionHandlerProps<T, K>,
   ...deps: any[]
 ) => {
+  const actionCallbackRef = useRef<(e?: T) => void>();
   const actionStateRef = useRef<boolean>();
+  actionCallbackRef.current = actionCallback;
   actionStateRef.current = actionState;
   useEffect(() => {
     const currentRightNow = rightNow && typeof rightNow === "function" ? rightNow() : rightNow;
+    const currentAction = action || actionCallbackRef.current;
+    if (!currentAction) {
+      throw new Error("autoAction need a action to handle");
+    }
     // 定时器
     if (timmer) {
       const actionCallback = () => {
-        if (actionStateRef.current) action();
+        if (actionStateRef.current) currentAction();
       };
       if (delayTime === undefined) {
         log("timmer delayTime not set ---> useAutoActionHandler", "warn");
@@ -64,14 +71,14 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
         throw new Error("every addListener need a removeListener! ---> useAutoActionHandler");
       } else {
         if (actionStateRef.current) {
-          if (currentRightNow) action();
+          if (currentRightNow) currentAction();
           if (currentRef?.current) {
             const ele = currentRef.current;
-            addListener(action, ele);
-            return () => removeListener(action, ele);
+            addListener(currentAction, ele);
+            return () => removeListener(currentAction, ele);
           } else {
-            addListener(action);
-            return () => removeListener(action);
+            addListener(currentAction);
+            return () => removeListener(currentAction);
           }
         }
       }
@@ -81,20 +88,20 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
         throw new Error("every addListenerCallback need a removeListenerCallback! ---> useAutoActionHandler");
       } else {
         if (actionStateRef.current) {
-          if (currentRightNow) action();
+          if (currentRightNow) currentAction();
           if (currentRef?.current) {
             const ele = currentRef.current;
-            addListenerCallback(action, ele);
-            return () => removeListenerCallback(action, ele);
+            addListenerCallback(currentAction, ele);
+            return () => removeListenerCallback(currentAction, ele);
           } else {
-            addListenerCallback(action);
-            return () => removeListenerCallback(action);
+            addListenerCallback(currentAction);
+            return () => removeListenerCallback(currentAction);
           }
         }
       }
     } else if (currentRightNow) {
       if (actionStateRef.current) {
-        action();
+        currentAction();
       }
     }
   }, [action, timmer, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps]);

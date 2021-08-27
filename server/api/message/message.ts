@@ -115,7 +115,7 @@ const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
 // 发布子评论
 const publishChildMessageByPrimaryIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const { primaryCommentId, blogId, commentId, userId, toIp, toUserId, content } = req.body;
+    const { primaryCommentId, blogId, commentId, userId, toIp, toUserId, content, preview, isMd } = req.body;
     if (!content || !content.length) {
       throw new ServerError("content内容为空", 401);
     }
@@ -137,6 +137,8 @@ const publishChildMessageByPrimaryIdAction = autoRequestHandler({
       createDate,
       modifyState,
       modifyDate,
+      isMd,
+      preview,
     });
     success({ res, resDate: { state: "回复留言成功", data: `时间：${createDate}` } });
   },
@@ -202,7 +204,7 @@ const deleteChildMessageByCommentIdAction = autoRequestHandler({
 // 修改主评论
 const updatePrimaryMessageByCommentIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const { isChild, newContent, commentId } = req.body;
+    const { isChild, newContent, commentId, preview, isMd } = req.body;
     if (isChild) {
       throw new ServerError("请求路径错误", 404);
     }
@@ -210,20 +212,38 @@ const updatePrimaryMessageByCommentIdAction = autoRequestHandler({
       throw new ServerError("content内容为空", 401);
     }
     // 进行更新
-    await updateTableWithParam({
-      db: req.db!,
-      table: "primaryComment",
-      param: {
-        set: {
-          content: newContent,
-          modifyState: 1,
-          modifyDate: new Date().toLocaleString(),
+    if (isMd) {
+      await updateTableWithParam({
+        db: req.db!,
+        table: "primaryComment",
+        param: {
+          set: {
+            content: newContent,
+            modifyState: 1,
+            modifyDate: new Date().toLocaleString(),
+            preview,
+          },
+          where: {
+            commentId: { value: commentId },
+          },
         },
-        where: {
-          commentId: { value: commentId },
+      });
+    } else {
+      await updateTableWithParam({
+        db: req.db!,
+        table: "primaryComment",
+        param: {
+          set: {
+            content: newContent,
+            modifyState: 1,
+            modifyDate: new Date().toLocaleString(),
+          },
+          where: {
+            commentId: { value: commentId },
+          },
         },
-      },
-    });
+      });
+    }
     success({ res, resDate: { state: "更新成功", data: `更新成功, ${commentId}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
@@ -237,7 +257,7 @@ const updatePrimaryMessageByCommentIdAction = autoRequestHandler({
 // 修改子评论
 const updateChildMessageByCommentIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
-    const { isChild, newContent, commentId } = req.body;
+    const { isChild, newContent, commentId, preview, isMd } = req.body;
     if (!isChild) {
       throw new ServerError("请求路径错误", 404);
     }
@@ -245,20 +265,38 @@ const updateChildMessageByCommentIdAction = autoRequestHandler({
       throw new ServerError("content内容为空", 401);
     }
     // 进行更新
-    await updateTableWithParam({
-      db: req.db!,
-      table: "childComment",
-      param: {
-        set: {
-          content: newContent,
-          modifyState: 1,
-          modifyDate: new Date().toLocaleString(),
+    if (isMd) {
+      await updateTableWithParam({
+        db: req.db!,
+        table: "childComment",
+        param: {
+          set: {
+            content: newContent,
+            modifyState: 1,
+            modifyDate: new Date().toLocaleString(),
+            preview,
+          },
+          where: {
+            commentId: { value: commentId },
+          },
         },
-        where: {
-          commentId: { value: commentId },
+      });
+    } else {
+      await updateTableWithParam({
+        db: req.db!,
+        table: "childComment",
+        param: {
+          set: {
+            content: newContent,
+            modifyState: 1,
+            modifyDate: new Date().toLocaleString(),
+          },
+          where: {
+            commentId: { value: commentId },
+          },
         },
-      },
-    });
+      });
+    }
     success({ res, resDate: { state: "更新成功", data: `更新成功, ${commentId}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>

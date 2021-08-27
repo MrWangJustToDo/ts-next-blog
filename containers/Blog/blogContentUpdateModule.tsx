@@ -1,5 +1,7 @@
 import { apiName } from "config/api";
 import Button from "components/Button";
+import { BlogContentMessageTextArea } from "./blogContentMessagePut";
+import BlogContentMessageMarkdown from "./blogContentMessageMarkdown";
 import { flexBetween, getClass } from "utils/dom";
 import { useAutoLoadCheckcodeImg } from "hook/useAuto";
 import { useUpdateModuleToSubmit } from "hook/useMessage";
@@ -18,14 +20,11 @@ const BlogContentUpdateModuleWithImg: BlogContentUpdateModuleWithImageType = <T 
 
   return (
     <form ref={formRef}>
-      <textarea
-        name="newContent"
-        className="w-100 my-2 border rounded"
-        placeholder="请输入新留言"
-        style={{ minHeight: "100px" }}
-        defaultValue={props.content}
-        ref={input1}
-      />
+      {props.isMd ? (
+        <BlogContentMessageMarkdown className="my-2" name="newContent" defaultValue={props.content} forwardRef={input1} />
+      ) : (
+        <BlogContentMessageTextArea name="newContent" defaultValue={props.content} forwardRef={input1} />
+      )}
       <div className={getClass("row px-3", flexBetween, style.checkcodeRow)}>
         <label htmlFor="putcheck" className="col-2 col-form-label text-truncate px-0" title="验证码">
           验证码:

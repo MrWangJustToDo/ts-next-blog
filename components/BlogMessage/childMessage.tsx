@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from "react";
 import Image from "components/Image";
 import UserHover from "components/UserHover";
-import { momentTo } from "utils/time";
 import { getClass } from "utils/dom";
+import { momentTo } from "utils/time";
 import { getCurrentAvatar } from "utils/data";
+import { markNOLineNumber } from "utils/markdown";
 import { ChildMessageType } from "types/components";
 
 import style from "./index.module.scss";
@@ -20,9 +21,12 @@ const ChildMessage: ChildMessageType = (props) => {
     toIp,
     toUserName,
     children,
+    isMd,
+    preview,
     replayHandler,
     updateHandler,
     deleteHandler,
+    previewMod = true,
     withHover = true,
     withReplay = true,
     withUpdate = false,
@@ -36,6 +40,8 @@ const ChildMessage: ChildMessageType = (props) => {
   const deleteCallback = useCallback(() => typeof deleteHandler === "function" && deleteHandler(props), [deleteHandler, props]);
 
   const src = useMemo(() => getCurrentAvatar(avatar, gender), [avatar, gender]);
+
+  const renderContent = useMemo(() => (previewMod ? preview || content : isMd ? markNOLineNumber.render(content) : content), [isMd, content, previewMod]);
 
   return (
     <div className={getClass("media py-2", style.childMessage)}>
@@ -53,7 +59,11 @@ const ChildMessage: ChildMessageType = (props) => {
           <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{toUserName ? toUserName : toIp}</span>
           <span className="float-right badge badge-primary">{(modifyState ? "更新于：" : "回复于：") + momentTo(modifyDate)}</span>
         </h5>
-        <p className="mb-2 mb-md-3 pb-1 border-bottom rounded">{content}</p>
+        {isMd && !previewMod ? (
+          <p className="mb-2 mb-md-3 pb-1 border-bottom rounded typo" style={{ fontSize: "14px" }} dangerouslySetInnerHTML={{ __html: renderContent }} />
+        ) : (
+          <p className="mb-2 mb-md-3 pb-1 border-bottom rounded">{renderContent}</p>
+        )}
         <div className={style.btnContainer}>
           {withReplay && (
             <button className={getClass("btn btn-outline-info", style.replay)} onClick={replayCallback}>

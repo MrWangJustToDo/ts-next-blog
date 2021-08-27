@@ -27,24 +27,22 @@ const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImageType = <T
 
   return (
     <form ref={formRef}>
-      <div>
-        <button type="button" className={getClass("btn btn-sm btn-outline-info", flexCenter)} onClick={switchBoolDebounce}>
-          {bool ? (
-            <>
-              <i className="ri-file-text-line" /> <span className="ml-2">go text</span>
-            </>
-          ) : (
-            <>
-              <i className="ri-markdown-line" /> <span className="ml-2">go markdown</span>
-            </>
-          )}
-        </button>
+      <button type="button" className={getClass("btn btn-sm btn-outline-info", flexCenter)} onClick={switchBoolDebounce}>
         {bool ? (
-          <BlogContentMessageMarkdown className="my-2" name="content" forwardRef={input1} />
+          <>
+            <i className="ri-file-text-line" /> <span className="ml-2">go text</span>
+          </>
         ) : (
-          <BlogContentMessageTextArea name="content" forwardRef={input1} />
+          <>
+            <i className="ri-markdown-line" /> <span className="ml-2">go markdown</span>
+          </>
         )}
-      </div>
+      </button>
+      {bool ? (
+        <BlogContentMessageMarkdown className="my-2" name="content" forwardRef={input1} />
+      ) : (
+        <BlogContentMessageTextArea name="content" forwardRef={input1} />
+      )}
       <div className={getClass("row px-3", flexBetween, style.checkcodeRow)}>
         <label htmlFor="putcheck" className="col-2 col-form-label text-truncate px-0" title="验证码">
           验证码:

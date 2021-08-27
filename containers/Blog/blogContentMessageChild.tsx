@@ -23,6 +23,7 @@ const BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType =
         <ChildMessage
           key={item.commentId}
           {...item}
+          previewMod={false}
           replayHandler={childReplay}
           withDelete={Boolean(userId)}
           deleteHandler={childDelete}
