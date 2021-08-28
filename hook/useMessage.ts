@@ -83,8 +83,10 @@ const usePutToCheckcodeModule: UsePutToCheckcodeModuleType = ({ blogId, body, cl
   const formRef = useRef<HTMLFormElement>(null);
   const { ref: textAreaRef, canSubmit } = useJudgeInputValue<HTMLTextAreaElement>(undefined, isMd);
   const request = useUserRequest({ method: "post", apiPath: apiName.putPrimaryMessage, data: { blogId }, cache: false });
+
   mdRef.current = Number(isMd);
   submitRef.current = canSubmit;
+
   const submit = useCallback<(e?: Event) => void>((e) => {
     e?.preventDefault();
     actionHandler<HTMLFormElement, void, void>(formRef.current, (ele) => {
@@ -137,7 +139,9 @@ const useCheckcodeModuleToSubmit: UseCheckcodeModuleToSubmitType = ({ blogId, re
   const formRef = useRef<HTMLFormElement>(null);
   const stateRef = useRef<{ loading: boolean; canSubmit: boolean }>({ loading: false, canSubmit: false });
   const { canSubmit, ref: inputRef } = useJudgeInputValue<HTMLInputElement>();
+
   stateRef.current.canSubmit = canSubmit;
+  stateRef.current.loading = bool;
 
   const flashData = useCallback(() => {
     const primaryRequest = createRequest({ apiPath: apiName.primaryMessage, query: { blogId } });
@@ -157,7 +161,6 @@ const useCheckcodeModuleToSubmit: UseCheckcodeModuleToSubmitType = ({ blogId, re
       } else {
         return actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(formRef.current, (ele) => {
           show();
-          stateRef.current.loading = true;
           return request({ data: { ...formSerialize(ele), commentId: getRandom(1000).toString(16) } })
             .run<ApiRequestResult<string>>()
             .then(({ code, data }) => {
@@ -169,10 +172,7 @@ const useCheckcodeModuleToSubmit: UseCheckcodeModuleToSubmitType = ({ blogId, re
               }
             })
             .catch((e) => pushFail(`发生错误: ${e.toString()}`))
-            .finally(() => {
-              stateRef.current.loading = false;
-              hide();
-            });
+            .finally(hide);
         });
       }
     },
@@ -218,6 +218,7 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
 
   mdRef.current = isMd;
   stateRef.current.canSubmit = canSubmit1 && canSubmit2;
+  stateRef.current.loading = bool;
 
   const flashData = useCallback(() => {
     const childMessageRequest = createRequest({
@@ -239,7 +240,6 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
       } else {
         return actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(formRef.current, (ele) => {
           show();
-          stateRef.current.loading = true;
           const requestPromise = mdRef.current
             ? request({
                 data: {
@@ -275,10 +275,7 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
               }
             })
             .catch((e) => pushFail(`发生错误: ${e.toString()}`))
-            .finally(() => {
-              stateRef.current.loading = false;
-              hide();
-            });
+            .finally(hide);
         });
       }
     },
@@ -314,6 +311,7 @@ const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryM
   const loadingRef = useRef<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
 
+  loadingRef.current = bool;
   const isChild = Object.prototype.hasOwnProperty.call(props, "primaryCommentId");
 
   const flashData = useCallback(() => {
@@ -337,7 +335,6 @@ const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryM
         return pushFail("加载中");
       } else {
         return actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(formRef.current, () => {
-          loadingRef.current = true;
           show();
           return request({
             data: {
@@ -357,10 +354,7 @@ const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryM
               }
             })
             .catch((e) => pushFail(`删除${isChild ? "子评论" : "主评论"}出错, commentId: ${props.commentId}, error: ${e.toString()}`))
-            .finally(() => {
-              loadingRef.current = false;
-              hide();
-            });
+            .finally(hide);
         });
       }
     },
@@ -404,6 +398,7 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
   const stateRef = useRef<{ loading: boolean; canSubmit: boolean }>({ loading: false, canSubmit: false });
 
   stateRef.current.canSubmit = canSubmit1 && canSubmit2;
+  stateRef.current.loading = bool;
 
   const flashData = useCallback(() => {
     if (isChild) {
@@ -431,7 +426,6 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
       }
       return actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(formRef.current, (ele) => {
         show();
-        stateRef.current.loading = true;
         const requestPromise = props.isMd
           ? request({
               data: {
@@ -464,10 +458,7 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
             }
           })
           .catch((e) => pushFail(`更新出错, ${e.toString()}`))
-          .finally(() => {
-            stateRef.current.loading = false;
-            hide();
-          });
+          .finally(hide);
       });
     }
   }, []);

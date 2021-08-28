@@ -22,6 +22,7 @@ import {
   UseManageToDeleteModuleType,
   UseSearchType,
 } from "types/hook";
+import { useBool } from "./useData";
 
 const useSearch: UseSearchType = () => {
   const fail = useFailToast();
@@ -68,31 +69,45 @@ const useManageToAddModule: UseManageToAddModuleType = ({ title, body, className
 };
 
 const useAddRequest: UseAddRequestType = ({ request, successCallback }) => {
-  const ref = useRef<HTMLInputElement>(null);
   const fail = useFailToast();
   const success = useSucessToast();
-  const doRequest = useCallback(
-    () =>
-      actionHandler<HTMLInputElement, Promise<void>, Promise<void>>(
-        ref.current,
-        (ele) => {
-          return request({ data: { [ele.name]: ele.value } })
-            .run<ApiRequestResult<string>>()
-            .then(({ code, data }) => {
-              if (code === 0) {
-                successCallback();
-                return success(`添加tag成功，${data.toString()}`);
-              } else {
-                return fail(`添加tag失败，请稍候尝试`);
-              }
-            })
-            .catch((e) => fail(`添加tag出错，${e.toString()}`));
-        },
-        () => fail(`当前组件已经卸载`)
-      ),
-    [request, successCallback]
-  );
-  return [ref, doRequest];
+  const loadingRef = useRef<boolean>();
+  const { bool, show, hide } = useBool();
+  const ref = useRef<HTMLFormElement>(null);
+
+  loadingRef.current = bool;
+
+  useAutoActionHandler<Event, null>({
+    actionCallback: (e?: Event) => {
+      e?.preventDefault();
+      if (loadingRef.current) {
+        return fail("加载中，不能提交");
+      } else {
+        actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(
+          ref.current,
+          (ele) => {
+            show();
+            return request({ data: { ...formSerialize(ele) } })
+              .run<ApiRequestResult<string>>()
+              .then(({ code, data }) => {
+                if (code === 0) {
+                  successCallback();
+                  return success(`添加tag成功，${data.toString()}`);
+                } else {
+                  return fail(`添加tag失败，请稍候尝试`);
+                }
+              })
+              .catch((e) => fail(`添加tag出错，${e.toString()}`))
+              .finally(hide);
+          },
+          () => fail(`当前组件已经卸载`)
+        );
+      }
+    },
+    addListenerCallback: (action) => actionHandler<HTMLFormElement, void, void>(ref.current, (ele) => ele.addEventListener("submit", action)),
+    removeListenerCallback: (action) => actionHandler<HTMLFormElement, void, void>(ref.current, (ele) => ele.removeEventListener("submit", action)),
+  });
+  return [ref, bool];
 };
 
 const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, successClassName, failClassName, loadingClassName }) => {

@@ -51,7 +51,7 @@ class Cache<T, K> {
     if (this.store.has(key)) {
       return this.store.get(key);
     } else {
-      log(`warn, not cache yet, nothing to return. key: ${key}${isBrowser ? ", fetch from server" : ""}`, "warn");
+      log(`not cache yet, nothing to return. key: ${key}${isBrowser ? ", fetch from server" : ""}`, "warn");
       return false;
     }
   };
@@ -90,7 +90,7 @@ class Cache<T, K> {
         tryKeys.push(newKey);
       }
     }
-    log(`error, nothing need to delete. keys: ${tryKeys.join(", ")}`, "error");
+    log(`error, nothing need to delete. keys: [${tryKeys.join(", ")}]`, "error");
   };
 }
 

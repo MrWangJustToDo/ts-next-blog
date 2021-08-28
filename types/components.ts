@@ -348,6 +348,7 @@ interface InputEleProps {
   type?: string;
   name?: string;
   option: InputProps;
+  autoFocus?: boolean;
   forWardRef?: RefObject<HTMLInputElement>;
   changeState?: (props: boolean) => void;
   changeLoading?: (props: boolean) => void;

@@ -3,10 +3,10 @@ import { mutate } from "swr";
 import { apiName } from "config/api";
 import ManageAddModule from "./manageAddModule";
 import { useUserRequest } from "hook/useUser";
+import { createRequest } from "utils/fetcher";
 import { useManageToAddModule } from "hook/useManage";
 import { SimpleElement } from "types/components";
 import { ManageAddButtonBody, ManageAddButtonTypes } from "types/containers";
-import { createRequest } from "utils/fetcher";
 
 const ManageAddTypeButton: ManageAddButtonTypes = ({ body }) => {
   const click = useManageToAddModule({

@@ -13,15 +13,17 @@ const ManageAddModule: ManageAddModuleType = ({ request, judgeApiName, fieldname
     closeHandler();
   }, [closeHandler, successHandler]);
 
-  const [ref, doRequest] = useAddRequest({
+  const [ref, loading] = useAddRequest({
     request,
     successCallback,
   });
 
   return (
     <div className="overflow-hidden p-2">
-      <Input forWardRef={ref} name={fieldname} option={addModule.input} judgeApiName={judgeApiName} changeState={setBool} />
-      <Button className="float-right btn-info btn-sm mt-2" request={doRequest} value="添加" disable={!bool} />
+      <form ref={ref}>
+        <Input autoFocus={true} name={fieldname} option={addModule.input} judgeApiName={judgeApiName} changeState={setBool} />
+        <Button type="submit" className="float-right btn-info btn-sm mt-2" loading={loading} value="添加" disable={!bool} />
+      </form>
     </div>
   );
 };

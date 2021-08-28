@@ -14,6 +14,7 @@ const Input: InputEleType = ({
   changeState,
   changeLoading,
   judgeApiName,
+  autoFocus = false,
   outerClassName = "",
   innerClassName = "",
   failClassName,
@@ -41,9 +42,26 @@ const Input: InputEleType = ({
     }
   }, [changeLoading, loading]);
 
+  useEffect(() => {
+    if (autoFocus) {
+      const id = setTimeout(() => {
+        ref.current && ref.current.focus();
+      }, 200);
+      return () => clearTimeout(id);
+    }
+  }, [autoFocus]);
+
   return (
     <div className={getClass("position-relative", outerClassName)}>
-      <input ref={ref} className={getClass("form-control", innerClassName)} name={name} type={type || "text"} placeholder={placeHolder} data-check={state} />
+      <input
+        ref={ref}
+        name={name}
+        data-check={state}
+        type={type || "text"}
+        autoFocus={autoFocus}
+        placeholder={placeHolder}
+        className={getClass("form-control", innerClassName)}
+      />
     </div>
   );
 };

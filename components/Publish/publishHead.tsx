@@ -9,7 +9,7 @@ const PublishHead: BlogContentType = ({ blogOriginState, blogTitle }) => {
         fieldName="blogOriginState"
         className="col-1 border-info rounded-left"
         data={blogOrigin}
-        initData={blogOriginState ? [blogOriginState] : []}
+        initData={blogOriginState !== undefined ? [blogOriginState] : []}
       />
       <input type="text" className="form-control shadow-none col-11" placeholder="标题" name="blogTitle" defaultValue={blogTitle} />
     </div>

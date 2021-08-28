@@ -330,7 +330,7 @@ interface UseAddRequestProps {
   successCallback: () => void;
 }
 interface UseAddRequestType {
-  (props: UseAddRequestProps): [ref: RefObject<HTMLInputElement>, request: () => Promise<void>];
+  (props: UseAddRequestProps): [ref: RefObject<HTMLFormElement>, loading: boolean];
 }
 interface UseJudgeInputProps {
   option: InputProps;

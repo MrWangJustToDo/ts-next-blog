@@ -5,12 +5,12 @@ import { useUserRequest } from "hook/useUser";
 import { useManageToDeleteModule } from "hook/useManage";
 import { apiName } from "config/api";
 import { getClass } from "utils/dom";
+import { createRequest } from "utils/fetcher";
 import ManageDeleteModule from "./manageDeleteModule";
 import { UseManageToDeleteModuleBody } from "types/hook";
 import { ManageDeleteTypeButtonType, ManageDeleteTypeItemType } from "types/containers";
 
 import style from "./index.module.scss";
-import { createRequest } from "utils/fetcher";
 
 const ManageDeleteTypeButton: ManageDeleteTypeButtonType = ({ deleteItem, typeId }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId }, cache: false });

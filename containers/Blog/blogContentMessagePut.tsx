@@ -77,7 +77,7 @@ const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
           <button
             type="button"
             className={getClass("btn btn-sm btn-light", style.markdown)}
-            title={`切换到${bool ? "markdown编辑" : "普通文本"}`}
+            title={`切换到${bool ? "普通文本" : "markdown编辑"}`}
             onClick={switchBoolDebounce}
           >
             <span>.</span>
