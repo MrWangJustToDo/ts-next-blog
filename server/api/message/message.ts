@@ -61,7 +61,7 @@ const deleteAllMessageByBlogIdAction = autoRequestHandler({
       try {
         await deleteChildMessageByPrimaryId({ db: req.db!, primaryId: id });
       } catch (e) {
-        log(`deleteAllMessageByBlogIdAction 出错, 当前删除primaryId: ${id}, error: ${e.toString()}`, "error");
+        log(`deleteAllMessageByBlogIdAction 出错, 当前删除primaryId: ${id}, error: ${(e as Error).toString()}`, "error");
         errorStack.push(id);
       }
     }

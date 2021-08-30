@@ -48,15 +48,15 @@ const catchHandler = (requestHandler: RequestHandlerType, errorHandler?: ErrorHa
     try {
       return await requestHandler({ req, res, next, cache });
     } catch (e) {
-      log(e, "error");
+      log(e as Error, "error");
       if (errorHandler && typeof errorHandler === "function") {
         if (e instanceof ServerError) {
           await errorHandler({ req, res, next, e, code: e.code, cache });
-        } else {
+        } else if (e instanceof Error) {
           await errorHandler({ req, res, next, e, code: 404, cache });
         }
       } else {
-        fail({ res, resDate: { state: "访问失败", data: e.toString() } });
+        fail({ res, resDate: { state: "访问失败", data: (e as Error).toString() } });
       }
     }
   };
@@ -67,15 +67,15 @@ const catchMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, ne
   try {
     return await nextMiddleware();
   } catch (e) {
-    log(e, "error");
+    log(e as Error, "error");
     if (errorHandler && typeof errorHandler === "function") {
       if (e instanceof ServerError) {
         await errorHandler({ req, res, next, e, code: e.code, cache });
-      } else {
+      } else if (e instanceof Error) {
         await errorHandler({ req, res, next, e, code: 404, cache });
       }
     } else {
-      fail({ res, resDate: { state: "访问失败", data: e.toString() } });
+      fail({ res, resDate: { state: "访问失败", data: (e as Error).toString() } });
     }
   }
 };
