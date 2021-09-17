@@ -30,6 +30,7 @@ const useInitRef: UseInitRefTypes = <T extends HTMLElement, K extends HTMLElemen
   useEffect(() => {
     const { current: cover } = coverRef;
     if (cover) {
+      cover.style.zIndex = "999999999";
       cover.style.touchAction = "none";
     }
   }, []);
@@ -148,7 +149,7 @@ const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(pr
 
   const matrix = useMatrix();
 
-  useInitRef<T, K>({coverRef: targetCoverRef, pinchRef: targetPinchRef})
+  useInitRef<T, K>({ coverRef: targetCoverRef, pinchRef: targetPinchRef });
 
   const updateTransform = useCallback(
     (scale: number, x: number, y: number) => {

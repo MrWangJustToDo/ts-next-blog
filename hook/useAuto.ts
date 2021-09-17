@@ -118,7 +118,9 @@ const useAutoSetHeaderHeight: UseAutoSetHeaderHeightType = <T extends HTMLElemen
           if (document.body.offsetWidth < breakPoint) {
             setBool(false);
             ele.style.height = "auto";
-            setHeight(ele.offsetHeight);
+            const allHeight = ele.offsetHeight;
+            ele.setAttribute("data-hright", `${allHeight}px`);
+            setHeight(allHeight);
             ele.style.height = "0px";
           }
         }),
@@ -206,6 +208,7 @@ const useAutoSetHeight: UseAutoSetHeightType = <T extends HTMLElement>(props: Us
           ele.style.height = "auto";
           const allHeight = ele.offsetHeight;
           const targetHeight = maxHeight > allHeight ? allHeight : maxHeight;
+          ele.setAttribute("data-height", `${allHeight}px`);
           ele.style.height = `${lastHeight}px`;
           setHeight(targetHeight);
         }),
@@ -233,6 +236,7 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
   const { bool, show, hide } = useBool();
   const ref = useRef<HTMLImageElement>(null);
   const request = useMemo(() => createRequest({ apiPath: imgUrl, header: { apiToken: true }, cache: false }), [imgUrl]);
+  // must a function for useEffect
   const rightNow = useCallback(() => {
     if (initUrl) {
       return false;

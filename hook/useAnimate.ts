@@ -70,15 +70,14 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
         .then(() =>
           delay<void>(0, () =>
             actionHandler<T, void, void>(element, (ele) => {
+              ele.dataset.show = "true";
               if (mode === "display") {
                 if (ele.style.display === "none") {
                   ele.style.display = "block";
-                  ele.dataset.show = "true";
                 }
               } else if (mode === "opacity") {
                 if (ele.style.opacity === "0") {
                   ele.style.opacity = "1";
-                  ele.dataset.show = "true";
                 }
               }
             })

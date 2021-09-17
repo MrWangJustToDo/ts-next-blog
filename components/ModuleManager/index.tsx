@@ -21,10 +21,12 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
   );
   return (
     <>
-      <div id="page-toast" className="position-fixed" style={{ right: "10px", top: "15px", zIndex: 999 }} data-show={toast.length > 0}>
-        {toast.map((props) => (
-          <Toast key={props.currentTime?.getTime()} {...props} />
-        ))}
+      <div id="page-toast" data-show={toast.length > 0}>
+        <div className="position-fixed" style={{ right: "10px", top: "15px", zIndex: 999 }}>
+          {toast.map((props) => (
+            <Toast key={props.currentTime?.getTime()} {...props} />
+          ))}
+        </div>
       </div>
       <ToastPushContext.Provider value={push}>
         <OverlayOpenContext.Provider value={open}>
@@ -32,23 +34,26 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
             {children}
           </div>
         </OverlayOpenContext.Provider>
-        <div
-          id="desktop-overlay"
-          className={getClass("position-fixed w-100 h-100 overflow-auto py-4", flexCenter, style.cover, overlay && overlay.showState ? style.cover_active : "")}
-          style={{ pointerEvents: deskTop ? "auto" : "none", zIndex: deskTop ? 2 : -1 }}
-          data-modal="desktop"
-          data-show={Boolean(deskTop)}
-        >
-          {overlay && !state && <DeskTopOverlay {...overlay} />}
+        <div id="desktop-overlay" data-modal="desktop" data-show={Boolean(deskTop)}>
+          <div
+            className={getClass(
+              "position-fixed w-100 h-100 overflow-auto py-4",
+              flexCenter,
+              style.cover,
+              overlay && overlay.showState ? style.cover_active : ""
+            )}
+            style={{ pointerEvents: deskTop ? "auto" : "none", zIndex: deskTop ? 2 : -1 }}
+          >
+            {overlay && !state && <DeskTopOverlay {...overlay} />}
+          </div>
         </div>
-        <div
-          id="mobile-overlay"
-          className={getClass("position-fixed w-100 h-100", style.cover, overlay && overlay.showState ? style.cover_active : "")}
-          style={{ pointerEvents: mobile ? "auto" : "none", zIndex: mobile ? 2 : -1 }}
-          data-modal="mobile"
-          data-show={Boolean(mobile)}
-        >
-          {overlay && state && <MobileOverlay {...overlay} />}
+        <div id="mobile-overlay" data-modal="mobile" data-show={Boolean(mobile)}>
+          <div
+            className={getClass("position-fixed w-100 h-100", style.cover, overlay && overlay.showState ? style.cover_active : "")}
+            style={{ pointerEvents: mobile ? "auto" : "none", zIndex: mobile ? 2 : -1 }}
+          >
+            {overlay && state && <MobileOverlay {...overlay} />}
+          </div>
         </div>
       </ToastPushContext.Provider>
     </>

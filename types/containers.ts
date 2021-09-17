@@ -1,7 +1,7 @@
 import { RefObject } from "react";
 import { mainRight } from "config/hoom";
 import { AutoRequestType } from "./utils";
-import { BlogContentProps, MyInputELement, TypeProps } from "./hook";
+import { BlogContentProps, TypeProps } from "./hook";
 import { ChildMessageProps, PrimaryMessageProps } from "./components";
 import { apiName } from "config/api";
 
