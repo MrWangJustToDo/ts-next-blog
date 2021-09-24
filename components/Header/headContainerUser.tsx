@@ -5,7 +5,7 @@ import { useRouter } from "next/dist/client/router";
 import { useCurrentUser, useLogout } from "hook/useUser";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { getCurrentAvatar } from "utils/data";
-import { animateFadein, flexCenter, getClass } from "utils/dom";
+import { animateFadeIn, flexCenter, getClass } from "utils/dom";
 
 import style from "./index.module.scss";
 
@@ -30,7 +30,7 @@ const HeadContainerUser = () => {
 
   return userId ? (
     <div className={getClass("d-inline-block", style.headUser, bool ? style.headUserActive : "")}>
-      <div className={getClass("bg-dark", animateFadein, flexCenter, style.userPanel)} onClick={switchBoolDebounce}>
+      <div className={getClass("bg-dark", animateFadeIn, flexCenter, style.userPanel)} onClick={switchBoolDebounce}>
         <img className="rounded-circle" src={getCurrentAvatar(avatar, gender)} alt="头像" height="30" width="30" />
         <span className={getClass("mx-2 text-info", style.username)}>{username}</span>
       </div>

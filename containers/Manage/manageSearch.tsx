@@ -16,7 +16,7 @@ const ManageSearch: SimpleElement = () => {
         <input type="text" className="form-control m-2" placeholder="标题" name="blogTitle" />
         <LoadRender<TypeProps[]>
           needUpdate
-          needinitialData
+          needInitialData
           revalidateOnFocus={false}
           apiPath={apiName.type}
           loaded={(res) => {
@@ -26,7 +26,7 @@ const ManageSearch: SimpleElement = () => {
         />
         <LoadRender<TagProps[]>
           needUpdate
-          needinitialData
+          needInitialData
           revalidateOnFocus={false}
           apiPath={apiName.tag}
           loaded={(res) => {

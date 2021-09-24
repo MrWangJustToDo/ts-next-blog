@@ -4,7 +4,7 @@ import { getBlogByBlogIdAction, deleteBlogByBlogIdAAction, publishBlogAction, up
 const blogHandler = {
   [apiName.blog]: getBlogByBlogIdAction,
   [apiName.publishBlog]: publishBlogAction,
-  [apiName.updataBlog]: updateBlogByBlogIdAction,
+  [apiName.updateBlog]: updateBlogByBlogIdAction,
   [apiName.deleteBlog]: deleteBlogByBlogIdAAction,
   [apiName.addBlogRead]: updateBlogReadAction,
 };

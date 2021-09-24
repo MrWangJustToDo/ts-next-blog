@@ -16,7 +16,7 @@ const AboutLeft: SimpleElement = () => {
           loaded={(data) => (
             <Slick dots infinite speed={500} slidesToShow={1} slidesToScroll={1} lazyLoad="ondemand" autoplay>
               {[process.env.NEXT_PUBLIC_ABOUT].concat(data.map((it) => it.relativeUrl)).map((relativeUrl) => (
-                <ImgItem relativeUrl={relativeUrl} key={relativeUrl}  />
+                <ImgItem relativeUrl={relativeUrl} key={relativeUrl} />
               ))}
             </Slick>
           )}
@@ -27,9 +27,8 @@ const AboutLeft: SimpleElement = () => {
   );
 };
 
-const ImgItem = ({relativeUrl}: {relativeUrl: string}) => {
-
-  const [pinchRef, coverRef] = usePinch<HTMLDivElement, HTMLDivElement>()
+const ImgItem = ({ relativeUrl }: { relativeUrl: string }) => {
+  const [pinchRef, coverRef] = usePinch<HTMLDivElement, HTMLDivElement>();
 
   return (
     <div className="d-block" ref={coverRef}>

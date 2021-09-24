@@ -8,7 +8,7 @@ import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<BlogContentProps[]>;
 
-const initState: CurrentState = { data: [], error: null, loaded: false, loading: true };
+const initState: CurrentState = { data: [], error: null, loaded: false, loading: false };
 
 const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<BlogContentProps[]>) => {
   if (action.type === HYDRATE) {

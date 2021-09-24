@@ -13,8 +13,8 @@ import {
   UseAutoActionHandlerProps,
   UseAutoActionHandlerType,
   UseAutoSetHeaderHeightType,
-  UseAutoLoadCheckcodeImgProps,
-  UseAutoLoadCheckcodeImgType,
+  UseAutoLoadCheckCodeImgProps,
+  UseAutoLoadCheckCodeImgType,
   UseAutoShowAndHideType,
   UseAutoSetHeightProps,
   UseAutoSetHeightType,
@@ -30,6 +30,7 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
     once = true,
     delayTime,
     rightNow = false,
+    getRightNowState,
     currentRef,
     addListener,
     removeListener,
@@ -38,13 +39,11 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
   }: UseAutoActionHandlerProps<T, K>,
   ...deps: any[]
 ) => {
-  const actionCallbackRef = useRef<(e?: T) => void>();
   const actionStateRef = useRef<boolean>();
-  actionCallbackRef.current = actionCallback;
   actionStateRef.current = actionState;
   useEffect(() => {
-    const currentRightNow = rightNow && typeof rightNow === "function" ? rightNow() : rightNow;
-    const currentAction = action || actionCallbackRef.current;
+    const currentRightNow = rightNow ? rightNow : typeof getRightNowState === "function" ? getRightNowState() : false;
+    const currentAction = action || actionCallback;
     if (!currentAction) {
       throw new Error("autoAction need a action to handle");
     }
@@ -119,7 +118,7 @@ const useAutoSetHeaderHeight: UseAutoSetHeaderHeightType = <T extends HTMLElemen
             setBool(false);
             ele.style.height = "auto";
             const allHeight = ele.offsetHeight;
-            ele.setAttribute("data-hright", `${allHeight}px`);
+            ele.setAttribute("data-height", `${allHeight}px`);
             setHeight(allHeight);
             ele.style.height = "0px";
           }
@@ -129,19 +128,17 @@ const useAutoSetHeaderHeight: UseAutoSetHeaderHeightType = <T extends HTMLElemen
     ),
     [breakPoint]
   );
-  const addListenerCallback = useCallback<(action: () => void) => void>((action) => window.addEventListener("resize", action), []);
-  const removeListenerCallback = useCallback<(action: () => void) => void>((action) => window.removeEventListener("resize", action), []);
   useAutoActionHandler({
-    action: setHeightCallback,
-    actionState: bool,
     rightNow: true,
-    addListener: addListenerCallback,
-    removeListener: removeListenerCallback,
+    actionState: bool,
+    action: setHeightCallback,
+    addListenerCallback: (action) => window.addEventListener("resize", action),
+    removeListenerCallback: (action) => window.removeEventListener("resize", action),
   });
   return { ref, height };
 };
 
-const useAutoLoadCheckcodeImg: UseAutoLoadCheckcodeImgType = <T extends HTMLImageElement>({ imgUrl, strUrl, state = true }: UseAutoLoadCheckcodeImgProps) => {
+const useAutoLoadCheckCodeImg: UseAutoLoadCheckCodeImgType = <T extends HTMLImageElement>({ imgUrl, strUrl, state = true }: UseAutoLoadCheckCodeImgProps) => {
   const ref = useRef<T>(null);
   const loadActionCallback = useCallback<() => void>(
     debounce(
@@ -151,20 +148,12 @@ const useAutoLoadCheckcodeImg: UseAutoLoadCheckcodeImgType = <T extends HTMLImag
     ),
     [state]
   );
-  const addListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-    []
-  );
-  const removeListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
-    []
-  );
   useAutoActionHandler(
     {
-      action: loadActionCallback,
       rightNow: true,
-      addListener: addListenerCallback,
-      removeListener: removeListenerCallback,
+      action: loadActionCallback,
+      addListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+      removeListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
     },
     state
   );
@@ -183,13 +172,11 @@ const useAutoShowAndHide: UseAutoShowAndHideType = <T extends HTMLElement>(break
     }, 400),
     [breakPoint]
   );
-  const addListenerCallback = useCallback<(action: () => void) => void>((action) => window.addEventListener("scroll", action), []);
-  const removeListenerCallback = useCallback<(action: () => void) => void>((action) => window.removeEventListener("scroll", action), []);
   useAutoActionHandler({
-    action: autoSetValueHandler,
     rightNow: true,
-    addListener: addListenerCallback,
-    removeListener: removeListenerCallback,
+    action: autoSetValueHandler,
+    addListenerCallback: (action) => window.addEventListener("scroll", action),
+    removeListenerCallback: (action) => window.removeEventListener("scroll", action),
   });
   const { animateRef: ref } = useShowAndHideAnimate<T>({ state: value, showClassName: "slideInRight", hideClassName: "slideOutRight" });
   return ref;
@@ -217,14 +204,12 @@ const useAutoSetHeight: UseAutoSetHeightType = <T extends HTMLElement>(props: Us
     ),
     [maxHeight]
   );
-  const addListenerCallback = useCallback<(action: () => void) => void>((action) => window.addEventListener("resize", action), []);
-  const removeListenerCallback = useCallback<(action: () => void) => void>((action) => window.removeEventListener("resize", action), []);
   useAutoActionHandler(
     {
-      action: setHeightCallback,
       rightNow: true,
-      addListener: addListenerCallback,
-      removeListener: removeListenerCallback,
+      action: setHeightCallback,
+      addListenerCallback: (action) => window.addEventListener("resize", action),
+      removeListenerCallback: (action) => window.removeEventListener("resize", action),
     },
     ...deps
   );
@@ -237,7 +222,7 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
   const ref = useRef<HTMLImageElement>(null);
   const request = useMemo(() => createRequest({ apiPath: imgUrl, header: { apiToken: true }, cache: false }), [imgUrl]);
   // must a function for useEffect
-  const rightNow = useCallback(() => {
+  const getRightNowState = useCallback(() => {
     if (initUrl) {
       return false;
     } else if (getInitUrl) {
@@ -271,16 +256,6 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
     [request]
   );
 
-  const addListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-    []
-  );
-
-  const removeListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
-    []
-  );
-
   useEffect(() => {
     if (initUrl) {
       actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => (ele.src = initUrl));
@@ -310,12 +285,12 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
 
   useAutoActionHandler({
     action: loadSrc,
-    rightNow,
-    addListener: addListenerCallback,
-    removeListener: removeListenerCallback,
+    getRightNowState,
+    addListenerCallback: (action) => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+    removeListenerCallback: (action) => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
   });
 
   return [ref, bool];
 };
 
-export { useAutoActionHandler, useAutoSetHeaderHeight, useAutoLoadCheckcodeImg, useAutoShowAndHide, useAutoSetHeight, useAutoLoadRandomImg };
+export { useAutoActionHandler, useAutoSetHeaderHeight, useAutoLoadCheckCodeImg, useAutoShowAndHide, useAutoSetHeight, useAutoLoadRandomImg };

@@ -21,7 +21,7 @@ interface FootContentProps {
   icon?: string;
   hrefTo?: string;
   title?: string;
-  [propo: string]: any;
+  [props: string]: any;
 }
 
 interface FootContentType extends Array<any> {
@@ -43,7 +43,7 @@ interface HeaderContentType extends Array<HeaderContentItem> {
 
 export type { HeaderContentType };
 
-/* hoom */
+/* home */
 interface mainContentItem {
   icon?: string;
   content?: string;
@@ -89,22 +89,22 @@ interface SessionReq extends IncomingMessage {
   [props: string]: any;
 }
 
-interface AutoDispatchTockenHandlerProps {
+interface AutoDispatchTokenHandlerProps {
   store: SagaStore;
   req: SessionReq;
   res: ServerResponse;
   [props: string]: any;
 }
 
-interface AutoDispatchTockenHandlerType {
-  (props: AutoDispatchTockenHandlerProps): Promise<any>;
+interface AutoDispatchTokenHandlerType {
+  (props: AutoDispatchTokenHandlerProps): Promise<any>;
 }
 
-interface AutoDispatchTockenHandler {
-  (props: AutoDispatchTockenHandlerType): AutoDispatchTockenHandlerType;
+interface AutoDispatchTokenHandler {
+  (props: AutoDispatchTokenHandlerType): AutoDispatchTokenHandlerType;
 }
 
-export type { AutoDispatchTockenHandler, AutoDispatchTockenHandlerProps };
+export type { AutoDispatchTokenHandler, AutoDispatchTokenHandlerProps };
 
 /* user */
 interface InputProps {

@@ -4,15 +4,16 @@ import { transformPath } from "utils/path";
 import { getPrimaryByBlogId, getChildByPrimaryId, getPrimaryByCommentId, getChildByCommentId } from "server/database/get";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { insertChildComment, insertPrimaryComment } from "server/database/insert";
-import { ServerError } from "server/utils/error";
+import { updateTableWithParam } from "server/database/update";
 import {
   deletePrimaryMessageByBlogId,
   deleteChildMessageByPrimaryId,
   deletePrimaryMessageByCommentId,
   deleteChildMessageByCommentId,
 } from "server/database/delete";
+import { ServerError } from "server/utils/error";
+
 import { PrimaryMessageProps } from "types/components";
-import { updateTableWithParam } from "server/database/updata";
 
 // 获取主评论
 const getPrimaryMessageByBlogIdAction = autoRequestHandler({
@@ -23,7 +24,7 @@ const getPrimaryMessageByBlogIdAction = autoRequestHandler({
     return success({ res, resDate: { state: "获取成功", data: primaryMessages } });
   },
   errorHandler: ({ res, e, code = 404 }) =>
-    fail({ res, statuCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getPrimaryMessageByBlogIdAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getPrimaryMessageByBlogIdAction" } }),
   cacheConfig: { needCache: true },
   paramsConfig: { fromQuery: ["blogId"] },
 });
@@ -36,7 +37,7 @@ const getChildMessageByPrimaryIdAction = autoRequestHandler({
     childMessage.sort(({ createDate: d1 }, { createDate: d2 }) => (new Date(d1).getTime() > new Date(d2).getTime() ? -1 : 1));
     return success({ res, resDate: { data: childMessage } });
   },
-  errorHandler: ({ res, e, code = 404 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getChildMessageByPrimaryIdAction" } }),
+  errorHandler: ({ res, e, code = 404 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getChildMessageByPrimaryIdAction" } }),
   cacheConfig: { needCache: true },
   paramsConfig: { fromQuery: ["primaryCommentId"] },
 });
@@ -68,7 +69,7 @@ const deleteAllMessageByBlogIdAction = autoRequestHandler({
     success({ res, resDate: { state: "删除成功", data: `删除blogId: ${blogId} 下的所有message` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "删除失败", data: e.toString(), methodName: "deleteAllMessageByBlogId" } }),
+    fail({ res, statusCode: code, resDate: { state: "删除失败", data: e.toString(), methodName: "deleteAllMessageByBlogId" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
   paramsConfig: { fromBody: ["blogId"] },
@@ -106,7 +107,7 @@ const publishPrimaryMessageByBlogIdAction = autoRequestHandler({
     success({ res, resDate: { state: "评论留言成功", data: `时间：${createDate}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "评论发布错误", data: e.toString(), methodName: "publishPrimaryMessageByBlogIdAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "评论发布错误", data: e.toString(), methodName: "publishPrimaryMessageByBlogIdAction" } }),
   checkCodeConfig: { needCheck: true },
   cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
   paramsConfig: { fromBody: ["blogId", "commentId", "content"] },
@@ -143,7 +144,7 @@ const publishChildMessageByPrimaryIdAction = autoRequestHandler({
     success({ res, resDate: { state: "回复留言成功", data: `时间：${createDate}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "发布回复出错", data: e.toString(), methodName: "publishChildMessageByPrimaryIdAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "发布回复出错", data: e.toString(), methodName: "publishChildMessageByPrimaryIdAction" } }),
   checkCodeConfig: { needCheck: true },
   cacheConfig: {
     needDelete: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
@@ -170,7 +171,7 @@ const deletePrimaryMessageByCommentIdAction = autoRequestHandler({
     success({ res, resDate: { state: "删除成功", data: `删除成功, commentId: ${commentId}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "删除评论出错", data: e.toString(), methodName: "deletePrimaryMessageByCommentId" } }),
+    fail({ res, statusCode: code, resDate: { state: "删除评论出错", data: e.toString(), methodName: "deletePrimaryMessageByCommentId" } }),
   cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
   userConfig: { needCheck: true, checkStrict: true },
   paramsConfig: { fromQuery: ["userId"], fromBody: ["commentId", "isChild", "userId", "blogId"] },
@@ -193,7 +194,7 @@ const deleteChildMessageByCommentIdAction = autoRequestHandler({
     success({ res, resDate: { state: "删除成功", data: `删除成功, commentId: ${commentId}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "删除评论出错", data: e.toString(), methodName: "deleteChildMessageByCommentIdAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "删除评论出错", data: e.toString(), methodName: "deleteChildMessageByCommentIdAction" } }),
   cacheConfig: {
     needDelete: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
   },
@@ -247,7 +248,7 @@ const updatePrimaryMessageByCommentIdAction = autoRequestHandler({
     success({ res, resDate: { state: "更新成功", data: `更新成功, ${commentId}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "更新失败", data: e.toString(), methodName: "updatePrimaryMessageByCommentIdAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "更新失败", data: e.toString(), methodName: "updatePrimaryMessageByCommentIdAction" } }),
   checkCodeConfig: { needCheck: true },
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.body.blogId }, needPre: false }) },
@@ -300,7 +301,7 @@ const updateChildMessageByCommentIdAction = autoRequestHandler({
     success({ res, resDate: { state: "更新成功", data: `更新成功, ${commentId}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "更新失败", data: e.toString(), methodName: "updateChildMessageByCommentIdAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "更新失败", data: e.toString(), methodName: "updateChildMessageByCommentIdAction" } }),
   checkCodeConfig: { needCheck: true },
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: {

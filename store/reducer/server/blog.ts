@@ -12,7 +12,7 @@ type BlogContentArray = {
 
 type CurrentState = State<BlogContentArray>;
 
-const initState: CurrentState = { data: {}, error: null, loaded: false, loading: true };
+const initState: CurrentState = { data: {}, error: null, loaded: false, loading: false };
 
 const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<BlogContentArray>) => {
   if (action.type === HYDRATE) {

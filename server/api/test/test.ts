@@ -145,8 +145,8 @@ const test_author = autoRequestHandler({
     await insertAuthor({
       db: req.db!,
       userId: "1",
-      userAlipay: "/avatar/aliPay.jpg",
-      userWechat: "/avatar/weichatPay.png",
+      userAliPay: "/avatar/aliPay.jpg",
+      userWeChat: "/avatar/weichatPay.png",
       cacheState: 0,
     });
     success({ res, resDate: { data: "ok" } });

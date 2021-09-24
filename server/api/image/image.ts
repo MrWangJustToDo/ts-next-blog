@@ -21,7 +21,7 @@ const getImagesAction = autoRequestHandler({
     });
     success({ res, resDate: { data: images } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getImagesAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getImagesAction" } }),
 });
 
 // 获取随机图片信息
@@ -31,7 +31,7 @@ const getRandomImageAction = autoRequestHandler({
     const [{ relativeUrl }] = images.map((item: { [props: string]: string }) => ({ relativeUrl: `${process.env.BINGURL}${item.url}` }));
     success({ res, resDate: { data: relativeUrl } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getRandomImageAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getRandomImageAction" } }),
 });
 
 export { getImagesAction, getRandomImageAction };

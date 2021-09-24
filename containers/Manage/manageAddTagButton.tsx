@@ -32,7 +32,7 @@ const ManageAddTagButtonWrapper: SimpleElement = () => {
 
   const body = useCallback<ManageAddButtonBody>(
     (closeHandler) => (
-      <ManageAddModule fieldname="tagContent" request={request} judgeApiName={apiName.checkTag} closeHandler={closeHandler} successHandler={successHandler} />
+      <ManageAddModule fieldName="tagContent" request={request} judgeApiName={apiName.checkTag} closeHandler={closeHandler} successHandler={successHandler} />
     ),
     [request, successHandler]
   );

@@ -17,15 +17,15 @@ import {
 
 const cache = new Cache<string, any>();
 
-const success = <T>({ res, statuCode = 200, resDate }: ApiResponseProps<T>): ApiResponseData<T> | void => {
+const success = <T>({ res, statusCode = 200, resDate }: ApiResponseProps<T>): ApiResponseData<T> | void => {
   resDate.code = resDate.code || 0;
   resDate.state = resDate.state || "获取成功";
   resDate.time = new Date().toLocaleString();
-  res.status(statuCode).json(resDate);
+  res.status(statusCode).json(resDate);
   return resDate;
 };
 
-const fail = <T>({ res, statuCode = 404, resDate, methodName }: ApiResponseProps<T> & { methodName?: string }): void => {
+const fail = <T>({ res, statusCode = 404, resDate, methodName }: ApiResponseProps<T> & { methodName?: string }): void => {
   if (methodName && process.env.NODE_ENV === "development") {
     resDate["methodName"] = `method: ${methodName} 出现错误`;
   } else {
@@ -34,7 +34,7 @@ const fail = <T>({ res, statuCode = 404, resDate, methodName }: ApiResponseProps
   resDate.code = resDate.code || -1;
   resDate.state = resDate.state || "获取失败";
   resDate.time = new Date().toLocaleString();
-  res.status(statuCode).json(resDate);
+  res.status(statusCode).json(resDate);
 };
 
 const transformHandler = (requestHandler: RequestHandlerType) => {
@@ -136,7 +136,7 @@ const cacheMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, ne
   }
 };
 
-const checkcodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
+const checkCodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
   const { req, checkCodeConfig, check } = ctx;
   const currentCheckCodeConfig = assign({}, checkCodeConfig, req.config?.check);
   const needCheck = currentCheckCodeConfig.needCheck ? currentCheckCodeConfig.needCheck : check;
@@ -145,11 +145,17 @@ const checkcodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps
   if (needCheck) {
     if (fromQuery) {
       const checkCode = req.query[fieldName];
+      if (!checkCode) {
+        throw new ServerError(`请求参数不存在: ${fieldName}`, 400);
+      }
       if (checkCode !== req.session.captcha) {
         throw new ServerError("验证码不正确  query", 400);
       }
     } else {
       const checkCode = req.body[fieldName];
+      if (!checkCode) {
+        throw new ServerError(`请求参数不存在: ${fieldName}`, 400);
+      }
       if (checkCode !== req.session.captcha) {
         throw new ServerError("验证码不正确  body", 400);
       }
@@ -213,15 +219,15 @@ const userMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nex
   }
 };
 
-const compose = (...middlewares: ((ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => Promise<any | void>)[]) => {
+const compose = (...middleWares: ((ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => Promise<any | void>)[]) => {
   return function (ctx: AutoRequestHandlerMiddlewareProps, next: RequestHandlerType) {
     let index = -1;
     function dispatch(i: number): Promise<any> {
       if (i <= index) {
-        throw new ServerError("compose index error", 500);
+        throw new ServerError("compose index error, every middleware only allow call once", 500);
       }
       index = i;
-      const fn = middlewares[i] || next;
+      const fn = middleWares[i] || next;
       if (fn) {
         try {
           return Promise.resolve(fn(ctx, () => dispatch(i + 1)));
@@ -245,7 +251,7 @@ const autoRequestHandler = (config: AutoRequestHandlerProps) => {
       catchMiddlewareHandler,
       decodeMiddlewareHandler,
       checkParamsMiddlewareHandler,
-      checkcodeMiddlewareHandler,
+      checkCodeMiddlewareHandler,
       userMiddlewareHandler,
       cacheMiddlewareHandler
     );

@@ -2,14 +2,14 @@ import { produce } from "immer";
 import { Reducer } from "redux";
 import { clientAction } from "./action";
 import { actionName } from "config/action";
-import { IpaddressProps } from "types/hook";
+import { IpAddressProps } from "types/hook";
 import { State, StateAction, StateActionMapType } from "types/store";
 
-type CurrentState = State<IpaddressProps>;
+type CurrentState = State<IpAddressProps>;
 
-const initState: CurrentState = { data: {}, error: null, loading: true, loaded: false };
+const initState: CurrentState = { data: {}, error: null, loading: false, loaded: false };
 
-const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<IpaddressProps>) => {
+const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<IpAddressProps>) => {
   let actionReducer = actionReducerMap[action.type];
   if (actionReducer) {
     return actionReducer(state, action);
@@ -18,7 +18,7 @@ const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action:
   }
 };
 
-const actionReducerMap: StateActionMapType<IpaddressProps> = {
+const actionReducerMap: StateActionMapType<IpAddressProps> = {
   [clientAction.SETDATALOADING(actionName.currentIp)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};

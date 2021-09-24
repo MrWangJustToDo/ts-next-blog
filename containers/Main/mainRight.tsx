@@ -1,4 +1,4 @@
-import { mainRight } from "config/hoom";
+import { mainRight } from "config/home";
 import MainRightType from "./mainRightType";
 import MainRightTag from "./mainRightTag";
 import MainRightCommend from "./mainRightCommend";

@@ -7,12 +7,12 @@ import { SimpleElement } from "types/components";
 import style from "./index.module.scss";
 
 const BlogMenu: SimpleElement = () => {
-  const seted = useBlogMenu(".blog-content");
+  const isSet = useBlogMenu(".blog-content");
 
   const { bool, switchBoolDebounce } = useBool();
 
   const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({
-    state: bool && seted,
+    state: bool && isSet,
     showClassName: "lightSpeedInRight",
     hideClassName: "lightSpeedOutRight",
   });

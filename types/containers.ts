@@ -1,5 +1,5 @@
 import { RefObject } from "react";
-import { mainRight } from "config/hoom";
+import { mainRight } from "config/home";
 import { AutoRequestType } from "./utils";
 import { BlogContentProps, TypeProps } from "./hook";
 import { ChildMessageProps, PrimaryMessageProps } from "./components";
@@ -68,21 +68,21 @@ interface BlogContentChildMessageWithReplayType {
 
 export type { BlogContentChildMessageType, BlogContentChildMessageWithReplayType };
 
-/* blogContentCheckcode */
-interface BlogContentCheckcodeModuleProps {
+/* blogContentCheckCode */
+interface BlogContentCheckCodeModuleProps {
   blogId: string;
   request: AutoRequestType;
   closeHandler: () => void;
   requestCallback: () => void;
 }
-interface BlogContentCheckcodeModuleType {
-  (props: BlogContentCheckcodeModuleProps): JSX.Element;
+interface BlogContentCheckCodeModuleType {
+  (props: BlogContentCheckCodeModuleProps): JSX.Element;
 }
-interface BlogContentCheckcodeModuleWithImageType {
-  (props: BlogContentCheckcodeModuleProps & WithImgRef): JSX.Element;
+interface BlogContentCheckCodeModuleWithImageType {
+  (props: BlogContentCheckCodeModuleProps & WithImgRef): JSX.Element;
 }
 
-export type { BlogContentCheckcodeModuleType, BlogContentCheckcodeModuleWithImageType };
+export type { BlogContentCheckCodeModuleType, BlogContentCheckCodeModuleWithImageType };
 
 /* blogContentMessagePut */
 interface BlogContentMessagePutType {
@@ -142,7 +142,7 @@ export type {
 /* BlogContentLikeToPayModule */
 interface BlogContentLikeToPayModuleProps {
   aliUrl: string;
-  wchatUrl: string;
+  wChatUrl: string;
 }
 
 interface BlogContentLikeToPayModuleType {
@@ -164,7 +164,7 @@ interface SubmitType {
 
 export type { SubmitType };
 
-/* loginCheckcode */
+/* loginCheckCode */
 
 interface LoginCheckCodeType {
   (props: { show: boolean }): JSX.Element;
@@ -292,7 +292,7 @@ export type { ManageAddButtonBody, ManageAddButtonTypes, ManageUserIdType };
 
 /* manageAddModule */
 interface ManageAddModuleProps {
-  fieldname: string;
+  fieldName: string;
   judgeApiName: apiName;
   request: AutoRequestType;
   closeHandler: () => void;

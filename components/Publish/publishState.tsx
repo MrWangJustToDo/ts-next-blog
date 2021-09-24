@@ -8,7 +8,7 @@ const PublishState: BlogContentType = (props) => {
     <>
       {blogState.map(({ fieldName, name, value }, idx) => {
         if (Array.isArray(value)) {
-          const init = props[fieldName] !== undefined ? [props[fieldName]].map((it) => value.findIndex(({ value: subalue }) => subalue === String(it))) : [];
+          const init = props[fieldName] !== undefined ? [props[fieldName]].map((it) => value.findIndex(({ value: subValue }) => subValue === String(it))) : [];
           return (
             <div key={idx} className="form-check form-check-inline mr-4">
               <span className="mr-lg-2 mr-1">{name}</span>

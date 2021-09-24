@@ -18,7 +18,7 @@ const generateToken: TransformHandlerType = transformHandler(
       next();
     },
     ({ res, e, code = 500 }) =>
-      fail({ res, statuCode: code, resDate: { code: -1, state: "初始化失败", data: `token生成失败：${e.toString()}`, methodName: "generateToken" } })
+      fail({ res, statusCode: code, resDate: { code: -1, state: "初始化失败", data: `token生成失败：${e.toString()}`, methodName: "generateToken" } })
   )
 );
 

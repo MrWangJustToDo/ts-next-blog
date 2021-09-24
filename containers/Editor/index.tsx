@@ -10,7 +10,7 @@ import { useUpdateBlog } from "hook/useBlog";
 import { BlogContentType } from "types/containers";
 
 const Editor: BlogContentType = (props) => {
-  const request = useUserRequest({ method: "post", apiPath: apiName.updataBlog, header: { apiToken: true }, data: { oldProps: props }, cache: false });
+  const request = useUserRequest({ method: "post", apiPath: apiName.updateBlog, header: { apiToken: true }, data: { oldProps: props }, cache: false });
 
   const [ref, submit] = useUpdateBlog({ request, id: props.blogId! });
 

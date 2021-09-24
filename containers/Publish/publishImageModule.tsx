@@ -32,7 +32,7 @@ const PublishImageModule: PublishImageModuleType = ({ closeHandler, initialUrl, 
     <div className="container">
       <div className={getClass(flexCenter)}>
         <div className={getClass("position-relative", style.imgContainer)}>
-          <Loading className={getClass("position-absolute", style.imgLoding)} _style={{ display: bool ? "none" : "block" }} />
+          <Loading className={getClass("position-absolute", style.imgLoading)} _style={{ display: bool ? "none" : "block" }} />
           <div ref={divRef} className={getClass("w-100 position-absolute", style.imgItem)}>
             <img
               className='border rounded'

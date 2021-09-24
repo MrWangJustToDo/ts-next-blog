@@ -16,7 +16,7 @@ const BlogUtils: SimpleElement = () => {
   const bottomRef = useAutoScrollBottom<HTMLButtonElement>();
 
   return (
-    <div ref={divRef} className={getClass("btn-group-vertical position-fixed", style.btnsPosition)} style={{ display: "none" }}>
+    <div ref={divRef} className={getClass("btn-group-vertical position-fixed", style.btnPosition)} style={{ display: "none" }}>
       <BlogMenu />
       <button ref={bottomRef} type="button" className="btn btn-info">
         留言

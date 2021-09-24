@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { animateFadein, getClass } from "utils/dom";
+import { animateFadeIn, getClass } from "utils/dom";
 import { MyNextComponent } from "./_app";
 
 const NotFound: MyNextComponent = () => {
   return (
-    <div className={getClass(animateFadein, "container-md my-5")}>
+    <div className={getClass(animateFadeIn, "container-md my-5")}>
       <div className="jumbotron my-3 small">
         <h1 className="display-4">访问错误！</h1>
         <p className="lead">访问资源不存在！</p>

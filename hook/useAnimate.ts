@@ -35,7 +35,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
     actionHandler<T, void, void>(element, (ele) => {
       ele.classList.remove("animate__animated", `animate__${showClassName}`, `animate__${hideClassName}`);
     });
-    let needCacel = false;
+    let needCancel = false;
     const startHideCallback = callbackRef.current.startHide;
     const hideDoneCallback = callbackRef.current.hideDone;
     const startShowCallback = callbackRef.current.startShow;
@@ -48,7 +48,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
             actionHandler<T, void | Promise<void>, Promise<void>>(element, (ele) => {
               if ((mode === "display" && ele.style.display !== "none") || (mode === "opacity" && ele.style.opacity !== "0")) {
                 return animateCSS({ element: ele, animation: hideClassName }).then(() => {
-                  if (!needCacel) {
+                  if (!needCancel) {
                     if (mode === "display") {
                       ele.style.display = "none";
                     } else {
@@ -56,7 +56,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
                     }
                     ele.dataset.show = "false";
                   } else {
-                    log("element style change have been cacel", "normal");
+                    log("element style change have been cancel", "normal");
                   }
                 });
               }
@@ -88,7 +88,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
     }
 
     return () => {
-      needCacel = true;
+      needCancel = true;
     };
   }, [state]);
   return { animateRef: currentRef };

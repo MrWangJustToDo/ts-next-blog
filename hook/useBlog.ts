@@ -11,7 +11,7 @@ import { formSerialize, getRandom } from "utils/data";
 import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
-import { useFailToast, useSucessToast } from "./useToast";
+import { useFailToast, useSuccessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
 import {
   UseBlogMenuType,
@@ -51,48 +51,28 @@ const useBlogMenu: UseBlogMenuType = (className) => {
 
 const useAutoScrollTop: UseAutoScrollType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
-  const scrollTopCallback = useCallback<() => void>(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, []);
-  const addListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-    []
-  );
-  const removeListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
-    []
-  );
   useAutoActionHandler({
-    action: scrollTopCallback,
-    addListener: addListenerCallback,
-    removeListener: removeListenerCallback,
+    actionCallback: () =>
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      }),
+    addListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+    removeListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
   });
   return ref;
 };
 
 const useAutoScrollBottom: UseAutoScrollType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
-  const scrollTopCallback = useCallback<() => void>(() => {
-    window.scrollTo({
-      top: document.body.offsetHeight - 1000,
-      behavior: "smooth",
-    });
-  }, []);
-  const addListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-    []
-  );
-  const removeListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
-    []
-  );
   useAutoActionHandler({
-    action: scrollTopCallback,
-    addListener: addListenerCallback,
-    removeListener: removeListenerCallback,
+    actionCallback: () =>
+      window.scrollTo({
+        top: document.body.offsetHeight - 1000,
+        behavior: "smooth",
+      }),
+    addListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+    removeListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
   });
   return ref;
 };
@@ -126,20 +106,21 @@ const useEditor: UseEditorType = (id) => {
       }
     });
   });
-  const keydonwHandler = useCallback<(e: KeyboardEvent) => void>((e) => {
-    if (e.key === "Tab") {
-      e.preventDefault();
-      document.execCommand("insertText", false, " ".repeat(2));
-    }
-  }, []);
+  //
   useEffect(() => {
+    const keydownHandler = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        document.execCommand("insertText", false, " ".repeat(2));
+      }
+    };
     const init = () =>
       delay(
         100,
         () =>
           actionHandler<HTMLTextAreaElement, void, void>(
             document.querySelector(mdId) as HTMLTextAreaElement,
-            (ele) => ele.addEventListener("keydown", keydonwHandler),
+            (ele) => ele.addEventListener("keydown", keydownHandler),
             init
           ),
         "initEditor"
@@ -162,7 +143,7 @@ const useEditor: UseEditorType = (id) => {
       cancel("initObserve");
       observer.disconnect();
       actionHandler<HTMLTextAreaElement, void, void>(document.querySelector(mdId) as HTMLTextAreaElement, (ele) =>
-        ele.removeEventListener("keydown", keydonwHandler)
+        ele.removeEventListener("keydown", keydownHandler)
       );
     };
   }, []);
@@ -171,7 +152,7 @@ const useEditor: UseEditorType = (id) => {
 const usePublish: UsePublishType = ({ request, id }) => {
   const router = useRouter();
   const fail = useFailToast();
-  const success = useSucessToast();
+  const success = useSuccessToast();
   const htmlId = `#editor_${id}_html`;
   const ref = useRef<HTMLFormElement>(null);
   const { userId } = useCurrentUser();
@@ -219,7 +200,7 @@ const useInputToImageModule: UseInputToImageModuleType = ({ body, className }) =
 const useUpdateBlog: UsePublishType = ({ request, id }) => {
   const router = useRouter();
   const fail = useFailToast();
-  const success = useSucessToast();
+  const success = useSuccessToast();
   const htmlId = `#editor_${id}_html`;
   const ref = useRef<HTMLFormElement>(null);
   const submit = useCallback(
@@ -250,7 +231,7 @@ const useUpdateBlog: UsePublishType = ({ request, id }) => {
 
 const useUpdateBlogRead: UseUpdateBlogReadType = (blogId) => {
   const fail = useFailToast();
-  const success = useSucessToast();
+  const success = useSuccessToast();
   const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.addBlogRead, data: { blogId } }), [blogId]);
   useEffect(() => {
     delay(1000, () => {
@@ -269,9 +250,9 @@ const useUpdateBlogRead: UseUpdateBlogReadType = (blogId) => {
 };
 
 const useLikeToPayModule: UseLikeToPayModuleType = ({ body, className }) => {
-  const opne = useOverlayOpen();
+  const open = useOverlayOpen();
   const click = useCallback(() => {
-    opne({ head: "感谢", body, className });
+    open({ head: "感谢", body, className });
   }, [body]);
 
   return click;

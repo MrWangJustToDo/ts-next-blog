@@ -2,7 +2,7 @@ import LoadRender from "components/LoadRender";
 import MainRightHead from "components/CardHead";
 import AnimationList from "components/AnimationList";
 import MainRightTypeItem from "./mainRightTypeItem";
-import { mainRightHeader } from "config/hoom";
+import { mainRightHeader } from "config/home";
 import { apiName } from "config/api";
 import { useType } from "hook/useType";
 import { TypeProps } from "types/hook";
@@ -20,7 +20,7 @@ const MainRightType: MainRightTypeType = ({ index }) => {
         <div className="list-group">
           <LoadRender<TypeProps[]>
             needUpdate
-            needinitialData
+            needInitialData
             initialData={type}
             apiPath={apiName.type}
             revalidateOnFocus={false}

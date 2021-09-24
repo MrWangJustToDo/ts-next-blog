@@ -6,7 +6,7 @@ import { State, StateAction, StateActionMapType } from "types/store";
 
 type CurrentState = State<number>;
 
-const initState: CurrentState = { data: 1, error: null, loaded: false, loading: true };
+const initState: CurrentState = { data: 1, error: null, loaded: false, loading: false };
 
 const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<number>) => {
   let actionReducer = actionReducerMap[action.type];

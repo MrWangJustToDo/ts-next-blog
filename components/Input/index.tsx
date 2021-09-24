@@ -18,14 +18,14 @@ const Input: InputEleType = ({
   outerClassName = "",
   innerClassName = "",
   failClassName,
-  successCalsssName,
+  successClassName,
   loadingClassName,
 }) => {
   const [ref, state, loading] = useJudgeInput({
     option,
     forWardRef,
     judgeApiName,
-    successClassName: successCalsssName || style.success,
+    successClassName: successClassName || style.success,
     failClassName: failClassName || style.fail,
     loadingClassName: loadingClassName || getClass("spinner-border spinner-border-sm text-info", style.loading),
   });

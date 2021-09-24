@@ -27,13 +27,13 @@ interface ActionHandlerType {
   <T, K, V>(state: T | void | null | undefined, action: (props: T) => K, otherAction?: () => V): K | V | Promise<void>;
 }
 
-interface JudgeActioProps<T> {
+interface JudgeActionProps<T> {
   element: T;
   judge: () => Promise<{ className: string; message: string; needHandle?: boolean }>;
 }
 
 interface JudgeActionType {
-  <T extends HTMLElement>(props: JudgeActioProps<T>): void;
+  <T extends HTMLElement>(props: JudgeActionProps<T>): void;
 }
 
 interface LoadingActionProps<T> {
@@ -45,7 +45,7 @@ interface LoadingActionType {
   <T extends HTMLElement>(props: LoadingActionProps<T>): void;
 }
 
-export type { ActionHandlerType, JudgeActioProps, JudgeActionType, LoadingActionProps, LoadingActionType };
+export type { ActionHandlerType, JudgeActionProps, JudgeActionType, LoadingActionProps, LoadingActionType };
 
 /* request */
 interface PendingType {

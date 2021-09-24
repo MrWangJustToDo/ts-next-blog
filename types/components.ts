@@ -230,7 +230,7 @@ interface DropSelectItemProps<T> {
   name?: string;
   multiple?: boolean;
   value: T;
-  cacel: (props: number) => void;
+  cancel: (props: number) => void;
 }
 interface DropSelectItemType {
   <T>(props: DropSelectItemProps<T>): JSX.Element;
@@ -358,7 +358,7 @@ interface InputEleProps {
   innerClassName?: string;
   failClassName?: string;
   loadingClassName?: string;
-  successCalsssName?: string;
+  successClassName?: string;
 }
 
 interface InputEleType {
@@ -418,7 +418,7 @@ interface LoadRenderProps<T> {
   requestData?: object;
   initialData?: T;
   needUpdate?: boolean;
-  needinitialData?: boolean;
+  needInitialData?: boolean;
   loaded: (props: T, fetcher: AutoRequestType) => JSX.Element | null;
   loading?: (props: LoadingProps) => JSX.Element;
   loadError?: (props: any) => JSX.Element;
@@ -462,7 +462,7 @@ interface UseLoadingType {
 
 interface GetCurrentInitialDataProps<T> {
   initialData?: T;
-  needinitialData?: boolean;
+  needInitialData?: boolean;
   apiPath?: apiName;
 }
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import LoginUsername from "./loginUsername";
 import LoginPassword from "./loginPassword";
-import LoginCheckcode from "./loginCheckcode";
+import LoginCheckCode from "./loginCheckCode";
 import LoginSubmit from "./loginSubmit";
 import { useLogin } from "hook/useUser";
 import { flexCenter, getClass } from "utils/dom";
@@ -29,7 +29,7 @@ const Login: SimpleElement = () => {
       <form className="px-lg-5 px-3 py-2" ref={formRef}>
         <LoginUsername setState={setUsername} />
         <LoginPassword setState={setPassword} />
-        <LoginCheckcode show={username && password} />
+        <LoginCheckCode show={username && password} />
         <LoginSubmit enabled={username && password} />
       </form>
     </div>

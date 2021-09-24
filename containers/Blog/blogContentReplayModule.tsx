@@ -4,7 +4,7 @@ import { BlogContentMessageTextArea } from "./blogContentMessagePut";
 import BlogContentMessageMarkdown from "./blogContentMessageMarkdown";
 import { flexBetween, flexCenter, getClass } from "utils/dom";
 import { useBool } from "hook/useData";
-import { useAutoLoadCheckcodeImg } from "hook/useAuto";
+import { useAutoLoadCheckCodeImg } from "hook/useAuto";
 import { useReplayModuleToSubmit } from "hook/useMessage";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
 import { BlogContentReplayModuleProps, BlogContentReplayModuleType, BlogContentReplayModuleWithImageType, WithImgRef } from "types/containers";
@@ -43,12 +43,12 @@ const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImageType = <T
       ) : (
         <BlogContentMessageTextArea name="content" forwardRef={input1} />
       )}
-      <div className={getClass("row px-3", flexBetween, style.checkcodeRow)}>
-        <label htmlFor="putcheck" className="col-2 col-form-label text-truncate px-0" title="验证码">
+      <div className={getClass("row px-3", flexBetween, style.checkCodeRow)}>
+        <label htmlFor="putCheck" className="col-2 col-form-label text-truncate px-0" title="验证码">
           验证码:
         </label>
         <img ref={imgRef} className="col-4 col-md-3 border rounded" height="38" alt="验证码" />
-        <input name="checkCode" ref={input2} className="col-4 col-md-3 form-control" id="putcheck" />
+        <input name="checkCode" ref={input2} className="col-4 col-md-3 form-control" id="putCheck" />
         <Button className="btn-sm btn-primary" type="submit" loading={loading} disable={!canSubmit} value="新留言" />
       </div>
     </form>
@@ -60,7 +60,7 @@ const BlogContentReplayModule: BlogContentReplayModuleType = <T extends PrimaryM
   request,
   closeHandler,
 }: BlogContentReplayModuleProps<T>) => {
-  const imgRef = useAutoLoadCheckcodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
+  const imgRef = useAutoLoadCheckCodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
 
   return <BlogContentReplayModuleWithImag request={request} closeHandler={closeHandler} imgRef={imgRef} props={props} />;
 };

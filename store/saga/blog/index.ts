@@ -3,7 +3,7 @@ import { State } from "store";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { createRequest } from "utils/fetcher";
-import { getDataSucess_Server, getDataFail_Server } from "store/reducer/server/action";
+import { getDataSuccess_Server, getDataFail_Server } from "store/reducer/server/action";
 
 export function* getBlogData() {
   const state: ReturnType<(props: State) => State> = yield select<(props: State) => State>((state) => state);
@@ -15,11 +15,11 @@ export function* getBlogData() {
       apiName.blog
     );
     if (code === 0) {
-      yield put(getDataSucess_Server({ name: apiName.blog, data: { [id]: data } }));
+      yield put(getDataSuccess_Server({ name: apiName.blog, data: { [id]: data } }));
     } else {
       yield put(getDataFail_Server({ name: apiName.blog, data: { [id]: state } }));
     }
   } catch (e) {
-    yield put(getDataFail_Server({ name: apiName.blog, data: { [id]: e.toString() } }));
+    yield put(getDataFail_Server({ name: apiName.blog, data: { [id]: (e as Error).toString() } }));
   }
 }

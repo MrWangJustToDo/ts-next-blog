@@ -16,7 +16,7 @@ const Type: SimpleElement = () => {
       <div className="card mx-lg-4 mt-4">
         <LoadRender<BlogContentProps[]>
           needUpdate
-          needinitialData
+          needInitialData
           initialData={blogs}
           apiPath={apiName.home}
           revalidateOnFocus={false}

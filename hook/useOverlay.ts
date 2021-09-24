@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useState, useEffect, useRef, useMemo } from "react";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { getScrollBarSize } from "utils/action";
+import { useUpdate } from "./useBase";
 import { applyRootStyles, cleanupRootStyles } from "utils/dom";
 import { OverlayProps } from "types/components";
 import { UseOverlayOpenType, UseOverlayPropsType, UseBodyLockType, UseOverlayBodyType } from "types/hook";
@@ -9,19 +10,19 @@ const OverlayOpenContext = createContext<UseOverlayOpenType>(() => {});
 
 const useOverlayProps: UseOverlayPropsType = () => {
   const [overlay, setOverlay] = useState<OverlayProps | null>(null);
-  const update = useCallback(() => setOverlay((last) => ({ ...last! })), []);
+  const forceUpdate = useUpdate();
   const clear = useCallback(() => setOverlay(null), []);
   const open = useCallback(
     (props: OverlayProps) => {
       props.showState = true;
       props.closeHandler = () => {
         props.showState = false;
-        update();
+        forceUpdate();
       };
       props.clear = clear;
       setOverlay(props);
     },
-    [update]
+    [forceUpdate]
   );
   return { overlay, open };
 };

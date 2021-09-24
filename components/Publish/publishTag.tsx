@@ -15,7 +15,7 @@ const PublishTag: BlogContentType = ({ tagId }) => {
         </span>
       </div>
       <LoadRender<TagProps[]>
-        needinitialData
+        needInitialData
         apiPath={apiName.tag}
         revalidateOnFocus={false}
         loaded={(res) => {

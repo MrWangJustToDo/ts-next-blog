@@ -1,10 +1,11 @@
 import { useCallback, useEffect } from "react";
+import { State } from "store";
 import { AnyAction } from "redux";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { pageContentLength } from "config/type&tag";
 import { useCurrentState } from "./useBase";
-import { setDataSucess_client } from "store/reducer/client/action";
+import { setDataSuccess_client } from "store/reducer/client/action";
 import { UseTagType } from "types/hook";
 import { TagProps } from "types/containers";
 
@@ -19,14 +20,14 @@ const autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Fu
 const autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
   useEffect(() => {
     if (allPage > 0 && currentPage > allPage) {
-      dispatch(setDataSucess_client({ name: actionName.currentTagPage, data: allPage }));
+      dispatch(setDataSuccess_client({ name: actionName.currentTagPage, data: allPage }));
     }
   }, [allPage, currentPage]);
 };
 
 const useTag: UseTagType = (props = {}) => {
   let { blogs, needInitTag = false } = props;
-  const { state, dispatch } = useCurrentState();
+  const { state, dispatch } = useCurrentState<State>();
   // 当前所有的tag
   const tag = state.server[apiName.tag]["data"];
   // 获取所有的blog
@@ -36,15 +37,15 @@ const useTag: UseTagType = (props = {}) => {
   // 当前tag的页数
   const currentPage = state.client[actionName.currentTagPage]["data"];
   // 更改当前选中的tag
-  const changeCurrentTag = useCallback((nextTag) => dispatch(setDataSucess_client({ name: actionName.currentTag, data: nextTag })), []);
+  const changeCurrentTag = useCallback((nextTag) => dispatch(setDataSuccess_client({ name: actionName.currentTag, data: nextTag })), []);
   // 自动设置初始选中tag
   autoChangeTag(tag, currentTag, changeCurrentTag, needInitTag);
   // 根据当前选中的tag获取blog
   const currentBlogs = blogs?.filter(({ tagContent }) => tagContent?.includes(currentTag)) || [];
   // 获取符合当前tag的blog页数
   const allPage = Math.ceil(currentBlogs.length / pageContentLength);
-  const increasePage = useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentTagPage, data: currentPage + 1 })), [currentPage]);
-  const decreasePage = useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentTagPage, data: currentPage - 1 })), [currentPage]);
+  const increasePage = useCallback(() => dispatch(setDataSuccess_client({ name: actionName.currentTagPage, data: currentPage + 1 })), [currentPage]);
+  const decreasePage = useCallback(() => dispatch(setDataSuccess_client({ name: actionName.currentTagPage, data: currentPage - 1 })), [currentPage]);
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
   autoChangePage(allPage, currentPage, dispatch);

@@ -1,10 +1,11 @@
 import { useCallback, useEffect } from "react";
+import { State } from "store";
 import { AnyAction } from "redux";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { pageContentLength } from "config/type&tag";
 import { useCurrentState } from "./useBase";
-import { setDataSucess_client } from "store/reducer/client/action";
+import { setDataSuccess_client } from "store/reducer/client/action";
 import { TypeProps, UseTypeType } from "types/hook";
 
 const autoChangeType = (type: TypeProps[], currentType: string, changeCurrentType: Function, needChange: boolean) => {
@@ -18,14 +19,14 @@ const autoChangeType = (type: TypeProps[], currentType: string, changeCurrentTyp
 const autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
   useEffect(() => {
     if (allPage > 0 && currentPage > allPage) {
-      dispatch(setDataSucess_client({ name: actionName.currentTypePage, data: allPage }));
+      dispatch(setDataSuccess_client({ name: actionName.currentTypePage, data: allPage }));
     }
   }, [allPage, currentPage]);
 };
 
 const useType: UseTypeType = (props = {}) => {
   let { blogs, needInitType = false } = props;
-  const { state, dispatch } = useCurrentState();
+  const { state, dispatch } = useCurrentState<State>();
   // 所有type
   const type = state.server[apiName.type]["data"];
   // 获取当前的blog
@@ -35,15 +36,15 @@ const useType: UseTypeType = (props = {}) => {
   // 当前页数
   const currentPage = state.client[actionName.currentTypePage]["data"];
   // 更改当前选中的type
-  const changeCurrentType = useCallback((nextType) => dispatch(setDataSucess_client({ name: actionName.currentType, data: nextType })), []);
+  const changeCurrentType = useCallback((nextType) => dispatch(setDataSuccess_client({ name: actionName.currentType, data: nextType })), []);
   // 自动设置初始type
   autoChangeType(type, currentType, changeCurrentType, needInitType);
   // 根据当前选中的type获取blog
   const currentBlogs = blogs?.filter(({ typeContent }) => typeContent === currentType) || [];
   // 根据符合的blog获取所有的页数
   const allPage = Math.ceil(currentBlogs.length / pageContentLength);
-  const increasePage = useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentTypePage, data: currentPage + 1 })), [currentPage]);
-  const decreasePage = useCallback(() => dispatch(setDataSucess_client({ name: actionName.currentTypePage, data: currentPage - 1 })), [currentPage]);
+  const increasePage = useCallback(() => dispatch(setDataSuccess_client({ name: actionName.currentTypePage, data: currentPage + 1 })), [currentPage]);
+  const decreasePage = useCallback(() => dispatch(setDataSuccess_client({ name: actionName.currentTypePage, data: currentPage - 1 })), [currentPage]);
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
   autoChangePage(allPage, currentPage, dispatch);

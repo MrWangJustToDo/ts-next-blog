@@ -22,7 +22,7 @@ const initDBConnect: TransformHandlerType = transformHandler(
       next();
     },
     ({ res, e, code = 500 }) =>
-      fail({ res, statuCode: code, resDate: { code: -1, state: "初始化失败", data: `数据库连接失败：${e.toString()}`, methodName: "initDBConnect" } })
+      fail({ res, statusCode: code, resDate: { code: -1, state: "初始化失败", data: `数据库连接失败：${e.toString()}`, methodName: "initDBConnect" } })
   )
 );
 
@@ -35,7 +35,7 @@ const initSession: TransformHandlerType = transformHandler(
       next();
     },
     ({ res, e, code = 500 }) =>
-      fail({ res, statuCode: code, resDate: { code: -1, state: "初始化失败", data: `session初始化失败：${e.toString()}`, methodName: "initSession" } })
+      fail({ res, statusCode: code, resDate: { code: -1, state: "初始化失败", data: `session初始化失败：${e.toString()}`, methodName: "initSession" } })
   )
 );
 
@@ -76,7 +76,7 @@ const initUser: TransformHandlerType = transformHandler(
       }
       next();
     },
-    ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "初始化用户信息失败", data: e.toString(), methodName: "initUser" } })
+    ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "初始化用户信息失败", data: e.toString(), methodName: "initUser" } })
   )
 );
 

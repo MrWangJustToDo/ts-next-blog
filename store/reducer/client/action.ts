@@ -3,7 +3,7 @@ import { ClientActionType, CreateClientActionProps, CreateClientActionType } fro
 const clientAction: ClientActionType = {
   SETDATALOADING: (name) => `setDataAction_client_${name}`,
   SETDATAACTION: (name) => `setDataAction_client_${name}`,
-  SETDATASUCESS: (name) => `setDataSucess_client_${name}`,
+  SETDATASUCESS: (name) => `setDataSuccess_client_${name}`,
   SETDATAFAIL: (name) => `setDataFail_client_${name}`,
 };
 
@@ -11,7 +11,7 @@ const setDataLoading_client: CreateClientActionType = ({ name }) => ({ type: cli
 
 const setDataAction_client: CreateClientActionType = ({ name }) => ({ type: clientAction.SETDATAACTION(name), loadingState: true });
 
-const setDataSucess_client: CreateClientActionType = <T>({ name, data }: CreateClientActionProps<T>) => ({
+const setDataSuccess_client: CreateClientActionType = <T>({ name, data }: CreateClientActionProps<T>) => ({
   type: clientAction.SETDATASUCESS(name),
   data,
   loadingState: false,
@@ -23,4 +23,4 @@ const setDataFail_client: CreateClientActionType = <T>({ name, error }: CreateCl
   loadingState: false,
 });
 
-export { clientAction, setDataLoading_client, setDataAction_client, setDataSucess_client, setDataFail_client };
+export { clientAction, setDataLoading_client, setDataAction_client, setDataSuccess_client, setDataFail_client };

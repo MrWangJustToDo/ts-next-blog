@@ -2,10 +2,10 @@ import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { log } from "utils/log";
 import { flexBetween, getClass } from "utils/dom";
 import { useBool } from "hook/useData";
-import { usePutToCheckcodeModule } from "hook/useMessage";
-import BlogContentCheckcodeModule from "./blogContentCheckcodeModule";
+import { usePutToCheckCodeModule } from "hook/useMessage";
+import BlogContentCheckCodeModule from "./blogContentCheckCodeModule";
 import BlogContentMessageMarkdown from "./blogContentMessageMarkdown";
-import { UsePutToCheckcodeModuleBody } from "types/hook";
+import { UsePutToCheckCodeModuleBody } from "types/hook";
 import { BlogContentMessagePutType } from "types/containers";
 
 import style from "./index.module.scss";
@@ -48,14 +48,14 @@ const BlogContentMessageTextArea = ({
 const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
   const { bool, switchBoolDebounce, hide } = useBool();
 
-  const body = useCallback<UsePutToCheckcodeModuleBody>(
+  const body = useCallback<UsePutToCheckCodeModuleBody>(
     ({ request, requestCallback, blogId }) =>
       (closeHandler) =>
-        <BlogContentCheckcodeModule blogId={blogId} request={request} closeHandler={closeHandler} requestCallback={requestCallback} />,
+        <BlogContentCheckCodeModule blogId={blogId} request={request} closeHandler={closeHandler} requestCallback={requestCallback} />,
     []
   );
 
-  const { formRef, textAreaRef, canSubmit } = usePutToCheckcodeModule({
+  const { formRef, textAreaRef, canSubmit } = usePutToCheckCodeModule({
     body,
     blogId,
     isMd: Number(bool),

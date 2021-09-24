@@ -12,7 +12,7 @@ type ArchiveProps = {
 
 type CurrentState = State<ArchiveProps>;
 
-const initState: CurrentState = { data: {}, error: null, loaded: false, loading: true };
+const initState: CurrentState = { data: {}, error: null, loaded: false, loading: false };
 
 const reducer: Reducer<CurrentState> = (state: CurrentState = initState, action: StateAction<ArchiveProps>) => {
   // 合并服务器上的client部分数据

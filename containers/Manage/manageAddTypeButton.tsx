@@ -32,7 +32,7 @@ const ManageAddTypeButtonWrapper: SimpleElement = () => {
 
   const body = useCallback<ManageAddButtonBody>(
     (closeHandler) => (
-      <ManageAddModule fieldname="typeContent" request={request} judgeApiName={apiName.checkType} closeHandler={closeHandler} successHandler={successHandler} />
+      <ManageAddModule fieldName="typeContent" request={request} judgeApiName={apiName.checkType} closeHandler={closeHandler} successHandler={successHandler} />
     ),
     [request, successHandler]
   );

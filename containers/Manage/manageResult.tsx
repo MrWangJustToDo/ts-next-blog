@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import LoadRender from "components/LoadRender";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
-import { animateFadein, getClass } from "utils/dom";
+import { animateFadeIn, getClass } from "utils/dom";
 import ManageResultAll from "./manageResultAll";
 import ManageResultSearch from "./manageResultSearch";
 import { useBool } from "hook/useData";
@@ -12,14 +12,19 @@ import { ManageUserIdType } from "types/containers";
 
 import style from "./index.module.scss";
 
+type Result = {
+  loading: boolean;
+  data: BlogContentProps[];
+};
+
 const ManageResult: ManageUserIdType = ({ userId }) => {
   const { bool, switchBoolDebounce, show } = useBool();
 
-  const { state } = useCurrentState();
+  const { state } = useCurrentState<Result>((state) => state.client[actionName.currentResult]);
 
-  const data = state.client[actionName.currentResult]["data"];
+  const data = (state as Result)["data"];
 
-  const loading = state.client[actionName.currentResult]["loading"];
+  const loading = (state as Result)["loading"];
 
   useEffect(() => {
     if (!loading && data) {
@@ -39,18 +44,18 @@ const ManageResult: ManageUserIdType = ({ userId }) => {
         <LoadRender<BlogContentProps[]>
           token
           needUpdate
-          needinitialData
+          needInitialData
           revalidateOnFocus={false}
           apiPath={apiName.userHome}
           query={{ userId }}
           loaded={(data) => (
-            <div className={getClass(animateFadein)}>
+            <div className={getClass(animateFadeIn)}>
               <ManageResultAll {...data} />
             </div>
           )}
         />
       ) : (
-        <div className={getClass(animateFadein)}>
+        <div className={getClass(animateFadeIn)}>
           <ManageResultSearch data={data} loading={loading} />
         </div>
       )}

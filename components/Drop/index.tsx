@@ -53,7 +53,7 @@ const Drop: DropType = <T extends ValueType>({
               name={data[index]?.name || "null"}
               value={data[index]?.value || undefined}
               multiple={multiple}
-              cacel={switchItem}
+              cancel={switchItem}
             />
           ))
         ) : (

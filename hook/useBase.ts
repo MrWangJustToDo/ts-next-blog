@@ -1,11 +1,16 @@
 import { State } from "store";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UseBasePageProps, UseBasePageType, UseCurrentStateType } from "types/hook";
 
-const useCurrentState: UseCurrentStateType = () => {
+type StateResult<T> = T | State;
+
+const defaultSelector = (state: State) => state;
+
+const useCurrentState: UseCurrentStateType = <T extends any>(selector?: (state: State) => T) => {
+  const currentSelector = selector || defaultSelector;
   const dispatch = useDispatch();
-  const state = useSelector<State, State>((state) => state);
+  const state = useSelector<State, StateResult<T>>(currentSelector);
   return { state, dispatch };
 };
 
@@ -14,15 +19,14 @@ const useBasePage: UseBasePageType = <T>(props: UseBasePageProps<T> = {}) => {
   if (!data && !stateName) {
     throw new Error("useBasePage need Data");
   }
-  const { state } = useCurrentState();
-  const [currentPage, setCurrentPage] = useState(1);
-  let allData;
+  let selector;
   if (stateName) {
-    allData = <Array<T>>state[stateSide][stateName]["data"];
-  } else {
-    allData = data;
+    selector = (state: State) => <Array<T>>state[stateSide][stateName]["data"];
   }
-  const allPage = Math.ceil(allData!.length / pageLength);
+  const { state } = useCurrentState<Array<T>>(selector);
+  const [currentPage, setCurrentPage] = useState(1);
+  const allData = stateName ? (state as Array<T>) : data;
+  const allPage = useMemo(() => Math.ceil(allData!.length / pageLength), []);
   const increasePage = useCallback(() => setCurrentPage((lastPage) => lastPage + 1), []);
   const decreasePage = useCallback(() => setCurrentPage((lastPage) => lastPage - 1), []);
   const increaseAble = currentPage < allPage;
@@ -34,4 +38,10 @@ const useBasePage: UseBasePageType = <T>(props: UseBasePageProps<T> = {}) => {
   return { allData: allData!, allPage, currentPage, currentPageData: currentPageData!, decreaseAble, increaseAble, decreasePage, increasePage };
 };
 
-export { useCurrentState, useBasePage };
+const useUpdate = () => {
+  const [, forceUpdate] = useReducer((a) => a + 1, 0);
+
+  return forceUpdate;
+};
+
+export { useCurrentState, useBasePage, useUpdate };

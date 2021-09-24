@@ -13,7 +13,7 @@ const getTypeAction = autoRequestHandler({
     const data = await getType({ db: req.db! });
     return success({ res, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getTypeAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getTypeAction" } }),
   cacheConfig: { needCache: true },
 });
 
@@ -27,7 +27,7 @@ const checkTypeAction = autoRequestHandler({
     }
     success({ res, resDate: { state: "建成通过", data: `当前type：${typeContent}可用` } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
   userConfig: { needCheck: true },
   paramsConfig: { fromBody: ["typeContent"] },
 });
@@ -40,7 +40,7 @@ const addTypeAction = autoRequestHandler({
     await insertType({ db: req.db!, typeId, typeState: 1, typeContent, typeCount: 0 });
     success({ res, resDate: { state: "新增type成功", data: `typeId: ${typeId}, typeContent: ${typeContent}` } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "添加type失败", data: e.toString(), methodName: "addTypeAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "添加type失败", data: e.toString(), methodName: "addTypeAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.type] },
   paramsConfig: { fromBody: ["typeContent"] },
@@ -61,7 +61,7 @@ const deleteTypeAction = autoRequestHandler({
     success({ res, resDate: { state: "删除type成功", data: `typeId: ${type.typeId}, typeContent: ${type.typeContent}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "删除type出错", data: e.toString(), methodName: "deleteTypeAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "删除type出错", data: e.toString(), methodName: "deleteTypeAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.type] },
   paramsConfig: { fromBody: ["deleteType"] },

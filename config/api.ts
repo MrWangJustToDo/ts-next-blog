@@ -34,7 +34,7 @@ enum apiName {
   updatePrimaryMessage = "updatePrimaryMessage",
   // 管理信息
   search = "search", // 搜索博客
-  updataBlog = "updateBlog", // 更新博客信息
+  updateBlog = "updateBlog", // 更新博客信息
   publishBlog = "publishBlog", // 发布博客信息
   addTag = "addTag", // 添加tag
   addType = "addType", // 添加Type
@@ -97,7 +97,7 @@ const accessApi: AccessType = {
   [apiName.deleteBlog]: { disable: false, token: false, method: "delete" },
   [apiName.deleteChildMessage]: { disable: false, token: true, method: "delete" },
   [apiName.deletePrimaryMessage]: { disable: false, token: true, method: "delete" },
-  [apiName.updataBlog]: { disable: false, token: false, method: "post" },
+  [apiName.updateBlog]: { disable: false, token: false, method: "post" },
   [apiName.updateChildMessage]: { disable: false, token: true, method: "post" },
   [apiName.updatePrimaryMessage]: { disable: false, token: true, method: "post" },
   [apiName.publishBlog]: { disable: false, token: false, method: "post" },

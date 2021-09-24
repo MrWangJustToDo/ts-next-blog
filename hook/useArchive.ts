@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { State } from "store";
 import throttle from "lodash/throttle";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
@@ -15,7 +16,7 @@ const autoLoadArchive = (loadArchive: Function, archiveData: Object, needUpdate:
 };
 
 const useArchive: UseArchiveType = () => {
-  const { state } = useCurrentState();
+  const { state } = useCurrentState<State>();
   const [page, setPage] = useState<number>(1);
   const [bool, setBool] = useState<boolean>(true);
   const [value, setValue] = useState<ArchiveProps>({});
@@ -49,14 +50,12 @@ const useAutoLoadArchive: UseAutoLoadArchiveType = ({ canLoad, loadMore, breakPo
     }, 1000),
     [breakPoint]
   );
-  const addListenerCallback = useCallback<(action: () => void) => void>((action) => window.addEventListener("scroll", action), []);
-  const removeListenerCallback = useCallback<(action: () => void) => void>((action) => window.removeEventListener("scroll", action), []);
   useAutoActionHandler({
-    action: loadMoreCallback,
-    actionState: canLoad,
     rightNow: true,
-    addListener: addListenerCallback,
-    removeListener: removeListenerCallback,
+    actionState: canLoad,
+    action: loadMoreCallback,
+    addListenerCallback: (action) => window.addEventListener("scroll", action),
+    removeListenerCallback: (action) => window.removeEventListener("scroll", action),
   });
 };
 

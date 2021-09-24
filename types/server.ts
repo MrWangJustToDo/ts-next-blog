@@ -21,7 +21,7 @@ interface ApiResponseData<T> {
 }
 interface ApiResponseProps<T> {
   res: Response;
-  statuCode?: number;
+  statusCode?: number;
   resDate: ApiResponseData<T>;
 }
 interface ApiResponseType<T> {

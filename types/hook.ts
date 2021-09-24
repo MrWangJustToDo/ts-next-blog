@@ -10,7 +10,7 @@ import { ChildMessageProps, LoadingBarProps, OverlayProps, PrimaryMessageProps, 
 import { Pointer } from "utils/pointer";
 
 // from http://ip-api.com/json/
-interface IpaddressProps {
+interface IpAddressProps {
   country?: string;
   countryCode?: string;
   region?: string;
@@ -69,9 +69,9 @@ interface BlogProps {
   blogCommentState?: number;
 }
 
-type BlogContentProps = UserProps & BlogProps & TypeProps & TagProps & IpaddressProps;
+type BlogContentProps = UserProps & BlogProps & TypeProps & TagProps & IpAddressProps;
 
-export type { UserProps, TypeProps, TagProps, BlogProps, BlogContentProps, IpaddressProps };
+export type { UserProps, TypeProps, TagProps, BlogProps, BlogContentProps, IpAddressProps };
 
 /* useAnimate */
 type animateCallback = () => void | Promise<void>;
@@ -87,11 +87,11 @@ interface UseShowAndHideAnimateProps<T> {
   showDone?: animateCallback;
   hideDone?: animateCallback;
 }
-interface UseShowAndHideAnimateReture<T> {
+interface UseShowAndHideAnimateReturn<T> {
   animateRef: RefObject<T>;
 }
 interface UseShowAndHideAnimateType {
-  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>): UseShowAndHideAnimateReture<T>;
+  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>): UseShowAndHideAnimateReturn<T>;
 }
 
 export type { UseShowAndHideAnimateProps, UseShowAndHideAnimateType, animateCallback };
@@ -117,8 +117,8 @@ interface UseAutoActionHandlerProps<T, K> {
   timmer?: boolean; // 是否使用定时器
   once?: boolean; // 执行一次，for timmer
   delayTime?: number; // 定时器执行时间间隔
-  rightNow?: boolean | Function; // 立即执行，for listner
-  // 适应React 17 的更新
+  rightNow?: boolean; // 立即执行，for listener
+  getRightNowState?: () => boolean;
   currentRef?: RefObject<K>;
   addListener?: (action: (e?: T) => void, ele?: K) => void; // 添加事件监听
   removeListener?: (action: (e?: T) => void, ele?: K) => void; // 移除事件监听
@@ -131,13 +131,13 @@ interface UseAutoActionHandlerType {
 interface UseAutoSetHeaderHeightType {
   <T extends HTMLElement>(breakPoint?: number): { ref: RefObject<T>; height: number };
 }
-interface UseAutoLoadCheckcodeImgProps {
+interface UseAutoLoadCheckCodeImgProps {
   imgUrl: apiName;
   strUrl: apiName;
   state?: boolean;
 }
-interface UseAutoLoadCheckcodeImgType {
-  <T extends HTMLImageElement>(props: UseAutoLoadCheckcodeImgProps): RefObject<T>;
+interface UseAutoLoadCheckCodeImgType {
+  <T extends HTMLImageElement>(props: UseAutoLoadCheckCodeImgProps): RefObject<T>;
 }
 interface UseAutoShowAndHideType {
   <T extends HTMLElement>(breakPoint: number): RefObject<T>;
@@ -163,8 +163,8 @@ export type {
   UseAutoActionHandlerProps,
   UseAutoActionHandlerType,
   UseAutoSetHeaderHeightType,
-  UseAutoLoadCheckcodeImgProps,
-  UseAutoLoadCheckcodeImgType,
+  UseAutoLoadCheckCodeImgProps,
+  UseAutoLoadCheckCodeImgType,
   UseAutoShowAndHideType,
   UseAutoSetHeightProps,
   UseAutoSetHeightType,
@@ -173,7 +173,7 @@ export type {
 
 /* useBase */
 interface UseCurrentStateType {
-  (): { state: State; dispatch: (props: AnyAction) => void };
+  <T>(selector?: (state: State) => T): { state: State | T; dispatch: (props: AnyAction) => void };
 }
 interface UseBasePageProps<T> {
   stateSide?: "server" | "client";
@@ -235,8 +235,8 @@ interface UseInputToImageModuleType {
 }
 interface AuthorProps {
   userId?: string;
-  userAlipay?: string;
-  userWechat?: string;
+  userAliPay?: string;
+  userWeChat?: string;
   cacheState?: number;
 }
 
@@ -381,31 +381,31 @@ type MyInputELement = HTMLInputElement | HTMLTextAreaElement;
 interface UseJudgeInputValueType {
   <T extends MyInputELement>(ref?: RefObject<T>, ...deps: any[]): { canSubmit: boolean; ref?: RefObject<T> };
 }
-interface UsePutToCheckcodeModuleBody {
+interface UsePutToCheckCodeModuleBody {
   ({ request, requestCallback, blogId }: { request: AutoRequestType; requestCallback: () => void; blogId: string }): (closeHandler: () => void) => JSX.Element;
 }
-interface UsePutToCheckcodeModuleProps {
+interface UsePutToCheckCodeModuleProps {
   isMd?: number;
   blogId: string;
   className?: string;
   submitCallback?: () => void;
-  body: UsePutToCheckcodeModuleBody;
+  body: UsePutToCheckCodeModuleBody;
 }
-interface UsePutToCheckcodeModuleType {
-  (props: UsePutToCheckcodeModuleProps, ...deps: any[]): {
+interface UsePutToCheckCodeModuleType {
+  (props: UsePutToCheckCodeModuleProps, ...deps: any[]): {
     formRef: RefObject<HTMLFormElement>;
     textAreaRef?: RefObject<HTMLTextAreaElement>;
     canSubmit: boolean;
   };
 }
-interface UseCheckcodeModuleToSubmitProps {
+interface UseCheckCodeModuleToSubmitProps {
   blogId: string;
   request: AutoRequestType;
   closeHandler: () => void;
   requestCallback: () => void;
 }
-interface UseCheckcodeModuleToSubmitType {
-  (props: UseCheckcodeModuleToSubmitProps): {
+interface UseCheckCodeModuleToSubmitType {
+  (props: UseCheckCodeModuleToSubmitProps): {
     loading: boolean;
     formRef: RefObject<HTMLFormElement>;
     inputRef?: RefObject<HTMLInputElement>;
@@ -464,11 +464,11 @@ export type {
   UseChildMessageType,
   MyInputELement,
   UseJudgeInputValueType,
-  UsePutToCheckcodeModuleBody,
-  UsePutToCheckcodeModuleProps,
-  UsePutToCheckcodeModuleType,
-  UseCheckcodeModuleToSubmitProps,
-  UseCheckcodeModuleToSubmitType,
+  UsePutToCheckCodeModuleBody,
+  UsePutToCheckCodeModuleProps,
+  UsePutToCheckCodeModuleType,
+  UseCheckCodeModuleToSubmitProps,
+  UseCheckCodeModuleToSubmitType,
   UseMessageToModuleBody,
   UseMessageToModuleProps,
   UseMessageToModuleType,

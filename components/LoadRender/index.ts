@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
+import { State } from "store";
 import isEqual from "lodash/isEqual";
 import Loading from "components/Loading";
 import loadingError from "./loadingError";
@@ -9,15 +10,15 @@ import { cancel, delay } from "utils/delay";
 import { autoTransformData } from "utils/data";
 import { autoStringify, createRequest } from "utils/fetcher";
 import { useCurrentState } from "hook/useBase";
-import { getDataSucess_Server } from "store/reducer/server/action";
+import { getDataSuccess_Server } from "store/reducer/server/action";
 import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType, RenderProps, RenderType, UseLoadingType } from "types/components";
 
-const useCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath, needinitialData }) => {
-  const { state } = useCurrentState();
+const useCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath, needInitialData }) => {
+  const { state } = useCurrentState<State>();
 
   if (initialData) return { currentInitialData: initialData };
 
-  if (apiPath && needinitialData) return { currentInitialData: state.server[apiPath]["data"] };
+  if (apiPath && needInitialData) return { currentInitialData: state.server[apiPath]["data"] };
 
   return { currentInitialData: null };
 };
@@ -27,8 +28,8 @@ const useAutoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiP
 
   useEffect(() => {
     if (needUpdate && apiPath && currentData && !isEqual(initialData, currentData)) {
-      log(`start update store from loadrender, apiPath: ${apiPath}`, "normal");
-      dispatch(getDataSucess_Server({ name: apiPath, data: currentData }));
+      log(`start update store from loadRender, apiPath: ${apiPath}`, "normal");
+      dispatch(getDataSuccess_Server({ name: apiPath, data: currentData }));
     }
   }, [needUpdate, apiPath, initialData, currentData]);
 };
@@ -73,7 +74,7 @@ const Render: RenderType = <T>({
   if (error) return loadError(error.toString());
 
   if (currentInitialData || currentData) {
-    // make soure not flash if data loaded
+    // make page not flash if data loaded
     cancel(currentRequest.cacheKey);
 
     return loaded(currentData ? currentData : currentInitialData, currentRequest);
@@ -97,11 +98,11 @@ const LoadRender: LoadRenderType = <T>({
   token = false,
   delayTime = 260,
   needUpdate = false,
-  needinitialData = false,
+  needInitialData = false,
   revalidateOnMount = true,
   revalidateOnFocus = true,
 }: LoadRenderProps<T>) => {
-  if (!path && !apiPath) throw new Error("loadrender error, path undefined!");
+  if (!path && !apiPath) throw new Error("loadRender error, path undefined!");
 
   const currentRequestData = autoStringify(requestData);
 
@@ -123,7 +124,7 @@ const LoadRender: LoadRenderType = <T>({
     [apiPath, path, currentRequestData, currentHeader, cacheTime, currentQuery]
   );
 
-  const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needinitialData });
+  const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needInitialData });
 
   return Render<T>({
     loadError,

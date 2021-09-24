@@ -3,7 +3,7 @@ import { createRequest } from "utils/fetcher";
 import { insertUser } from "server/database/insert";
 import { getAuthorByUserId, getUserByUser, getUserByUserId, getUsersExByUserId } from "server/database/get";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
-import { IpaddressProps } from "types/hook";
+import { IpAddressProps } from "types/hook";
 
 // 用户登录请求
 const loginAction = autoRequestHandler({
@@ -23,7 +23,7 @@ const loginAction = autoRequestHandler({
     });
     success({ res, resDate: { state: "登录成功", data: user } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "登录失败", data: e.toString(), methodName: "loginAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "登录失败", data: e.toString(), methodName: "loginAction" } }),
   paramsConfig: { fromBody: ["username", "password"] },
   checkCodeConfig: { needCheck: true },
 });
@@ -34,7 +34,7 @@ const autoLoginAction = autoRequestHandler({
     if (req.user) {
       success({ res, resDate: { state: "自动登录成功", data: req.user } });
     } else {
-      fail({ res, statuCode: 200, resDate: { state: "自动登录失败" } });
+      fail({ res, statusCode: 200, resDate: { state: "自动登录失败" } });
     }
   },
 });
@@ -43,7 +43,7 @@ const autoGetIp = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const request = createRequest({ path: process.env.NEXT_PUBLIC_IPADDRESS, header: req.headers, data: req.body });
     await request
-      .run<IpaddressProps>()
+      .run<IpAddressProps>()
       .then((data) => success({ res, resDate: { data } }))
       .catch((e) => fail({ res, resDate: { data: e.toString() } }));
   },
@@ -66,7 +66,7 @@ const registerAction = autoRequestHandler({
     const data = await insertUser({ db: req.db!, ...req.body });
     success({ res, resDate: { state: "注册成功", data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "注册失败", data: e.toString(), methodName: "registerAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "注册失败", data: e.toString(), methodName: "registerAction" } }),
 });
 
 // 获取用户点赞相关数据
@@ -76,7 +76,7 @@ const getUserExByUserIdAction = autoRequestHandler({
     const data = await getUsersExByUserId({ userId, db: req.db! });
     return success({ res, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getUserExByUserIdAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getUserExByUserIdAction" } }),
   cacheConfig: { needCache: true },
   paramsConfig: { fromQuery: ["userId"] },
 });
@@ -91,7 +91,7 @@ const getUserByUserIdAction = autoRequestHandler({
     const data = await getUserByUserId({ db: req.db!, userId });
     success({ res, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getUserByUserIdAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getUserByUserIdAction" } }),
 });
 
 const getAuthorByUserIdAction = autoRequestHandler({
@@ -101,7 +101,7 @@ const getAuthorByUserIdAction = autoRequestHandler({
     return success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "获取失败", data: e.toString() }, methodName: "getAuthorByUserIdAction" }),
+    fail({ res, statusCode: code, resDate: { state: "获取失败", data: e.toString() }, methodName: "getAuthorByUserIdAction" }),
   cacheConfig: { needCache: true },
   paramsConfig: { fromQuery: ["userId"] },
 });

@@ -95,12 +95,12 @@ const getBlogsByTypeIdAndUserId = async ({ db, typeId, userId }: { db: Database;
 
 // 根据tagId获取博客
 const getBlogsByTagId = async ({ db, tagId }: { db: Database; tagId: string }) => {
-  const sqls = tagId.split(",").filter(Boolean);
+  const allId = tagId.split(",").filter(Boolean);
   const blogs: BlogContentProps[] = [];
-  for (let i = 0; i < sqls.length; i++) {
+  for (let i = 0; i < allId.length; i++) {
     const temp = await db.all(
       "SELECT * FROM home LEFT JOIN users WHERE home.tagId LIKE ? AND home.authorId = users.userId AND home.blogState != -1",
-      `%${sqls[i]}%`
+      `%${allId[i]}%`
     );
     temp.forEach((it) => {
       if (blogs.every((blog) => blog.blogId !== it.blogId)) {
@@ -118,12 +118,12 @@ const getBlogsByTagId = async ({ db, tagId }: { db: Database; tagId: string }) =
 };
 
 const getBlogsByTagIdAndUserId = async ({ db, tagId, userId }: { db: Database; tagId: string; userId: string }) => {
-  const sqls = tagId.split(",").filter(Boolean);
+  const allId = tagId.split(",").filter(Boolean);
   const blogs: BlogContentProps[] = [];
-  for (let i = 0; i < sqls.length; i++) {
+  for (let i = 0; i < allId.length; i++) {
     const temp = await db.all(
       "SELECT * FROM home LEFT JOIN users WHERE home.tagId LIKE ? AND home.authorId = ? AND home.authorId = users.userId AND home.blogState != -1",
-      `%${sqls[i]}%`,
+      `%${allId[i]}%`,
       userId
     );
     temp.forEach((it) => {

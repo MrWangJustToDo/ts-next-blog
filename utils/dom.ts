@@ -32,10 +32,10 @@ const transformArray: TransformArray = (arr) => {
 const getClass: GetClass = (...res) => transformArray(res).join(" ");
 
 // animate
-const animateFadein: GetArray<string> = () => ["animate__animated", "animate__fadeIn", "animate__faster"];
-const animateFadeout: GetArray<string> = () => ["animate__animated", "animate__fadeOut", "animate__faster"];
-const animateZoomin: GetArray<string> = () => ["animate__animated", "animate__zoomIn", "animate__faster"];
-const animateZoomout: GetArray<string> = () => ["animate__animated", "animate__zoomOut", "animate__faster"];
+const animateFadeIn: GetArray<string> = () => ["animate__animated", "animate__fadeIn", "animate__faster"];
+const animateFadeOut: GetArray<string> = () => ["animate__animated", "animate__fadeOut", "animate__faster"];
+const animateZoomIn: GetArray<string> = () => ["animate__animated", "animate__zoomIn", "animate__faster"];
+const animateZoomOut: GetArray<string> = () => ["animate__animated", "animate__zoomOut", "animate__faster"];
 
 // flex
 const flexCenter: GetItem<string> = () => "d-flex justify-content-center align-items-center";
@@ -80,7 +80,8 @@ const applyRootStyles = (rootId: string) => {
     root.style.borderTopLeftRadius = "10px";
     root.style.filter = "blur(0.8px)";
 
-    // Add highlighed overlay to emphasize the modality effect
+    // Add highLighted overlay to emphasize the modality effect
+    
     const highlight = document.createElement("div");
     highlight.setAttribute("aria-hidden", "true");
     highlight.id = bgId;
@@ -124,10 +125,10 @@ const cleanupRootStyles = (rootId: string) => {
 
 export {
   getClass,
-  animateFadein,
-  animateZoomin,
-  animateFadeout,
-  animateZoomout,
+  animateFadeIn,
+  animateZoomIn,
+  animateFadeOut,
+  animateZoomOut,
   flexCenter,
   flexStart,
   flexEnd,

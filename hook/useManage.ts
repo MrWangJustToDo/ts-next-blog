@@ -6,12 +6,13 @@ import { actionName } from "config/action";
 import { createRequest } from "utils/fetcher";
 import { formSerialize } from "utils/data";
 import { actionHandler, judgeAction, loadingAction } from "utils/action";
-import { setDataFail_client, setDataLoading_client, setDataSucess_client } from "store/reducer/client/action";
+import { setDataFail_client, setDataLoading_client, setDataSuccess_client } from "store/reducer/client/action";
+import { useBool } from "./useData";
 import { useCurrentState } from "./useBase";
 import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
-import { useFailToast, useSucessToast } from "./useToast";
+import { useFailToast, useSuccessToast } from "./useToast";
 import { ApiRequestResult } from "types/utils";
 import {
   BlogContentProps,
@@ -22,12 +23,11 @@ import {
   UseManageToDeleteModuleType,
   UseSearchType,
 } from "types/hook";
-import { useBool } from "./useData";
 
 const useSearch: UseSearchType = () => {
   const fail = useFailToast();
   const dispatch = useDispatch();
-  const success = useSucessToast();
+  const success = useSuccessToast();
   const { userId } = useCurrentUser();
   const ref = useRef<HTMLFormElement>(null);
   const search = useCallback(
@@ -42,7 +42,7 @@ const useSearch: UseSearchType = () => {
                 const { code, data } = res;
                 if (code === 0) {
                   if (Array.isArray(data)) {
-                    dispatch(setDataSucess_client({ name: actionName.currentResult, data }));
+                    dispatch(setDataSuccess_client({ name: actionName.currentResult, data }));
                     return success(`搜索数据成功，一共${data.length}条数据`);
                   }
                 }
@@ -70,7 +70,7 @@ const useManageToAddModule: UseManageToAddModuleType = ({ title, body, className
 
 const useAddRequest: UseAddRequestType = ({ request, successCallback }) => {
   const fail = useFailToast();
-  const success = useSucessToast();
+  const success = useSuccessToast();
   const loadingRef = useRef<boolean>();
   const { bool, show, hide } = useBool();
   const ref = useRef<HTMLFormElement>(null);
@@ -136,8 +136,8 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
                   Promise<{ className: string; message: string; state: boolean }>
                 >(
                   judgeApiName,
-                  (apiname) =>
-                    createRequest({ apiPath: apiname, method: "post", data: { [currentRef.current!.name]: currentRef.current!.value }, cache: false })
+                  (apiName) =>
+                    createRequest({ apiPath: apiName, method: "post", data: { [currentRef.current!.name]: currentRef.current!.value }, cache: false })
                       .run<ApiRequestResult<string>>()
                       .then(({ code, data }) => {
                         if (code === 0) {
@@ -183,16 +183,12 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
     // 重新开始状态
     handleRef.current = { needHandle: { state: true } };
   }, []);
-  const addListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.addEventListener("input", action)),
-    []
-  );
-  const removeListenerCallback = useCallback<(action: () => void) => void>(
-    (action) => actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.removeEventListener("input", action)),
-    []
-  );
-  useAutoActionHandler({ action: start, addListener: addListenerCallback, removeListener: removeListenerCallback });
-  useAutoActionHandler({ action: judge, addListener: addListenerCallback, removeListener: removeListenerCallback });
+  const addListenerCallback = (action: () => void) =>
+    actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.addEventListener("input", action));
+  const removeListenerCallback = (action: () => void) =>
+    actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.removeEventListener("input", action));
+  useAutoActionHandler({ action: start, addListenerCallback: addListenerCallback, removeListenerCallback: removeListenerCallback });
+  useAutoActionHandler({ action: judge, addListenerCallback: addListenerCallback, removeListenerCallback: removeListenerCallback });
   return [currentRef, state, loading];
 };
 
@@ -204,7 +200,7 @@ const useManageToDeleteModule: UseManageToDeleteModuleType = ({ title, body, del
 
 const useDeleteRequest: UseDeleteRequestType = ({ request, closeHandler, successHandler }) => {
   const fail = useFailToast();
-  const success = useSucessToast();
+  const success = useSuccessToast();
   const doRequest = useCallback(
     () =>
       request
@@ -225,11 +221,13 @@ const useDeleteRequest: UseDeleteRequestType = ({ request, closeHandler, success
 };
 
 const useFilterResult = ({ currentBlogId }: { currentBlogId: string }) => {
-  const { state, dispatch } = useCurrentState();
   // 获取当前result
-  const result = <BlogContentProps[]>state.client[actionName.currentResult]["data"];
+  const { state: result, dispatch } = useCurrentState<BlogContentProps[]>((state) => state.client[actionName.currentResult]["data"]);
   return useCallback(
-    () => dispatch(setDataSucess_client({ name: actionName.currentResult, data: result.filter(({ blogId }) => blogId !== currentBlogId) })),
+    () =>
+      dispatch(
+        setDataSuccess_client({ name: actionName.currentResult, data: (result as BlogContentProps[]).filter(({ blogId }) => blogId !== currentBlogId) })
+      ),
     [currentBlogId]
   );
 };

@@ -1,6 +1,6 @@
 import MainRightHead from "components/CardHead";
 import MainRightCommendItem from "./mainRightCommendItem";
-import { mainRightHeader } from "config/hoom";
+import { mainRightHeader } from "config/home";
 import { useCommend } from "hook/useHome";
 import { MainRightCommendType } from "types/containers";
 

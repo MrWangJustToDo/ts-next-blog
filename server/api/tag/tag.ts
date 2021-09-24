@@ -13,7 +13,7 @@ const getTagAction = autoRequestHandler({
     const data = await getTag({ db: req.db! });
     return success({ res, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getTagAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getTagAction" } }),
   cacheConfig: { needCache: true },
 });
 
@@ -27,7 +27,7 @@ const checkTagAction = autoRequestHandler({
     }
     success({ res, resDate: { state: "检测通过", data: `当前tag：${tagContent}可以使用` } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
   userConfig: { needCheck: true },
   paramsConfig: { fromBody: ["tagContent"] },
 });
@@ -40,7 +40,7 @@ const addTagAction = autoRequestHandler({
     await insertTag({ db: req.db!, tagId, tagState: 1, tagContent, tagCount: 0 });
     success({ res, resDate: { state: "新增tag成功", data: `tagId: ${tagId}, tagContent: ${tagContent}` } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { state: "添加tag失败", data: e.toString(), methodName: "addTagAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "添加tag失败", data: e.toString(), methodName: "addTagAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.tag] },
   paramsConfig: { fromBody: ["tagContent"] },
@@ -61,7 +61,7 @@ const deleteTagAction = autoRequestHandler({
     success({ res, resDate: { state: "删除tag成功", data: `tagId: ${tag.tagId}, tagContent: ${tag.tagContent}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "删除tag失败", data: e.toString(), methodName: "deleteTagAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "删除tag失败", data: e.toString(), methodName: "deleteTagAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.tag] },
   paramsConfig: { fromBody: ["deleteTag"] },

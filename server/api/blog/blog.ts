@@ -4,7 +4,7 @@ import { ServerError } from "server/utils/error";
 import { insertBlog, insertHome } from "server/database/insert";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { getBlogByBlogId, getTagByTagId, getTypeByTypeId } from "server/database/get";
-import { updateTableWithParam, updateTagCountByTagId, updateTypeCountByTypeId } from "server/database/updata";
+import { updateTableWithParam, updateTagCountByTagId, updateTypeCountByTypeId } from "server/database/update";
 import { deleteBlogByBlogId, deleteChildMessageByBlogId, deleteHomeByBlogId, deletePrimaryMessageByBlogId } from "server/database/delete";
 import { TagProps } from "types/containers";
 
@@ -13,9 +13,9 @@ const getBlogByBlogIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const blogId = <string>req.query.blogId;
     const data = await getBlogByBlogId({ db: req.db!!, blogId });
-    return success({ res, statuCode: 200, resDate: { data } });
+    return success({ res, statusCode: 200, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statuCode: code, resDate: { data: e.toString(), methodName: "getBlogByBlogIdAction" } }),
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getBlogByBlogIdAction" } }),
   cacheConfig: { needCache: true },
   paramsConfig: { fromQuery: ["blogId"] },
 });
@@ -96,10 +96,10 @@ const publishBlogAction = autoRequestHandler({
       typeId,
       tagId,
     });
-    success({ res, statuCode: 200, resDate: { state: "创建博客成功", data: `博客id：${blogIdStr}` } });
+    success({ res, statusCode: 200, resDate: { state: "创建博客成功", data: `博客id：${blogIdStr}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "创建博客失败", data: e.toString(), methodName: "publishBlogAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "创建博客失败", data: e.toString(), methodName: "publishBlogAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.home, apiName.type, apiName.tag] },
   paramsConfig: {
@@ -162,7 +162,7 @@ const deleteBlogByBlogIdAAction = autoRequestHandler({
     success({ res, resDate: { state: "删除博客成功", data: "删除博客成功" } });
   },
   errorHandler: ({ res, e, code = 400 }) =>
-    fail({ res, statuCode: code, resDate: { state: "删除博客失败", data: e.toString(), methodName: "deleteBlogByBlogIdAAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "删除博客失败", data: e.toString(), methodName: "deleteBlogByBlogIdAAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: {
     needDelete: [
@@ -262,7 +262,7 @@ const updateBlogByBlogIdAction = autoRequestHandler({
     success({ res, resDate: { state: "更新博客成功", data: `更新blog成功, id: ${blogId}` } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "更新博客失败", data: e.toString(), methodName: "updateBlogByBlogIdAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "更新博客失败", data: e.toString(), methodName: "updateBlogByBlogIdAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: {
     needDelete: [
@@ -291,7 +291,7 @@ const updateBlogReadAction = autoRequestHandler({
     success({ res, resDate: { data: "更新readCount成功" } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statuCode: code, resDate: { state: "更新readcount失败", data: e.toString(), methodName: "updateBlogReadAction" } }),
+    fail({ res, statusCode: code, resDate: { state: "更新readCount失败", data: e.toString(), methodName: "updateBlogReadAction" } }),
   cacheConfig: { needDelete: [apiName.home] },
   paramsConfig: { fromBody: ["blogId"] },
 });

@@ -2,7 +2,7 @@ import LoadRender from "components/LoadRender";
 import MainRightHead from "components/CardHead";
 import AnimationList from "components/AnimationList";
 import MainRightTagItem from "./mainRightTagItem";
-import { mainRightHeader } from "config/hoom";
+import { mainRightHeader } from "config/home";
 import { apiName } from "config/api";
 import { useTag } from "hook/useTag";
 import { MainRightTagType, TagProps } from "types/containers";
@@ -18,7 +18,7 @@ const MainRightTag: MainRightTagType = ({ index }) => {
       <div className="card-body">
         <LoadRender<TagProps[]>
           needUpdate
-          needinitialData
+          needInitialData
           initialData={tag}
           apiPath={apiName.tag}
           revalidateOnFocus={false}

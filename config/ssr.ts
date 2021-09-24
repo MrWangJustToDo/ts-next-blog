@@ -1,14 +1,14 @@
 import { actionName } from "config/action";
-import { setDataSucess_client } from "store/reducer/client/action";
-import { AutoDispatchTockenHandler, AutoDispatchTockenHandlerProps } from "types/config";
+import { setDataSuccess_client } from "store/reducer/client/action";
+import { AutoDispatchTokenHandler, AutoDispatchTokenHandlerProps } from "types/config";
 
-const autoDispatchTockenHandler: AutoDispatchTockenHandler = (action) => {
-  return async ({ store, req, res, ...etc }: AutoDispatchTockenHandlerProps) => {
+const autoDispatchTokenHandler: AutoDispatchTokenHandler = (action) => {
+  return async ({ store, req, res, ...etc }: AutoDispatchTokenHandlerProps) => {
     if (store.getState().client[actionName.currentToken].data !== req.session["apiToken"]) {
-      store.dispatch(setDataSucess_client({ name: actionName.currentToken, data: req.session["apiToken"] }));
+      store.dispatch(setDataSuccess_client({ name: actionName.currentToken, data: req.session["apiToken"] }));
     }
     return await action({ store, req, res, ...etc });
   };
 };
 
-export { autoDispatchTockenHandler };
+export { autoDispatchTokenHandler };
