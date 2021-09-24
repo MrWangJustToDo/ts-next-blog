@@ -1,4 +1,4 @@
-import { ActionHandlerType, JudgeActionType, JudgeActioProps, LoadingActionProps, LoadingActionType } from "types/utils";
+import { ActionHandlerType, JudgeActionType, JudgeActionProps, LoadingActionProps, LoadingActionType } from "types/utils";
 import { log } from "./log";
 
 const actionHandler: ActionHandlerType = (element, action, otherAction) => {
@@ -12,11 +12,11 @@ const actionHandler: ActionHandlerType = (element, action, otherAction) => {
 };
 
 const removeElements = (element: HTMLElement) =>
-  actionHandler<HTMLCollection, void, void>(element.parentElement?.children, (eles) =>
-    Array.from(eles).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove())
+  actionHandler<HTMLCollection, void, void>(element.parentElement?.children, (allEle) =>
+    Array.from(allEle).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove())
   );
 
-const judgeAction: JudgeActionType = async <T extends HTMLElement>({ element, judge }: JudgeActioProps<T>) => {
+const judgeAction: JudgeActionType = async <T extends HTMLElement>({ element, judge }: JudgeActionProps<T>) => {
   removeElements(element);
   const { message, className, needHandle = true } = await judge();
   if (needHandle) {

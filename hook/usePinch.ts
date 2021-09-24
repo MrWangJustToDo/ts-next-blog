@@ -30,6 +30,7 @@ const useInitRef: UseInitRefTypes = <T extends HTMLElement, K extends HTMLElemen
   useEffect(() => {
     const { current: cover } = coverRef;
     if (cover) {
+      cover.setAttribute("data-pinchCover", "true");
       cover.style.zIndex = "999999999";
       cover.style.touchAction = "none";
     }
@@ -37,6 +38,7 @@ const useInitRef: UseInitRefTypes = <T extends HTMLElement, K extends HTMLElemen
   useEffect(() => {
     const { current: pinch } = pinchRef;
     if (pinch) {
+      pinch.setAttribute("data-pinchTarget", "true");
       pinch.setAttribute("draggable", "false");
       pinch.querySelectorAll("img").forEach((img) => img.setAttribute("draggable", "false"));
     }
