@@ -184,8 +184,8 @@ const insertChildComment = async ({
   );
 };
 
-const insertAuthor = async ({ db, userId, userAliPay, userWeChat, cacheState }: AuthorProps & { db: Database }) => {
-  return await db.run("INSERT INTO author VALUES(?,?,?,?)", userId, userAliPay, userWeChat, cacheState);
+const insertAuthor = async ({ db, userId, userAlipay, userWechat, cacheState }: AuthorProps & { db: Database }) => {
+  return await db.run("INSERT INTO author VALUES(?,?,?,?)", userId, userAlipay, userWechat, cacheState);
 };
 
 export { insertBlog, insertHome, insertUserEx, insertUser, insertType, insertTag, insertChildComment, insertPrimaryComment, insertAuthor };
