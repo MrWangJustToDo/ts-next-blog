@@ -1,6 +1,6 @@
 import LoadRender from "components/LoadRender";
 import MainRightHead from "components/CardHead";
-import AnimationList from "components/AnimationList";
+import { AnimationList } from "components/AnimationList";
 import MainRightTagItem from "./mainRightTagItem";
 import { mainRightHeader } from "config/home";
 import { apiName } from "config/api";

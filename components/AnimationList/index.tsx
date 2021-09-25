@@ -10,7 +10,7 @@ class Empty extends Component {
   }
 }
 
-const AnimationItem: AnimationItemType = ({ children, showState, next, showClassName, nextIndex }) => {
+const AnimationItem: AnimationItemType = ({ children, showState, showDone, showClassName, hideClassName, hideDone }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [currentRef, currentChildren] = useMemo(() => {
@@ -29,8 +29,10 @@ const AnimationItem: AnimationItemType = ({ children, showState, next, showClass
   useShowAndHideAnimate({
     mode: "opacity",
     getElement,
-    state: showState,
-    showDone: () => next(nextIndex),
+    state: Boolean(showState),
+    showDone,
+    hideDone,
+    hideClassName: hideClassName || "lightSpeedOutLeft",
     showClassName: showClassName || "lightSpeedInLeft",
   });
 
@@ -74,13 +76,13 @@ const AnimationList: AnimationListType = ({ children, showClassName }) => {
         return newArray;
       }
     });
-  }, [children]);
+  }, [children.length]);
 
   return (
     <>
       {Children.map(children, (child, index) => {
         return child && typeof child === "object" ? (
-          <AnimationItem key={(child as any).key || index} showState={show[index]} next={showItem} nextIndex={index + 1} showClassName={showClassName}>
+          <AnimationItem key={(child as any).key || index} showState={show[index]} showDone={() => showItem(index + 1)} showClassName={showClassName}>
             {child}
           </AnimationItem>
         ) : (
@@ -91,4 +93,4 @@ const AnimationList: AnimationListType = ({ children, showClassName }) => {
   );
 };
 
-export default AnimationList;
+export { AnimationList, AnimationItem };

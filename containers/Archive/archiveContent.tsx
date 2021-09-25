@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { momentTo } from "utils/time";
 import { flexBetween, flexCenter, getClass } from "utils/dom";
-import AnimationList from "components/AnimationList";
+import { AnimationList } from "components/AnimationList";
 import { ArchiveContentType } from "types/containers";
 
 import style from "./index.module.scss";

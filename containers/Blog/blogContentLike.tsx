@@ -12,7 +12,7 @@ const BlogContentLike: BlogContentType = ({ userId, blogPriseState }) => {
       <LoadRender<AuthorProps>
         apiPath={apiName.author}
         query={{ userId: userId! }}
-        loaded={({ userAliPay, userWeChat }) => <BlogContentLikeToPayModule aliUrl={userAliPay!} wChatUrl={userWeChat!} />}
+        loaded={({ userAlipay, userWechat }) => <BlogContentLikeToPayModule aliUrl={userAlipay!} wChatUrl={userWechat!} />}
       />
     ),
   });

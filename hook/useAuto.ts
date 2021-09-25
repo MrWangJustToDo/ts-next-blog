@@ -7,6 +7,7 @@ import { createRequest } from "utils/fetcher";
 import { actionHandler } from "utils/action";
 import { useBool } from "./useData";
 import { useFailToast } from "./useToast";
+import { useUpdateProps } from "./useBase";
 import { useShowAndHideAnimate } from "./useAnimate";
 import { ApiRequestResult } from "types/utils";
 import {
@@ -31,6 +32,7 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
     delayTime,
     rightNow = false,
     getRightNowState,
+    componentName,
     currentRef,
     addListener,
     removeListener,
@@ -41,6 +43,7 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
 ) => {
   const actionStateRef = useRef<boolean>();
   actionStateRef.current = actionState;
+  useUpdateProps(componentName || "useAutoActionHandler", { action, timmer, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps });
   useEffect(() => {
     const currentRightNow = rightNow ? rightNow : typeof getRightNowState === "function" ? getRightNowState() : false;
     const currentAction = action || actionCallback;
@@ -82,7 +85,6 @@ const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
         }
       }
     } else if (addListenerCallback) {
-      log("no useCallback autoAction", "normal");
       if (!removeListenerCallback) {
         throw new Error("every addListenerCallback need a removeListenerCallback! ---> useAutoActionHandler");
       } else {

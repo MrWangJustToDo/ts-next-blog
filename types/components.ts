@@ -35,7 +35,14 @@ interface AnimationListType {
   (props: { children: ReactChild[]; showClassName?: string; delay?: number }): JSX.Element;
 }
 interface AnimationItemType {
-  (props: { children: ReactChild; nextIndex: number; showState: boolean; showClassName?: string; next: (index: number) => void }): JSX.Element;
+  (props: {
+    children: ReactChild;
+    showState?: boolean;
+    showDone?: () => void | Promise<void>;
+    showClassName?: string;
+    hideClassName?: string;
+    hideDone?: () => void | Promise<void>;
+  }): JSX.Element;
 }
 
 export type { AnimationListType, AnimationItemType };

@@ -95,4 +95,4 @@ const useOverlayBody: UseOverlayBodyType = ({ body, closeHandler }) => {
   return bodyContent;
 };
 
-export { OverlayOpenContext, useOverlayProps, useOverlayOpen, useBodyLock, useModalEffect, useOverlayBody };
+export { OverlayOpenContext, useOverlayProps, useOverlayOpen, useBodyLock, useModalEffect, useOverlayBody, usePrevious };

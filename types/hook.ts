@@ -119,6 +119,7 @@ interface UseAutoActionHandlerProps<T, K> {
   delayTime?: number; // 定时器执行时间间隔
   rightNow?: boolean; // 立即执行，for listener
   getRightNowState?: () => boolean;
+  componentName?: string;
   currentRef?: RefObject<K>;
   addListener?: (action: (e?: T) => void, ele?: K) => void; // 添加事件监听
   removeListener?: (action: (e?: T) => void, ele?: K) => void; // 移除事件监听
@@ -235,8 +236,8 @@ interface UseInputToImageModuleType {
 }
 interface AuthorProps {
   userId?: string;
-  userAliPay?: string;
-  userWeChat?: string;
+  userAlipay?: string;
+  userWechat?: string;
   cacheState?: number;
 }
 

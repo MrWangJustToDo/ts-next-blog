@@ -7,7 +7,7 @@ const loadImg: LoadImgType = ({ imgUrl, strUrl, imgElement, state = true }) => {
   if (state) {
     return new Promise<HTMLImageElement>((resolve) => {
       imgElement.setAttribute("src", transformPath({ apiPath: imgUrl, query: { time: String(Date.now()) } }));
-      imgElement.addEventListener("load", () => resolve(imgElement));
+      imgElement.addEventListener("load", () => resolve(imgElement), { once: true });
     }).then((imgEle) =>
       createRequest({ apiPath: strUrl, cache: false })
         .run<ApiRequestResult<string>>()
@@ -19,4 +19,9 @@ const loadImg: LoadImgType = ({ imgUrl, strUrl, imgElement, state = true }) => {
   }
 };
 
-export { loadImg };
+const clearImg = (imgElement: HTMLImageElement) => {
+  imgElement.removeAttribute("src");
+  imgElement.removeAttribute("title");
+};
+
+export { loadImg, clearImg };

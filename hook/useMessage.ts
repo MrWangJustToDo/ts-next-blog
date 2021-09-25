@@ -76,7 +76,7 @@ const usePutToCheckCodeModule: UsePutToCheckCodeModuleType = ({ blogId, body, cl
   submitRef.current = canSubmit;
 
   useAutoActionHandler<Event, void>({
-    action: (e) => {
+    actionCallback: (e) => {
       e?.preventDefault();
       actionHandler<HTMLFormElement, void, void>(formRef.current, (ele) => {
         if (submitRef.current) {
@@ -132,7 +132,7 @@ const useCheckCodeModuleToSubmit: UseCheckCodeModuleToSubmitType = ({ blogId, re
 
   useAutoActionHandler<Event, void>(
     {
-      action: (e) => {
+      actionCallback: (e) => {
         e?.preventDefault();
         if (stateRef.current.loading) {
           return pushFail("加载中");
@@ -295,7 +295,7 @@ const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryM
 
   useAutoActionHandler<Event, void>(
     {
-      action: (e) => {
+      actionCallback: (e) => {
         e?.preventDefault();
         if (loadingRef.current) {
           return pushFail("加载中");
