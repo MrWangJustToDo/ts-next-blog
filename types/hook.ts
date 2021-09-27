@@ -78,6 +78,7 @@ type animateCallback = () => void | Promise<void>;
 interface UseShowAndHideAnimateProps<T> {
   mode?: "display" | "opacity";
   state: boolean;
+  faster?: boolean;
   getElement?: () => T | null;
   forWardRef?: RefObject<T>;
   showClassName?: string;
@@ -91,7 +92,7 @@ interface UseShowAndHideAnimateReturn<T> {
   animateRef: RefObject<T>;
 }
 interface UseShowAndHideAnimateType {
-  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>): UseShowAndHideAnimateReturn<T>;
+  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>, ...deps: any[]): UseShowAndHideAnimateReturn<T>;
 }
 
 export type { UseShowAndHideAnimateProps, UseShowAndHideAnimateType, animateCallback };

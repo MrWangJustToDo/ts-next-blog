@@ -136,7 +136,9 @@ interface GetItem<T> {
 interface AnimateCSSProps {
   element: HTMLElement;
   prefix?: string;
-  animation: string;
+  from: string;
+  to: string;
+  faster?: boolean;
 }
 interface AnimateCSSType {
   (props: AnimateCSSProps): Promise<void>;

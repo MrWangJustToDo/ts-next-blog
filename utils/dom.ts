@@ -46,13 +46,15 @@ const flexAround: GetItem<string> = () => "d-flex justify-content-around align-i
 const flexBottom: GetItem<string> = () => "d-flex justify-content-center align-items-end";
 
 // 动画
-const animateCSS: AnimateCSSType = ({ element, animation, prefix = "animate__" }) => {
+const animateCSS: AnimateCSSType = ({ element, from, to, prefix = "animate__", faster = true }) => {
   return new Promise((resolve) => {
-    const classNames = [`${prefix}animated`, `${prefix}faster`, `${prefix}${animation}`];
-    handleCssAction({ element, classNames, type: "add" });
+    const classNames = [`${prefix}animated`, `${prefix}faster`, `${prefix}${from}`, `${prefix}${to}`];
+    handleCssAction({ element, classNames, type: "remove" });
+    const toClassNames = [`${prefix}animated`, faster ? `${prefix}faster` : "", `${prefix}${to}`].filter(Boolean);
+    handleCssAction({ element, classNames: toClassNames, type: "add" });
     function handleAnimationEnd(event: Event) {
       event.stopPropagation();
-      handleCssAction({ element, classNames, type: "remove" });
+      handleCssAction({ element, classNames: toClassNames, type: "remove" });
       resolve();
     }
     element.addEventListener("animationend", handleAnimationEnd, { once: true });
@@ -81,7 +83,7 @@ const applyRootStyles = (rootId: string) => {
     root.style.filter = "blur(0.8px)";
 
     // Add highLighted overlay to emphasize the modality effect
-    
+
     const highlight = document.createElement("div");
     highlight.setAttribute("aria-hidden", "true");
     highlight.id = bgId;

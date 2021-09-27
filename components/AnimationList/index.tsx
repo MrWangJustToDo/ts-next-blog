@@ -10,7 +10,7 @@ class Empty extends Component {
   }
 }
 
-const AnimationItem: AnimationItemType = ({ children, showState, showDone, showClassName, hideClassName, hideDone }) => {
+const AnimationItem: AnimationItemType = ({ children, showState, showDone, showClassName, hideClassName, hideDone, faster }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [currentRef, currentChildren] = useMemo(() => {
@@ -22,14 +22,15 @@ const AnimationItem: AnimationItemType = ({ children, showState, showDone, showC
   useEffect(() => {
     const ele = getElement();
     if (ele) {
-      (ele as HTMLElement).style.opacity = "0";
+      ele.style.opacity = "0";
     }
   }, [getElement]);
 
   useShowAndHideAnimate({
     mode: "opacity",
-    getElement,
     state: Boolean(showState),
+    faster,
+    getElement,
     showDone,
     hideDone,
     hideClassName: hideClassName || "lightSpeedOutLeft",

@@ -5,18 +5,22 @@ import { animateCSS } from "utils/dom";
 import { actionHandler } from "utils/action";
 import { UseShowAndHideAnimateProps, UseShowAndHideAnimateType } from "types/hook";
 
-const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>({
-  state,
-  forWardRef,
-  getElement,
-  mode = "display",
-  showClassName = "fadeIn",
-  hideClassName = "fadeOut",
-  startHide,
-  startShow,
-  hideDone,
-  showDone,
-}: UseShowAndHideAnimateProps<T>) => {
+const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>(
+  {
+    state,
+    forWardRef,
+    getElement,
+    faster = true,
+    mode = "display",
+    showClassName = "fadeIn",
+    hideClassName = "fadeOut",
+    startHide,
+    startShow,
+    hideDone,
+    showDone,
+  }: UseShowAndHideAnimateProps<T>,
+  ...deps: any[]
+) => {
   const ref = useRef<T>(null);
   const currentRef = forWardRef ? forWardRef : ref;
   const callbackRef = useRef({ startHide, startShow, hideDone, showDone });
@@ -32,9 +36,6 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
     } else if (getElement) {
       element = getElement();
     }
-    actionHandler<T, void, void>(element, (ele) => {
-      ele.classList.remove("animate__animated", `animate__${showClassName}`, `animate__${hideClassName}`);
-    });
     let needCancel = false;
     const startHideCallback = callbackRef.current.startHide;
     const hideDoneCallback = callbackRef.current.hideDone;
@@ -47,7 +48,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
           delay<void>(0, () =>
             actionHandler<T, void | Promise<void>, Promise<void>>(element, (ele) => {
               if ((mode === "display" && ele.style.display !== "none") || (mode === "opacity" && ele.style.opacity !== "0")) {
-                return animateCSS({ element: ele, animation: hideClassName }).then(() => {
+                return animateCSS({ element: ele, from: showClassName, to: hideClassName, faster }).then(() => {
                   if (!needCancel) {
                     if (mode === "display") {
                       ele.style.display = "none";
@@ -83,14 +84,14 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
             })
           )
         )
-        .then(() => actionHandler<T, Promise<void>, Promise<void>>(element, (ele) => animateCSS({ element: ele, animation: showClassName })))
+        .then(() => actionHandler<T, Promise<void>, Promise<void>>(element, (ele) => animateCSS({ element: ele, from: hideClassName, to: showClassName, faster })))
         .then(() => delay(0, () => showDoneCallback && showDoneCallback()));
     }
 
     return () => {
       needCancel = true;
     };
-  }, [state]);
+  }, [state, getElement, faster, ...deps]);
   return { animateRef: currentRef };
 };
 

@@ -36,6 +36,7 @@ interface AnimationListType {
 }
 interface AnimationItemType {
   (props: {
+    faster?: boolean;
     children: ReactChild;
     showState?: boolean;
     showDone?: () => void | Promise<void>;
