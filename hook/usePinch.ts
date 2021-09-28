@@ -57,11 +57,11 @@ const useMatrix: UseMatrixType = () => {
 
 const useWheel: UseWheelType = ({ action, ref }) => {
   const addListener = useCallback<(action: (e?: WheelEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void, void>(ref.current, (ele) => ele.addEventListener("wheel", action));
+    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("wheel", action));
   }, []);
 
   const removeListener = useCallback<(action: (e?: WheelEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void, void>(ref.current, (ele) => ele.removeEventListener("wheel", action));
+    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("wheel", action));
   }, []);
 
   useAutoActionHandler<WheelEvent, HTMLElement>({
@@ -110,19 +110,19 @@ const useTouch: UseTouchTypes = ({ ref, action, scaleRef }) => {
   }, []);
 
   const addTouchStartListener = useCallback<(action: (e?: TouchEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void, void>(ref.current, (ele) => ele.addEventListener("touchstart", action));
+    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("touchstart", action));
   }, []);
 
   const addTouchEndListener = useCallback<(action: (e?: TouchEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void, void>(ref.current, (ele) => ele.addEventListener("touchend", action));
+    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("touchend", action));
   }, []);
 
   const removeTouchStartListener = useCallback<(action: (e?: TouchEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void, void>(ref.current, (ele) => ele.removeEventListener("touchstart", action));
+    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("touchstart", action));
   }, []);
 
   const removeTouchEndListener = useCallback<(action: (e?: TouchEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void, void>(ref.current, (ele) => ele.removeEventListener("touchend", action));
+    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("touchend", action));
   }, []);
 
   useAutoActionHandler({

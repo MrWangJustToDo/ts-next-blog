@@ -57,8 +57,8 @@ const useAutoScrollTop: UseAutoScrollType = <T extends HTMLElement>() => {
         top: 0,
         behavior: "smooth",
       }),
-    addListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-    removeListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
+    addListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+    removeListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
   });
   return ref;
 };
@@ -71,8 +71,8 @@ const useAutoScrollBottom: UseAutoScrollType = <T extends HTMLElement>() => {
         top: document.body.offsetHeight - 1000,
         behavior: "smooth",
       }),
-    addListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-    removeListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
+    addListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+    removeListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
   });
   return ref;
 };
@@ -80,7 +80,7 @@ const useAutoScrollBottom: UseAutoScrollType = <T extends HTMLElement>() => {
 const useLinkToImg: UseLinkToImgType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
   useEffect(() => {
-    actionHandler<T, void, void>(ref.current, (ele) => toCanvas(ele, location.href));
+    actionHandler<T, void>(ref.current, (ele) => toCanvas(ele, location.href));
   }, []);
   return ref;
 };
@@ -142,7 +142,7 @@ const useEditor: UseEditorType = (id) => {
       cancel("initEditor");
       cancel("initObserve");
       observer.disconnect();
-      actionHandler<HTMLTextAreaElement, void, void>(document.querySelector(mdId) as HTMLTextAreaElement, (ele) =>
+      actionHandler<HTMLTextAreaElement, void>(document.querySelector(mdId) as HTMLTextAreaElement, (ele) =>
         ele.removeEventListener("keydown", keydownHandler)
       );
     };

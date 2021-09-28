@@ -46,7 +46,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
       Promise.resolve(startHideCallback && startHideCallback())
         .then(() =>
           delay<void>(0, () =>
-            actionHandler<T, void | Promise<void>, Promise<void>>(element, (ele) => {
+            actionHandler<T, void | Promise<void>>(element, (ele) => {
               if ((mode === "display" && ele.style.display !== "none") || (mode === "opacity" && ele.style.opacity !== "0")) {
                 return animateCSS({ element: ele, from: showClassName, to: hideClassName, faster }).then(() => {
                   if (!needCancel) {
@@ -70,7 +70,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
       Promise.resolve(startShowCallback && startShowCallback())
         .then(() =>
           delay<void>(0, () =>
-            actionHandler<T, void, void>(element, (ele) => {
+            actionHandler<T, void>(element, (ele) => {
               ele.dataset.show = "true";
               if (mode === "display") {
                 if (ele.style.display === "none") {
@@ -84,7 +84,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
             })
           )
         )
-        .then(() => actionHandler<T, Promise<void>, Promise<void>>(element, (ele) => animateCSS({ element: ele, from: hideClassName, to: showClassName, faster })))
+        .then(() => actionHandler<T, Promise<void>>(element, (ele) => animateCSS({ element: ele, from: hideClassName, to: showClassName, faster })))
         .then(() => delay(0, () => showDoneCallback && showDoneCallback()));
     }
 

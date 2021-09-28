@@ -1,18 +1,20 @@
-import { ActionHandlerType, JudgeActionType, JudgeActionProps, LoadingActionProps, LoadingActionType } from "types/utils";
+import { JudgeActionType, JudgeActionProps, LoadingActionProps, LoadingActionType } from "types/utils";
 import { log } from "./log";
 
-const actionHandler: ActionHandlerType = (element, action, otherAction) => {
-  if (element) {
-    return action(element);
+function actionHandler<T, K>(state: T | void | null | undefined, action: (props: T) => K): K | Promise<void>;
+function actionHandler<T, K, V>(state: T | void | null | undefined, action: (props: T) => K, otherAction: () => V): K | V;
+function actionHandler<T, K, V>(state: T | void | null | undefined, action: (props: T) => K, otherAction?: () => V) {
+  if (state) {
+    return action(state);
   } else if (otherAction) {
     return otherAction();
   } else {
     return Promise.resolve();
   }
-};
+}
 
 const removeElements = (element: HTMLElement) =>
-  actionHandler<HTMLCollection, void, void>(element.parentElement?.children, (allEle) =>
+  actionHandler<HTMLCollection, void>(element.parentElement?.children, (allEle) =>
     Array.from(allEle).forEach((ele) => ele.localName === "span" && ele.hasAttribute("toast") && ele.remove())
   );
 

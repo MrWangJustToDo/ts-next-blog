@@ -23,10 +23,6 @@ interface KeyMap {
 export type { Cancel, Delay, TimeoutMap, ResolveMap, KeyMap };
 
 /* action */
-interface ActionHandlerType {
-  <T, K, V>(state: T | void | null | undefined, action: (props: T) => K, otherAction?: () => V): K | V | Promise<void>;
-}
-
 interface JudgeActionProps<T> {
   element: T;
   judge: () => Promise<{ className: string; message: string; needHandle?: boolean }>;
@@ -45,7 +41,7 @@ interface LoadingActionType {
   <T extends HTMLElement>(props: LoadingActionProps<T>): void;
 }
 
-export type { ActionHandlerType, JudgeActionProps, JudgeActionType, LoadingActionProps, LoadingActionType };
+export type { JudgeActionProps, JudgeActionType, LoadingActionProps, LoadingActionType };
 
 /* request */
 interface PendingType {

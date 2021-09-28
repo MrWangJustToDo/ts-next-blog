@@ -14,7 +14,7 @@ const LoginCheckCode: LoginCheckCodeType = ({ show }) => {
   const imgRef = useAutoLoadCheckCodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr, state: show });
 
   return (
-    <AnimationItem showState={show} hideDone={() => actionHandler<HTMLImageElement, void, void>(imgRef.current, (ele) => clearImg(ele))}>
+    <AnimationItem showState={show} hideDone={() => actionHandler<HTMLImageElement, void>(imgRef.current, (ele) => clearImg(ele))}>
       <div
         ref={ref}
         className={getClass("form-group row align-items-center overflow-hidden", style.checkCode)}

@@ -20,9 +20,7 @@ const PublishImageModule: PublishImageModuleType = ({ closeHandler, initialUrl, 
   useShowAndHideAnimate<HTMLImageElement>({ state: bool, forWardRef: ref });
 
   const clickCallback = useCallback(() => {
-    actionHandler<HTMLInputElement, void, void>(inputRef.current, (input) =>
-      actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => (input.value = ele.src))
-    );
+    actionHandler<HTMLInputElement, void>(inputRef.current, (input) => actionHandler<HTMLImageElement, void>(ref.current, (ele) => (input.value = ele.src)));
     closeHandler();
   }, [closeHandler]);
 
@@ -34,15 +32,7 @@ const PublishImageModule: PublishImageModuleType = ({ closeHandler, initialUrl, 
         <div className={getClass("position-relative", style.imgContainer)}>
           <Loading className={getClass("position-absolute", style.imgLoading)} _style={{ display: bool ? "none" : "block" }} />
           <div ref={divRef} className={getClass("w-100 position-absolute", style.imgItem)}>
-            <img
-              className='border rounded'
-              draggable="false"
-              ref={ref}
-              title="点击切换"
-              alt="图片信息"
-              width="100%"
-              style={{ display: "none" }}
-            />
+            <img className="border rounded" draggable="false" ref={ref} title="点击切换" alt="图片信息" width="100%" style={{ display: "none" }} />
           </div>
         </div>
       </div>

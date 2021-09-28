@@ -115,7 +115,7 @@ const useAutoSetHeaderHeight: UseAutoSetHeaderHeightType = <T extends HTMLElemen
   const setHeightCallback = useCallback<() => void>(
     debounce(
       () =>
-        actionHandler<T, void, void>(ref.current, (ele) => {
+        actionHandler<T, void>(ref.current, (ele) => {
           if (document.body.offsetWidth < breakPoint) {
             setBool(false);
             ele.style.height = "auto";
@@ -144,7 +144,7 @@ const useAutoLoadCheckCodeImg: UseAutoLoadCheckCodeImgType = <T extends HTMLImag
   const ref = useRef<T>(null);
   const loadActionCallback = useCallback<() => void>(
     debounce(
-      () => actionHandler<T, void, void>(ref.current, (ele) => loadImg({ imgUrl, strUrl, imgElement: ele, state })),
+      () => actionHandler<T, void>(ref.current, (ele) => loadImg({ imgUrl, strUrl, imgElement: ele, state })),
       400,
       { leading: true } // 立即执行一次
     ),
@@ -154,8 +154,8 @@ const useAutoLoadCheckCodeImg: UseAutoLoadCheckCodeImgType = <T extends HTMLImag
     {
       rightNow: true,
       action: loadActionCallback,
-      addListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-      removeListenerCallback: (action) => actionHandler<T, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
+      addListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+      removeListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
     },
     state
   );
@@ -192,7 +192,7 @@ const useAutoSetHeight: UseAutoSetHeightType = <T extends HTMLElement>(props: Us
   const setHeightCallback = useCallback<() => void>(
     debounce(
       () =>
-        actionHandler<T, void, void>(currentRef.current, (ele) => {
+        actionHandler<T, void>(currentRef.current, (ele) => {
           const lastHeight = ele.offsetHeight;
           ele.style.height = "auto";
           const allHeight = ele.offsetHeight;
@@ -248,8 +248,8 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
         const getUniqueImg = (): Promise<string> => getImgUrl().then((newUrl) => (newUrl === url ? getUniqueImg() : newUrl));
         // 保证前后两次加载的图片路径不一致
         getUniqueImg()
-          .then((url) => (actionHandler<HTMLImageElement, string, void>(ref.current, (ele) => (ele.src = "")), url))
-          .then((url) => actionHandler<HTMLImageElement, string, void>(ref.current, (ele) => (ele.src = url!)))
+          .then((url) => (actionHandler<HTMLImageElement, string>(ref.current, (ele) => (ele.src = "")), url))
+          .then((url) => actionHandler<HTMLImageElement, void>(ref.current, (ele) => (ele.src = url!)))
           .catch((e) => fail(`获取失败: ${e.toString()}`));
       },
       800,
@@ -260,7 +260,7 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
 
   useEffect(() => {
     if (initUrl) {
-      actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => (ele.src = initUrl));
+      actionHandler<HTMLImageElement, void>(ref.current, (ele) => (ele.src = initUrl));
     }
   }, [initUrl]);
 
@@ -268,7 +268,7 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
     if (getInitUrl) {
       const res = getInitUrl();
       if (res) {
-        actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => (ele.src = res));
+        actionHandler<HTMLImageElement, void>(ref.current, (ele) => (ele.src = res));
       }
     }
   }, [getInitUrl]);
@@ -281,15 +281,15 @@ const useAutoLoadRandomImg: UseAutoLoadRandomImgType = ({ imgUrl, initUrl, getIn
   }, []);
 
   useEffect(() => {
-    actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.addEventListener("load", show));
-    () => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.removeEventListener("load", show));
+    actionHandler<HTMLImageElement, void>(ref.current, (ele) => ele.addEventListener("load", show));
+    () => actionHandler<HTMLImageElement, void>(ref.current, (ele) => ele.removeEventListener("load", show));
   }, []);
 
   useAutoActionHandler({
     action: loadSrc,
     getRightNowState,
-    addListenerCallback: (action) => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-    removeListenerCallback: (action) => actionHandler<HTMLImageElement, void, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
+    addListenerCallback: (action) => actionHandler<HTMLImageElement, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+    removeListenerCallback: (action) => actionHandler<HTMLImageElement, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
   });
 
   return [ref, bool];

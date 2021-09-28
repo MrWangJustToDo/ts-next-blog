@@ -82,7 +82,7 @@ const useLogin: UseLoginType = () => {
   useAutoActionHandler<Event, void>({
     actionCallback: (e) => {
       e?.preventDefault();
-      actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
+      actionHandler<HTMLFormElement, Promise<void>>(ref.current, (ele) => {
         return createRequest({ method: "post", data: formSerialize(ele), cache: false, apiPath: apiName.login, encode: true })
           .run<ApiRequestResult<UserProps>>()
           .then(({ code, data }) => {
@@ -97,8 +97,8 @@ const useLogin: UseLoginType = () => {
           .catch((e) => failToast(`出现错误：${e.toString()}`));
       });
     },
-    addListenerCallback: (action) => actionHandler<HTMLFormElement, void, void>(ref.current, (ele) => ele.addEventListener("submit", action)),
-    removeListenerCallback: (action) => actionHandler<HTMLFormElement, void, void>(ref.current, (ele) => ele.removeEventListener("submit", action)),
+    addListenerCallback: (action) => actionHandler<HTMLFormElement, void>(ref.current, (ele) => ele.addEventListener("submit", action)),
+    removeListenerCallback: (action) => actionHandler<HTMLFormElement, void>(ref.current, (ele) => ele.removeEventListener("submit", action)),
   });
   return ref;
 };

@@ -32,7 +32,7 @@ const useSearch: UseSearchType = () => {
   const ref = useRef<HTMLFormElement>(null);
   const search = useCallback(
     () =>
-      actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(ref.current, (ele) => {
+      actionHandler<HTMLFormElement, Promise<void>>(ref.current, (ele) => {
         if (userId !== undefined) {
           dispatch(setDataLoading_client({ name: actionName.currentResult }));
           return createRequest({ method: "post", header: { apiToken: true }, cache: false, data: { ...formSerialize(ele), userId }, apiPath: apiName.search })
@@ -104,8 +104,8 @@ const useAddRequest: UseAddRequestType = ({ request, successCallback }) => {
         );
       }
     },
-    addListenerCallback: (action) => actionHandler<HTMLFormElement, void, void>(ref.current, (ele) => ele.addEventListener("submit", action)),
-    removeListenerCallback: (action) => actionHandler<HTMLFormElement, void, void>(ref.current, (ele) => ele.removeEventListener("submit", action)),
+    addListenerCallback: (action) => actionHandler<HTMLFormElement, void>(ref.current, (ele) => ele.addEventListener("submit", action)),
+    removeListenerCallback: (action) => actionHandler<HTMLFormElement, void>(ref.current, (ele) => ele.removeEventListener("submit", action)),
   });
   return [ref, bool];
 };
@@ -122,49 +122,56 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
       const currentNeedHandle = handleRef.current;
       judgeAction<HTMLInputElement>({
         element: currentRef.current!,
-        judge: () => <Promise<{ className: string; message: string; state: boolean }>>actionHandler<
-            boolean,
+        judge: () =>
+          actionHandler<
+            HTMLInputElement,
             Promise<{ className: string; message: string; state: boolean }>,
             Promise<{ className: string; message: string; state: boolean }>
           >(
-            option.regexp.test(currentRef.current!.value),
-            () =>
-              <Promise<{ className: string; message: string; state: boolean }>>(
-                actionHandler<
-                  apiName,
-                  Promise<{ className: string; message: string; state: boolean }>,
-                  Promise<{ className: string; message: string; state: boolean }>
-                >(
-                  judgeApiName,
-                  (apiName) =>
-                    createRequest({ apiPath: apiName, method: "post", data: { [currentRef.current!.name]: currentRef.current!.value }, cache: false })
-                      .run<ApiRequestResult<string>>()
-                      .then(({ code, data }) => {
-                        if (code === 0) {
-                          return { className: successClassName, message: option.success, state: true };
-                        } else {
-                          return { className: failClassName, message: data.toString(), state: false };
-                        }
-                      })
-                      .catch((e) => {
-                        return { className: failClassName, message: e.toString(), state: false };
-                      }),
-                  () => Promise.resolve({ className: successClassName, message: option.success, state: true })
-                )
-              ),
+            currentRef.current,
+            (ele) => <Promise<{ className: string; message: string; state: boolean }>>actionHandler<
+                boolean,
+                Promise<{ className: string; message: string; state: boolean }>,
+                Promise<{ className: string; message: string; state: boolean }>
+              >(
+                option.regexp.test(ele.value),
+                () =>
+                  actionHandler<
+                    apiName,
+                    Promise<{ className: string; message: string; state: boolean }>,
+                    Promise<{ className: string; message: string; state: boolean }>
+                  >(
+                    judgeApiName,
+                    (apiName) =>
+                      createRequest({ apiPath: apiName, method: "post", data: { [ele.name]: ele.value }, cache: false })
+                        .run<ApiRequestResult<string>>()
+                        .then(({ code, data }) => {
+                          if (code === 0) {
+                            return { className: successClassName, message: option.success, state: true };
+                          } else {
+                            return { className: failClassName, message: data.toString(), state: false };
+                          }
+                        })
+                        .catch((e) => {
+                          return { className: failClassName, message: e.toString(), state: false };
+                        }),
+                    () => Promise.resolve({ className: successClassName, message: option.success, state: true })
+                  ),
+                () => Promise.resolve({ className: failClassName, message: option.fail, state: false })
+              ).then((data) => {
+                if (data && currentNeedHandle.needHandle.state) {
+                  const { state } = data;
+                  if (state) {
+                    setState(true);
+                  } else {
+                    setState(false);
+                  }
+                  setLoading(false);
+                }
+                return data;
+              }),
             () => Promise.resolve({ className: failClassName, message: option.fail, state: false })
-          ).then((data) => {
-            if (data && currentNeedHandle.needHandle) {
-              const { state } = data;
-              if (state) {
-                setState(true);
-              } else {
-                setState(false);
-              }
-              setLoading(false);
-            }
-            return data;
-          }),
+          ),
       });
     }, 800),
     [option, judgeApiName]
@@ -183,10 +190,9 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
     // 重新开始状态
     handleRef.current = { needHandle: { state: true } };
   }, []);
-  const addListenerCallback = (action: () => void) =>
-    actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.addEventListener("input", action));
+  const addListenerCallback = (action: () => void) => actionHandler<HTMLInputElement, void>(currentRef.current, (ele) => ele.addEventListener("input", action));
   const removeListenerCallback = (action: () => void) =>
-    actionHandler<HTMLInputElement, void, void>(currentRef.current, (ele) => ele.removeEventListener("input", action));
+    actionHandler<HTMLInputElement, void>(currentRef.current, (ele) => ele.removeEventListener("input", action));
   useAutoActionHandler({ action: start, addListenerCallback: addListenerCallback, removeListenerCallback: removeListenerCallback });
   useAutoActionHandler({ action: judge, addListenerCallback: addListenerCallback, removeListenerCallback: removeListenerCallback });
   return [currentRef, state, loading];
