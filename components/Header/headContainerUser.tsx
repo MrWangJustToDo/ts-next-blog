@@ -34,7 +34,7 @@ const HeadContainerUser = () => {
         <img className="rounded-circle" src={getCurrentAvatar(avatar, gender)} alt="头像" height="30" width="30" />
         <span className={getClass("mx-2 text-info", style.username)}>{username}</span>
       </div>
-      <div ref={ref} className={getClass("w-100 position-absolute", style.dropPanel)} style={{ display: "none" }}>
+      <div ref={ref} className={getClass("w-100 position-absolute", style.dropPanel)}>
         <div className={getClass("position-absolute", style.hoverTriangle)} />
         <div className={getClass("position-absolute d-flex", style.controlPanel)}>
           <Link href="/publish">

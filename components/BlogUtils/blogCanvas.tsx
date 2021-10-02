@@ -23,7 +23,7 @@ const BlogCanvas: SimpleElement = () => {
       <button type="button" className="btn btn-secondary" onClick={switchBoolDebounce}>
         <i className="ri-smartphone-line" />
       </button>
-      <canvas ref={canvasRef} className={getClass("position-absolute border rounded", style.canvasContent)} style={{ display: "none" }} />
+      <canvas ref={canvasRef} className={getClass("position-absolute border rounded", style.canvasContent)} />
     </>
   );
 };

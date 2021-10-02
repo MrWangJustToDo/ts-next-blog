@@ -19,13 +19,6 @@ const AnimationItem: AnimationItemType = ({ children, showState, showDone, showC
 
   const getElement = useCallback(() => findDOMNode(currentRef.current) as HTMLElement, []);
 
-  useEffect(() => {
-    const ele = getElement();
-    if (ele) {
-      ele.style.opacity = "0";
-    }
-  }, [getElement]);
-
   useShowAndHideAnimate({
     mode: "opacity",
     state: Boolean(showState),

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
 import { State } from "store";
@@ -9,6 +9,7 @@ import { log } from "utils/log";
 import { cancel, delay } from "utils/delay";
 import { autoTransformData } from "utils/data";
 import { autoStringify, createRequest } from "utils/fetcher";
+import { useUpdateProps } from "hook/useBase";
 import { useCurrentState } from "hook/useBase";
 import { getDataSuccess_Server } from "store/reducer/server/action";
 import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType, RenderProps, RenderType, UseLoadingType } from "types/components";
@@ -58,10 +59,24 @@ const Render: RenderType = <T>({
   needUpdate,
   apiPath,
 }: RenderProps<T>) => {
-  const loadingEle = useLoading({ loading, placeholder, delayTime, cancelKey: currentRequest.cacheKey });
+  useUpdateProps("Render", {
+    currentRequest,
+    currentInitialData,
+    loading,
+    loadError,
+    delayTime,
+    revalidateOnMount,
+    revalidateOnFocus,
+    placeholder,
+    needUpdate,
+    apiPath,
+  });
+
+  const cancelKey = currentRequest.cacheKey + "-LoadRender";
+  const loadingEle = useLoading({ loading, placeholder, delayTime, cancelKey });
 
   // only need key
-  const { data, error } = useSWR<T>(currentRequest.cacheKey, currentRequest.run, {
+  const { data, error } = useSWR<T>([currentRequest.cacheKey, currentRequest], currentRequest.run, {
     initialData: currentInitialData,
     revalidateOnMount,
     revalidateOnFocus,
@@ -75,7 +90,7 @@ const Render: RenderType = <T>({
 
   if (currentInitialData || currentData) {
     // make page not flash if data loaded
-    cancel(currentRequest.cacheKey);
+    cancel(cancelKey);
 
     return loaded(currentData ? currentData : currentInitialData, currentRequest);
   }
@@ -125,6 +140,7 @@ const LoadRender: LoadRenderType = <T>({
   );
 
   const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needInitialData });
+  const ref = useRef(currentInitialData)
 
   return Render<T>({
     loadError,
@@ -137,7 +153,7 @@ const LoadRender: LoadRenderType = <T>({
     revalidateOnFocus,
     revalidateOnMount,
     currentRequest,
-    currentInitialData,
+    currentInitialData: ref.current,
   });
 };
 

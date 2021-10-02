@@ -1,13 +1,11 @@
 import { apiName } from "config/api";
 import Button from "components/Button";
 import { flexCenter, getClass } from "utils/dom";
-// import { useWhyDidYouUpdate } from "hook/useBase";
 import { useAutoLoadCheckCodeImg } from "hook/useAuto";
 import { useCheckCodeModuleToSubmit } from "hook/useMessage";
 import { BlogContentCheckCodeModuleWithImageType, BlogContentCheckCodeModuleType } from "types/containers";
 
 const BlogContentCheckCodeModuleWithImag: BlogContentCheckCodeModuleWithImageType = ({ blogId, request, closeHandler, imgRef, requestCallback }) => {
-  // useWhyDidYouUpdate("BlogContentCheckCodeModuleWithImag", { blogId, request, closeHandler, imgRef, requestCallback });
   const { formRef, inputRef, loading, canSubmit } = useCheckCodeModuleToSubmit({ request, closeHandler, requestCallback, blogId });
 
   return (

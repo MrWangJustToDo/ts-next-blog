@@ -6,8 +6,34 @@ const maxTimeStore = 1000 * 60 * 10;
 
 const isBrowser = typeof window !== "undefined";
 
+class CacheData<T> {
+  id: NodeJS.Timeout | undefined;
+  time: number;
+  constructor(readonly data: T, time: number) {
+    this.time = time;
+    if(isBrowser){
+      this.init();
+    }
+  }
+
+  init() {
+    this.id = setInterval(() => {
+      if (this.time > 0) {
+        this.time -= 1000;
+      } else {
+        this.id !== undefined && clearInterval(this.id);
+        this.id = undefined;
+      }
+    }, 1000);
+  }
+
+  get value() {
+    return this.data;
+  }
+}
+
 class Cache<T, K> {
-  constructor(readonly maxTime: number = maxTimeStore, readonly store: Map<T, K> = new Map()) {
+  constructor(readonly maxTime: number = maxTimeStore, readonly store: Map<T, CacheData<K>> = new Map()) {
     if (!store.has || !store.set || !store.delete || !store.get) {
       throw new Error(`store must is a Map or List. store: ${store}`);
     }
@@ -28,7 +54,7 @@ class Cache<T, K> {
         cancel(key);
       }
     }
-    this.store.set(key, value);
+    this.store.set(key, new CacheData<K>(value, time));
     this.delete(key, time);
   };
 
@@ -49,7 +75,7 @@ class Cache<T, K> {
 
   get = (key: T) => {
     if (this.store.has(key)) {
-      return this.store.get(key);
+      return this.store.get(key)?.value;
     } else {
       log(`not cache yet, nothing to return. key: ${key}${isBrowser ? ", fetch from server" : ""}`, "warn");
       return false;

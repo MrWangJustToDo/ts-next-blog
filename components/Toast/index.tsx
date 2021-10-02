@@ -26,7 +26,7 @@ const Toast: ToastType = ({ title, currentTime, contentState, content, showState
   });
 
   return (
-    <div ref={ref} className={getClass("toast user-select-none", style.toast)} style={{ display: "none" }}>
+    <div ref={ref} className={getClass("toast user-select-none", style.toast)}>
       <div className={getClass("toast-header p-md-2", flexBetween)}>
         <div className={getClass("text-info", flexCenter)}>
           <i className="ri-chat-1-fill mr-1" />

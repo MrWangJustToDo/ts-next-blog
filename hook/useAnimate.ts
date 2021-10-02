@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { log } from "utils/log";
 import { delay } from "utils/delay";
 import { animateCSS } from "utils/dom";
@@ -28,6 +28,26 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
   callbackRef.current.startShow = startShow;
   callbackRef.current.hideDone = hideDone;
   callbackRef.current.showDone = showDone;
+
+  const isServer = typeof window === "undefined" ? true : false;
+  const useUniverseEffect = isServer ? useEffect : useLayoutEffect;
+
+  useUniverseEffect(() => {
+    let element: T | null = null;
+    if (currentRef.current) {
+      element = currentRef.current;
+    } else if (getElement) {
+      element = getElement();
+    }
+    actionHandler<T, void>(element, (ele) => {
+      if (mode === "display") {
+        ele.style.display = "none";
+      } else if (mode === "opacity") {
+        ele.style.opacity = "0";
+      }
+    });
+  }, [mode, getElement]);
+
   useEffect(() => {
     // init
     let element: T | null = null;

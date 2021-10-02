@@ -1,4 +1,4 @@
-import DeskTopOverlay from "./deskTop";
+import DesktopOverlay from "./desktop";
 import MobileOverlay from "./mobile";
 
-export { DeskTopOverlay, MobileOverlay };
+export { DesktopOverlay, MobileOverlay };

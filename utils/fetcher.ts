@@ -11,6 +11,10 @@ const cacheResult = new Cache<string, Promise<any>>(60000);
 
 const isBrowser = typeof window !== "undefined";
 
+if (isBrowser && process.env.NODE_ENV === "development") {
+  (window as any).__cache = cacheResult;
+}
+
 const autoParse = (params: string | any) => {
   if (typeof params === "string") {
     return JSON.parse(params);

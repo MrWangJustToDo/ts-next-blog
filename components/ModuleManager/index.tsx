@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import Toast from "components/Toast";
-import { DeskTopOverlay, MobileOverlay } from "components/Overlay";
+import { DesktopOverlay, MobileOverlay } from "components/Overlay";
 import { flexCenter, getClass } from "utils/dom";
 import { useMediaQuery } from "hook/useMediaQuery";
 import { useToastProps, ToastPushContext } from "hook/useToast";
@@ -12,9 +12,9 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
   const { toast, push } = useToastProps([]);
   const { overlay, open } = useOverlayProps();
   const state = useMediaQuery("only screen and (max-width: 600px)");
-  const { deskTop, mobile } = useMemo(
+  const { desktop, mobile } = useMemo(
     () => ({
-      deskTop: overlay && !state,
+      desktop: overlay && !state,
       mobile: overlay && state,
     }),
     [state, overlay]
@@ -34,7 +34,7 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
             {children}
           </div>
         </OverlayOpenContext.Provider>
-        <div id="desktop-overlay" data-modal="desktop" data-show={Boolean(deskTop)}>
+        <div id="desktop-overlay" data-modal="desktop" data-show={Boolean(desktop)}>
           <div
             className={getClass(
               "position-fixed w-100 h-100 overflow-auto py-4",
@@ -42,9 +42,9 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
               style.cover,
               overlay && overlay.showState ? style.cover_active : ""
             )}
-            style={{ pointerEvents: deskTop ? "auto" : "none", zIndex: deskTop ? 2 : -1 }}
+            style={{ pointerEvents: desktop ? "auto" : "none", zIndex: desktop ? 2 : -1 }}
           >
-            {overlay && !state && <DeskTopOverlay {...overlay} />}
+            {overlay && !state && <DesktopOverlay {...overlay} />}
           </div>
         </div>
         <div id="mobile-overlay" data-modal="mobile" data-show={Boolean(mobile)}>
