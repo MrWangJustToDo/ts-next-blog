@@ -24,7 +24,6 @@ const TypeContent: TypeContentType = ({ blogs }) => {
               <LoadRender<PrimaryMessageProps[]>
                 apiPath={apiName.primaryMessage}
                 query={{ blogId: props.blogId! }}
-                revalidateOnFocus={false}
                 loaded={(data) => (
                   <>
                     {data.length ? (

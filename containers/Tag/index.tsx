@@ -19,7 +19,6 @@ const Tag: SimpleElement = () => {
           needInitialData
           initialData={blogs}
           apiPath={apiName.home}
-          revalidateOnFocus={false}
           loaded={(data) => {
             return (
               <>

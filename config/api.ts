@@ -7,6 +7,7 @@ enum apiName {
   userHome = "userHome", // 当前用户的所有数据
   userEx = "userEx", // 获取用户信息数据
   user = "user", // 获取用户详细数据
+  userName = "userFromName", // 根据userName获取详细的用户信息
   type = "type", // 获取type页面数据apiName
   tag = "tag", // 获取tag页面数据apiName
   // 用户信息
@@ -67,6 +68,7 @@ const accessApi: AccessType = {
   [apiName.logout]: { disable: false, token: false },
   [apiName.register]: { disable: false, token: false, method: "post" },
   [apiName.author]: { disable: false, token: false },
+  [apiName.userName]: { disable: false, token: false },
   // 图片信息
   [apiName.image]: { disable: false, token: false },
   [apiName.allImage]: { disable: false, token: true },

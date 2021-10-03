@@ -10,14 +10,15 @@ class Empty extends Component {
   }
 }
 
+const useGetElement = <T extends HTMLElement>(element: JSX.Element): [e: JSX.Element, g: () => T] => {
+  const ref = useRef<T>();
+  const currentElement = useMemo(() => React.cloneElement(<Empty>{element}</Empty>, { ref }), [element]);
+  const getElement = useCallback(() => findDOMNode(ref.current) as T, []);
+  return [currentElement, getElement];
+};
+
 const AnimationItem: AnimationItemType = ({ children, showState, showDone, showClassName, hideClassName, hideDone, faster }) => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const [currentRef, currentChildren] = useMemo(() => {
-    return [ref, React.cloneElement(<Empty>{children}</Empty>, { ref })];
-  }, [children]);
-
-  const getElement = useCallback(() => findDOMNode(currentRef.current) as HTMLElement, []);
+  const [currentChildren, getElement] = useGetElement<HTMLElement>(children as JSX.Element);
 
   useShowAndHideAnimate({
     mode: "opacity",
@@ -87,4 +88,4 @@ const AnimationList: AnimationListType = ({ children, showClassName }) => {
   );
 };
 
-export { AnimationList, AnimationItem };
+export { AnimationList, AnimationItem, useGetElement };

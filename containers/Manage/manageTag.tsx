@@ -11,7 +11,6 @@ const ManageTag: SimpleElement = () => {
         needUpdate
         needInitialData
         apiPath={apiName.tag}
-        revalidateOnFocus={false}
         loaded={(data) => {
           return (
             <>

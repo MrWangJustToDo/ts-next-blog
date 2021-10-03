@@ -23,7 +23,6 @@ const MainRightType: MainRightTypeType = ({ index }) => {
             needInitialData
             initialData={type}
             apiPath={apiName.type}
-            revalidateOnFocus={false}
             loaded={(data) => (
               <AnimationList showClassName="fadeInUp">
                 {data.map(({ typeId, typeContent, typeCount }) => (

@@ -76,7 +76,7 @@ const Render: RenderType = <T>({
   const loadingEle = useLoading({ loading, placeholder, delayTime, cancelKey });
 
   // only need key
-  const { data, error } = useSWR<T>([currentRequest.cacheKey, currentRequest], currentRequest.run, {
+  const { data, error } = useSWR<T>(currentRequest.cacheKey, currentRequest.run, {
     initialData: currentInitialData,
     revalidateOnMount,
     revalidateOnFocus,
@@ -115,7 +115,7 @@ const LoadRender: LoadRenderType = <T>({
   needUpdate = false,
   needInitialData = false,
   revalidateOnMount = true,
-  revalidateOnFocus = true,
+  revalidateOnFocus = false,
 }: LoadRenderProps<T>) => {
   if (!path && !apiPath) throw new Error("loadRender error, path undefined!");
 
@@ -140,7 +140,7 @@ const LoadRender: LoadRenderType = <T>({
   );
 
   const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needInitialData });
-  const ref = useRef(currentInitialData)
+  const ref = useRef(currentInitialData);
 
   return Render<T>({
     loadError,

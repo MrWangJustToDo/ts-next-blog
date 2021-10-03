@@ -1,5 +1,5 @@
-import { State } from "store";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import { State } from "store";
 import { useDispatch, useSelector } from "react-redux";
 import { usePrevious } from "./useOverlay";
 import { log } from "utils/log";
@@ -47,7 +47,7 @@ const useUpdate = () => {
   return forceUpdate;
 };
 
-function useUpdateProps(componentName: string, props: { [props: string]: any }) {
+const useUpdateProps = (componentName: string, props: { [props: string]: any }) => {
   const prevProps = usePrevious<{ [props: string]: any }>(props);
 
   useEffect(() => {
@@ -69,6 +69,6 @@ function useUpdateProps(componentName: string, props: { [props: string]: any }) 
       }
     }
   }, [props]);
-}
+};
 
 export { useCurrentState, useBasePage, useUpdate, useUpdateProps };

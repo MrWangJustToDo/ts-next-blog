@@ -13,6 +13,11 @@ const getUserByUserId = async ({ userId, db }: { userId: string; db: Database })
   return await db.get("SELECT * FROM users WHERE users.userId = ?", userId);
 };
 
+// 根据用户名获取用户信息
+const getUserByUserName = async ({ userName, db }: { userName: string; db: Database }) => {
+  return await db.get("SELECT * FROM users WHERE users.username = ?", userName);
+};
+
 // 获取总的用户数
 const getUserCount = async ({ db }: { db: Database }) => {
   return await db.get("SELECT COUNT(*) FROM users");
@@ -255,7 +260,18 @@ const getAuthorByUserId = async ({ db, userId }: { db: Database; userId: string 
 
 export { getUserByUser, getAliveBlogCount, getAliveTag, getBlogCount, getBlogByBlogId, getChildByPrimaryId, getHome, getPrimaryByBlogId, getTag };
 
-export { getTypeByTypeContent, getTagByTagContent, getAliveType, getTagByTagId, getTagCount, getType, getTypeByTypeId, getTypeCount, getUserByUserId };
+export {
+  getTypeByTypeContent,
+  getTagByTagContent,
+  getAliveType,
+  getTagByTagId,
+  getTagCount,
+  getType,
+  getTypeByTypeId,
+  getTypeCount,
+  getUserByUserId,
+  getUserByUserName,
+};
 
 export { getUserCount, getUsersExByUserId, getBlogsByBlogTitle, getBlogsByTypeId, getBlogsByTagId, getChildByBlogId, getBlogsByBlogTitleAndUserId };
 

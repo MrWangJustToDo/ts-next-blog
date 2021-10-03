@@ -17,7 +17,6 @@ const ManageSearch: SimpleElement = () => {
         <LoadRender<TypeProps[]>
           needUpdate
           needInitialData
-          revalidateOnFocus={false}
           apiPath={apiName.type}
           loaded={(res) => {
             const data: DropItemProps<string>[] = res.map(({ typeContent, typeId }) => ({ name: typeContent, value: typeId! }));
@@ -27,7 +26,6 @@ const ManageSearch: SimpleElement = () => {
         <LoadRender<TagProps[]>
           needUpdate
           needInitialData
-          revalidateOnFocus={false}
           apiPath={apiName.tag}
           loaded={(res) => {
             const data: DropItemProps<string>[] = res.map(({ tagContent, tagId }) => ({ name: tagContent, value: tagId! }));

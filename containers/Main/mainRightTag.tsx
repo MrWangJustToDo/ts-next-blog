@@ -21,7 +21,6 @@ const MainRightTag: MainRightTagType = ({ index }) => {
           needInitialData
           initialData={tag}
           apiPath={apiName.tag}
-          revalidateOnFocus={false}
           loaded={(data) => (
             <AnimationList showClassName="bounceInDown">
               {data.map(({ tagId, tagContent, tagCount }) => (

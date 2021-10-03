@@ -17,7 +17,6 @@ const PublishTag: BlogContentType = ({ tagId }) => {
       <LoadRender<TagProps[]>
         needInitialData
         apiPath={apiName.tag}
-        revalidateOnFocus={false}
         loaded={(res) => {
           const data: { name?: string; value: string }[] = res.map(({ tagContent, tagId }) => {
             return { name: tagContent, value: tagId! };

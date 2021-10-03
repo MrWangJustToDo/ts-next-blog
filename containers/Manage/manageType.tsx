@@ -11,7 +11,6 @@ const ManageType: SimpleElement = () => {
         needUpdate
         needInitialData
         apiPath={apiName.type}
-        revalidateOnFocus={false}
         loaded={(data) => {
           return (
             <>

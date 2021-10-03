@@ -45,7 +45,6 @@ const ManageResult: ManageUserIdType = ({ userId }) => {
           token
           needUpdate
           needInitialData
-          revalidateOnFocus={false}
           apiPath={apiName.userHome}
           query={{ userId }}
           loaded={(data) => (

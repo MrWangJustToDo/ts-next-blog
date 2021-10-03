@@ -1,5 +1,5 @@
 import { apiName } from "config/api";
-import { BlogContentProps } from "types/hook";
+import { BlogContentProps, UserProps } from "types/hook";
 
 type Color =
   | "blue"
@@ -32,7 +32,7 @@ export type { SimpleElement };
 
 /* AnimationList */
 interface AnimationListType {
-  (props: { children: ReactChild[]; showClassName?: string; delay?: number }): JSX.Element;
+  (props: { children: ReactChild[]; showClassName?: string; delay?: number, replace?: boolean }): JSX.Element;
 }
 interface AnimationItemType {
   (props: {
@@ -575,7 +575,7 @@ interface TypeType {
 export type { TypeType };
 
 /* === UserHover === */
-interface UserHoverProps extends BlogContentProps {
+interface UserHoverProps extends UserProps {
   children?: JSX.Element;
 }
 

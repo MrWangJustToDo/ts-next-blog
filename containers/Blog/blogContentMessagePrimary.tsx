@@ -40,7 +40,6 @@ const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, pr
           >
             <LoadRender<ChildMessageProps[]>
               token
-              revalidateOnFocus={false}
               apiPath={apiName.childMessage}
               query={{ primaryCommentId: item.commentId }}
               loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} /> : null)}

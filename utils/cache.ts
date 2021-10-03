@@ -11,7 +11,7 @@ class CacheData<T> {
   time: number;
   constructor(readonly data: T, time: number) {
     this.time = time;
-    if(isBrowser){
+    if (isBrowser) {
       this.init();
     }
   }
@@ -93,7 +93,7 @@ class Cache<T, K> {
       return;
     }
     tryKeys.push(key);
-    if (typeof key === "string") {
+    if (typeof key === "string" && !key.startsWith("http")) {
       let newKey = key as string;
       if (!newKey.startsWith("/")) {
         newKey = "/" + newKey;

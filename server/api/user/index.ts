@@ -7,6 +7,7 @@ import {
   registerAction,
   getUserExByUserIdAction,
   getUserByUserIdAction,
+  getUserByUserNameAction,
   getAuthorByUserIdAction,
   autoGetIp,
 } from "./user";
@@ -17,6 +18,7 @@ const userHandler = {
   [apiName.register]: registerAction,
   [apiName.autoLogin]: autoLoginAction,
   [apiName.user]: getUserByUserIdAction,
+  [apiName.userName]: getUserByUserNameAction,
   [apiName.userEx]: getUserExByUserIdAction,
   [apiName.author]: getAuthorByUserIdAction,
   [apiName.ip]: autoGetIp,

@@ -1,10 +1,14 @@
 import { useCallback, useMemo } from "react";
 import Image from "components/Image";
+import LoadRender from "components/LoadRender";
 import UserHover from "components/UserHover";
+import { apiName } from "config/api";
 import { getClass } from "utils/dom";
 import { momentTo } from "utils/time";
 import { getCurrentAvatar } from "utils/data";
 import { markNOLineNumber } from "utils/markdown";
+
+import { UserProps } from "types/hook";
 import { ChildMessageType } from "types/components";
 
 import style from "./index.module.scss";
@@ -56,7 +60,23 @@ const ChildMessage: ChildMessageType = (props) => {
         <h5 className="small pt-1 border-top rounded">
           <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{username ? username : fromIp}</span>
           <span className="mx-1 align-middle">回复</span>
-          <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{toUserName ? toUserName : toIp}</span>
+          {toUserName ? (
+            <LoadRender<UserProps>
+              apiPath={apiName.userName}
+              query={{ userName: toUserName }}
+              loaded={(props) => {
+                return (
+                  <div style={{ display: "inline-block", cursor: "pointer" }}>
+                    <UserHover {...props}>
+                      <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>@ {toUserName}</span>
+                    </UserHover>
+                  </div>
+                );
+              }}
+            />
+          ) : (
+            <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{toIp}</span>
+          )}
           <span className="float-right badge badge-primary">{(modifyState ? "更新于：" : "回复于：") + momentTo(modifyDate)}</span>
         </h5>
         {isMd && !previewMod ? (

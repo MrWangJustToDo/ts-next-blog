@@ -18,7 +18,6 @@ const PublishType: BlogContentType = ({ typeId }) => {
       <LoadRender<TypeProps[]>
         needInitialData
         apiPath={apiName.type}
-        revalidateOnFocus={false}
         loaded={(res) => {
           const data: { name?: string; value: string }[] = res.map(({ typeContent, typeId }) => {
             return { name: typeContent, value: typeId! };

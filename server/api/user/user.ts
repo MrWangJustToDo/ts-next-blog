@@ -1,7 +1,7 @@
 import { ServerError } from "server/utils/error";
 import { createRequest } from "utils/fetcher";
 import { insertUser } from "server/database/insert";
-import { getAuthorByUserId, getUserByUser, getUserByUserId, getUsersExByUserId } from "server/database/get";
+import { getAuthorByUserId, getUserByUser, getUserByUserId, getUserByUserName, getUsersExByUserId } from "server/database/get";
 import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
 import { IpAddressProps } from "types/hook";
 
@@ -94,6 +94,17 @@ const getUserByUserIdAction = autoRequestHandler({
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getUserByUserIdAction" } }),
 });
 
+const getUserByUserNameAction = autoRequestHandler({
+  requestHandler: async ({ req, res }) => {
+    const userName = req.query.userName as string;
+    const data = await getUserByUserName({ db: req.db!, userName: userName });
+    success({ res, resDate: { data } });
+  },
+  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getUserByUserNameAction" } }),
+  cacheConfig: { needCache: true },
+  paramsConfig: { fromQuery: ["userName"] },
+});
+
 const getAuthorByUserIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { userId } = req.query;
@@ -106,4 +117,14 @@ const getAuthorByUserIdAction = autoRequestHandler({
   paramsConfig: { fromQuery: ["userId"] },
 });
 
-export { loginAction, logoutAction, autoLoginAction, autoGetIp, registerAction, getUserByUserIdAction, getUserExByUserIdAction, getAuthorByUserIdAction };
+export {
+  loginAction,
+  logoutAction,
+  autoLoginAction,
+  autoGetIp,
+  registerAction,
+  getUserByUserIdAction,
+  getUserExByUserIdAction,
+  getAuthorByUserIdAction,
+  getUserByUserNameAction,
+};
