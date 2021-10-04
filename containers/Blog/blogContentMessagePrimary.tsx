@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import PageFoot from "components/PageFoot";
 import LoadRender from "components/LoadRender";
+import { AnimationList } from "components/AnimationList";
 import { PrimaryMessage } from "components/BlogMessage";
 import { apiName } from "config/api";
 import { primaryMessageLength } from "config/message";
@@ -27,25 +28,27 @@ const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, pr
   return (
     <>
       <div className="card-body">
-        {currentPageData.map((item) => (
-          <PrimaryMessage
-            {...item}
-            key={item.commentId}
-            previewMod={false}
-            replayHandler={primaryReplay}
-            withDelete={Boolean(userId)}
-            deleteHandler={primaryDelete}
-            withUpdate={Boolean(userId)}
-            updateHandler={primaryUpdate}
-          >
-            <LoadRender<ChildMessageProps[]>
-              token
-              apiPath={apiName.childMessage}
-              query={{ primaryCommentId: item.commentId }}
-              loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} /> : null)}
-            />
-          </PrimaryMessage>
-        ))}
+        <AnimationList replace={true}>
+          {currentPageData.map((item) => (
+            <PrimaryMessage
+              {...item}
+              key={item.commentId}
+              previewMod={false}
+              replayHandler={primaryReplay}
+              withDelete={Boolean(userId)}
+              deleteHandler={primaryDelete}
+              withUpdate={Boolean(userId)}
+              updateHandler={primaryUpdate}
+            >
+              <LoadRender<ChildMessageProps[]>
+                token
+                apiPath={apiName.childMessage}
+                query={{ primaryCommentId: item.commentId }}
+                loaded={(data) => (data.length ? <BlogContentChildMessage messages={data} /> : null)}
+              />
+            </PrimaryMessage>
+          ))}
+        </AnimationList>
       </div>
       <PageFoot
         page={currentPage}

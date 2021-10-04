@@ -46,7 +46,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
         ele.style.opacity = "0";
       }
     });
-  }, [mode, getElement]);
+  }, [mode, getElement, ...deps]);
 
   useEffect(() => {
     // init
