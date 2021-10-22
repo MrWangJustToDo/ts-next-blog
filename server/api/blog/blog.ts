@@ -275,6 +275,7 @@ const updateBlogByBlogIdAction = autoRequestHandler({
   paramsConfig: { fromQuery: ["userId"], fromBody: ["oldProps", "newProps"] },
 });
 
+// 更新博客阅读数量
 const updateBlogReadAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { blogId } = req.body;

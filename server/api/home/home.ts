@@ -52,6 +52,13 @@ const getBlogsByParams = autoRequestHandler({
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "搜索出错", data: e.toString(), methodName: "getBlogsByParams" } }),
   userConfig: { needCheck: true },
+  cacheConfig: {
+    needCache: true,
+    cacheKey: ({ req }) => {
+      const { blogTitle = "", typeId = "", tagId = "" } = req.body;
+      return req.url + `?${blogTitle}:${typeId}:${tagId}`;
+    },
+  },
   paramsConfig: { fromBody: ["userId"] },
 });
 
@@ -62,7 +69,8 @@ const getUserHomeAction = autoRequestHandler({
     data.sort(({ blogCreateDate: d1 }, { blogCreateDate: d2 }) => (new Date(d1!).getTime() > new Date(d2!).getTime() ? -1 : 1));
     success({ res, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getUserHomeAction" } }),
+  errorHandler: ({ res, e, code = 500 }) =>
+    fail({ res, statusCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getUserHomeAction" } }),
   userConfig: { needCheck: true },
   paramsConfig: { fromQuery: ["userId"] },
 });

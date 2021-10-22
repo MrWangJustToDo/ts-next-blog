@@ -101,7 +101,7 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
     const currentHeader = header !== false && isBrowser ? getHeader(autoParse(header)) : autoParse(header);
 
-    const currentData = data !== false ? (encode ? { encode: btoa(autoStringify(data)!) } : autoParse(data)) : undefined;
+    const currentData = data !== false ? (encode ? { encode: btoa(autoStringify(data)!) + process.env.NEXT_PUBLIC_STRING } : autoParse(data)) : undefined;
 
     const requestPromise: Promise<AxiosResponse<T>> = instance({
       method: currentMethod,

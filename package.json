@@ -44,7 +44,7 @@
     "sqlite": "^4.0.19",
     "sqlite3": "^5.0.2",
     "svg-captcha": "^1.4.0",
-    "swr": "^0.5.3",
+    "swr": "^1.0.1",
     "tocbot": "^4.12.2"
   },
   "devDependencies": {

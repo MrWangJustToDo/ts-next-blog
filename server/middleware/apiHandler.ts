@@ -193,7 +193,14 @@ const decodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, n
     if (typeof req.body.encode === "undefined") {
       throw new ServerError("当前请求体格式不正确", 400);
     } else {
-      req.body = JSON.parse(Buffer.from(req.body["encode"], "base64").toString());
+      let encodeBodyString = req.body["encode"].toString() as string;
+      if (process.env) {
+        if (encodeBodyString.endsWith(process.env.NEXT_PUBLIC_STRING as string)) {
+          encodeBodyString = encodeBodyString.slice(0, -(process.env.NEXT_PUBLIC_STRING || "").length);
+        }
+      }
+      const bodyString = Buffer.from(encodeBodyString, "base64").toString();
+      req.body = JSON.parse(bodyString);
     }
   }
   return await nextMiddleware();

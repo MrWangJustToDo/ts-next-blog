@@ -12,6 +12,7 @@ declare module NodeJS {
     NEXT_PUBLIC_ABOUT: string;
     NEXT_PUBLIC_ADMIN: string;
     NEXT_PUBLIC_ONESAY: string;
+    NEXT_PUBLIC_STRING: string;
     NEXT_PUBLIC_APIHOST: string;
     NEXT_PUBLIC_APITOKEN: string;
     NEXT_PUBLIC_IPADDRESS: string;
