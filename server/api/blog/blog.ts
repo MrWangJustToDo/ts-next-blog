@@ -13,7 +13,7 @@ const getBlogByBlogIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const blogId = <string>req.query.blogId;
     const data = await getBlogByBlogId({ db: req.db!!, blogId });
-    return success({ res, statusCode: 200, resDate: { data } });
+    success({ res, statusCode: 200, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getBlogByBlogIdAction" } }),
   cacheConfig: { needCache: true },

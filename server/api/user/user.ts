@@ -74,7 +74,7 @@ const getUserExByUserIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const userId = req.query.userId as string;
     const data = await getUsersExByUserId({ userId, db: req.db! });
-    return success({ res, resDate: { data } });
+    success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getUserExByUserIdAction" } }),
   cacheConfig: { needCache: true },
@@ -109,7 +109,7 @@ const getAuthorByUserIdAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const { userId } = req.query;
     const data = await getAuthorByUserId({ db: req.db!, userId: userId as string });
-    return success({ res, resDate: { data } });
+    success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) =>
     fail({ res, statusCode: code, resDate: { state: "获取失败", data: e.toString() }, methodName: "getAuthorByUserIdAction" }),

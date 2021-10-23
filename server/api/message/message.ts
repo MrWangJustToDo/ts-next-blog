@@ -21,7 +21,7 @@ const getPrimaryMessageByBlogIdAction = autoRequestHandler({
     const { blogId } = req.query;
     const primaryMessages = await getPrimaryByBlogId({ db: req.db!, blogId: blogId as string });
     primaryMessages.sort(({ createDate: d1 }, { createDate: d2 }) => (new Date(d1).getTime() > new Date(d2).getTime() ? -1 : 1));
-    return success({ res, resDate: { state: "获取成功", data: primaryMessages } });
+    success({ res, resDate: { state: "获取成功", data: primaryMessages } });
   },
   errorHandler: ({ res, e, code = 404 }) =>
     fail({ res, statusCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getPrimaryMessageByBlogIdAction" } }),
@@ -35,7 +35,7 @@ const getChildMessageByPrimaryIdAction = autoRequestHandler({
     const { primaryCommentId } = req.query;
     const childMessage = await getChildByPrimaryId({ db: req.db!, primaryCommentId: primaryCommentId as string });
     childMessage.sort(({ createDate: d1 }, { createDate: d2 }) => (new Date(d1).getTime() > new Date(d2).getTime() ? -1 : 1));
-    return success({ res, resDate: { data: childMessage } });
+    success({ res, resDate: { data: childMessage } });
   },
   errorHandler: ({ res, e, code = 404 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getChildMessageByPrimaryIdAction" } }),
   cacheConfig: { needCache: true },

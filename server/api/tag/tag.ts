@@ -11,7 +11,7 @@ import { TagProps } from "types/containers";
 const getTagAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const data = await getTag({ db: req.db! });
-    return success({ res, resDate: { data } });
+    success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getTagAction" } }),
   cacheConfig: { needCache: true },

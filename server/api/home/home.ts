@@ -7,7 +7,7 @@ const getHomeAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const data = (await getHome({ db: req.db! })) as BlogContentProps[];
     data.sort(({ blogCreateDate: d1 }, { blogCreateDate: d2 }) => (new Date(d1!).getTime() > new Date(d2!).getTime() ? -1 : 1));
-    return success({ res, resDate: { data } });
+    success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getHomeAction" } }),
   cacheConfig: { needCache: true },

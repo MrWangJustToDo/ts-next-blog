@@ -11,7 +11,7 @@ import { TypeProps } from "types/hook";
 const getTypeAction = autoRequestHandler({
   requestHandler: async ({ req, res }) => {
     const data = await getType({ db: req.db! });
-    return success({ res, resDate: { data } });
+    success({ res, resDate: { data } });
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getTypeAction" } }),
   cacheConfig: { needCache: true },

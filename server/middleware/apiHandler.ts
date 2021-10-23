@@ -17,12 +17,15 @@ import {
 
 const cache = new Cache<string, any>();
 
+let currentResponseDate: null | any = null;
+
 const success = <T>({ res, statusCode = 200, resDate }: ApiResponseProps<T>): ApiResponseData<T> | void => {
+  // 缓存当前成功的请求数据
+  currentResponseDate = resDate;
   resDate.code = resDate.code || 0;
   resDate.state = resDate.state || "获取成功";
   resDate.time = new Date().toLocaleString();
   res.status(statusCode).json(resDate);
-  return resDate;
 };
 
 const fail = <T>({ res, statusCode = 404, resDate, methodName }: ApiResponseProps<T> & { methodName?: string }): void => {
@@ -65,7 +68,7 @@ const catchHandler = (requestHandler: RequestHandlerType, errorHandler?: ErrorHa
 const catchMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
   const { req, res, next, errorHandler } = ctx;
   try {
-    return await nextMiddleware();
+    await nextMiddleware();
   } catch (e) {
     log(e as Error, "error");
     if (errorHandler && typeof errorHandler === "function") {
@@ -88,6 +91,7 @@ const cacheMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, ne
       ? currentCacheConfig.cacheKey({ req })
       : currentCacheConfig.cacheKey
     : req.originalUrl;
+
   const needCache = currentCacheConfig.needCache;
   const cacheTime = currentCacheConfig.cacheTime ? currentCacheConfig.cacheTime : time;
   const needDelete = currentCacheConfig.needDelete;
@@ -125,14 +129,15 @@ const cacheMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, ne
       success({ res, resDate: cacheValue });
     } else {
       const actionValue = await nextMiddleware();
-      if (!!actionValue) {
-        cache.set(key, actionValue, cacheTime);
+      const currentActionValue = actionValue || currentResponseDate;
+      if (!!currentActionValue) {
+        cache.set(key, currentActionValue, cacheTime);
       } else {
         log(`nothing to return, so nothing to cache. method: ${req.method}, url: ${req.originalUrl}`, "warn");
       }
     }
   } else {
-    return await nextMiddleware();
+    await nextMiddleware();
   }
 };
 
@@ -161,7 +166,7 @@ const checkCodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps
       }
     }
   }
-  return await nextMiddleware();
+  await nextMiddleware();
 };
 
 const checkParamsMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
@@ -183,7 +188,7 @@ const checkParamsMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewarePro
       }
     }
   }
-  return await nextMiddleware();
+  await nextMiddleware();
 };
 
 const decodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
@@ -203,7 +208,7 @@ const decodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, n
       req.body = JSON.parse(bodyString);
     }
   }
-  return await nextMiddleware();
+  await nextMiddleware();
 };
 
 const userMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
@@ -220,18 +225,25 @@ const userMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nex
         throw new ServerError("登录用户与操作用户不一致", 401);
       }
     }
-    return await nextMiddleware();
+    await nextMiddleware();
   } else {
-    return await nextMiddleware();
+    await nextMiddleware();
   }
 };
 
 const compose = (...middleWares: ((ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => Promise<any | void>)[]) => {
   return function (ctx: AutoRequestHandlerMiddlewareProps, next: RequestHandlerType) {
+    let runTime = 0;
     let index = -1;
+    // 需要加上死循环判断
     function dispatch(i: number): Promise<any> {
       if (i <= index) {
+        // 这些错误将会被 catchMiddlewareHandler  进行捕获
         throw new ServerError("compose index error, every middleware only allow call once", 500);
+      }
+      runTime++;
+      if (runTime > middleWares.length + 5) {
+        throw new ServerError("call middleWare many times, look like a infinite loop and will stop call next", 500);
       }
       index = i;
       const fn = middleWares[i] || next;
@@ -251,18 +263,25 @@ const compose = (...middleWares: ((ctx: AutoRequestHandlerMiddlewareProps, nextM
   };
 };
 
+const composedHandler = compose(
+  catchMiddlewareHandler,
+  decodeMiddlewareHandler,
+  checkParamsMiddlewareHandler,
+  checkCodeMiddlewareHandler,
+  userMiddlewareHandler,
+  cacheMiddlewareHandler
+);
+
 const autoRequestHandler = (config: AutoRequestHandlerProps) => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    // 每一个新的请求  需要清除原始的缓存数据
+    currentResponseDate = null;
     const ctx = { ...config, req, res, next, cache };
-    const fn = compose(
-      catchMiddlewareHandler,
-      decodeMiddlewareHandler,
-      checkParamsMiddlewareHandler,
-      checkCodeMiddlewareHandler,
-      userMiddlewareHandler,
-      cacheMiddlewareHandler
-    );
-    return await fn(ctx, ctx.requestHandler || next);
+    try {
+      return await composedHandler(ctx, ctx.requestHandler || next);
+    } catch (e) {
+      fail({ res, statusCode: 500, resDate: { data: (e as Error).toString(), methodName: "composedHandler" } });
+    }
   };
 };
 
