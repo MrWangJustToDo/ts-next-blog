@@ -29,7 +29,7 @@ export const makeStore: MakeStore<SagaStore> = () => {
   const sagaMiddleware = createSagaMiddleware();
 
   // 2: Add an extra parameter for applying middleware:
-  const store = <SagaStore>createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware)));
+  const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware))) as SagaStore;
 
   // 3: Run your sagas on server
   store.sagaTask = sagaMiddleware.run(rootSaga);

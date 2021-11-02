@@ -177,10 +177,10 @@ export type {
 interface UseCurrentStateType {
   <T>(selector?: (state: State) => T): { state: State | T; dispatch: (props: AnyAction) => void };
 }
+
 interface UseBasePageProps<T> {
-  stateSide?: "server" | "client";
+  selector?: (state: State) => Array<T>;
   pageLength?: number;
-  stateName?: apiName | actionName;
   data?: Array<T>;
 }
 interface UseBasePageType {

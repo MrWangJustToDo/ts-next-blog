@@ -1,6 +1,5 @@
 import CardPage from "components/PageFoot";
 import { WithWriteBlogItem as SearchResult } from "components/BlogItem";
-import { apiName } from "config/api";
 import { useBasePage } from "hook/useBase";
 import { BlogContentProps } from "types/hook";
 import { ManageResultType } from "types/containers";
@@ -8,8 +7,6 @@ import { ManageResultType } from "types/containers";
 const ManageResultAll: ManageResultType = (props) => {
   const { currentPage, currentPageData, increaseAble, increasePage, decreaseAble, decreasePage } = useBasePage<BlogContentProps>({
     data: props,
-    stateSide: "server",
-    stateName: apiName.userHome,
   });
 
   return (

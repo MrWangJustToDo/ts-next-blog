@@ -9,7 +9,7 @@ import { setDataSuccess_client } from "store/reducer/client/action";
 import { UseTagType } from "types/hook";
 import { TagProps } from "types/containers";
 
-const autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Function, needChange: boolean) => {
+const useAutoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Function, needChange: boolean) => {
   useEffect(() => {
     if (needChange && currentTag === "" && tag.length) {
       changeCurrentTag(tag[0].tagContent);
@@ -17,7 +17,7 @@ const autoChangeTag = (tag: TagProps[], currentTag: string, changeCurrentTag: Fu
   }, [needChange, currentTag, changeCurrentTag, tag]);
 };
 
-const autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
+const useAutoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
   useEffect(() => {
     if (allPage > 0 && currentPage > allPage) {
       dispatch(setDataSuccess_client({ name: actionName.currentTagPage, data: allPage }));
@@ -39,7 +39,7 @@ const useTag: UseTagType = (props = {}) => {
   // 更改当前选中的tag
   const changeCurrentTag = useCallback((nextTag) => dispatch(setDataSuccess_client({ name: actionName.currentTag, data: nextTag })), []);
   // 自动设置初始选中tag
-  autoChangeTag(tag, currentTag, changeCurrentTag, needInitTag);
+  useAutoChangeTag(tag, currentTag, changeCurrentTag, needInitTag);
   // 根据当前选中的tag获取blog
   const currentBlogs = blogs?.filter(({ tagContent }) => tagContent?.includes(currentTag)) || [];
   // 获取符合当前tag的blog页数
@@ -48,7 +48,7 @@ const useTag: UseTagType = (props = {}) => {
   const decreasePage = useCallback(() => dispatch(setDataSuccess_client({ name: actionName.currentTagPage, data: currentPage - 1 })), [currentPage]);
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
-  autoChangePage(allPage, currentPage, dispatch);
+  useAutoChangePage(allPage, currentPage, dispatch);
   const currentPageBlogs = currentBlogs.slice((currentPage - 1) * pageContentLength, currentPage * pageContentLength);
   return {
     tag,

@@ -24,7 +24,7 @@ const useHeaderItem: UseHeaderItemType = (props = {}) => {
       dispatch(setDataSuccess_client({ name: actionName.currentHeader, data: headItem }));
     }
   }, []);
-  autoChangeHeader(route, <string>currentHeader, changeCurrentHeader, needInitHead);
+  autoChangeHeader(route, currentHeader, changeCurrentHeader, needInitHead);
   return { currentHeader, changeCurrentHeader };
 };
 

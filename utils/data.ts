@@ -1,6 +1,6 @@
 import { ApiRequestResult, AutoTransformDataType, FormChild, FormSerializeType, GetCurrentAvatar, ResultProps } from "types/utils";
 
-const autoTransformData: AutoTransformDataType = <T, F>(data: ResultProps<T, F>) => {
+const autoTransformData: AutoTransformDataType = <T extends any, F extends any>(data: ResultProps<T, F>) => {
   if (data.code !== undefined && data.state && data.data) {
     return (<ApiRequestResult<T>>data).data;
   } else {

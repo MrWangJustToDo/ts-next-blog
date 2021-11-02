@@ -45,7 +45,7 @@ const useBlogMenu: UseBlogMenuType = (className) => {
     }
     const re = tocbot.destroy.bind(tocbot);
     return () => (added ? re() : void 0);
-  }, []);
+  }, [className]);
   return bool;
 };
 
@@ -87,27 +87,27 @@ const useLinkToImg: UseLinkToImgType = <T extends HTMLElement>() => {
 
 const useEditor: UseEditorType = (id) => {
   const mdId = `#editor_${id}_md`;
-  // 创建DOM观察者对象，观察DOM的class变化，执行对应的操作
-  const observer = new MutationObserver(function (mutationsList) {
-    // 判断当前是否需要进行overflow切换
-    const isOverflow = document.body.style.overflow === "hidden";
-    // 遍历出所有的MutationRecord对象
-    mutationsList.forEach(function (mutation) {
-      if (mutation.attributeName === "class") {
-        if ((mutation.target as HTMLDivElement).classList.contains("full")) {
-          if (!isOverflow) {
-            document.body.style.overflow = "hidden";
-          }
-        } else {
-          if (!isOverflow) {
-            document.body.style.overflow = "auto";
+
+  useEffect(() => {
+    // 创建DOM观察者对象，观察DOM的class变化，执行对应的操作
+    const observer = new MutationObserver(function (mutationsList) {
+      // 判断当前是否需要进行overflow切换
+      const isOverflow = document.body.style.overflow === "hidden";
+      // 遍历出所有的MutationRecord对象
+      mutationsList.forEach(function (mutation) {
+        if (mutation.attributeName === "class") {
+          if ((mutation.target as HTMLDivElement).classList.contains("full")) {
+            if (!isOverflow) {
+              document.body.style.overflow = "hidden";
+            }
+          } else {
+            if (!isOverflow) {
+              document.body.style.overflow = "auto";
+            }
           }
         }
-      }
+      });
     });
-  });
-  //
-  useEffect(() => {
     const keydownHandler = (e: KeyboardEvent) => {
       if (e.key === "Tab") {
         e.preventDefault();
@@ -146,7 +146,7 @@ const useEditor: UseEditorType = (id) => {
         ele.removeEventListener("keydown", keydownHandler)
       );
     };
-  }, []);
+  }, [id, mdId]);
 };
 
 const usePublish: UsePublishType = ({ request, id }) => {
@@ -183,7 +183,7 @@ const usePublish: UsePublishType = ({ request, id }) => {
         },
         () => fail("form元素不存在...")
       ),
-    [userId]
+    [fail, htmlId, request, router, success, userId]
   );
   return [ref, submit];
 };
@@ -193,7 +193,7 @@ const useInputToImageModule: UseInputToImageModuleType = ({ body, className }) =
   const ref = useRef<HTMLInputElement>(null);
   const select = useCallback(() => {
     open({ head: "选择图片，点击刷新", body: body(ref), className });
-  }, [body]);
+  }, [body, className, open]);
   return [ref, select];
 };
 

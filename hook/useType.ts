@@ -8,7 +8,7 @@ import { useCurrentState } from "./useBase";
 import { setDataSuccess_client } from "store/reducer/client/action";
 import { TypeProps, UseTypeType } from "types/hook";
 
-const autoChangeType = (type: TypeProps[], currentType: string, changeCurrentType: Function, needChange: boolean) => {
+const useAutoChangeType = (type: TypeProps[], currentType: string, changeCurrentType: Function, needChange: boolean) => {
   useEffect(() => {
     if (needChange && currentType === "" && type.length) {
       changeCurrentType(type[0].typeContent);
@@ -16,7 +16,7 @@ const autoChangeType = (type: TypeProps[], currentType: string, changeCurrentTyp
   }, [needChange, currentType, changeCurrentType, type]);
 };
 
-const autoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
+const useAutoChangePage = (allPage: number, currentPage: number, dispatch: (props: AnyAction) => void) => {
   useEffect(() => {
     if (allPage > 0 && currentPage > allPage) {
       dispatch(setDataSuccess_client({ name: actionName.currentTypePage, data: allPage }));
@@ -38,7 +38,7 @@ const useType: UseTypeType = (props = {}) => {
   // 更改当前选中的type
   const changeCurrentType = useCallback((nextType) => dispatch(setDataSuccess_client({ name: actionName.currentType, data: nextType })), []);
   // 自动设置初始type
-  autoChangeType(type, currentType, changeCurrentType, needInitType);
+  useAutoChangeType(type, currentType, changeCurrentType, needInitType);
   // 根据当前选中的type获取blog
   const currentBlogs = blogs?.filter(({ typeContent }) => typeContent === currentType) || [];
   // 根据符合的blog获取所有的页数
@@ -47,7 +47,7 @@ const useType: UseTypeType = (props = {}) => {
   const decreasePage = useCallback(() => dispatch(setDataSuccess_client({ name: actionName.currentTypePage, data: currentPage - 1 })), [currentPage]);
   const increaseAble = currentPage < allPage;
   const decreaseAble = currentPage > 1;
-  autoChangePage(allPage, currentPage, dispatch);
+  useAutoChangePage(allPage, currentPage, dispatch);
   const currentPageBlogs = currentBlogs.slice((currentPage - 1) * pageContentLength, currentPage * pageContentLength);
   return {
     type,

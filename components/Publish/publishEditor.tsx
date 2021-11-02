@@ -13,9 +13,7 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 });
 
 const PublishEditor: BlogContentType = ({ blogId, blogContent = "" }) => {
-  if (process.browser) {
-    useEditor(blogId!);
-  }
+  useEditor(blogId!);
 
   const mdRender = useCallback<(t: string) => string>((text) => markNOLineNumber.render(text), []);
 

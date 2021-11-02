@@ -18,18 +18,14 @@ const useCurrentState: UseCurrentStateType = <T extends any>(selector?: (state: 
 };
 
 const useBasePage: UseBasePageType = <T>(props: UseBasePageProps<T> = {}) => {
-  const { data, stateSide = "server", stateName, pageLength = 4 } = props;
-  if (!data && !stateName) {
+  const { data, selector, pageLength = 4 } = props;
+  if (!data && !selector) {
     throw new Error("useBasePage need Data");
-  }
-  let selector;
-  if (stateName) {
-    selector = (state: State) => <Array<T>>state[stateSide][stateName]["data"];
   }
   const { state } = useCurrentState<Array<T>>(selector);
   const [currentPage, setCurrentPage] = useState(1);
-  const allData = stateName ? (state as Array<T>) : data;
-  const allPage = useMemo(() => Math.ceil(allData!.length / pageLength), []);
+  const allData = data || (state as Array<T>);
+  const allPage = useMemo(() => Math.ceil(allData!.length / pageLength), [allData, pageLength]);
   const increasePage = useCallback(() => setCurrentPage((lastPage) => lastPage + 1), []);
   const decreasePage = useCallback(() => setCurrentPage((lastPage) => lastPage - 1), []);
   const increaseAble = currentPage < allPage;

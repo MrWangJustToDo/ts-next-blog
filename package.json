@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon",
+    "lint": "next lint",
     "build": "next build && ttsc --project tsconfig.server.json",
     "start": "cross-env NODE_ENV=production node dist/server/index.js"
   },
@@ -28,7 +29,7 @@
     "lodash": "^4.17.21",
     "markdown-it": "^12.0.4",
     "moment": "^2.29.1",
-    "next": "^11.0.1",
+    "next": "^12.0.2",
     "next-redux-wrapper": "^6.0.2",
     "pretty-error": "^3.0.3",
     "qrcode": "^1.4.4",
@@ -63,6 +64,8 @@
     "@types/react-redux": "^7.1.16",
     "@types/react-slick": "^0.23.4",
     "@types/react-transition-group": "^4.4.1",
+    "eslint": "<8.0.0",
+    "eslint-config-next": "12.0.1",
     "nodemon": "^2.0.7",
     "ts-node": "^9.1.1",
     "ttypescript": "^1.5.12",

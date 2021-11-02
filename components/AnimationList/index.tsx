@@ -13,6 +13,7 @@ class Empty extends Component {
 const useGetElement = <T extends HTMLElement>(element: JSX.Element): [e: JSX.Element, g: () => T] => {
   const ref = useRef<T>();
   const currentElement = useMemo(() => React.cloneElement(<Empty>{element}</Empty>, { ref }), [element]);
+  // eslint-disable-next-line react/no-find-dom-node
   const getElement = useCallback(() => findDOMNode(ref.current) as T, []);
   return [currentElement, getElement];
 };

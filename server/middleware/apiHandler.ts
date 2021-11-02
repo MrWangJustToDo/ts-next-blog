@@ -1,4 +1,5 @@
 import assign from "lodash/assign";
+import chalk from "chalk";
 import { log } from "utils/log";
 import { Cache } from "utils/cache";
 import { ServerError } from "server/utils/error";
@@ -231,6 +232,15 @@ const userMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nex
   }
 };
 
+const logMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
+  const url = ctx.req.url;
+  const method = ctx.req.method;
+  const key =  chalk.redBright("[time log] url: " + url + ", method: " + method);
+  console.time(key);
+  await nextMiddleware();
+  console.timeEnd(key);
+};
+
 const compose = (...middleWares: ((ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => Promise<any | void>)[]) => {
   return function (ctx: AutoRequestHandlerMiddlewareProps, next: RequestHandlerType) {
     let runTime = 0;
@@ -241,6 +251,7 @@ const compose = (...middleWares: ((ctx: AutoRequestHandlerMiddlewareProps, nextM
         // 这些错误将会被 catchMiddlewareHandler  进行捕获
         throw new ServerError("compose index error, every middleware only allow call once", 500);
       }
+      // 防止中间件死循环
       runTime++;
       if (runTime > middleWares.length + 5) {
         throw new ServerError("call middleWare many times, look like a infinite loop and will stop call next", 500);
@@ -264,6 +275,7 @@ const compose = (...middleWares: ((ctx: AutoRequestHandlerMiddlewareProps, nextM
 };
 
 const composedHandler = compose(
+  logMiddlewareHandler,
   catchMiddlewareHandler,
   decodeMiddlewareHandler,
   checkParamsMiddlewareHandler,
