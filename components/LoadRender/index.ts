@@ -77,7 +77,7 @@ const Render: RenderType = <T>({
 
   // only need key
   const { data, error } = useSWR<T>(currentRequest.cacheKey, currentRequest.run, {
-    initialData: currentInitialData,
+    fallbackData: currentInitialData,
     revalidateOnMount,
     revalidateOnFocus,
   });
@@ -86,7 +86,7 @@ const Render: RenderType = <T>({
 
   useAutoUpdateState<T>({ needUpdate, initialData: currentInitialData, apiPath, currentData });
 
-  if (error) return loadError(error.toString());
+  if (error) return loadError((error as Error).toString());
 
   if (currentInitialData || currentData) {
     // make page not flash if data loaded

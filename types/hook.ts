@@ -2,7 +2,6 @@ import { State } from "store";
 import { MutableRefObject, RefObject } from "react";
 import { AnyAction } from "redux";
 import { apiName } from "config/api";
-import { actionName } from "config/action";
 import { InputProps } from "./config";
 import { ManageAddButtonBody } from "./containers";
 import { AutoRequestProps, AutoRequestType } from "./utils";
