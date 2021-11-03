@@ -49,7 +49,7 @@ const ManageResult: ManageUserIdType = ({ userId }) => {
           query={{ userId }}
           loaded={(data) => (
             <div className={getClass(animateFadeIn)}>
-              <ManageResultAll {...data} />
+              <ManageResultAll data={data} />
             </div>
           )}
         />

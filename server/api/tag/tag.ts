@@ -29,6 +29,7 @@ const checkTagAction = autoRequestHandler({
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
   userConfig: { needCheck: true },
+  cacheConfig: { needCache: true },
   paramsConfig: { fromBody: ["tagContent"] },
 });
 

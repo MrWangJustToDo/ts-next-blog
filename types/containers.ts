@@ -307,7 +307,7 @@ export type { ManageAddModuleType };
 
 /* manageResult */
 interface ManageResultType {
-  (props: BlogContentProps[]): JSX.Element;
+  (props: { data: BlogContentProps[] }): JSX.Element;
 }
 
 export type { ManageResultType };

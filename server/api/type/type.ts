@@ -29,6 +29,7 @@ const checkTypeAction = autoRequestHandler({
   },
   errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "检测未通过", data: e.toString() } }),
   userConfig: { needCheck: true },
+  cacheConfig: { needCache: true },
   paramsConfig: { fromBody: ["typeContent"] },
 });
 
@@ -40,7 +41,8 @@ const addTypeAction = autoRequestHandler({
     await insertType({ db: req.db!, typeId, typeState: 1, typeContent, typeCount: 0 });
     success({ res, resDate: { state: "新增type成功", data: `typeId: ${typeId}, typeContent: ${typeContent}` } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "添加type失败", data: e.toString(), methodName: "addTypeAction" } }),
+  errorHandler: ({ res, e, code = 500 }) =>
+    fail({ res, statusCode: code, resDate: { state: "添加type失败", data: e.toString(), methodName: "addTypeAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.type] },
   paramsConfig: { fromBody: ["typeContent"] },

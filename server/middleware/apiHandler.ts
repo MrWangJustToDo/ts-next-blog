@@ -155,7 +155,7 @@ const checkCodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps
         throw new ServerError(`请求参数不存在: ${fieldName}`, 400);
       }
       if (checkCode !== req.session.captcha) {
-        throw new ServerError("验证码不正确  query", 400);
+        throw new ServerError("验证码不正确 from query", 400);
       }
     } else {
       const checkCode = req.body[fieldName];
@@ -163,7 +163,7 @@ const checkCodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps
         throw new ServerError(`请求参数不存在: ${fieldName}`, 400);
       }
       if (checkCode !== req.session.captcha) {
-        throw new ServerError("验证码不正确  body", 400);
+        throw new ServerError("验证码不正确 from body", 400);
       }
     }
   }
@@ -235,7 +235,7 @@ const userMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nex
 const logMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
   const url = ctx.req.url;
   const method = ctx.req.method;
-  const key =  chalk.redBright("[time log] url: " + url + ", method: " + method);
+  const key =  chalk.redBright("[time log] method: " + method + ", url: " + url + ', time');
   console.time(key);
   await nextMiddleware();
   console.timeEnd(key);
