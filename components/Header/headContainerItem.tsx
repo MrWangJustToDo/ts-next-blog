@@ -6,7 +6,7 @@ import { HeadContainerItemType } from "types/components";
 
 import style from "./index.module.scss";
 
-const HeadContainerItem: HeadContainerItemType = ({ value = "head", hrefTo = "/", icon = "ri-home-heart-fill" }) => {
+export const HeadContainerItem: HeadContainerItemType = ({ value = "head", hrefTo = "/", icon = "ri-home-heart-fill" }) => {
   const { currentHeader, changeCurrentHeader } = useHeaderItem();
 
   const clickHandler = useCallback(() => {
@@ -24,5 +24,3 @@ const HeadContainerItem: HeadContainerItemType = ({ value = "head", hrefTo = "/"
     </li>
   );
 };
-
-export default HeadContainerItem;

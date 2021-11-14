@@ -1,8 +1,8 @@
-import Drop from "components/Drop";
+import { Drop } from "components/Drop";
 import { blogOrigin } from "config/publish";
-import { BlogContentType } from "types/containers";
+import { BlogProps } from "types";
 
-const PublishHead: BlogContentType = ({ blogOriginState, blogTitle }) => {
+export const PublishHead = ({ blogOriginState, blogTitle }: Partial<Pick<BlogProps, "blogOriginState" | "blogTitle">>) => {
   return (
     <div className="input-group mb-3">
       <Drop<string>
@@ -15,5 +15,3 @@ const PublishHead: BlogContentType = ({ blogOriginState, blogTitle }) => {
     </div>
   );
 };
-
-export default PublishHead;

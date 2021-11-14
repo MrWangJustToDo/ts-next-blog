@@ -3,17 +3,25 @@ import { apiName } from "config/api";
 import { getClass } from "utils/dom";
 import { ChildMessage } from "components/BlogMessage";
 import { useCurrentUser, useUserRequest } from "hook/useUser";
-import { useChildMessage, useMessageToDeleteModule, useMessageToReplayModule, useMessageToUpdateModule } from "hook/useMessage";
-import BlogContentReplayModule from "./blogContentReplayModule";
-import BlogContentDeleteModule from "./blogContentDeleteModule";
-import BlogContentUpdateModule from "./blogContentUpdateModule";
-import { UseMessageToModuleBody } from "types/hook";
+import { useChildMessage, useMessageToDeleteModule, UseMessageToModuleBody, useMessageToReplayModule, useMessageToUpdateModule } from "hook/useMessage";
+import { BlogContentReplayModule } from "./blogContentReplayModule";
+import { BlogContentDeleteModule } from "./blogContentDeleteModule";
+import { BlogContentUpdateModule } from "./blogContentUpdateModule";
 import { ChildMessageProps } from "types/components";
-import { BlogContentChildMessageType, BlogContentChildMessageWithReplayType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const BlogContentChildMessageWithReplay: BlogContentChildMessageWithReplayType = ({ messages, childDelete, childReplay, childUpdate }) => {
+const BlogContentChildMessageWithFeature = ({
+  messages,
+  childDelete,
+  childReplay,
+  childUpdate,
+}: {
+  messages: ChildMessageProps[];
+  childDelete: ReturnType<typeof BlogContentChildMessageDelete>;
+  childReplay: ReturnType<typeof BlogContentChildMessageReplay>;
+  childUpdate: ReturnType<typeof BlogContentChildMessageUpdate>;
+}) => {
   const { userId } = useCurrentUser();
   const { messageProps, more, loadMore } = useChildMessage(messages);
 
@@ -48,13 +56,15 @@ const BlogContentChildMessageReplay = () => {
 
   const body = useCallback<UseMessageToModuleBody<ChildMessageProps>>(
     ({ props }) =>
-      (closeHandler) =>
-        (
+      (closeHandler) => {
+        const WithReplay = (
           <>
             <ChildMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
             <BlogContentReplayModule request={request} closeHandler={closeHandler} props={props} />
           </>
-        ),
+        );
+        return WithReplay;
+      },
     []
   );
 
@@ -71,13 +81,15 @@ const BlogContentChildMessageDelete = () => {
 
   const body = useCallback<UseMessageToModuleBody<ChildMessageProps>>(
     ({ props }) =>
-      (closeHandler) =>
-        (
+      (closeHandler) => {
+        const WithDelete = (
           <>
             <ChildMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
             <BlogContentDeleteModule<ChildMessageProps> request={request} closeHandler={closeHandler} props={props} />
           </>
-        ),
+        );
+        return WithDelete;
+      },
     []
   );
 
@@ -92,12 +104,13 @@ const BlogContentChildMessageUpdate = () => {
   const body = useCallback<UseMessageToModuleBody<ChildMessageProps>>(
     ({ props }) =>
       (closeHandler) => {
-        return (
+        const WithUpdate = (
           <>
             <ChildMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
             <BlogContentUpdateModule request={request} props={props} closeHandler={closeHandler} />
           </>
         );
+        return WithUpdate;
       },
     []
   );
@@ -107,12 +120,10 @@ const BlogContentChildMessageUpdate = () => {
   return childUpdate;
 };
 
-const BlogContentChildMessage: BlogContentChildMessageType = ({ messages }) => {
+export const BlogContentChildMessage = ({ messages }: { messages: ChildMessageProps[] }) => {
   const childReplay = BlogContentChildMessageReplay();
   const childDelete = BlogContentChildMessageDelete();
   const childUpdate = BlogContentChildMessageUpdate();
 
-  return <BlogContentChildMessageWithReplay messages={messages} childReplay={childReplay} childDelete={childDelete} childUpdate={childUpdate} />;
+  return <BlogContentChildMessageWithFeature messages={messages} childReplay={childReplay} childDelete={childDelete} childUpdate={childUpdate} />;
 };
-
-export default BlogContentChildMessage;

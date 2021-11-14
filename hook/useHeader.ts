@@ -2,10 +2,13 @@ import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/dist/client/router";
 import { actionName } from "config/action";
 import { useCurrentState } from "./useBase";
-import { setDataSuccess_client } from "store/reducer/client/action";
-import { UseHeaderItemType } from "types/hook";
+import { setDataSuccess_client } from "store/reducer/client/share/action";
 
-const autoChangeHeader = (item: string, currentHeader: string, changeCurrentItem: Function, needChange: boolean) => {
+interface UseHeaderItemType {
+  (props?: { needInitHead?: boolean }): { currentHeader: string; changeCurrentHeader: (headItem: string) => void };
+}
+
+const useAutoChangeHeader = (item: string, currentHeader: string, changeCurrentItem: Function, needChange: boolean) => {
   useEffect(() => {
     if (needChange && item !== currentHeader) {
       changeCurrentItem(item);
@@ -23,8 +26,8 @@ const useHeaderItem: UseHeaderItemType = (props = {}) => {
     if (ref.current !== headItem) {
       dispatch(setDataSuccess_client({ name: actionName.currentHeader, data: headItem }));
     }
-  }, []);
-  autoChangeHeader(route, currentHeader, changeCurrentHeader, needInitHead);
+  }, [dispatch]);
+  useAutoChangeHeader(route, currentHeader, changeCurrentHeader, needInitHead);
   return { currentHeader, changeCurrentHeader };
 };
 

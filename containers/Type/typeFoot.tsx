@@ -1,12 +1,12 @@
-import PageFoot from "components/PageFoot";
+import { FootPage } from "components/PageFoot";
 import { useType } from "hook/useType";
-import { TypeContentType } from "types/containers";
+import { HomeProps } from "store/reducer/server/action/home";
 
-const TypeFoot: TypeContentType = ({ blogs }) => {
+export const TypeFoot = ({ blogs }: { blogs: HomeProps }) => {
   let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageBlogs } = useType({ blogs });
 
   return currentPageBlogs.length ? (
-    <PageFoot
+    <FootPage
       className="border-0"
       page={currentPage}
       increaseAble={increaseAble}
@@ -16,5 +16,3 @@ const TypeFoot: TypeContentType = ({ blogs }) => {
     />
   ) : null;
 };
-
-export default TypeFoot;

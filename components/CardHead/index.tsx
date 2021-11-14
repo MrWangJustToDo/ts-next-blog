@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CardHeadType } from "types/components";
 import { flexBetween, flexCenter, getClass } from "utils/dom";
 
-const CardHead: CardHeadType = ({ icon, content, hrefTo }) => {
+export const CardHead: CardHeadType = ({ icon, content, hrefTo }) => {
   return (
     <div className={getClass(flexBetween, "card-header small")} style={{ borderBottom: "3px solid rgb(23, 162, 184)", backgroundColor: "#f4f6f8" }}>
       <div className={getClass(flexCenter)}>
@@ -20,5 +20,3 @@ const CardHead: CardHeadType = ({ icon, content, hrefTo }) => {
     </div>
   );
 };
-
-export default CardHead;

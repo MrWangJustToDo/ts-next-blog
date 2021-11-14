@@ -3,7 +3,7 @@ import { LoadingType } from "types/components";
 
 import style from "./index.module.scss";
 
-const Loading: LoadingType = ({ _style = {}, className = "", color = "info" }) => {
+export const Loading: LoadingType = ({ _style = {}, className = "", color = "info" }) => {
   return (
     <div className={getClass("", flexCenter, className)}>
       <div className={style["default"]} style={_style}>
@@ -19,5 +19,3 @@ const Loading: LoadingType = ({ _style = {}, className = "", color = "info" }) =
     </div>
   );
 };
-
-export default Loading;

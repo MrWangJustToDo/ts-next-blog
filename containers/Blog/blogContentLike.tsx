@@ -1,12 +1,11 @@
 import { apiName } from "config/api";
-import LoadRender from "components/LoadRender";
-import BlogContentLikeToPayModule from "./blogContentLikeToPayModule";
+import { LoadRender } from "components/LoadRender";
+import { BlogContentLikeToPayModule } from "./blogContentLikeToPayModule";
 import { flexCenter, getClass } from "utils/dom";
 import { useLikeToPayModule } from "hook/useBlog";
-import { AuthorProps } from "types/hook";
-import { BlogContentType } from "types/containers";
+import { AuthorProps, BlogProps, UserProps } from "types";
 
-const BlogContentLike: BlogContentType = ({ userId, blogPriseState }) => {
+export const BlogContentLike = ({ userId, blogPriseState }: { userId: UserProps["userId"]; blogPriseState: BlogProps["blogPriseState"] }) => {
   const click = useLikeToPayModule({
     body: (
       <LoadRender<AuthorProps>
@@ -38,5 +37,3 @@ const BlogContentLike: BlogContentType = ({ userId, blogPriseState }) => {
     </li>
   );
 };
-
-export default BlogContentLike;

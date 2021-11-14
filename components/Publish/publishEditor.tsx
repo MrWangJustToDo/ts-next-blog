@@ -3,7 +3,6 @@ import { useCallback } from "react";
 import { useEditor } from "hook/useBlog";
 import { getClass } from "utils/dom";
 import { markNOLineNumber } from "utils/markdown";
-import { BlogContentType } from "types/containers";
 
 import style from "./index.module.scss";
 import "react-markdown-editor-lite/lib/index.css";
@@ -12,7 +11,7 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
 });
 
-const PublishEditor: BlogContentType = ({ blogId, blogContent = "" }) => {
+export const PublishEditor = ({ blogId, blogContent = "" }: { blogId: string; blogContent?: string }) => {
   useEditor(blogId!);
 
   const mdRender = useCallback<(t: string) => string>((text) => markNOLineNumber.render(text), []);
@@ -29,5 +28,3 @@ const PublishEditor: BlogContentType = ({ blogId, blogContent = "" }) => {
     </div>
   );
 };
-
-export default PublishEditor;

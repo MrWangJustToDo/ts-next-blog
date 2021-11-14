@@ -6,13 +6,13 @@ import { log } from "utils/log";
  * update操作
  * @param {db: Object, table: String, param: {set: {String: String}, where: {String: {value:operator}}}} params db 数据库连接对象，table 表名称，paramupdate参数{set:{typeCount: 1}, where: {typeId: {value: 1, oparetor: 'and'}}}
  */
-const updateTableWithParam = async ({
+export const updateTableWithParam = async ({
   db,
   table,
   param,
 }: {
   db: Database;
-  table: string;
+  table: "users" | "author" | "type" | "tag" | "blogs" | "home" | "usersEx" | "primaryComment" | "childComment";
   param: { set: { [props: string]: string | number }; where: { [props: string]: { value: string | number; operator?: string } } };
 }) => {
   let Sql = `UPDATE ${table} SET`;
@@ -38,18 +38,16 @@ const updateTableWithParam = async ({
       Sql += ` ${where[key].operator}`;
     }
   }
-  log(`update sql: ${Sql} --> params: ${sqlParam.join(', ')}`, "normal");
+  log(`update sql: ${Sql} --> params: ${sqlParam.join(", ")}`, "normal");
   return await db.run(Sql, ...sqlParam);
 };
 
 // 更新指定type的count计数
-const updateTypeCountByTypeId = async ({ db, typeId, count }: { db: Database; typeId: string; count: number }) => {
+export const updateTypeCountByTypeId = async ({ db, typeId, count }: { db: Database; typeId: string; count: number }) => {
   return await db.run("UPDATE type SET typeCount = ? WHERE typeId = ? ", count, typeId);
 };
 
 // 更新指定tag的count计数
-const updateTagCountByTagId = async ({ db, count, tagId }: { db: Database; count: number; tagId: string }) => {
+export const updateTagCountByTagId = async ({ db, count, tagId }: { db: Database; count: number; tagId: string }) => {
   return await db.run("UPDATE tag SET tagCount = ? WHERE tagId = ?", count, tagId);
 };
-
-export { updateTableWithParam, updateTagCountByTagId, updateTypeCountByTypeId };

@@ -1,15 +1,13 @@
 import * as sqlite from "sqlite";
 import sqlite3 from "sqlite3";
-import { log } from "utils/log";
 import { getUserByUserId } from "server/database/get";
-import { catchHandler, fail, transformHandler } from "server/middleware/apiHandler";
-import { TransformHandlerType } from "types/server";
+import { catchMiddlewareHandler, compose, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
 
-var db: sqlite.Database;
+let db: sqlite.Database;
 
-const initDBConnect: TransformHandlerType = transformHandler(
-  catchHandler(
-    async ({ req, next }) => {
+const initDBConnect = wrapperMiddlewareRequest(
+  {
+    requestHandler: async function initDBConnect({ req }) {
       if (!db) {
         db = await sqlite.open({
           filename: process.env.DATABASE as string,
@@ -19,45 +17,37 @@ const initDBConnect: TransformHandlerType = transformHandler(
       if (!req.db) {
         req.db = db;
       }
-      next();
     },
-    ({ res, e, code = 500 }) =>
-      fail({ res, statusCode: code, resDate: { code: -1, state: "初始化失败", data: `数据库连接失败：${e.toString()}`, methodName: "initDBConnect" } })
-  )
+    goNext: true,
+  },
+  compose(catchMiddlewareHandler)
 );
 
-const initSession: TransformHandlerType = transformHandler(
-  catchHandler(
-    ({ req, next }) => {
+const initSession = wrapperMiddlewareRequest(
+  {
+    requestHandler: function initSession({ req }) {
       if (!req.session.views) {
         req.session.views = {};
       }
-      next();
     },
-    ({ res, e, code = 500 }) =>
-      fail({ res, statusCode: code, resDate: { code: -1, state: "初始化失败", data: `session初始化失败：${e.toString()}`, methodName: "initSession" } })
-  )
+    goNext: true,
+  },
+  compose(catchMiddlewareHandler)
 );
 
-const decodeURI: TransformHandlerType = transformHandler(
-  catchHandler(({ req, next }) => {
-    req.url = decodeURIComponent(req.url);
-    next();
-  })
+const decodeURI = wrapperMiddlewareRequest(
+  {
+    requestHandler: function decodeURI({ req }) {
+      req.url = decodeURIComponent(req.url);
+    },
+    goNext: true,
+  },
+  compose(catchMiddlewareHandler)
 );
 
-const serverLog: TransformHandlerType = transformHandler(
-  catchHandler(({ req, next }) => {
-    if (!req.url.startsWith("/_next") && !req.url.startsWith("/__next")) {
-      log(`method: ${req.method}, request url: ${req.url}`, "normal");
-    }
-    next();
-  })
-);
-
-const initUser: TransformHandlerType = transformHandler(
-  catchHandler(
-    async ({ req, next }) => {
+const initUser = wrapperMiddlewareRequest(
+  {
+    requestHandler: async function initUser({ req }) {
       // 从签名cookie中找出该用户的信息并挂在req对象上以供后续的中间件访问
       if (req.signedCookies.id) {
         // 从session中找登录信息
@@ -74,10 +64,10 @@ const initUser: TransformHandlerType = transformHandler(
       } else {
         req.session.userCache = null;
       }
-      next();
     },
-    ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "初始化用户信息失败", data: e.toString(), methodName: "initUser" } })
-  )
+    goNext: true,
+  },
+  compose(catchMiddlewareHandler)
 );
 
-export { initDBConnect, initSession, initUser, decodeURI, serverLog };
+export { initDBConnect, initSession, initUser, decodeURI };

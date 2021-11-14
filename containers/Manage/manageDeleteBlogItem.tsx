@@ -4,15 +4,14 @@ import { mutate } from "swr";
 import { apiName } from "config/api";
 import { flexCenter, getClass } from "utils/dom";
 import { useUserRequest } from "hook/useUser";
-import { useFilterResult, useManageToDeleteModule } from "hook/useManage";
+import { useFilterResult, useManageToDeleteModule, UseManageToDeleteModuleBody } from "hook/useManage";
 import { WithWriteBlogItem as SearchResult, BlogItem } from "components/BlogItem";
-import ManageDeleteModule from "./manageDeleteModule";
-import { BlogContentType } from "types/containers";
-import { UseManageToDeleteModuleBody } from "types/hook";
+import { ManageDeleteModule } from "./manageDeleteModule";
+import { ClientTagProps, HomeBlogProps, TypeProps, UserProps } from "types";
 
 import style from "./index.module.scss";
 
-const ManageDeleteBlogItem: BlogContentType = (props) => {
+export const ManageDeleteBlogItem = (props: HomeBlogProps & TypeProps & ClientTagProps & UserProps) => {
   const filter = useFilterResult({ currentBlogId: props.blogId! });
 
   const request = useUserRequest({
@@ -26,13 +25,15 @@ const ManageDeleteBlogItem: BlogContentType = (props) => {
   const successHandler = useCallback(() => {
     filter();
     mutate(apiName.home);
-  }, []);
+  }, [filter]);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
     ({ deleteItem }) =>
-      (closeHandler) =>
-        <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
-    []
+      (closeHandler) => {
+        const WithDelete = <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />;
+        return WithDelete;
+      },
+    [request, successHandler]
   );
 
   const click = useManageToDeleteModule({
@@ -57,5 +58,3 @@ const ManageDeleteBlogItem: BlogContentType = (props) => {
     </>
   );
 };
-
-export default ManageDeleteBlogItem;

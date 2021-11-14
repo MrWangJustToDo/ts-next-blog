@@ -1,10 +1,9 @@
 import { log } from "./log";
+import { isBrowser } from "./env";
 import { parseToString } from "./data";
 import { cancel, delay } from "./delay";
 
 const maxTimeStore = 1000 * 60 * 10;
-
-const isBrowser = typeof window !== "undefined";
 
 class CacheData<T> {
   id: NodeJS.Timeout | undefined;

@@ -1,10 +1,9 @@
-import MainRightHead from "components/CardHead";
-import MainRightCommendItem from "./mainRightCommendItem";
+import { CardHead as MainRightHead } from "components/CardHead";
+import { MainRightCommendItem } from "./mainRightCommendItem";
 import { mainRightHeader } from "config/home";
 import { useCommend } from "hook/useHome";
-import { MainRightCommendType } from "types/containers";
 
-const MainRightCommend: MainRightCommendType = ({ index }) => {
+export const MainRightCommend = ({ index }: { index: number }) => {
   const { commendBlogs } = useCommend();
 
   const { icon, content, hrefTo } = mainRightHeader[index];
@@ -20,5 +19,3 @@ const MainRightCommend: MainRightCommendType = ({ index }) => {
     </div>
   );
 };
-
-export default MainRightCommend;

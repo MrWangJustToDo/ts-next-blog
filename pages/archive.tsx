@@ -1,14 +1,14 @@
 import { wrapper } from "store";
 import { END } from "redux-saga";
 import groupBy from "lodash/groupBy";
-import ArchiveContent from "containers/Archive";
+import { Archive as ArchiveContent } from "containers/Archive";
 import { MyNextComponent } from "./_app";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { autoDispatchTokenHandler } from "config/ssr";
 import { animateFadeIn, getClass } from "utils/dom";
-import { setDataSuccess_client } from "store/reducer/client/action";
-import { getDataAction_Server, getDataSuccess_Server } from "store/reducer/server/action";
+import { setDataSuccess_client } from "store/reducer/client/share/action";
+import { getDataAction_Server, getDataSuccess_Server } from "store/reducer/server/share/action";
 
 const Archive: MyNextComponent = () => {
   return (

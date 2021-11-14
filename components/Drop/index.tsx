@@ -1,13 +1,13 @@
 import { useArray, useBool } from "hook/useData";
 import { flexCenter, getClass } from "utils/dom";
-import DropItem from "./dropItem";
-import DropContainer from "./dropContainer";
-import DropSelectItem from "./dropSelectItem";
+import { DropItem } from "./dropItem";
+import { DropContainer } from "./dropContainer";
+import { DropSelectItem } from "./dropSelectItem";
 import { DropProps, DropType, ValueType } from "types/components";
 
 import styleCss from "./index.module.scss";
 
-const Drop: DropType = <T extends ValueType>({
+export const Drop: DropType = <T extends ValueType>({
   data = [],
   className = "",
   placeHolder = "请选择",
@@ -69,5 +69,3 @@ const Drop: DropType = <T extends ValueType>({
     </div>
   );
 };
-
-export default Drop;

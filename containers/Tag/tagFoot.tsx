@@ -1,12 +1,12 @@
-import PageFoot from "components/PageFoot";
+import { FootPage } from "components/PageFoot";
 import { useTag } from "hook/useTag";
-import { TagContentType } from "types/containers";
+import { HomeProps } from "store/reducer/server/action/home";
 
-const TagFoot: TagContentType = ({ blogs }) => {
+export const TagFoot = ({ blogs }: { blogs: HomeProps }) => {
   let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageBlogs } = useTag({ blogs });
 
   return currentPageBlogs.length ? (
-    <PageFoot
+    <FootPage
       className="border-0"
       page={currentPage}
       increaseAble={increaseAble}
@@ -16,5 +16,3 @@ const TagFoot: TagContentType = ({ blogs }) => {
     />
   ) : null;
 };
-
-export default TagFoot;

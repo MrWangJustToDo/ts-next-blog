@@ -1,12 +1,22 @@
 import { useCallback, useMemo, useState } from "react";
-import { State } from "store";
 import throttle from "lodash/throttle";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { archiveLength } from "config/archive";
 import { useCurrentState } from "./useBase";
 import { useAutoActionHandler } from "./useAuto";
-import { ArchiveProps, UseArchiveType, UseAutoLoadArchiveType } from "types/hook";
+import type { HomeBlogProps } from "types";
+import type { HomeProps } from "store/reducer/server/action/home";
+
+interface ArchiveProps {
+  [year: string]: HomeProps;
+}
+interface UseArchiveType {
+  (): { value: ArchiveProps; canLoad: boolean; loadMore: () => void; allCount: number };
+}
+interface UseAutoLoadArchiveType {
+  (props: { canLoad: boolean; loadMore: () => void; breakPoint: number }): void;
+}
 
 const autoLoadArchive = (loadArchive: Function, archiveData: Object, needUpdate: boolean, setNeedUpdate: Function) => {
   if (Object.keys(archiveData).length && needUpdate) {
@@ -16,14 +26,13 @@ const autoLoadArchive = (loadArchive: Function, archiveData: Object, needUpdate:
 };
 
 const useArchive: UseArchiveType = () => {
-  const { state } = useCurrentState<State>();
+  const { state: archives } = useCurrentState<ArchiveProps>((state) => state.client[actionName.currentArchive]["data"]);
+  const { state: home } = useCurrentState<HomeBlogProps[]>((state) => state.server[apiName.home]["data"]);
   const [page, setPage] = useState<number>(1);
   const [bool, setBool] = useState<boolean>(true);
   const [value, setValue] = useState<ArchiveProps>({});
-  // 获取所有的archive
-  const archives = state.client[actionName.currentArchive]["data"];
   // 获取所有的长度
-  const allCount = state.server[apiName.home]["data"].length;
+  const allCount = home.length;
   // 获取当前最少显示的archive数量
   const currentCount = page * archiveLength;
   const currentArchive: ArchiveProps = {};
@@ -42,21 +51,20 @@ const useArchive: UseArchiveType = () => {
 };
 
 const useAutoLoadArchive: UseAutoLoadArchiveType = ({ canLoad, loadMore, breakPoint }) => {
-  const loadMoreCallback = useCallback<() => void>(
-    throttle(() => {
-      if (document.body.offsetHeight - (document.scrollingElement?.scrollTop || 0) < breakPoint) {
-        loadMore();
-      }
-    }, 1000),
-    [breakPoint]
+  useAutoActionHandler(
+    {
+      rightNow: true,
+      actionState: canLoad,
+      actionCallback: throttle(() => {
+        if (document.body.offsetHeight - (document.scrollingElement?.scrollTop || 0) < breakPoint) {
+          loadMore();
+        }
+      }, 1000),
+      addListenerCallback: (action) => window.addEventListener("scroll", action),
+      removeListenerCallback: (action) => window.removeEventListener("scroll", action),
+    },
+    breakPoint
   );
-  useAutoActionHandler({
-    rightNow: true,
-    actionState: canLoad,
-    action: loadMoreCallback,
-    addListenerCallback: (action) => window.addEventListener("scroll", action),
-    removeListenerCallback: (action) => window.removeEventListener("scroll", action),
-  });
 };
 
 export { useArchive, useAutoLoadArchive };

@@ -1,23 +1,25 @@
+import { apiName } from "config/api";
 import { getBlogsByBlogTitleAndUserId, getBlogsByTagIdAndUserId, getBlogsByTypeIdAndUserId, getHome, getHomeByUserId } from "server/database/get";
-import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
-import { BlogContentProps } from "types/hook";
+import { success, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
+import { HomeBlogProps, UserProps } from "types";
+import { transformPath } from "utils/path";
 
 // 获取首页数据
-const getHomeAction = autoRequestHandler({
-  requestHandler: async ({ req, res }) => {
-    const data = (await getHome({ db: req.db! })) as BlogContentProps[];
+const homeCacheKey = transformPath({ apiPath: apiName.home, needPre: false });
+export const getHomeAction = wrapperMiddlewareRequest({
+  requestHandler: async function getHomeAction({ req, res }) {
+    const data = await getHome({ db: req.db! });
     data.sort(({ blogCreateDate: d1 }, { blogCreateDate: d2 }) => (new Date(d1!).getTime() > new Date(d2!).getTime() ? -1 : 1));
     success({ res, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getHomeAction" } }),
-  cacheConfig: { needCache: true },
+  cacheConfig: { needCache: true, cacheKey: homeCacheKey },
 });
 
 // 根据指定参数获取blog
-const getBlogsByParams = autoRequestHandler({
-  requestHandler: async ({ req, res }) => {
+export const getBlogsByParams = wrapperMiddlewareRequest({
+  requestHandler: async function getBlogsByParams({ req, res }) {
     const { blogTitle, typeId: currentTypeId, tagId: currentTagId, userId } = req.body;
-    let blogs: BlogContentProps[] = [];
+    let blogs: Array<HomeBlogProps & UserProps> = [];
     if (blogTitle) {
       blogs = await getBlogsByBlogTitleAndUserId({ db: req.db!, blogTitle, userId });
       blogs = blogs.filter(({ typeId, tagId }) => {
@@ -50,29 +52,24 @@ const getBlogsByParams = autoRequestHandler({
     }
     success({ res, resDate: { state: "搜索成功", data: blogs } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { state: "搜索出错", data: e.toString(), methodName: "getBlogsByParams" } }),
   userConfig: { needCheck: true },
   cacheConfig: {
     needCache: true,
     cacheKey: ({ req }) => {
-      const { blogTitle = "", typeId = "", tagId = "" } = req.body;
-      return req.url + `?${blogTitle}:${typeId}:${tagId}`;
+      const { blogTitle = "", typeId = "", tagId = "", userId } = req.body;
+      return transformPath({ apiPath: apiName.search, needPre: false, query: { userId, blogTitle, typeId, tagId } });
     },
   },
   paramsConfig: { fromBody: ["userId"] },
 });
 
-const getUserHomeAction = autoRequestHandler({
-  requestHandler: async ({ req, res }) => {
+export const getUserHomeAction = wrapperMiddlewareRequest({
+  requestHandler: async function getUserHomeAction({ req, res }) {
     const { userId } = req.query;
-    const data = (await getHomeByUserId({ db: req.db!, userId: userId as string })) as BlogContentProps[];
+    const data = await getHomeByUserId({ db: req.db!, userId: userId as string });
     data.sort(({ blogCreateDate: d1 }, { blogCreateDate: d2 }) => (new Date(d1!).getTime() > new Date(d2!).getTime() ? -1 : 1));
     success({ res, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statusCode: code, resDate: { state: "获取失败", data: e.toString(), methodName: "getUserHomeAction" } }),
   userConfig: { needCheck: true },
   paramsConfig: { fromQuery: ["userId"] },
 });
-
-export { getHomeAction, getBlogsByParams, getUserHomeAction };

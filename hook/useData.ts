@@ -1,7 +1,25 @@
-import { useCallback, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useRef, useState } from "react";
 import debounce from "lodash/debounce";
 import throttle from "lodash/throttle";
-import { UseBoolType, UseArrayType } from "types/hook";
+
+interface UseBoolResult {
+  bool: boolean;
+  boolState: MutableRefObject<boolean>;
+  switchBool: () => void;
+  switchBoolDebounce: () => void;
+  show: () => void;
+  showThrottle: () => void;
+  showThrottleState: () => void;
+  hide: () => void;
+  hideDebounce: () => void;
+  hideDebounceState: () => void;
+}
+interface UseBoolType {
+  (props?: { init?: boolean }): UseBoolResult;
+}
+interface UseArrayType {
+  <T>(init: T[]): [T[], (val: T) => void, (val: T) => void, (val: T) => void, (val: T) => void];
+}
 
 const timeStep: number = 200;
 

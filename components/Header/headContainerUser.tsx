@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { useBool } from "hook/useData";
 import { useRouter } from "next/dist/client/router";
+import { Image } from "components/Image";
 import { useCurrentUser, useLogout } from "hook/useUser";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { getCurrentAvatar } from "utils/data";
@@ -9,7 +10,7 @@ import { animateFadeIn, flexCenter, getClass } from "utils/dom";
 
 import style from "./index.module.scss";
 
-const HeadContainerUser = () => {
+export const HeadContainerUser = () => {
   const router = useRouter();
 
   const logout = useLogout();
@@ -31,7 +32,7 @@ const HeadContainerUser = () => {
   return userId ? (
     <div className={getClass("d-inline-block", style.headUser, bool ? style.headUserActive : "")}>
       <div className={getClass("bg-dark", animateFadeIn, flexCenter, style.userPanel)} onClick={switchBoolDebounce}>
-        <img className="rounded-circle" src={getCurrentAvatar(avatar, gender)} alt="头像" height="30" width="30" />
+        <Image className="rounded-circle" src={getCurrentAvatar(avatar, gender)} alt="头像" height="30" width="30" />
         <span className={getClass("mx-2 text-info", style.username)}>{username}</span>
       </div>
       <div ref={ref} className={getClass("w-100 position-absolute", style.dropPanel)}>
@@ -62,5 +63,3 @@ const HeadContainerUser = () => {
     </Link>
   ) : null;
 };
-
-export default HeadContainerUser;

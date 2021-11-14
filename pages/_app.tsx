@@ -2,11 +2,11 @@ import React, { FC } from "react";
 import { NextComponentType } from "next";
 import { AppProps } from "next/app";
 import { wrapper } from "store";
-import Layout from "components/Layout";
+import { Layout } from "components/Layout";
 
 import "../styles/globals.css";
 
-type MyNextComponent = NextComponentType & { container?: boolean; title?: string; routerIn?: string; routerOut?: string };
+type MyNextComponent<T = {}> = NextComponentType<{}, {}, T> & { container?: boolean; title?: string; routerIn?: string; routerOut?: string };
 
 interface MyAppProps extends AppProps {
   Component: MyNextComponent;

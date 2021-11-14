@@ -1,8 +1,8 @@
-import ManageSearch from "./manageSearch";
-import ManageResult from "./manageResult";
-import { ManageUserIdType } from "types/containers";
+import { ManageSearch } from "./manageSearch";
+import { ManageResult } from "./manageResult";
+import { UserProps } from "types";
 
-const ManageLeft: ManageUserIdType = ({ userId }) => {
+export const ManageLeft = ({ userId }: Pick<UserProps, "userId">) => {
   return (
     <div className="col-md-8 user-select-none">
       <ManageSearch />
@@ -10,5 +10,3 @@ const ManageLeft: ManageUserIdType = ({ userId }) => {
     </div>
   );
 };
-
-export default ManageLeft;

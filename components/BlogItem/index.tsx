@@ -1,10 +1,12 @@
 import Link from "next/link";
-import BlogItemLeft from "./blogItemLeft";
-import BlogItemRight from "./blogItemRight";
+import { BlogItemLeft } from "./blogItemLeft";
+import { BlogItemRight } from "./blogItemRight";
 import { getClass, flexAround } from "utils/dom";
-import { BlogItemType } from "types/components";
+import type { HomeBlogProps, TypeProps, UserProps } from "types";
 
-const BlogItem: BlogItemType = (props) => {
+type PropsType = HomeBlogProps & UserProps & TypeProps & { className?: string; _style?: { [props: string]: string } };
+
+const BlogItem = (props: PropsType) => {
   const { blogImgLink, className = "", _style = {} } = props;
 
   return (
@@ -15,7 +17,7 @@ const BlogItem: BlogItemType = (props) => {
   );
 };
 
-const WithReadBlogItem: BlogItemType = (props) => {
+const WithReadBlogItem = (props: PropsType) => {
   return (
     <Link href={`/blog/${props.blogId}`}>
       <a className="text-reset text-decoration-none d-block h-100">
@@ -25,7 +27,7 @@ const WithReadBlogItem: BlogItemType = (props) => {
   );
 };
 
-const WithWriteBlogItem: BlogItemType = (props) => {
+const WithWriteBlogItem = (props: PropsType) => {
   return (
     <Link href={`/editor/${props.blogId}`}>
       <a className="text-reset text-decoration-none d-block h-100">

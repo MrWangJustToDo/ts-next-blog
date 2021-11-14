@@ -1,9 +1,29 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { RefObject, useEffect, useLayoutEffect, useRef } from "react";
 import { log } from "utils/log";
 import { delay } from "utils/delay";
 import { animateCSS } from "utils/dom";
 import { actionHandler } from "utils/action";
-import { UseShowAndHideAnimateProps, UseShowAndHideAnimateType } from "types/hook";
+
+type animateCallback = () => void | Promise<void>;
+interface UseShowAndHideAnimateProps<T> {
+  mode?: "display" | "opacity";
+  state: boolean;
+  faster?: boolean;
+  getElement?: () => T | null;
+  forWardRef?: RefObject<T>;
+  showClassName?: string;
+  hideClassName?: string;
+  startShow?: animateCallback;
+  startHide?: animateCallback;
+  showDone?: animateCallback;
+  hideDone?: animateCallback;
+}
+interface UseShowAndHideAnimateReturn<T> {
+  animateRef: RefObject<T>;
+}
+interface UseShowAndHideAnimateType {
+  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>, ...deps: any[]): UseShowAndHideAnimateReturn<T>;
+}
 
 const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>(
   {
@@ -111,7 +131,7 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
     return () => {
       needCancel = true;
     };
-  }, [state, getElement, faster, ...deps]);
+  }, [state, getElement, faster, currentRef, mode, showClassName, hideClassName, ...deps]);
   return { animateRef: currentRef };
 };
 

@@ -2,13 +2,13 @@
 import { getClass } from "utils/dom";
 import { useAutoShowAndHide } from "hook/useAuto";
 import { useAutoScrollTop, useAutoScrollBottom } from "hook/useBlog";
-import BlogMenu from "./blogMenu";
-import BlogCanvas from "./blogCanvas";
+import { BlogMenu } from "./blogMenu";
+import { BlogCanvas } from "./blogCanvas";
 import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-const BlogUtils: SimpleElement = () => {
+export const BlogUtils: SimpleElement = () => {
   const divRef = useAutoShowAndHide<HTMLDivElement>(360);
 
   const topRef = useAutoScrollTop<HTMLButtonElement>();
@@ -28,5 +28,3 @@ const BlogUtils: SimpleElement = () => {
     </div>
   );
 };
-
-export default BlogUtils;

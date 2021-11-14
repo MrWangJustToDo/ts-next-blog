@@ -1,5 +1,4 @@
 import { apiName } from "config/api";
-import { BlogContentProps, UserProps } from "types/hook";
 
 type Color =
   | "blue"
@@ -32,7 +31,7 @@ export type { SimpleElement };
 
 /* AnimationList */
 interface AnimationListType {
-  (props: { children: ReactChild[]; showClassName?: string; delay?: number, replace?: boolean }): JSX.Element;
+  (props: { children: ReactChild[]; showClassName?: string; delay?: number; replace?: boolean }): JSX.Element;
 }
 interface AnimationItemType {
   (props: {
@@ -48,94 +47,38 @@ interface AnimationItemType {
 
 export type { AnimationListType, AnimationItemType };
 
-/* === BlogItem === */
-interface BlogItemType {
-  (props: BlogContentProps & { className?: string; _style?: { [props: string]: string } }): JSX.Element;
-}
-
-export type { BlogItemType };
-
-/* blogItemRight */
-interface BlogItemRightType {
-  (props: { src: string }): JSX.Element;
-}
-
-export type { BlogItemRightType };
-
 /* === BlogMessage */
-interface PrimaryMessageProps {
-  blogId: string;
-  commentId: string;
-  fromUserId?: string;
-  fromIp: string;
-  content: string;
-  createDate: string;
-  modifyState: number;
-  modifyDate: string;
-  childIds: string;
-  childCount: number;
-  preview?: string;
-  isMd?: number;
+type PrimaryMessageProps = PrimaryCommentProps &
+  UserHoverProps & {
+    withReplay?: boolean;
+    withUpdate?: boolean;
+    withDelete?: boolean;
+    withChildren?: boolean;
+    withHover?: boolean;
 
-  // 用户相关
-  avatar?: string;
-  username?: string;
-  address?: string;
-  email?: string;
-  gender?: number;
-  qq?: string;
-  children?: JSX.Element;
-
-  withReplay?: boolean;
-  withUpdate?: boolean;
-  withDelete?: boolean;
-  withChildren?: boolean;
-  withHover?: boolean;
-
-  replayHandler?: (props: PrimaryMessageProps) => void;
-  updateHandler?: (props: PrimaryMessageProps) => void;
-  deleteHandler?: (props: PrimaryMessageProps) => void;
-}
+    replayHandler?: (props: PrimaryMessageProps) => void;
+    updateHandler?: (props: PrimaryMessageProps) => void;
+    deleteHandler?: (props: PrimaryMessageProps) => void;
+  };
 
 interface PrimaryMessageType {
   (props: PrimaryMessageProps & { previewMod?: boolean }): JSX.Element;
 }
 
-interface ChildMessageProps {
-  blogId: string;
-  primaryCommentId: string;
-  commentId: string;
-  fromIp: string;
-  fromUserId: string;
-  toIp: string;
-  toUserId: string;
-  content: string;
-  createDate: string;
-  modifyState: number;
-  modifyDate: string;
-  preview?: string;
-  isMd?: number;
+type ChildMessageProps = ChildCommentProps &
+  UserHoverProps & {
+    toUserName?: string;
 
-  // 用户相关
-  avatar?: string;
-  username?: string;
-  address?: string;
-  email?: string;
-  gender?: number;
-  qq?: string;
-  toUserName?: string;
-  children?: JSX.Element;
+    withHover?: boolean;
+    withReplay?: boolean;
+    withUpdate?: boolean;
+    withDelete?: boolean;
+    withChildren?: boolean;
 
-  withHover?: boolean;
-  withReplay?: boolean;
-  withUpdate?: boolean;
-  withDelete?: boolean;
-  withChildren?: boolean;
-
-  replayHandler?: (props: ChildMessageProps) => void;
-  updateHandler?: (props: ChildMessageProps) => void;
-  deleteHandler?: (props: ChildMessageProps) => void;
-}
+    replayHandler?: (props: ChildMessageProps) => void;
+    updateHandler?: (props: ChildMessageProps) => void;
+    deleteHandler?: (props: ChildMessageProps) => void;
+  };
 
 interface ChildMessageType {
   (props: ChildMessageProps & { previewMod?: boolean }): JSX.Element;
@@ -475,7 +418,7 @@ interface GetCurrentInitialDataProps<T> {
 }
 
 interface GetCurrentInitialDataType {
-  <T>(props: GetCurrentInitialDataProps<T>): { currentInitialData?: T };
+  <T>(props: GetCurrentInitialDataProps<T>): { currentInitialData?: T | any };
 }
 
 interface AutoUpdateStateProps<T> {
@@ -489,7 +432,16 @@ interface AutoUpdateStateType {
   <T>(props: AutoUpdateStateProps<T>): void;
 }
 
-export type { LoadRenderProps, LoadRenderType, RenderProps, RenderType, GetCurrentInitialDataType, AutoUpdateStateType, UseLoadingType };
+export type {
+  LoadRenderProps,
+  LoadRenderType,
+  RenderProps,
+  RenderType,
+  GetCurrentInitialDataProps,
+  GetCurrentInitialDataType,
+  AutoUpdateStateType,
+  UseLoadingType,
+};
 
 /* loading */
 interface LoadingProps {
@@ -549,6 +501,7 @@ export type { TagType };
 /* === Toast === */
 import { toastState } from "config/toast";
 import { InputProps } from "./config";
+import { ChildCommentProps, PrimaryCommentProps, UserProps } from "types";
 import React, { ReactChild, ReactElement, RefObject } from "react";
 
 interface ToastProps {
@@ -599,4 +552,4 @@ interface UserHoverType {
   (props: UserHoverProps): JSX.Element | null;
 }
 
-export type { UserHoverType };
+export type { UserHoverType, UserHoverProps };

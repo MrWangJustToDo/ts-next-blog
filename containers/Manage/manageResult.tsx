@@ -1,36 +1,30 @@
 import { useEffect } from "react";
-import LoadRender from "components/LoadRender";
+import { LoadRender } from "components/LoadRender";
 import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { animateFadeIn, getClass } from "utils/dom";
-import ManageResultAll from "./manageResultAll";
-import ManageResultSearch from "./manageResultSearch";
+import { ManageResultAll } from "./manageResultAll";
+import { ManageResultSearch } from "./manageResultSearch";
 import { useBool } from "hook/useData";
 import { useCurrentState } from "hook/useBase";
-import { BlogContentProps } from "types/hook";
-import { ManageUserIdType } from "types/containers";
+import { ClientTagProps, HomeBlogProps, TypeProps, UserProps } from "types";
 
 import style from "./index.module.scss";
 
-type Result = {
-  loading: boolean;
-  data: BlogContentProps[];
-};
-
-const ManageResult: ManageUserIdType = ({ userId }) => {
+export const ManageResult = ({ userId }: { userId: string }) => {
   const { bool, switchBoolDebounce, show } = useBool();
 
-  const { state } = useCurrentState<Result>((state) => state.client[actionName.currentResult]);
+  const { state } = useCurrentState((state) => state.client[actionName.currentResult]);
 
-  const data = (state as Result)["data"];
+  const data = state["data"];
 
-  const loading = (state as Result)["loading"];
+  const loading = state["loading"];
 
   useEffect(() => {
     if (!loading && data) {
       show();
     }
-  }, [loading, data]);
+  }, [loading, data, show]);
 
   return (
     <div className="card mt-4">
@@ -41,7 +35,7 @@ const ManageResult: ManageUserIdType = ({ userId }) => {
         </a>
       </div>
       {!bool ? (
-        <LoadRender<BlogContentProps[]>
+        <LoadRender<Array<HomeBlogProps & UserProps & TypeProps & ClientTagProps>>
           token
           needUpdate
           needInitialData
@@ -61,5 +55,3 @@ const ManageResult: ManageUserIdType = ({ userId }) => {
     </div>
   );
 };
-
-export default ManageResult;

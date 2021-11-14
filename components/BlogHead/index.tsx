@@ -1,9 +1,11 @@
-import { BlogContentType } from "types/containers";
+import { BlogProps, UserProps } from "types";
 import { flexBetween, getClass } from "utils/dom";
-import BlogHeadLeft from "./blogHeadLeft";
-import BlogHeadRight from "./blogHeadRight";
+import { BlogHeadLeft } from "./blogHeadLeft";
+import { BlogHeadRight } from "./blogHeadRight";
 
-const BlogHead: BlogContentType = (props) => {
+export type BlogHeadProps = Pick<BlogProps, "blogModifyDate" | "blogModifyState" | "blogReadCount"> & Pick<UserProps, "avatar" | "gender" | "username">;
+
+export const BlogHead = (props: BlogHeadProps) => {
   return (
     <h6 className={getClass("card-header bg-transparent", flexBetween)}>
       <BlogHeadLeft {...props} />
@@ -11,5 +13,3 @@ const BlogHead: BlogContentType = (props) => {
     </h6>
   );
 };
-
-export default BlogHead;

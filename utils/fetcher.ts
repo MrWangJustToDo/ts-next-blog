@@ -2,14 +2,13 @@ import { AxiosResponse } from "axios";
 import assign from "lodash/assign";
 import { log } from "./log";
 import { Cache } from "./cache";
+import { isBrowser } from "./env";
 import { instance } from "./request";
 import { getHeader } from "./headers";
 import { transformPath } from "./path";
 import { AutoRequestProps, AutoRequestType, CreateRequestType } from "types/utils";
 
 const cacheResult = new Cache<string, Promise<any>>(60000);
-
-const isBrowser = typeof window !== "undefined";
 
 if (isBrowser && process.env.NODE_ENV === "development") {
   (window as any).__cache = cacheResult;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import tocbot from "tocbot";
 import { toCanvas } from "qrcode";
@@ -12,21 +12,48 @@ import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSuccessToast } from "./useToast";
-import { ApiRequestResult } from "types/utils";
-import {
-  UseBlogMenuType,
-  UseAutoScrollType,
-  UseLinkToImgType,
-  UsePublishType,
-  UseEditorType,
-  UseInputToImageModuleType,
-  UseUpdateBlogReadType,
-  UseLikeToPayModuleType,
-} from "types/hook";
+import type { ApiRequestResult, AutoRequestType } from "types/utils";
 
 import "tocbot/dist/tocbot.css";
 
-const useBlogMenu: UseBlogMenuType = (className) => {
+interface UseBlogMenuType {
+  (className: string): boolean;
+}
+interface UseAutoScrollType {
+  <T extends HTMLElement>(): RefObject<T>;
+}
+interface UseLinkToImgType {
+  <T extends HTMLElement>(): RefObject<T>;
+}
+interface UseEditorType {
+  (id: string): void;
+}
+interface UsePublishProps {
+  id: string;
+  request: AutoRequestType;
+}
+interface UsePublishType {
+  (props: UsePublishProps): [RefObject<HTMLFormElement>, () => Promise<void>];
+}
+interface UseUpdateBlogReadType {
+  (props: string): void;
+}
+interface UseLikeToPayModuleProps {
+  body: JSX.Element;
+  className?: string;
+}
+interface UseLikeToPayModuleType {
+  (props: UseLikeToPayModuleProps): () => void;
+}
+interface UseInputToImageModuleProps {
+  className?: string;
+  body: (ref: RefObject<HTMLInputElement>) => (closeHandler: () => void) => JSX.Element;
+}
+interface UseInputToImageModuleType {
+  (props: UseInputToImageModuleProps): [RefObject<HTMLInputElement>, () => void];
+}
+
+export const useBlogMenu: UseBlogMenuType = (className) => {
   const [bool, setBool] = useState<boolean>(false);
   useEffect(() => {
     const added = addIdForHeads(className);
@@ -49,7 +76,7 @@ const useBlogMenu: UseBlogMenuType = (className) => {
   return bool;
 };
 
-const useAutoScrollTop: UseAutoScrollType = <T extends HTMLElement>() => {
+export const useAutoScrollTop: UseAutoScrollType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
   useAutoActionHandler({
     actionCallback: () =>
@@ -63,7 +90,7 @@ const useAutoScrollTop: UseAutoScrollType = <T extends HTMLElement>() => {
   return ref;
 };
 
-const useAutoScrollBottom: UseAutoScrollType = <T extends HTMLElement>() => {
+export const useAutoScrollBottom: UseAutoScrollType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
   useAutoActionHandler({
     actionCallback: () =>
@@ -77,7 +104,7 @@ const useAutoScrollBottom: UseAutoScrollType = <T extends HTMLElement>() => {
   return ref;
 };
 
-const useLinkToImg: UseLinkToImgType = <T extends HTMLElement>() => {
+export const useLinkToImg: UseLinkToImgType = <T extends HTMLElement>() => {
   const ref = useRef<T>(null);
   useEffect(() => {
     actionHandler<T, void>(ref.current, (ele) => toCanvas(ele, location.href));
@@ -85,7 +112,7 @@ const useLinkToImg: UseLinkToImgType = <T extends HTMLElement>() => {
   return ref;
 };
 
-const useEditor: UseEditorType = (id) => {
+export const useEditor: UseEditorType = (id) => {
   const mdId = `#editor_${id}_md`;
 
   useEffect(() => {
@@ -149,7 +176,7 @@ const useEditor: UseEditorType = (id) => {
   }, [id, mdId]);
 };
 
-const usePublish: UsePublishType = ({ request, id }) => {
+export const usePublish: UsePublishType = ({ request, id }) => {
   const router = useRouter();
   const fail = useFailToast();
   const success = useSuccessToast();
@@ -188,7 +215,7 @@ const usePublish: UsePublishType = ({ request, id }) => {
   return [ref, submit];
 };
 
-const useInputToImageModule: UseInputToImageModuleType = ({ body, className }) => {
+export const useInputToImageModule: UseInputToImageModuleType = ({ body, className }) => {
   const open = useOverlayOpen();
   const ref = useRef<HTMLInputElement>(null);
   const select = useCallback(() => {
@@ -197,7 +224,7 @@ const useInputToImageModule: UseInputToImageModuleType = ({ body, className }) =
   return [ref, select];
 };
 
-const useUpdateBlog: UsePublishType = ({ request, id }) => {
+export const useUpdateBlog: UsePublishType = ({ request, id }) => {
   const router = useRouter();
   const fail = useFailToast();
   const success = useSuccessToast();
@@ -223,13 +250,13 @@ const useUpdateBlog: UsePublishType = ({ request, id }) => {
         },
         () => fail(`组件已卸载`)
       ),
-    [request, id]
+    [htmlId, request, id, success, router, fail]
   );
 
   return [ref, submit];
 };
 
-const useUpdateBlogRead: UseUpdateBlogReadType = (blogId) => {
+export const useUpdateBlogRead: UseUpdateBlogReadType = (blogId) => {
   const fail = useFailToast();
   const success = useSuccessToast();
   const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.addBlogRead, data: { blogId } }), [blogId]);
@@ -246,27 +273,14 @@ const useUpdateBlogRead: UseUpdateBlogReadType = (blogId) => {
         })
         .catch((e) => fail(`更新阅读次数出错, ${e.toString()}`));
     });
-  }, [request]);
+  }, [fail, request, success]);
 };
 
-const useLikeToPayModule: UseLikeToPayModuleType = ({ body, className }) => {
+export const useLikeToPayModule: UseLikeToPayModuleType = ({ body, className }) => {
   const open = useOverlayOpen();
   const click = useCallback(() => {
     open({ head: "感谢", body, className });
-  }, [body]);
+  }, [body, open, className]);
 
   return click;
-};
-
-export {
-  useBlogMenu,
-  useAutoScrollTop,
-  useAutoScrollBottom,
-  useLinkToImg,
-  useEditor,
-  usePublish,
-  useInputToImageModule,
-  useUpdateBlog,
-  useUpdateBlogRead,
-  useLikeToPayModule,
 };

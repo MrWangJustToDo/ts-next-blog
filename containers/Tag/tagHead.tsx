@@ -5,7 +5,7 @@ import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-const TagHead: SimpleElement = () => {
+export const TagHead: SimpleElement = () => {
   const { tag, currentTag } = useTag();
 
   return (
@@ -29,5 +29,3 @@ const TagHead: SimpleElement = () => {
     </div>
   );
 };
-
-export default TagHead;

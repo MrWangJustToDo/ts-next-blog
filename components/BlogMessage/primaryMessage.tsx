@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
-import Image from "components/Image";
-import UserHover from "components/UserHover";
+import { Image } from "components/Image";
+import { UserHover } from "components/UserHover";
 import { getClass } from "utils/dom";
 import { momentTo } from "utils/time";
 import { getCurrentAvatar } from "utils/data";
@@ -40,7 +40,10 @@ const PrimaryMessage: PrimaryMessageType = (props) => {
 
   const src = useMemo(() => getCurrentAvatar(avatar, gender), [avatar, gender]);
 
-  const renderContent = useMemo(() => (previewMod ? preview || content : isMd ? markNOLineNumber.render(content) : content), [isMd, content, previewMod]);
+  const renderContent = useMemo(
+    () => (previewMod ? preview || content : isMd ? markNOLineNumber.render(content) : content),
+    [previewMod, preview, content, isMd]
+  );
 
   return (
     <div className="media py-2">

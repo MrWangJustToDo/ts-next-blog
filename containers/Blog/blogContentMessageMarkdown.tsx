@@ -25,9 +25,7 @@ const BlogContentMessageMarkdown = ({
     }
   }, []);
 
-  if (process.browser) {
-    useEditor(name);
-  }
+  useEditor(name);
 
   const mdRender = useCallback((text) => markNOLineNumber.render(text), []);
 
@@ -46,4 +44,4 @@ const BlogContentMessageMarkdown = ({
 };
 
 // use memo to prevent render
-export default memo(BlogContentMessageMarkdown);
+export const BlogContentMessageMarkdownWithMemo = memo(BlogContentMessageMarkdown);

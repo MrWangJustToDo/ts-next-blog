@@ -1,14 +1,10 @@
 // 全局的head组件
-import Head from "next/head";
-
-interface ComponentType {
-  ({ title }: { title?: string }): JSX.Element;
-}
+import OriginalHead from "next/head";
 
 // Head 组件
-const Component: ComponentType = ({ title = "Blog" }) => {
+export const Head = ({ title = "Blog" }: { title?: string }) => {
   return (
-    <Head>
+    <OriginalHead>
       <meta charSet="utf-8" />
       <meta name="theme-color" content="#000000" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,8 +20,6 @@ const Component: ComponentType = ({ title = "Blog" }) => {
       {/* react slick */}
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
-    </Head>
+    </OriginalHead>
   );
 };
-
-export default Component;

@@ -2,27 +2,25 @@ import { apiName } from "config/api";
 import { transformPath } from "utils/path";
 import { ServerError } from "server/utils/error";
 import { insertBlog, insertHome } from "server/database/insert";
-import { autoRequestHandler, success, fail } from "server/middleware/apiHandler";
+import { success, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
 import { getBlogByBlogId, getTagByTagId, getTypeByTypeId } from "server/database/get";
 import { updateTableWithParam, updateTagCountByTagId, updateTypeCountByTypeId } from "server/database/update";
 import { deleteBlogByBlogId, deleteChildMessageByBlogId, deleteHomeByBlogId, deletePrimaryMessageByBlogId } from "server/database/delete";
-import { TagProps } from "types/containers";
 
 // 根据id获取blog
-const getBlogByBlogIdAction = autoRequestHandler({
-  requestHandler: async ({ req, res }) => {
+export const getBlogByBlogIdAction = wrapperMiddlewareRequest({
+  requestHandler: async function getBlogByBlogIdAction({ req, res }) {
     const blogId = <string>req.query.blogId;
     const data = await getBlogByBlogId({ db: req.db!!, blogId });
     success({ res, statusCode: 200, resDate: { data } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getBlogByBlogIdAction" } }),
   cacheConfig: { needCache: true },
   paramsConfig: { fromQuery: ["blogId"] },
 });
 
 // 发布一个新的blog
-const publishBlogAction = autoRequestHandler({
-  requestHandler: async ({ req, res }) => {
+export const publishBlogAction = wrapperMiddlewareRequest({
+  requestHandler: async function publishBlogAction({ req, res }) {
     const { blogId, blogOriginState, blogTitle, blogContent, typeId, tagId, blogImgLink, blogState, blogPriseState, blogCommentState, blogPreview } = req.body;
     const tagIdArr = typeof tagId === "string" ? tagId.split(",") : tagId;
     if (!Array.isArray(tagIdArr)) {
@@ -48,7 +46,7 @@ const publishBlogAction = autoRequestHandler({
     }
     // 增加blog
     const now = new Date();
-    const authorId = req.user.userId;
+    const authorId = req.user?.userId || "admin";
     const blogIdStr = blogId || now.getTime().toString(36);
     const blogCreateDate = now.toLocaleString();
     const blogCreateYear = String(now.getFullYear());
@@ -98,8 +96,6 @@ const publishBlogAction = autoRequestHandler({
     });
     success({ res, statusCode: 200, resDate: { state: "创建博客成功", data: `博客id：${blogIdStr}` } });
   },
-  errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statusCode: code, resDate: { state: "创建博客失败", data: e.toString(), methodName: "publishBlogAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: { needDelete: [apiName.home, apiName.type, apiName.tag] },
   paramsConfig: {
@@ -120,8 +116,8 @@ const publishBlogAction = autoRequestHandler({
 });
 
 // 根据id删除blog
-const deleteBlogByBlogIdAAction = autoRequestHandler({
-  requestHandler: async ({ req, res }) => {
+export const deleteBlogByBlogIdAAction = wrapperMiddlewareRequest({
+  requestHandler: async function deleteBlogByBlogIdAAction({ req, res }) {
     const { blogId, typeId, tagId } = req.body;
     // 判断
     let tagIdArr = typeof tagId === "string" ? tagId.split(",") : tagId;
@@ -130,7 +126,7 @@ const deleteBlogByBlogIdAAction = autoRequestHandler({
     }
     let tagArr = [];
     for (let id of tagIdArr) {
-      const tag = <TagProps>await getTagByTagId({ db: req.db!, tagId: id });
+      const tag = await getTagByTagId({ db: req.db!, tagId: id });
       if (!tag) {
         throw new ServerError(`tagId不合法, tagId: ${id}`, 404);
       }
@@ -161,8 +157,6 @@ const deleteBlogByBlogIdAAction = autoRequestHandler({
     await deleteHomeByBlogId({ db: req.db!, blogId });
     success({ res, resDate: { state: "删除博客成功", data: "删除博客成功" } });
   },
-  errorHandler: ({ res, e, code = 400 }) =>
-    fail({ res, statusCode: code, resDate: { state: "删除博客失败", data: e.toString(), methodName: "deleteBlogByBlogIdAAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: {
     needDelete: [
@@ -176,8 +170,8 @@ const deleteBlogByBlogIdAAction = autoRequestHandler({
 });
 
 // 根据id更新blog
-const updateBlogByBlogIdAction = autoRequestHandler({
-  requestHandler: async ({ req, res }) => {
+export const updateBlogByBlogIdAction = wrapperMiddlewareRequest({
+  requestHandler: async function updateBlogByBlogIdAction({ req, res }) {
     const now = new Date();
     const { oldProps, newProps } = req.body;
     // update type
@@ -214,12 +208,12 @@ const updateBlogByBlogIdAction = autoRequestHandler({
         newIndex++;
       } else {
         const tag = await getTagByTagId({ db: req.db!, tagId: oldTagIdArr[i] });
-        await updateTagCountByTagId({ db: req.db!, tagId: oldTagIdArr[i], count: tag.tagCount - 1 });
+        tag && (await updateTagCountByTagId({ db: req.db!, tagId: oldTagIdArr[i], count: tag.tagCount - 1 }));
       }
     }
     for (let j = newIndex; j < newTagIdArr.length; j++) {
       const tag = await getTagByTagId({ db: req.db!, tagId: newTagIdArr[j] });
-      await updateTagCountByTagId({ db: req.db!, tagId: newTagIdArr[j], count: tag.tagCount + 1 });
+      tag && (await updateTagCountByTagId({ db: req.db!, tagId: newTagIdArr[j], count: tag.tagCount + 1 }));
     }
     // 进行更新
     const { blogId, blogState, blogPriseState, blogCommentState, blogOriginState, blogTitle, blogImgLink, blogPreview, typeId, tagId, ...resProps } = newProps;
@@ -261,8 +255,6 @@ const updateBlogByBlogIdAction = autoRequestHandler({
     });
     success({ res, resDate: { state: "更新博客成功", data: `更新blog成功, id: ${blogId}` } });
   },
-  errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statusCode: code, resDate: { state: "更新博客失败", data: e.toString(), methodName: "updateBlogByBlogIdAction" } }),
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: {
     needDelete: [
@@ -276,8 +268,8 @@ const updateBlogByBlogIdAction = autoRequestHandler({
 });
 
 // 更新博客阅读数量
-const updateBlogReadAction = autoRequestHandler({
-  requestHandler: async ({ req, res }) => {
+export const updateBlogReadAction = wrapperMiddlewareRequest({
+  requestHandler: async function updateBlogReadAction({ req, res }) {
     const { blogId } = req.body;
     const blog = await getBlogByBlogId({ db: req.db!, blogId });
     if (!blog) {
@@ -291,10 +283,6 @@ const updateBlogReadAction = autoRequestHandler({
     });
     success({ res, resDate: { data: "更新readCount成功" } });
   },
-  errorHandler: ({ res, e, code = 500 }) =>
-    fail({ res, statusCode: code, resDate: { state: "更新readCount失败", data: e.toString(), methodName: "updateBlogReadAction" } }),
   cacheConfig: { needDelete: [apiName.home] },
   paramsConfig: { fromBody: ["blogId"] },
 });
-
-export { updateBlogByBlogIdAction, getBlogByBlogIdAction, publishBlogAction, deleteBlogByBlogIdAAction, updateBlogReadAction };

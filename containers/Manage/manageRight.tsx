@@ -1,10 +1,10 @@
-import ManageTag from "./manageTag";
-import ManageType from "./manageType";
-import ManageAddTagButton from "./manageAddTagButton";
-import ManageAddTypeButton from "./manageAddTypeButton";
+import { ManageTag } from "./manageTag";
+import { ManageType } from "./manageType";
+import { ManageAddTagButton } from "./manageAddTagButton";
+import { ManageAddTypeButton } from "./manageAddTypeButton";
 import { SimpleElement } from "types/components";
 
-const ManageRight: SimpleElement = () => {
+export const ManageRight: SimpleElement = () => {
   return (
     <div className="col-md-4">
       <div className="card mt-4 mt-md-0">
@@ -28,5 +28,3 @@ const ManageRight: SimpleElement = () => {
     </div>
   );
 };
-
-export default ManageRight;

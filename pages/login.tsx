@@ -1,12 +1,11 @@
 import { wrapper } from "store";
-import LoginContent from "containers/Login";
-import ReLoginContent from "containers/ReLogin";
+import { MyNextComponent } from "./_app";
+import { Login as LoginContent } from "containers/Login";
+import { ReLogin as ReLoginContent } from "containers/ReLogin";
 import { autoDispatchTokenHandler } from "config/ssr";
 import { animateFadeIn, flexCenter, getClass } from "utils/dom";
 
-type LoginType = ((props: { isLogin: boolean }) => JSX.Element) & { container?: boolean; title?: string };
-
-const Login: LoginType = ({ isLogin }) => {
+const Login: MyNextComponent<{ isLogin: boolean }> = ({ isLogin }) => {
   return <div className={getClass("container-md h-100", animateFadeIn, flexCenter)}>{isLogin ? <ReLoginContent /> : <LoginContent />}</div>;
 };
 

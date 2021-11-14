@@ -1,9 +1,9 @@
 import { apiName } from "config/api";
-import Drop from "components/Drop";
-import LoadRender from "components/LoadRender";
-import { BlogContentType, TagProps } from "types/containers";
+import { Drop } from "components/Drop";
+import { LoadRender } from "components/LoadRender";
+import { ClientTagProps, ServerTagProps } from "types";
 
-const PublishTag: BlogContentType = ({ tagId }) => {
+export const PublishTag = ({ tagId }: Partial<Pick<ClientTagProps, "tagId">>) => {
   return (
     <div className="input-group col">
       <div className="input-group-prepend text-center">
@@ -14,7 +14,7 @@ const PublishTag: BlogContentType = ({ tagId }) => {
           标签
         </span>
       </div>
-      <LoadRender<TagProps[]>
+      <LoadRender<ServerTagProps[]>
         needInitialData
         apiPath={apiName.tag}
         loaded={(res) => {
@@ -28,5 +28,3 @@ const PublishTag: BlogContentType = ({ tagId }) => {
     </div>
   );
 };
-
-export default PublishTag;

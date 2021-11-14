@@ -1,11 +1,24 @@
 import { useCallback, useState } from "react";
-import Input from "components/Input";
-import Button from "components/Button";
+import { Input } from "components/Input";
+import { Button } from "components/Button";
 import { addModule } from "config/manage";
 import { useAddRequest } from "hook/useManage";
-import { ManageAddModuleType } from "types/containers";
+import { AutoRequestType } from "types/utils";
+import { apiName } from "config/api";
 
-const ManageAddModule: ManageAddModuleType = ({ request, judgeApiName, fieldName, successHandler, closeHandler }) => {
+export const ManageAddModule = ({
+  request,
+  judgeApiName,
+  fieldName,
+  successHandler,
+  closeHandler,
+}: {
+  request: AutoRequestType;
+  judgeApiName: apiName;
+  fieldName: string;
+  closeHandler: () => void;
+  successHandler: () => void;
+}) => {
   const [bool, setBool] = useState<boolean>(false);
 
   const successCallback = useCallback(() => {
@@ -27,5 +40,3 @@ const ManageAddModule: ManageAddModuleType = ({ request, judgeApiName, fieldName
     </div>
   );
 };
-
-export default ManageAddModule;

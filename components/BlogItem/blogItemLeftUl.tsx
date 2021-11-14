@@ -1,16 +1,16 @@
-// import Image from "next/image";
 import dynamic from "next/dynamic";
-import Image from "components/Image";
+import { Image } from "components/Image";
 import { blogContentArray } from "config/blogItem";
 import { getCurrentAvatar } from "utils/data";
 import { getClass, flexEnd, flexStart } from "utils/dom";
-import { BlogItemType } from "types/components";
+import type { HomeBlogProps, UserProps } from "types";
+import type { UserHoverProps } from "types/components";
 
 import style from "./index.module.scss";
 
-const UserHover = dynamic(() => import("components/UserHover"));
+const UserHover = dynamic<UserHoverProps>(() => import("components/UserHover").then(r => r.UserHover));
 
-const BlogItemLeftUl: BlogItemType = (props) => {
+export const BlogItemLeftUl = (props: HomeBlogProps & UserProps) => {
   const { blogAssentCount, blogCollectCount, blogReadCount, avatar, gender, username } = props;
 
   const arr = [blogAssentCount, blogCollectCount, blogReadCount];
@@ -38,5 +38,3 @@ const BlogItemLeftUl: BlogItemType = (props) => {
     </ul>
   );
 };
-
-export default BlogItemLeftUl;

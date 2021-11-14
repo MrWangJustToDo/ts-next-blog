@@ -3,15 +3,15 @@ import { apiName } from "config/api";
 import { editorId } from "config/publish";
 import { usePublish } from "hook/useBlog";
 import { createRequest } from "utils/fetcher";
-import PublishHead from "components/Publish/publishHead";
-import PublishState from "components/Publish/publishState";
-import PublishEditor from "components/Publish/publishEditor";
-import PublishTypeTag from "components/Publish/publishType&Tag";
-import PublishImage from "./publishImage";
-import PublishSubmit from "./publishSubmit";
+import { PublishHead } from "components/Publish/publishHead";
+import { PublishState } from "components/Publish/publishState";
+import { PublishEditor } from "components/Publish/publishEditor";
+import { PublishTypeAndTag } from "components/Publish/publishTypeAndTag";
+import { PublishImage } from "./publishImage";
+import { PublishSubmit } from "./publishSubmit";
 import { SimpleElement } from "types/components";
 
-const Publish: SimpleElement = () => {
+export const Publish: SimpleElement = () => {
   const request = useMemo(() => createRequest({ method: "post", apiPath: apiName.publishBlog, header: { apiToken: true }, cache: false }), []);
 
   const [ref, submit] = usePublish({ request, id: editorId });
@@ -21,7 +21,7 @@ const Publish: SimpleElement = () => {
       <form ref={ref}>
         <PublishHead />
         <PublishEditor blogId={editorId} />
-        <PublishTypeTag />
+        <PublishTypeAndTag />
         <PublishImage />
         <PublishState />
         <PublishSubmit submit={submit} />
@@ -29,5 +29,3 @@ const Publish: SimpleElement = () => {
     </div>
   );
 };
-
-export default Publish;

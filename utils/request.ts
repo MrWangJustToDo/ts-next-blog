@@ -1,12 +1,12 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { log } from "./log";
 import { delay } from "./delay";
+import { isBrowser } from "./env";
 import { PendingType, RemovePendingType } from "types/utils";
 
 const pending: Array<PendingType> = [];
 const retryCount: number = 3;
 const retryDelay: number = 1000;
-const isBrowser = typeof window !== "undefined";
 
 const CancelToken = axios.CancelToken;
 const instance = axios.create({

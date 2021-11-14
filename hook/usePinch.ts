@@ -3,8 +3,7 @@ import { useBool } from "./useData";
 import { useAutoActionHandler } from "./useAuto";
 import { pinchHelper } from "utils/data";
 import { actionHandler } from "utils/action";
-import PointerTracker, { Pointer } from "utils/pointer";
-import { UseInitRefTypes, UseMatrixType, UsePinchProps, UsePinchType, UseTouchTypes, UseWheelType } from "types/hook";
+import { Pointer, PointerTracker } from "utils/pointer";
 
 interface ApplyChangeOpts {
   panX?: number;
@@ -18,6 +17,46 @@ interface SetTransformOpts {
   scale?: number;
   x?: number;
   y?: number;
+}
+
+interface UseMatrixType {
+  (): RefObject<DOMMatrix | undefined>;
+}
+
+interface UsePinchProps<T, K> {
+  maxScale?: number;
+  minScale?: number;
+  startScale?: () => void;
+  endScale?: () => void;
+  forWardPinchRef?: RefObject<T>;
+  forWardCoverRef?: RefObject<K>;
+}
+
+interface UsePinchType {
+  <T extends HTMLElement, K extends HTMLElement>(props?: UsePinchProps<T, K>): [RefObject<T>, RefObject<K>, boolean];
+}
+
+interface UseWheelProps {
+  ref: RefObject<HTMLElement | undefined>;
+  action: (event?: WheelEvent) => void;
+}
+
+interface UseWheelType {
+  (props: UseWheelProps): void;
+}
+
+interface UseTouchProps {
+  ref: RefObject<HTMLElement | undefined>;
+  scaleRef: RefObject<boolean>;
+  action: (prePointers: Pointer[], curePointers: Pointer[]) => void;
+}
+
+interface UseTouchTypes {
+  (props: UseTouchProps): void;
+}
+
+interface UseInitRefTypes {
+  <T extends HTMLElement, K extends HTMLElement>(props: { coverRef: RefObject<K>; pinchRef: RefObject<T> }): void;
 }
 
 const useInitRef: UseInitRefTypes = <T extends HTMLElement, K extends HTMLElement>({
@@ -34,7 +73,7 @@ const useInitRef: UseInitRefTypes = <T extends HTMLElement, K extends HTMLElemen
       cover.style.zIndex = "999999999";
       cover.style.touchAction = "none";
     }
-  }, []);
+  }, [coverRef]);
   useEffect(() => {
     const { current: pinch } = pinchRef;
     if (pinch) {
@@ -42,7 +81,7 @@ const useInitRef: UseInitRefTypes = <T extends HTMLElement, K extends HTMLElemen
       pinch.setAttribute("draggable", "false");
       pinch.querySelectorAll("img").forEach((img) => img.setAttribute("draggable", "false"));
     }
-  }, []);
+  }, [pinchRef]);
 };
 
 const useMatrix: UseMatrixType = () => {
@@ -56,13 +95,19 @@ const useMatrix: UseMatrixType = () => {
 };
 
 const useWheel: UseWheelType = ({ action, ref }) => {
-  const addListener = useCallback<(action: (e?: WheelEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("wheel", action));
-  }, []);
+  const addListener = useCallback<(action: (e?: WheelEvent) => void) => void>(
+    (action) => {
+      actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("wheel", action));
+    },
+    [ref]
+  );
 
-  const removeListener = useCallback<(action: (e?: WheelEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("wheel", action));
-  }, []);
+  const removeListener = useCallback<(action: (e?: WheelEvent) => void) => void>(
+    (action) => {
+      actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("wheel", action));
+    },
+    [ref]
+  );
 
   useAutoActionHandler<WheelEvent, HTMLElement>({
     action,
@@ -92,7 +137,7 @@ const useTouch: UseTouchTypes = ({ ref, action, scaleRef }) => {
       });
       pointerTracker.current = tracker;
     }
-  }, []);
+  }, [action, ref, scaleRef]);
 
   const touchStart = useCallback<(event?: TouchEvent) => void>((event) => {
     if (event && event.touches.length >= 2) {
@@ -109,21 +154,33 @@ const useTouch: UseTouchTypes = ({ ref, action, scaleRef }) => {
     twoFinger.current = false;
   }, []);
 
-  const addTouchStartListener = useCallback<(action: (e?: TouchEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("touchstart", action));
-  }, []);
+  const addTouchStartListener = useCallback<(action: (e?: TouchEvent) => void) => void>(
+    (action) => {
+      actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("touchstart", action));
+    },
+    [ref]
+  );
 
-  const addTouchEndListener = useCallback<(action: (e?: TouchEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("touchend", action));
-  }, []);
+  const addTouchEndListener = useCallback<(action: (e?: TouchEvent) => void) => void>(
+    (action) => {
+      actionHandler<HTMLElement, void>(ref.current, (ele) => ele.addEventListener("touchend", action));
+    },
+    [ref]
+  );
 
-  const removeTouchStartListener = useCallback<(action: (e?: TouchEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("touchstart", action));
-  }, []);
+  const removeTouchStartListener = useCallback<(action: (e?: TouchEvent) => void) => void>(
+    (action) => {
+      actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("touchstart", action));
+    },
+    [ref]
+  );
 
-  const removeTouchEndListener = useCallback<(action: (e?: TouchEvent) => void) => void>((action) => {
-    actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("touchend", action));
-  }, []);
+  const removeTouchEndListener = useCallback<(action: (e?: TouchEvent) => void) => void>(
+    (action) => {
+      actionHandler<HTMLElement, void>(ref.current, (ele) => ele.removeEventListener("touchend", action));
+    },
+    [ref]
+  );
 
   useAutoActionHandler({
     action: touchStart,
@@ -139,7 +196,7 @@ const useTouch: UseTouchTypes = ({ ref, action, scaleRef }) => {
 };
 
 // 让任何元素可以pinch
-const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(props: UsePinchProps<T, K> = {}) => {
+export const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(props: UsePinchProps<T, K> = {}) => {
   const { maxScale = 8, minScale = 1, startScale, endScale, forWardCoverRef, forWardPinchRef } = props;
   const { bool: scale, show, hide } = useBool({ init: false });
   const pinchRef = useRef<T>(null);
@@ -198,7 +255,7 @@ const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(pr
         }
       }
     },
-    [minScale, maxScale, startScale, endScale]
+    [targetPinchRef, maxScale, matrix, minScale, hide, endScale, show, startScale]
   );
 
   const setTransform = useCallback(
@@ -264,7 +321,7 @@ const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(pr
         }
       }
     },
-    [updateTransform]
+    [matrix, targetCoverRef, targetPinchRef, updateTransform]
   );
 
   const applyChange = useCallback(
@@ -323,7 +380,7 @@ const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(pr
         originY: event.clientY - currentRect.top,
       });
     },
-    [applyChange]
+    [applyChange, targetPinchRef]
   );
 
   const onPointerMove = useCallback(
@@ -355,7 +412,7 @@ const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(pr
         panY: newMidpoint.clientY - prevMidpoint.clientY,
       });
     },
-    [applyChange]
+    [applyChange, targetPinchRef]
   );
 
   useWheel({ ref: targetCoverRef, action: onWheel });
@@ -364,5 +421,3 @@ const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElement>(pr
 
   return [targetPinchRef, targetCoverRef, scale];
 };
-
-export { usePinch };

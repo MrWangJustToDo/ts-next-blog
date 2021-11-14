@@ -1,23 +1,27 @@
 import { apiName } from "config/api";
-import Button from "components/Button";
+import { Button } from "components/Button";
 import { BlogContentMessageTextArea } from "./blogContentMessagePut";
-import BlogContentMessageMarkdown from "./blogContentMessageMarkdown";
+import { BlogContentMessageMarkdownWithMemo } from "./blogContentMessageMarkdown";
 import { flexBetween, flexCenter, getClass } from "utils/dom";
 import { useBool } from "hook/useData";
 import { useAutoLoadCheckCodeImg } from "hook/useAuto";
 import { useReplayModuleToSubmit } from "hook/useMessage";
+import { AutoRequestType } from "types/utils";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
-import { BlogContentReplayModuleProps, BlogContentReplayModuleType, BlogContentReplayModuleWithImageType, WithImgRef } from "types/containers";
 
 import style from "./index.module.scss";
 
-const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImageType = <T extends PrimaryMessageProps | ChildMessageProps>({
+export const BlogContentReplayModule = <T extends PrimaryMessageProps | ChildMessageProps>({
   props,
-  imgRef,
   request,
   closeHandler,
-}: BlogContentReplayModuleProps<T> & WithImgRef) => {
+}: {
+  props: T;
+  request: AutoRequestType;
+  closeHandler: () => void;
+}) => {
   const { bool, switchBoolDebounce } = useBool();
+  const imgRef = useAutoLoadCheckCodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
   const { input1, input2, formRef, canSubmit, loading } = useReplayModuleToSubmit<T, HTMLTextAreaElement, HTMLInputElement>({
     isMd: Number(bool),
     props,
@@ -39,7 +43,7 @@ const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImageType = <T
         )}
       </button>
       {bool ? (
-        <BlogContentMessageMarkdown className="my-2" name="content" forwardRef={input1} />
+        <BlogContentMessageMarkdownWithMemo className="my-2" name="content" forwardRef={input1} />
       ) : (
         <BlogContentMessageTextArea name="content" forwardRef={input1} />
       )}
@@ -54,15 +58,3 @@ const BlogContentReplayModuleWithImag: BlogContentReplayModuleWithImageType = <T
     </form>
   );
 };
-
-const BlogContentReplayModule: BlogContentReplayModuleType = <T extends PrimaryMessageProps | ChildMessageProps>({
-  props,
-  request,
-  closeHandler,
-}: BlogContentReplayModuleProps<T>) => {
-  const imgRef = useAutoLoadCheckCodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
-
-  return <BlogContentReplayModuleWithImag request={request} closeHandler={closeHandler} imgRef={imgRef} props={props} />;
-};
-
-export default BlogContentReplayModule;

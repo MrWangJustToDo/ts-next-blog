@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { RefObject, useCallback, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import debounce from "lodash/debounce";
 import { apiName } from "config/api";
@@ -6,23 +6,65 @@ import { actionName } from "config/action";
 import { createRequest } from "utils/fetcher";
 import { formSerialize } from "utils/data";
 import { actionHandler, judgeAction, loadingAction } from "utils/action";
-import { setDataFail_client, setDataLoading_client, setDataSuccess_client } from "store/reducer/client/action";
 import { useBool } from "./useData";
 import { useCurrentState } from "./useBase";
 import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSuccessToast } from "./useToast";
-import { ApiRequestResult } from "types/utils";
-import {
-  BlogContentProps,
-  UseAddRequestType,
-  UseDeleteRequestType,
-  UseJudgeInputType,
-  UseManageToAddModuleType,
-  UseManageToDeleteModuleType,
-  UseSearchType,
-} from "types/hook";
+import { ApiRequestResult, AutoRequestType } from "types/utils";
+import { InputProps } from "types/config";
+import { setDataFail_client, setDataLoading_client, setDataSuccess_client } from "store/reducer/client/share/action";
+import { HomeProps } from "store/reducer/server/action/home";
+
+interface UseSearchType {
+  (): [RefObject<HTMLFormElement>, () => Promise<void>];
+}
+interface UseManageToAddModuleProps {
+  title: string;
+  body: (closeHandler: () => void) => JSX.Element;
+  className?: string;
+}
+interface UseManageToAddModuleType {
+  (props: UseManageToAddModuleProps): () => void;
+}
+interface UseAddRequestProps {
+  request: AutoRequestType;
+  successCallback: () => void;
+}
+interface UseAddRequestType {
+  (props: UseAddRequestProps): [ref: RefObject<HTMLFormElement>, loading: boolean];
+}
+interface UseJudgeInputProps {
+  option: InputProps;
+  forWardRef?: RefObject<HTMLInputElement>;
+  judgeApiName?: apiName;
+  failClassName: string;
+  successClassName: string;
+  loadingClassName: string;
+}
+interface UseJudgeInputType {
+  (props: UseJudgeInputProps): [RefObject<HTMLInputElement>, boolean, boolean];
+}
+export interface UseManageToDeleteModuleBody {
+  ({ deleteItem }: { deleteItem: JSX.Element }): (closeHandler: () => void) => JSX.Element;
+}
+interface UseManageToDeleteModuleProps {
+  title: string;
+  deleteItem: JSX.Element;
+  body: UseManageToDeleteModuleBody;
+}
+interface UseManageToDeleteModuleType {
+  (props: UseManageToDeleteModuleProps): () => void;
+}
+interface UseDeleteRequestProps {
+  request: AutoRequestType;
+  closeHandler: () => void;
+  successHandler: () => void;
+}
+interface UseDeleteRequestType {
+  (props: UseDeleteRequestProps): () => Promise<void>;
+}
 
 const useSearch: UseSearchType = () => {
   const fail = useFailToast();
@@ -36,7 +78,7 @@ const useSearch: UseSearchType = () => {
         if (userId !== undefined) {
           dispatch(setDataLoading_client({ name: actionName.currentResult }));
           return createRequest({ method: "post", header: { apiToken: true }, cache: false, data: { ...formSerialize(ele), userId }, apiPath: apiName.search })
-            .run<ApiRequestResult<BlogContentProps>>()
+            .run<ApiRequestResult<HomeProps>>()
             .then((res) => {
               if (res) {
                 const { code, data } = res;
@@ -57,14 +99,14 @@ const useSearch: UseSearchType = () => {
           return fail(`当前未登录`);
         }
       }),
-    [userId]
+    [dispatch, fail, success, userId]
   );
   return [ref, search];
 };
 
 const useManageToAddModule: UseManageToAddModuleType = ({ title, body, className }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body, className }), []);
+  const click = useCallback(() => open({ head: title, body, className }), [body, className, open, title]);
   return click;
 };
 
@@ -189,7 +231,7 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
     handleRef.current.needHandle.state = false;
     // 重新开始状态
     handleRef.current = { needHandle: { state: true } };
-  }, []);
+  }, [currentRef, loadingClassName]);
   const addListenerCallback = (action: () => void) => actionHandler<HTMLInputElement, void>(currentRef.current, (ele) => ele.addEventListener("input", action));
   const removeListenerCallback = (action: () => void) =>
     actionHandler<HTMLInputElement, void>(currentRef.current, (ele) => ele.removeEventListener("input", action));
@@ -200,7 +242,7 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
 
 const useManageToDeleteModule: UseManageToDeleteModuleType = ({ title, body, deleteItem }) => {
   const open = useOverlayOpen();
-  const click = useCallback(() => open({ head: title, body: body({ deleteItem }) }), [title, body]);
+  const click = useCallback(() => open({ head: title, body: body({ deleteItem }) }), [open, title, body, deleteItem]);
   return click;
 };
 
@@ -221,20 +263,17 @@ const useDeleteRequest: UseDeleteRequestType = ({ request, closeHandler, success
           }
         })
         .catch((e) => fail(`删除出错：${e.toString()}`)),
-    [request, closeHandler, successHandler]
+    [request, successHandler, closeHandler, success, fail]
   );
   return doRequest;
 };
 
 const useFilterResult = ({ currentBlogId }: { currentBlogId: string }) => {
   // 获取当前result
-  const { state: result, dispatch } = useCurrentState<BlogContentProps[]>((state) => state.client[actionName.currentResult]["data"]);
+  const { state: result, dispatch } = useCurrentState((state) => state.client[actionName.currentResult]["data"]);
   return useCallback(
-    () =>
-      dispatch(
-        setDataSuccess_client({ name: actionName.currentResult, data: (result as BlogContentProps[]).filter(({ blogId }) => blogId !== currentBlogId) })
-      ),
-    [currentBlogId]
+    () => dispatch(setDataSuccess_client({ name: actionName.currentResult, data: result.filter(({ blogId }) => blogId !== currentBlogId) })),
+    [currentBlogId, dispatch, result]
   );
 };
 

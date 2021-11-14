@@ -1,10 +1,12 @@
 import chalk from "chalk";
 import PrettyError from "pretty-error";
+import { isBrowser } from "./env";
 
 const pre = new PrettyError();
 
+const side = isBrowser ? "client" : "server";
+
 const log = (message: string | Error, lev: "normal" | "warn" | "error") => {
-  const side = typeof window !== "undefined" ? "client" : "server";
   if (lev === "error") {
     if (side === "server") {
       if (message instanceof Error) {

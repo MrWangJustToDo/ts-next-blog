@@ -1,11 +1,10 @@
-import CardPage from "components/PageFoot";
+import { FootPage } from "components/PageFoot";
 import { WithWriteBlogItem as SearchResult } from "components/BlogItem";
 import { useBasePage } from "hook/useBase";
-import { BlogContentProps } from "types/hook";
-import { ManageResultType } from "types/containers";
+import type { ClientTagProps, HomeBlogProps, TypeProps, UserProps } from "types";
 
-const ManageResultAll: ManageResultType = ({ data }) => {
-  const { currentPage, currentPageData, increaseAble, increasePage, decreaseAble, decreasePage } = useBasePage<BlogContentProps>({
+export const ManageResultAll = ({ data }: { data: Array<HomeBlogProps & UserProps & TypeProps & ClientTagProps> }) => {
+  const { currentPage, currentPageData, increaseAble, increasePage, decreaseAble, decreasePage } = useBasePage({
     data,
   });
 
@@ -16,7 +15,7 @@ const ManageResultAll: ManageResultType = ({ data }) => {
           {currentPageData.map((props) => (
             <SearchResult key={props.blogId} {...props} />
           ))}
-          <CardPage className="border-0" page={currentPage} {...{ increaseAble, decreaseAble, increasePage, decreasePage }} />
+          <FootPage className="border-0" page={currentPage} {...{ increaseAble, decreaseAble, increasePage, decreasePage }} />
         </>
       ) : (
         <div className="card-body text-danger">没有结果显示！</div>
@@ -24,5 +23,3 @@ const ManageResultAll: ManageResultType = ({ data }) => {
     </>
   );
 };
-
-export default ManageResultAll;

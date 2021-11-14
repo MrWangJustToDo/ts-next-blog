@@ -1,10 +1,9 @@
-import Drop from "components/Drop";
-import LoadRender from "components/LoadRender";
+import { Drop } from "components/Drop";
+import { LoadRender } from "components/LoadRender";
 import { apiName } from "config/api";
-import { TypeProps } from "types/hook";
-import { BlogContentType } from "types/containers";
+import { TypeProps } from "types";
 
-const PublishType: BlogContentType = ({ typeId }) => {
+export const PublishType = ({ typeId }: Partial<Pick<TypeProps, "typeId">>) => {
   return (
     <div className="input-group col">
       <div className="input-group-prepend text-center">
@@ -29,5 +28,3 @@ const PublishType: BlogContentType = ({ typeId }) => {
     </div>
   );
 };
-
-export default PublishType;

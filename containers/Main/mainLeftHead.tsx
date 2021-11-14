@@ -2,7 +2,7 @@ import { useHome } from "hook/useHome";
 import { SimpleElement } from "types/components";
 import { flexBetween, getClass } from "utils/dom";
 
-const MainLeftHead: SimpleElement = () => {
+export const MainLeftHead: SimpleElement = () => {
   let { allPage } = useHome();
 
   return (
@@ -14,5 +14,3 @@ const MainLeftHead: SimpleElement = () => {
     </h5>
   );
 };
-
-export default MainLeftHead;

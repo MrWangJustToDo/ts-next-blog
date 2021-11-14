@@ -2,30 +2,31 @@ import { useCallback } from "react";
 import { mutate } from "swr";
 import { Type as TypeItem } from "components/Type";
 import { useUserRequest } from "hook/useUser";
-import { useManageToDeleteModule } from "hook/useManage";
+import { useManageToDeleteModule, UseManageToDeleteModuleBody } from "hook/useManage";
 import { apiName } from "config/api";
 import { getClass } from "utils/dom";
 import { createRequest } from "utils/fetcher";
-import ManageDeleteModule from "./manageDeleteModule";
-import { UseManageToDeleteModuleBody } from "types/hook";
-import { ManageDeleteTypeButtonType, ManageDeleteTypeItemType } from "types/containers";
+import { ManageDeleteModule } from "./manageDeleteModule";
+import { TypeProps } from "types";
 
 import style from "./index.module.scss";
 
-const ManageDeleteTypeButton: ManageDeleteTypeButtonType = ({ deleteItem, typeId }) => {
+const ManageDeleteTypeButton = ({ deleteItem, typeId }: { deleteItem: JSX.Element; typeId: string }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId }, cache: false });
 
   const successHandler = useCallback(() => {
     const typeRequest = createRequest({ apiPath: apiName.type });
     typeRequest.deleteCache();
     mutate(typeRequest.cacheKey);
-  }, [request]);
+  }, []);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
     ({ deleteItem }) =>
-      (closeHandler) =>
-        <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
-    []
+      (closeHandler) => {
+        const WithDelete = <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />;
+        return WithDelete;
+      },
+    [request, successHandler]
   );
 
   const click = useManageToDeleteModule({
@@ -49,7 +50,7 @@ const ManageDeleteTypeButton: ManageDeleteTypeButtonType = ({ deleteItem, typeId
   );
 };
 
-const ManageDeleteTypeItem: ManageDeleteTypeItemType = ({ typeId, typeContent, typeCount }) => {
+export const ManageDeleteTypeItem = ({ typeId, typeContent, typeCount }: TypeProps) => {
   return (
     <div className="m-2 position-relative">
       <TypeItem key={typeId} typeContent={typeContent!} typeCount={typeCount!} hoverAble={false} />
@@ -57,5 +58,3 @@ const ManageDeleteTypeItem: ManageDeleteTypeItemType = ({ typeId, typeContent, t
     </div>
   );
 };
-
-export default ManageDeleteTypeItem;

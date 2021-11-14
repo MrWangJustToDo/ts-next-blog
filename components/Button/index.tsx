@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import Loading from "components/Loading";
+import { Loading } from "components/Loading";
 import { useBool } from "hook/useData";
 import { flexCenter, getClass } from "utils/dom";
 import { ButtonType } from "types/components";
 
-const Button: ButtonType = ({
+export const Button: ButtonType = ({
   request,
   type = "button",
   disable = false,
@@ -23,7 +23,7 @@ const Button: ButtonType = ({
       hide();
       Promise.resolve().then(request).then(show).catch(show);
     }
-  }, [request]);
+  }, [hide, request, show]);
 
   return (
     <button
@@ -40,5 +40,3 @@ const Button: ButtonType = ({
     </button>
   );
 };
-
-export default Button;

@@ -1,25 +1,34 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
-import { State } from "store";
 import isEqual from "lodash/isEqual";
-import Loading from "components/Loading";
-import loadingError from "./loadingError";
+import { Loading } from "components/Loading";
+import { LoadingError } from "./loadingError";
 import { log } from "utils/log";
 import { cancel, delay } from "utils/delay";
 import { autoTransformData } from "utils/data";
 import { autoStringify, createRequest } from "utils/fetcher";
 import { useUpdateProps } from "hook/useBase";
 import { useCurrentState } from "hook/useBase";
-import { getDataSuccess_Server } from "store/reducer/server/action";
-import { AutoUpdateStateType, GetCurrentInitialDataType, LoadRenderProps, LoadRenderType, RenderProps, RenderType, UseLoadingType } from "types/components";
+import {
+  AutoUpdateStateType,
+  GetCurrentInitialDataProps,
+  GetCurrentInitialDataType,
+  LoadRenderProps,
+  LoadRenderType,
+  RenderProps,
+  RenderType,
+  UseLoadingType,
+} from "types/components";
+import { getDataSuccess_Server } from "store/reducer/server/share/action";
+import { ServerReducerKey } from "store/reducer/server/type";
 
-const useCurrentInitialData: GetCurrentInitialDataType = ({ initialData, apiPath, needInitialData }) => {
-  const { state } = useCurrentState<State>();
+const useCurrentInitialData: GetCurrentInitialDataType = <T = any>({ initialData, apiPath, needInitialData }: GetCurrentInitialDataProps<T>) => {
+  const { state } = useCurrentState();
 
   if (initialData) return { currentInitialData: initialData };
 
-  if (apiPath && needInitialData) return { currentInitialData: state.server[apiPath]["data"] };
+  if (apiPath && needInitialData) return { currentInitialData: state.server[apiPath as ServerReducerKey]["data"] };
 
   return { currentInitialData: null };
 };
@@ -30,7 +39,7 @@ const useAutoUpdateState: AutoUpdateStateType = ({ needUpdate, initialData, apiP
   useEffect(() => {
     if (needUpdate && apiPath && currentData && !isEqual(initialData, currentData)) {
       log(`start update store from loadRender, apiPath: ${apiPath}`, "normal");
-      dispatch(getDataSuccess_Server({ name: apiPath, data: currentData }));
+      dispatch(getDataSuccess_Server({ name: apiPath as ServerReducerKey, data: currentData }));
     }
   }, [needUpdate, apiPath, initialData, currentData]);
 };
@@ -98,7 +107,7 @@ const Render: RenderType = <T>({
   return loadingEle;
 };
 
-const LoadRender: LoadRenderType = <T>({
+export const LoadRender: LoadRenderType = <T>({
   path,
   query,
   method,
@@ -108,7 +117,7 @@ const LoadRender: LoadRenderType = <T>({
   initialData,
   loaded,
   loading = Loading,
-  loadError = loadingError,
+  loadError = LoadingError,
   placeholder,
   token = false,
   delayTime = 260,
@@ -136,7 +145,7 @@ const LoadRender: LoadRenderType = <T>({
         data: currentRequestData,
         header: currentHeader,
       }),
-    [apiPath, path, currentRequestData, currentHeader, cacheTime, currentQuery]
+    [path, method, apiPath, cacheTime, currentQuery, currentRequestData, currentHeader]
   );
 
   const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needInitialData });
@@ -156,5 +165,3 @@ const LoadRender: LoadRenderType = <T>({
     currentInitialData: ref.current,
   });
 };
-
-export default LoadRender;

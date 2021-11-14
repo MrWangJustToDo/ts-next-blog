@@ -1,15 +1,14 @@
 import { useCallback, useMemo } from "react";
-import Image from "components/Image";
-import LoadRender from "components/LoadRender";
-import UserHover from "components/UserHover";
+import { Image } from "components/Image";
+import { LoadRender } from "components/LoadRender";
+import { UserHover } from "components/UserHover";
 import { apiName } from "config/api";
 import { getClass } from "utils/dom";
 import { momentTo } from "utils/time";
 import { getCurrentAvatar } from "utils/data";
 import { markNOLineNumber } from "utils/markdown";
-
-import { UserProps } from "types/hook";
-import { ChildMessageType } from "types/components";
+import type { UserProps } from "types";
+import type { ChildMessageType } from "types/components";
 
 import style from "./index.module.scss";
 
@@ -45,7 +44,10 @@ const ChildMessage: ChildMessageType = (props) => {
 
   const src = useMemo(() => getCurrentAvatar(avatar, gender), [avatar, gender]);
 
-  const renderContent = useMemo(() => (previewMod ? preview || content : isMd ? markNOLineNumber.render(content) : content), [isMd, content, previewMod]);
+  const renderContent = useMemo(
+    () => (previewMod ? preview || content : isMd ? markNOLineNumber.render(content) : content),
+    [previewMod, preview, content, isMd]
+  );
 
   return (
     <div className={getClass("media py-2", style.childMessage)}>

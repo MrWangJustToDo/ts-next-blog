@@ -1,14 +1,26 @@
-import { createContext, useCallback, useContext, useState, useEffect, useRef, useMemo } from "react";
+import { createContext, useCallback, useContext, useState, useEffect, useRef, useMemo, RefObject } from "react";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { getScrollBarSize } from "utils/action";
 import { useUpdate } from "./useBase";
 import { applyRootStyles, cleanupRootStyles } from "utils/dom";
 import { OverlayProps } from "types/components";
-import { UseOverlayOpenType, UseOverlayPropsType, UseBodyLockType, UseOverlayBodyType } from "types/hook";
 
-const OverlayOpenContext = createContext<UseOverlayOpenType>(() => {});
+interface UseOverlayOpenType {
+  (props: OverlayProps): void;
+}
+interface UseOverlayPropsType {
+  (): { overlay: OverlayProps | null; open: UseOverlayOpenType };
+}
+interface UseBodyLockType {
+  (props: { ref: RefObject<HTMLElement> }): void;
+}
+interface UseOverlayBodyType {
+  (props: { body: JSX.Element | ((handler: () => void) => JSX.Element); closeHandler?: () => void }): JSX.Element;
+}
 
-const useOverlayProps: UseOverlayPropsType = () => {
+export const OverlayOpenContext = createContext<UseOverlayOpenType>(() => {});
+
+export const useOverlayProps: UseOverlayPropsType = () => {
   const [overlay, setOverlay] = useState<OverlayProps | null>(null);
   const forceUpdate = useUpdate();
   const clear = useCallback(() => setOverlay(null), []);
@@ -22,16 +34,16 @@ const useOverlayProps: UseOverlayPropsType = () => {
       props.clear = clear;
       setOverlay(props);
     },
-    [forceUpdate]
+    [clear, forceUpdate]
   );
   return { overlay, open };
 };
 
-const useOverlayOpen = (): UseOverlayOpenType => {
+export const useOverlayOpen = (): UseOverlayOpenType => {
   return useContext(OverlayOpenContext);
 };
 
-const useBodyLock: UseBodyLockType = ({ ref }) => {
+export const useBodyLock: UseBodyLockType = ({ ref }) => {
   const [padding, setPadding] = useState<number>(0);
 
   useEffect(() => {
@@ -50,10 +62,10 @@ const useBodyLock: UseBodyLockType = ({ ref }) => {
         document.body.style.paddingRight = `0px`;
       };
     }
-  }, [padding]);
+  }, [padding, ref]);
 };
 
-const usePrevious = <T>(state: T): T | undefined => {
+export const usePrevious = <T>(state: T): T | undefined => {
   const ref = useRef<T>();
 
   useEffect(() => {
@@ -63,7 +75,7 @@ const usePrevious = <T>(state: T): T | undefined => {
   return ref.current;
 };
 
-const useModalEffect = (isOpen: boolean, rootId?: string) => {
+export const useModalEffect = (isOpen: boolean, rootId?: string) => {
   const prevOpen = usePrevious(isOpen);
 
   // Automatically apply the iOS modal effect to the body when sheet opens/closes
@@ -73,17 +85,17 @@ const useModalEffect = (isOpen: boolean, rootId?: string) => {
     } else if (rootId && !isOpen && prevOpen) {
       cleanupRootStyles(rootId);
     }
-  }, [isOpen, prevOpen]);
+  }, [isOpen, prevOpen, rootId]);
 
   // Make sure to cleanup modal styles on unmount
   useEffect(() => {
     return () => {
       if (rootId && isOpen) cleanupRootStyles(rootId);
     };
-  }, [isOpen]);
+  }, [isOpen, rootId]);
 };
 
-const useOverlayBody: UseOverlayBodyType = ({ body, closeHandler }) => {
+export const useOverlayBody: UseOverlayBodyType = ({ body, closeHandler }) => {
   const bodyContent = useMemo(() => {
     if (typeof body === "function") {
       return body(closeHandler!);
@@ -94,5 +106,3 @@ const useOverlayBody: UseOverlayBodyType = ({ body, closeHandler }) => {
 
   return bodyContent;
 };
-
-export { OverlayOpenContext, useOverlayProps, useOverlayOpen, useBodyLock, useModalEffect, useOverlayBody, usePrevious };

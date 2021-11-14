@@ -1,8 +1,16 @@
-import { useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import { useBool } from "./useData";
 import { cancel, delay } from "utils/delay";
-import { UseLoadType } from "types/hook";
 import { LoadingBarProps } from "types/components";
+
+interface UseLoadReturn {
+  start: () => void;
+  end: () => void;
+  ref: RefObject<HTMLDivElement>;
+}
+interface UseLoadType {
+  (props: LoadingBarProps): UseLoadReturn;
+}
 
 const useLoad: UseLoadType = ({ height = 1.5, present = 0, forwardRef }) => {
   const ref = useRef<HTMLDivElement>(null);

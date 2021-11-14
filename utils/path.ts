@@ -1,7 +1,7 @@
 import { log } from "./log";
 import { TransformPathType } from "types/utils";
 
-const transformPath: TransformPathType = ({ path, apiPath, query, needPre = true }) => {
+export const transformPath: TransformPathType = ({ path, apiPath, query, needPre = true }) => {
   if (!path && !apiPath) {
     log(`transform path not exist`, "warn");
     return "";
@@ -49,5 +49,3 @@ const transformPath: TransformPathType = ({ path, apiPath, query, needPre = true
   }
   return currentPath;
 };
-
-export { transformPath };

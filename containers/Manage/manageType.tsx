@@ -1,10 +1,10 @@
 import { apiName } from "config/api";
-import LoadRender from "components/LoadRender";
-import DeleteType from "./manageDeleteTypeItem";
+import { LoadRender } from "components/LoadRender";
+import { ManageDeleteTypeItem } from "./manageDeleteTypeItem";
 import { SimpleElement } from "types/components";
-import { TypeProps } from "types/hook";
+import { TypeProps } from "types";
 
-const ManageType: SimpleElement = () => {
+export const ManageType: SimpleElement = () => {
   return (
     <div className="card-body">
       <LoadRender<TypeProps[]>
@@ -14,9 +14,9 @@ const ManageType: SimpleElement = () => {
         loaded={(data) => {
           return (
             <>
-              {data.map(({ typeId, typeContent, typeCount }) => (
+              {data.map(({ typeId, typeContent, typeCount, typeState }) => (
                 <div key={typeId} className="d-inline-block">
-                  <DeleteType {...{ typeId, typeContent, typeCount }} />
+                  <ManageDeleteTypeItem {...{ typeId, typeContent, typeCount, typeState }} />
                 </div>
               ))}
             </>
@@ -26,5 +26,3 @@ const ManageType: SimpleElement = () => {
     </div>
   );
 };
-
-export default ManageType;

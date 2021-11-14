@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from "react";
+import { RefObject, useCallback, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/dist/client/router";
 import { apiName } from "config/api";
@@ -7,16 +7,32 @@ import { delay } from "utils/delay";
 import { formSerialize } from "utils/data";
 import { actionHandler } from "utils/action";
 import { autoAssignParams, autoStringify, createRequest } from "utils/fetcher";
-import { setDataFail_client, setDataSuccess_client } from "store/reducer/client/action";
 import { useCurrentState } from "./useBase";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSuccessToast } from "./useToast";
-import { ApiRequestResult } from "types/utils";
-import { UserProps, UseAutoLoginType, UseCurrentUserType, UseLoginType, UseLogoutType, UseUserRequest, IpAddressProps } from "types/hook";
+import { setDataFail_client, setDataSuccess_client } from "store/reducer/client/share/action";
+import type { IpAddressProps, UserProps } from "types";
+import type { ApiRequestResult, AutoRequestProps, AutoRequestType } from "types/utils";
+
+interface UseAutoLoginType {
+  (): void;
+}
+interface UseCurrentUserType {
+  (): UserProps;
+}
+interface UseLoginType {
+  (): RefObject<HTMLFormElement>;
+}
+interface UseLogoutType {
+  (): () => Promise<void>;
+}
+interface UseUserRequest {
+  (props?: AutoRequestProps): AutoRequestType;
+}
 
 // 自动登录
-const useAutoLogin: UseAutoLoginType = () => {
-  const { dispatch, state } = useCurrentState<UserProps>((state) => state.client[actionName.currentUser]["data"]);
+export const useAutoLogin: UseAutoLoginType = () => {
+  const { dispatch, state } = useCurrentState((state) => state.client[actionName.currentUser]["data"]);
   const { userId } = state as UserProps;
   const loginRequest = useMemo(() => createRequest({ header: { apiToken: true }, apiPath: apiName.autoLogin, cache: false }), []);
   const autoLoginCallback = useCallback(
@@ -31,10 +47,10 @@ const useAutoLogin: UseAutoLoginType = () => {
           }
         })
         .catch(() => dispatch(setDataFail_client({ name: actionName.currentUser, data: {} }))),
-    []
+    [dispatch, loginRequest]
   );
   useAutoActionHandler({
-    timmer: Boolean(userId),
+    timer: Boolean(userId),
     once: false,
     rightNow: true,
     delayTime: 1000 * 60 * 10,
@@ -42,8 +58,8 @@ const useAutoLogin: UseAutoLoginType = () => {
   });
 };
 
-const useAutoGetIp = () => {
-  const { dispatch, state } = useCurrentState<IpAddressProps>((state) => state.client[actionName.currentUser]["data"]);
+export const useAutoGetIp = () => {
+  const { dispatch, state } = useCurrentState((state) => state.client[actionName.currentUser]["data"]);
   const { country } = state as IpAddressProps;
   const getIp = useMemo(() => createRequest({ header: { apiToken: true }, apiPath: apiName.ip, cache: false }), []);
   const autoGetIpCallback = useCallback(
@@ -58,7 +74,7 @@ const useAutoGetIp = () => {
           }
         })
         .catch(() => {}),
-    []
+    [dispatch, getIp]
   );
   useAutoActionHandler({
     rightNow: !country,
@@ -67,13 +83,13 @@ const useAutoGetIp = () => {
 };
 
 // 获取当前登录对象
-const useCurrentUser: UseCurrentUserType = () => {
-  const { state } = useCurrentState<ReturnType<UseCurrentUserType>>((state) => state.client[actionName.currentUser]["data"]);
+export const useCurrentUser: UseCurrentUserType = () => {
+  const { state } = useCurrentState((state) => state.client[actionName.currentUser]["data"]);
   return state as ReturnType<UseCurrentUserType>;
 };
 
 // 登录
-const useLogin: UseLoginType = () => {
+export const useLogin: UseLoginType = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const failToast = useFailToast();
@@ -104,7 +120,7 @@ const useLogin: UseLoginType = () => {
 };
 
 // 登出
-const useLogout: UseLogoutType = () => {
+export const useLogout: UseLogoutType = () => {
   const router = useRouter();
   const user = useCurrentUser();
   const dispatch = useDispatch();
@@ -130,12 +146,12 @@ const useLogout: UseLogoutType = () => {
     } else {
       return failToast(`当前未登录`);
     }
-  }, [user]);
+  }, [dispatch, failToast, logoutRequest, router, successToast, user.userId]);
   return logoutCallback;
 };
 
 // 自动绑定当前用户的request
-const useUserRequest: UseUserRequest = (props = {}) => {
+export const useUserRequest: UseUserRequest = (props = {}) => {
   const { method, data, path, apiPath, header, cache, cacheTime, encode } = props;
   const stringData = autoStringify(data);
   const stringHeader = autoStringify(header);
@@ -156,5 +172,3 @@ const useUserRequest: UseUserRequest = (props = {}) => {
     [user.userId, stringData, path, apiPath, stringHeader, method, cache, cacheTime, encode]
   );
 };
-
-export { useAutoLogin, useAutoGetIp, useCurrentUser, useLogin, useLogout, useUserRequest };

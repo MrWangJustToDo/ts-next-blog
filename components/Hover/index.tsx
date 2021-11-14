@@ -2,10 +2,10 @@ import React from "react";
 import { getClass } from "utils/dom";
 import { useBool } from "hook/useData";
 import { useShowAndHideAnimate } from "hook/useAnimate";
-import Animate from "./animate";
+import { Animate } from "./animate";
 import { HoverType } from "types/components";
 
-const Hover: HoverType = ({ className = "", children, hoverItem }) => {
+export const Hover: HoverType = ({ className = "", children, hoverItem }) => {
   const { bool, boolState, showThrottleState, hideDebounce } = useBool();
 
   const { animateRef } = useShowAndHideAnimate<HTMLDivElement>({
@@ -25,5 +25,3 @@ const Hover: HoverType = ({ className = "", children, hoverItem }) => {
     </div>
   );
 };
-
-export default Hover;

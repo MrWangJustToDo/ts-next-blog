@@ -4,7 +4,7 @@ import { DropSelectItemType } from "types/components";
 
 import style from "./index.module.scss";
 
-const DropSelectItem: DropSelectItemType = ({ idx, name, value, cancel, multiple }) => {
+export const DropSelectItem: DropSelectItemType = ({ idx, name, value, cancel, multiple }) => {
   const cancelCallback = useCallback<(e: MouseEvent) => void>(
     (e) => {
       if (multiple) {
@@ -12,7 +12,7 @@ const DropSelectItem: DropSelectItemType = ({ idx, name, value, cancel, multiple
         cancel(idx);
       }
     },
-    [multiple, idx]
+    [multiple, cancel, idx]
   );
 
   return (
@@ -24,5 +24,3 @@ const DropSelectItem: DropSelectItemType = ({ idx, name, value, cancel, multiple
     </span>
   );
 };
-
-export default DropSelectItem;

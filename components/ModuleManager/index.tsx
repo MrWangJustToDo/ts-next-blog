@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import Toast from "components/Toast";
+import { Toast } from "components/Toast";
 import { DesktopOverlay, MobileOverlay } from "components/Overlay";
 import { flexCenter, getClass } from "utils/dom";
 import { useMediaQuery } from "hook/useMediaQuery";
@@ -8,7 +8,7 @@ import { useOverlayProps, OverlayOpenContext } from "hook/useOverlay";
 
 import style from "./index.module.scss";
 
-let ModuleManager = ({ children }: { children: JSX.Element }) => {
+export let ModuleManager = ({ children }: { children: JSX.Element }) => {
   const { toast, push } = useToastProps([]);
   const { overlay, open } = useOverlayProps();
   const state = useMediaQuery("only screen and (max-width: 600px)");
@@ -59,5 +59,3 @@ let ModuleManager = ({ children }: { children: JSX.Element }) => {
     </>
   );
 };
-
-export default ModuleManager;

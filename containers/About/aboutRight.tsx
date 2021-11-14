@@ -1,8 +1,8 @@
-import AboutRightLink from "./aboutRightLink";
-import AboutRightAbout from "./aboutRightAbout";
+import { AboutRightLink } from "./aboutRightLink";
+import { AboutRightAbout } from "./aboutRightAbout";
 import { SimpleElement } from "types/components";
 
-const AboutRight: SimpleElement = () => {
+export const AboutRight: SimpleElement = () => {
   return (
     <div className="col-md-4 mt-4 mt-md-0">
       <div className="card">
@@ -17,5 +17,3 @@ const AboutRight: SimpleElement = () => {
     </div>
   );
 };
-
-export default AboutRight;

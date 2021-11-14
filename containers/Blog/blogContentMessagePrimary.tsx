@@ -1,24 +1,32 @@
 import React, { useCallback } from "react";
-import PageFoot from "components/PageFoot";
-import LoadRender from "components/LoadRender";
+import { FootPage } from "components/PageFoot";
+import { LoadRender } from "components/LoadRender";
 import { AnimationList } from "components/AnimationList";
 import { PrimaryMessage } from "components/BlogMessage";
 import { apiName } from "config/api";
 import { primaryMessageLength } from "config/message";
 import { useBasePage } from "hook/useBase";
 import { useCurrentUser, useUserRequest } from "hook/useUser";
-import { useMessageToReplayModule, useMessageToDeleteModule, useMessageToUpdateModule } from "hook/useMessage";
-import BlogContentChildMessage from "./blogContentMessageChild";
-import BlogContentReplayModule from "./blogContentReplayModule";
-import BlogContentDeleteModule from "./blogContentDeleteModule";
-import BlogContentUpdateModule from "./blogContentUpdateModule";
-import { UseMessageToModuleBody } from "types/hook";
+import { useMessageToReplayModule, useMessageToDeleteModule, useMessageToUpdateModule, UseMessageToModuleBody } from "hook/useMessage";
+import { BlogContentChildMessage } from "./blogContentMessageChild";
+import { BlogContentReplayModule } from "./blogContentReplayModule";
+import { BlogContentDeleteModule } from "./blogContentDeleteModule";
+import { BlogContentUpdateModule } from "./blogContentUpdateModule";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
-import { BlogContentPrimaryMessageType, BlogContentPrimaryMessageWrapperType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, primaryReplay, primaryDelete, primaryUpdate }) => {
+const BlogContentPrimaryMessageWithFeature = ({
+  messages,
+  primaryReplay,
+  primaryDelete,
+  primaryUpdate,
+}: {
+  messages: PrimaryMessageProps[];
+  primaryReplay: ReturnType<typeof BlogContentPrimaryMessageReplay>;
+  primaryDelete: ReturnType<typeof BlogContentPrimaryMessageDelete>;
+  primaryUpdate: ReturnType<typeof BlogContentPrimaryMessageUpdate>;
+}) => {
   const { userId } = useCurrentUser();
   const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageData } = useBasePage<PrimaryMessageProps>({
     pageLength: primaryMessageLength,
@@ -50,7 +58,7 @@ const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, pr
           ))}
         </AnimationList>
       </div>
-      <PageFoot
+      <FootPage
         page={currentPage}
         className={style.footPage}
         increaseAble={increaseAble}
@@ -62,18 +70,20 @@ const BlogContentPrimaryMessage: BlogContentPrimaryMessageType = ({ messages, pr
   );
 };
 
-const blogContentPrimaryMessageReplay = () => {
+const BlogContentPrimaryMessageReplay = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage, cache: false });
 
   const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
     ({ props }) =>
-      (closeHandler) =>
-        (
+      (closeHandler) => {
+        const WithReplay = (
           <>
             <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
             <BlogContentReplayModule request={request} closeHandler={closeHandler} props={props} />
           </>
-        ),
+        );
+        return WithReplay;
+      },
     []
   );
 
@@ -85,18 +95,20 @@ const blogContentPrimaryMessageReplay = () => {
   return primaryReplay;
 };
 
-const blogContentPrimaryMessageDelete = () => {
+const BlogContentPrimaryMessageDelete = () => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deletePrimaryMessage, cache: false, header: { apiToken: true } });
 
   const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
     ({ props }) =>
-      (closeHandler) =>
-        (
+      (closeHandler) => {
+        const WithDelete = (
           <>
             <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
             <BlogContentDeleteModule request={request} closeHandler={closeHandler} props={props} />
           </>
-        ),
+        );
+        return WithDelete;
+      },
     []
   );
 
@@ -105,18 +117,19 @@ const blogContentPrimaryMessageDelete = () => {
   return primaryDelete;
 };
 
-const blogContentPrimaryMessageUpdate = () => {
+const BlogContentPrimaryMessageUpdate = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.updatePrimaryMessage, cache: false, header: { apiToken: true } });
 
   const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
     ({ props }) =>
       (closeHandler) => {
-        return (
+        const WithUpdate = (
           <>
             <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
             <BlogContentUpdateModule request={request} props={props} closeHandler={closeHandler} />
           </>
         );
+        return WithUpdate;
       },
     []
   );
@@ -126,12 +139,10 @@ const blogContentPrimaryMessageUpdate = () => {
   return primaryUpdate;
 };
 
-const BlogContentPrimaryMessageWrapper: BlogContentPrimaryMessageWrapperType = ({ messages }) => {
-  const primaryReplay = blogContentPrimaryMessageReplay();
-  const primaryDelete = blogContentPrimaryMessageDelete();
-  const primaryUpdate = blogContentPrimaryMessageUpdate();
+export const BlogContentPrimaryMessage = ({ messages }: { messages: PrimaryMessageProps[] }) => {
+  const primaryReplay = BlogContentPrimaryMessageReplay();
+  const primaryDelete = BlogContentPrimaryMessageDelete();
+  const primaryUpdate = BlogContentPrimaryMessageUpdate();
 
-  return <BlogContentPrimaryMessage messages={messages} primaryReplay={primaryReplay} primaryDelete={primaryDelete} primaryUpdate={primaryUpdate} />;
+  return <BlogContentPrimaryMessageWithFeature messages={messages} primaryReplay={primaryReplay} primaryDelete={primaryDelete} primaryUpdate={primaryUpdate} />;
 };
-
-export default BlogContentPrimaryMessageWrapper;

@@ -5,27 +5,28 @@ import { Tag as TagItem } from "components/Tag";
 import { getClass } from "utils/dom";
 import { createRequest } from "utils/fetcher";
 import { useUserRequest } from "hook/useUser";
-import { useManageToDeleteModule } from "hook/useManage";
-import ManageDeleteModule from "./manageDeleteModule";
-import { UseManageToDeleteModuleBody } from "types/hook";
-import { ManageDeleteTagButtonType, ManageDeleteTagItemType } from "types/containers";
+import { useManageToDeleteModule, UseManageToDeleteModuleBody } from "hook/useManage";
+import { ManageDeleteModule } from "./manageDeleteModule";
+import { ServerTagProps } from "types";
 
 import style from "./index.module.scss";
 
-const ManageDeleteTagButton: ManageDeleteTagButtonType = ({ deleteItem, tagId }) => {
+const ManageDeleteTagButton = ({ deleteItem, tagId }: { deleteItem: JSX.Element; tagId: string }) => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deleteTag, data: { deleteTag: tagId }, cache: false });
 
   const successHandler = useCallback(() => {
     const tagRequest = createRequest({ apiPath: apiName.tag });
     tagRequest.deleteCache();
     mutate(tagRequest.cacheKey);
-  }, [request]);
+  }, []);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
     ({ deleteItem }) =>
-      (closeHandler) =>
-        <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />,
-    []
+      (closeHandler) => {
+        const WithDelete = <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />;
+        return WithDelete;
+      },
+    [request, successHandler]
   );
 
   const click = useManageToDeleteModule({
@@ -49,7 +50,7 @@ const ManageDeleteTagButton: ManageDeleteTagButtonType = ({ deleteItem, tagId })
   );
 };
 
-const ManageDeleteTagItem: ManageDeleteTagItemType = ({ tagId, tagContent, tagCount }) => {
+export const ManageDeleteTagItem = ({ tagId, tagContent, tagCount }: ServerTagProps) => {
   return (
     <div className="m-2 position-relative">
       <TagItem hoverAble={false} key={tagId} tagContent={tagContent!} tagCount={tagCount!} />
@@ -57,5 +58,3 @@ const ManageDeleteTagItem: ManageDeleteTagItemType = ({ tagId, tagContent, tagCo
     </div>
   );
 };
-
-export default ManageDeleteTagItem;

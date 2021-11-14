@@ -1,6 +1,6 @@
-import { BlogOriginProps, BlogStateType } from "types/config";
+import { BlogStateType } from "types/config";
 
-const blogOrigin: BlogOriginProps = [
+const blogOrigin = [
   {
     name: "原创",
     value: "0",

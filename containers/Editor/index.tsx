@@ -1,15 +1,15 @@
 import { apiName } from "config/api";
-import EditorHead from "components/Publish/publishHead";
-import EditorEditor from "components/Publish/publishEditor";
-import EditorTypeTag from "components/Publish/publishType&Tag";
-import EditorImage from "containers/Publish/publishImage";
-import EditorState from "components/Publish/publishState";
-import EditorSubmit from "./editorSubmit";
+import { PublishHead as EditorHead } from "components/Publish/publishHead";
+import { PublishEditor as EditorEditor } from "components/Publish/publishEditor";
+import { PublishTypeAndTag as EditorTypeTag } from "components/Publish/publishTypeAndTag";
+import { PublishImage as EditorImage } from "containers/Publish/publishImage";
+import { PublishState as EditorState } from "components/Publish/publishState";
+import { EditorSubmit } from "./editorSubmit";
 import { useUserRequest } from "hook/useUser";
 import { useUpdateBlog } from "hook/useBlog";
-import { BlogContentType } from "types/containers";
+import { BlogProps, ClientTagProps, TypeProps, UserProps } from "types";
 
-const Editor: BlogContentType = (props) => {
+export const Editor = (props: BlogProps & UserProps & TypeProps & ClientTagProps) => {
   const request = useUserRequest({ method: "post", apiPath: apiName.updateBlog, header: { apiToken: true }, data: { oldProps: props }, cache: false });
 
   const [ref, submit] = useUpdateBlog({ request, id: props.blogId! });
@@ -27,5 +27,3 @@ const Editor: BlogContentType = (props) => {
     </div>
   );
 };
-
-export default Editor;

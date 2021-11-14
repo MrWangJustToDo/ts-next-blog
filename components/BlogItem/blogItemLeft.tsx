@@ -1,8 +1,8 @@
-import BlogItemLeftUl from "./blogItemLeftUl";
+import { BlogItemLeftUl } from "./blogItemLeftUl";
 import { flexBetween, getClass } from "utils/dom";
-import { BlogItemType } from "types/components";
+import { HomeBlogProps, TypeProps, UserProps } from "types";
 
-const BlogItemLeft: BlogItemType = (props) => {
+export const BlogItemLeft = (props: HomeBlogProps & TypeProps & UserProps) => {
   const { blogTitle, typeContent, blogPreview } = props;
 
   return (
@@ -18,5 +18,3 @@ const BlogItemLeft: BlogItemType = (props) => {
     </div>
   );
 };
-
-export default BlogItemLeft;

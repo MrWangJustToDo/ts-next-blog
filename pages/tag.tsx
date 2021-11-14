@@ -1,11 +1,11 @@
 import { wrapper } from "store";
 import { END } from "redux-saga";
-import TagContent from "containers/Tag";
+import { Tag as TagContent } from "containers/Tag";
 import { MyNextComponent } from "./_app";
 import { apiName } from "config/api";
 import { autoDispatchTokenHandler } from "config/ssr";
 import { animateFadeIn, getClass } from "utils/dom";
-import { getDataAction_Server, getDataSuccess_Server } from "store/reducer/server/action";
+import { getDataAction_Server, getDataSuccess_Server } from "store/reducer/server/share/action";
 
 const Tag: MyNextComponent = () => {
   return (

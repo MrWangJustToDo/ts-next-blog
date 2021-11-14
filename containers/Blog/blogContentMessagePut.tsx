@@ -2,15 +2,14 @@ import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { log } from "utils/log";
 import { flexBetween, getClass } from "utils/dom";
 import { useBool } from "hook/useData";
-import { usePutToCheckCodeModule } from "hook/useMessage";
-import BlogContentCheckCodeModule from "./blogContentCheckCodeModule";
-import BlogContentMessageMarkdown from "./blogContentMessageMarkdown";
-import { UsePutToCheckCodeModuleBody } from "types/hook";
-import { BlogContentMessagePutType } from "types/containers";
+import { usePutToCheckCodeModule, UsePutToCheckCodeModuleBody } from "hook/useMessage";
+import { BlogContentCheckCodeModule } from "./blogContentCheckCodeModule";
+import { BlogContentMessageMarkdownWithMemo } from "./blogContentMessageMarkdown";
+import { BlogProps } from "types";
 
 import style from "./index.module.scss";
 
-const BlogContentMessageTextArea = ({
+export const BlogContentMessageTextArea = ({
   forwardRef,
   name = "content",
   defaultValue = "",
@@ -45,13 +44,15 @@ const BlogContentMessageTextArea = ({
   );
 };
 
-const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
+export const BlogContentMessagePut = ({ blogId }: Pick<BlogProps, "blogId">) => {
   const { bool, switchBoolDebounce, hide } = useBool();
 
   const body = useCallback<UsePutToCheckCodeModuleBody>(
     ({ request, requestCallback, blogId }) =>
-      (closeHandler) =>
-        <BlogContentCheckCodeModule blogId={blogId} request={request} closeHandler={closeHandler} requestCallback={requestCallback} />,
+      (closeHandler) => {
+        const CheckCode = <BlogContentCheckCodeModule blogId={blogId} request={request} closeHandler={closeHandler} requestCallback={requestCallback} />;
+        return CheckCode;
+      },
     []
   );
 
@@ -66,7 +67,7 @@ const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
     <li className="list-group-item">
       <form ref={formRef}>
         {bool ? (
-          <BlogContentMessageMarkdown className="mb-3" name="content" forwardRef={textAreaRef} />
+          <BlogContentMessageMarkdownWithMemo className="mb-3" name="content" forwardRef={textAreaRef} />
         ) : (
           <BlogContentMessageTextArea name="content" forwardRef={textAreaRef} />
         )}
@@ -88,7 +89,3 @@ const BlogContentMessagePut: BlogContentMessagePutType = ({ blogId }) => {
     </li>
   );
 };
-
-export { BlogContentMessageTextArea };
-
-export default BlogContentMessagePut;

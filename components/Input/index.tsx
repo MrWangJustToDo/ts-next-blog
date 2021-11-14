@@ -5,7 +5,7 @@ import { InputEleType } from "types/components";
 
 import style from "./index.module.scss";
 
-const Input: InputEleType = ({
+export const Input: InputEleType = ({
   type,
   name,
   option,
@@ -65,5 +65,3 @@ const Input: InputEleType = ({
     </div>
   );
 };
-
-export default Input;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SimpleElement } from "types/components";
 
-const BlogHeadRight: SimpleElement = () => {
+export const BlogHeadRight: SimpleElement = () => {
   return (
     <nav aria-label="breadcrumb">
       <ol className="bg-transparent small breadcrumb m-0">
@@ -15,5 +15,3 @@ const BlogHeadRight: SimpleElement = () => {
     </nav>
   );
 };
-
-export default BlogHeadRight;

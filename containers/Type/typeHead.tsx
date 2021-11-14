@@ -3,7 +3,7 @@ import { WithChangeType as TypeItem } from "components/Type";
 import { flexBetween, flexCenter, getClass } from "utils/dom";
 import { SimpleElement } from "types/components";
 
-const TypeHead: SimpleElement = () => {
+export const TypeHead: SimpleElement = () => {
   const { type, currentType } = useType();
 
   return (
@@ -30,5 +30,3 @@ const TypeHead: SimpleElement = () => {
     </div>
   );
 };
-
-export default TypeHead;

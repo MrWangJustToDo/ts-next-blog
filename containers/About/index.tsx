@@ -1,8 +1,8 @@
-import AboutLeft from "./aboutLeft";
-import AboutRight from "./aboutRight";
+import { AboutLeft } from "./aboutLeft";
+import { AboutRight } from "./aboutRight";
 import { SimpleElement } from "types/components";
 
-const About: SimpleElement = () => {
+export const About: SimpleElement = () => {
   return (
     <div className="mx-lg-4 row">
       <AboutLeft />
@@ -10,5 +10,3 @@ const About: SimpleElement = () => {
     </div>
   );
 };
-
-export default About;

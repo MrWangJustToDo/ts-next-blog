@@ -6,32 +6,101 @@ import { log } from "utils/log";
 import { formSerialize, getRandom } from "utils/data";
 import { actionHandler } from "utils/action";
 import { createRequest } from "utils/fetcher";
+import { useBool } from "./useData";
 import { useUserRequest } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSuccessToast } from "./useToast";
-import { ApiRequestResult } from "types/utils";
-import { ChildMessageProps, PrimaryMessageProps } from "types/components";
-import {
-  UseChildMessageType,
-  MyInputELement,
-  UseJudgeInputValueType,
-  UsePutToCheckCodeModuleType,
-  UseCheckCodeModuleToSubmitProps,
-  UseCheckCodeModuleToSubmitType,
-  UseMessageToModuleProps,
-  UseMessageToModuleType,
-  UseReplayModuleToSubmitProps,
-  UseReplayModuleToSubmitType,
-  UsePutToCheckCodeModuleProps,
-  UseDeleteModuleToSubmitType,
-  UseDeleteModuleToSubmitProps,
-  UseUpdateModuleToSubmitType,
-  UseUpdateModuleToSubmitProps,
-} from "types/hook";
-import { useBool } from "./useData";
+import type { ApiRequestResult, AutoRequestType } from "types/utils";
+import type { ChildMessageProps, PrimaryMessageProps } from "types/components";
 
-const useChildMessage: UseChildMessageType = (props) => {
+interface UseChildMessageType {
+  (props: ChildMessageProps[]): { messageProps: ChildMessageProps[]; more: boolean; loadMore: () => void };
+}
+type MyInputELement = HTMLInputElement | HTMLTextAreaElement;
+interface UseJudgeInputValueType {
+  <T extends MyInputELement>(ref?: RefObject<T>, ...deps: any[]): { canSubmit: boolean; ref?: RefObject<T> };
+}
+export interface UsePutToCheckCodeModuleBody {
+  ({ request, requestCallback, blogId }: { request: AutoRequestType; requestCallback: () => void; blogId: string }): (closeHandler: () => void) => JSX.Element;
+}
+interface UsePutToCheckCodeModuleProps {
+  isMd?: number;
+  blogId: string;
+  className?: string;
+  submitCallback?: () => void;
+  body: UsePutToCheckCodeModuleBody;
+}
+interface UsePutToCheckCodeModuleType {
+  (props: UsePutToCheckCodeModuleProps, ...deps: any[]): {
+    formRef: RefObject<HTMLFormElement>;
+    textAreaRef?: RefObject<HTMLTextAreaElement>;
+    canSubmit: boolean;
+  };
+}
+interface UseCheckCodeModuleToSubmitProps {
+  blogId: string;
+  request: AutoRequestType;
+  closeHandler: () => void;
+  requestCallback: () => void;
+}
+interface UseCheckCodeModuleToSubmitType {
+  (props: UseCheckCodeModuleToSubmitProps): {
+    loading: boolean;
+    formRef: RefObject<HTMLFormElement>;
+    inputRef?: RefObject<HTMLInputElement>;
+    canSubmit: boolean;
+  };
+}
+export interface UseMessageToModuleBody<T> {
+  ({ props }: { props: T }): (closeHandler: () => void) => JSX.Element;
+}
+interface UseMessageToModuleProps<T> {
+  className: string;
+  body: UseMessageToModuleBody<T>;
+}
+interface UseMessageToModuleType {
+  <T>(props: UseMessageToModuleProps<T>): (props: T) => void;
+}
+interface UseReplayModuleToSubmitProps<T> {
+  props: T;
+  isMd?: number;
+  request: AutoRequestType;
+  closeHandler: () => void;
+}
+interface UseReplayModuleToSubmitType {
+  <T extends PrimaryMessageProps | ChildMessageProps, F extends MyInputELement, O extends MyInputELement>(props: UseReplayModuleToSubmitProps<T>): {
+    input1?: RefObject<F>;
+    input2?: RefObject<O>;
+    formRef: RefObject<HTMLFormElement>;
+    loading: boolean;
+    canSubmit: boolean;
+  };
+}
+interface UseDeleteModuleToSubmitProps<T> {
+  request: AutoRequestType;
+  closeHandler: () => void;
+  props: T;
+}
+interface UseDeleteModuleToSubmitType {
+  <T extends PrimaryMessageProps | ChildMessageProps>(props: UseDeleteModuleToSubmitProps<T>): { formRef: RefObject<HTMLFormElement>; loading: boolean };
+}
+interface UseUpdateModuleToSubmitProps<T> {
+  props: T;
+  closeHandler: () => void;
+  request: AutoRequestType;
+}
+interface UseUpdateModuleToSubmitType {
+  <T extends PrimaryMessageProps | ChildMessageProps, F extends MyInputELement, O extends MyInputELement>(props: UseUpdateModuleToSubmitProps<T>): {
+    input1?: RefObject<F>;
+    input2?: RefObject<O>;
+    formRef: RefObject<HTMLFormElement>;
+    loading: boolean;
+    canSubmit: boolean;
+  };
+}
+
+export const useChildMessage: UseChildMessageType = (props) => {
   const [page, setPage] = useState<number>(1);
   const [messageProps, setMessageProps] = useState<ChildMessageProps[]>([]);
   const more = page * childMessageLength < props.length;
@@ -40,7 +109,7 @@ const useChildMessage: UseChildMessageType = (props) => {
   return { messageProps, more, loadMore };
 };
 
-const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(forWareRef?: RefObject<T>, ...deps: any[]) => {
+export const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(forWareRef?: RefObject<T>, ...deps: any[]) => {
   const ref = useRef<T>(null);
   const [bool, setBool] = useState<boolean>(false);
   const targetRef = forWareRef || ref;
@@ -63,7 +132,13 @@ const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELement>(fo
   return { canSubmit: bool, ref };
 };
 
-const usePutToCheckCodeModule: UsePutToCheckCodeModuleType = ({ blogId, body, className = "", isMd = 0, submitCallback }: UsePutToCheckCodeModuleProps) => {
+export const usePutToCheckCodeModule: UsePutToCheckCodeModuleType = ({
+  blogId,
+  body,
+  className = "",
+  isMd = 0,
+  submitCallback,
+}: UsePutToCheckCodeModuleProps) => {
   const open = useOverlayOpen();
   const htmlId = `#editor_content_html`;
   const submitRef = useRef<boolean>(false);
@@ -111,7 +186,12 @@ const usePutToCheckCodeModule: UsePutToCheckCodeModuleType = ({ blogId, body, cl
   return { formRef, textAreaRef, canSubmit };
 };
 
-const useCheckCodeModuleToSubmit: UseCheckCodeModuleToSubmitType = ({ blogId, request, closeHandler, requestCallback }: UseCheckCodeModuleToSubmitProps) => {
+export const useCheckCodeModuleToSubmit: UseCheckCodeModuleToSubmitType = ({
+  blogId,
+  request,
+  closeHandler,
+  requestCallback,
+}: UseCheckCodeModuleToSubmitProps) => {
   const pushFail = useFailToast();
   const pushSuccess = useSuccessToast();
   const { bool, show, hide } = useBool();
@@ -168,12 +248,12 @@ const useCheckCodeModuleToSubmit: UseCheckCodeModuleToSubmitType = ({ blogId, re
   return { formRef, inputRef, canSubmit, loading: bool };
 };
 
-const useMessageToReplayModule: UseMessageToModuleType = <T>({ body, className }: UseMessageToModuleProps<T>) => {
+export const useMessageToReplayModule: UseMessageToModuleType = <T>({ body, className }: UseMessageToModuleProps<T>) => {
   const open = useOverlayOpen();
-  return useCallback<(props: T) => void>((props) => open({ head: "回复", body: body({ props }), className }), [body]);
+  return useCallback<(props: T) => void>((props) => open({ head: "回复", body: body({ props }), className }), [body, className, open]);
 };
 
-const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
+export const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
   T extends PrimaryMessageProps | ChildMessageProps,
   F extends MyInputELement,
   O extends MyInputELement
@@ -205,7 +285,7 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
     childMessageRequest.deleteCache();
     mutate(childMessageRequest.cacheKey);
     setTimeout(closeHandler, 0);
-  }, [isChild, closeHandler]);
+  }, [isChild, props, closeHandler]);
 
   const submit = useCallback<(e?: Event) => void>(
     (e) => {
@@ -244,7 +324,7 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
         });
       }
     },
-    [request, closeHandler, flashData]
+    [pushFail, show, request, props, isChild, hide, flashData, pushSuccess]
   );
 
   useAutoActionHandler<Event, void>({
@@ -260,12 +340,12 @@ const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
   return { input1, input2, submit, canSubmit: canSubmit1 && canSubmit2, loading: bool, formRef };
 };
 
-const useMessageToDeleteModule: UseMessageToModuleType = <T>({ body, className }: UseMessageToModuleProps<T>) => {
+export const useMessageToDeleteModule: UseMessageToModuleType = <T>({ body, className }: UseMessageToModuleProps<T>) => {
   const open = useOverlayOpen();
-  return useCallback<(props: T) => void>((props) => open({ head: "删除", body: body({ props }), className }), [body]);
+  return useCallback<(props: T) => void>((props) => open({ head: "删除", body: body({ props }), className }), [body, className, open]);
 };
 
-const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryMessageProps | ChildMessageProps>({
+export const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryMessageProps | ChildMessageProps>({
   props,
   request,
   closeHandler,
@@ -291,7 +371,7 @@ const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryM
       mutate(primaryMessageRequest.cacheKey);
     }
     setTimeout(closeHandler, 0);
-  }, [closeHandler, isChild]);
+  }, [closeHandler, isChild, props]);
 
   useAutoActionHandler<Event, void>(
     {
@@ -339,12 +419,12 @@ const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends PrimaryM
   return { formRef, loading: bool };
 };
 
-const useMessageToUpdateModule: UseMessageToModuleType = <T>({ body, className }: UseMessageToModuleProps<T>) => {
+export const useMessageToUpdateModule: UseMessageToModuleType = <T>({ body, className }: UseMessageToModuleProps<T>) => {
   const open = useOverlayOpen();
-  return useCallback<(props: T) => void>((props) => open({ head: "更新", body: body({ props }), className }), [body]);
+  return useCallback<(props: T) => void>((props) => open({ head: "更新", body: body({ props }), className }), [body, className, open]);
 };
 
-const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
+export const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
   T extends PrimaryMessageProps | ChildMessageProps,
   F extends MyInputELement,
   O extends MyInputELement
@@ -377,7 +457,7 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
       mutate(primaryMessageRequest.cacheKey);
     }
     setTimeout(closeHandler, 0);
-  }, [isChild, closeHandler]);
+  }, [isChild, closeHandler, props]);
 
   const submit = useCallback<(e?: Event) => void>((e) => {
     e?.preventDefault();
@@ -426,7 +506,7 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
           .finally(hide);
       });
     }
-  }, []);
+  }, [flashData, hide, input1, isChild, props, pushFail, pushSuccess, request, show]);
 
   useAutoActionHandler<Event, void>({
     action: submit,
@@ -439,17 +519,4 @@ const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
   });
 
   return { input1, input2, submit, canSubmit: canSubmit1 && canSubmit2, loading: bool, formRef };
-};
-
-export {
-  useChildMessage,
-  useJudgeInputValue,
-  usePutToCheckCodeModule,
-  useCheckCodeModuleToSubmit,
-  useMessageToReplayModule,
-  useReplayModuleToSubmit,
-  useMessageToDeleteModule,
-  useDeleteModuleToSubmit,
-  useMessageToUpdateModule,
-  useUpdateModuleToSubmit,
 };

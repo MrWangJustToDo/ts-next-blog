@@ -24,7 +24,7 @@ const IconItem: FootContainerContentItemType = ({ icon, content, hrefTo, title }
   );
 };
 
-const FootContainerContentItem: FootContainerContentItemType = ({
+export const FootContainerContentItem: FootContainerContentItemType = ({
   column = 1,
   head = "hello",
   content = "hello",
@@ -38,5 +38,3 @@ const FootContainerContentItem: FootContainerContentItemType = ({
     </li>
   );
 };
-
-export default FootContainerContentItem;

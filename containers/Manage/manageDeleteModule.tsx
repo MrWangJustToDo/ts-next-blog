@@ -1,8 +1,18 @@
-import Button from "components/Button";
+import { Button } from "components/Button";
 import { useDeleteRequest } from "hook/useManage";
-import { ManageDeleteModuleType } from "types/containers";
+import { AutoRequestType } from "types/utils";
 
-const ManageDeleteModule: ManageDeleteModuleType = ({ request, deleteItem, closeHandler, successHandler }) => {
+export const ManageDeleteModule = ({
+  request,
+  deleteItem,
+  closeHandler,
+  successHandler,
+}: {
+  request: AutoRequestType;
+  deleteItem: JSX.Element;
+  closeHandler: () => void;
+  successHandler: () => void;
+}) => {
   const click = useDeleteRequest({ request, closeHandler, successHandler });
 
   return (
@@ -15,5 +25,3 @@ const ManageDeleteModule: ManageDeleteModuleType = ({ request, deleteItem, close
     </div>
   );
 };
-
-export default ManageDeleteModule;

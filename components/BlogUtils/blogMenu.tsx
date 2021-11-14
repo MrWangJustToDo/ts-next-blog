@@ -6,7 +6,7 @@ import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-const BlogMenu: SimpleElement = () => {
+export const BlogMenu: SimpleElement = () => {
   const isSet = useBlogMenu(".blog-content");
 
   const { bool, switchBoolDebounce } = useBool();
@@ -28,5 +28,3 @@ const BlogMenu: SimpleElement = () => {
     </>
   );
 };
-
-export default BlogMenu;

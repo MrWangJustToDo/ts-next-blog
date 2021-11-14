@@ -4,11 +4,10 @@ import { useAutoLoadCheckCodeImg, useAutoSetHeight } from "hook/useAuto";
 import { clearImg } from "utils/image";
 import { actionHandler } from "utils/action";
 import { flexBetween, getClass } from "utils/dom";
-import { LoginCheckCodeType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const LoginCheckCode: LoginCheckCodeType = ({ show }) => {
+export const LoginCheckCode = ({ show }: { show: boolean }) => {
   const [ref, height] = useAutoSetHeight<HTMLDivElement>();
 
   const imgRef = useAutoLoadCheckCodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr, state: show });
@@ -31,5 +30,3 @@ const LoginCheckCode: LoginCheckCodeType = ({ show }) => {
     </AnimationItem>
   );
 };
-
-export default LoginCheckCode;

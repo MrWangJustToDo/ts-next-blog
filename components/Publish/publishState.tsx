@@ -1,9 +1,9 @@
-import Drop from "components/Drop";
-import CheckBox from "components/CheckBox";
+import { Drop } from "components/Drop";
+import { CheckBox } from "components/CheckBox";
 import { blogState } from "config/publish";
-import { BlogContentType } from "types/containers";
+import { BlogProps } from "types";
 
-const PublishState: BlogContentType = (props) => {
+export const PublishState = (props: Partial<BlogProps>) => {
   return (
     <>
       {blogState.map(({ fieldName, name, value }, idx) => {
@@ -28,5 +28,3 @@ const PublishState: BlogContentType = (props) => {
     </>
   );
 };
-
-export default PublishState;

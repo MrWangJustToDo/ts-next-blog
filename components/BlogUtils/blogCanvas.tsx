@@ -6,7 +6,7 @@ import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-const BlogCanvas: SimpleElement = () => {
+export const BlogCanvas: SimpleElement = () => {
   const canvasRef = useLinkToImg<HTMLCanvasElement>();
 
   const { bool, switchBoolDebounce } = useBool();
@@ -27,5 +27,3 @@ const BlogCanvas: SimpleElement = () => {
     </>
   );
 };
-
-export default BlogCanvas;

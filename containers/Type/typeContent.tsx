@@ -1,15 +1,15 @@
-import LoadRender from "components/LoadRender";
+import { LoadRender } from "components/LoadRender";
 import { PrimaryMessage } from "components/BlogMessage";
 import { WithReadBlogItem as TypeContentItem } from "components/BlogItem";
 import { useType } from "hook/useType";
 import { apiName } from "config/api";
 import { flexCenter, getClass } from "utils/dom";
-import { TypeContentType } from "types/containers";
 import { PrimaryMessageProps } from "types/components";
+import { HomeProps } from "store/reducer/server/action/home";
 
 import style from "./index.module.scss";
 
-const TypeContent: TypeContentType = ({ blogs }) => {
+export const TypeContent = ({ blogs }: { blogs: HomeProps }) => {
   const { currentPageBlogs } = useType({ blogs, needInitType: true });
 
   return (
@@ -43,5 +43,3 @@ const TypeContent: TypeContentType = ({ blogs }) => {
     </ul>
   );
 };
-
-export default TypeContent;

@@ -1,5 +1,5 @@
 import { getClass, flexCenter } from "utils/dom";
-import LoadRender from "components/LoadRender";
+import { LoadRender } from "components/LoadRender";
 import { SimpleElement, YiYanComponent } from "types/components";
 
 import style from "./index.module.scss";
@@ -16,7 +16,7 @@ const Bquote: YiYanComponent = ({ hitokoto, from_who, from }) => {
   );
 };
 
-const FootContainerYiYan: SimpleElement = () => {
+export const FootContainerYiYan: SimpleElement = () => {
   return (
     <div className={getClass(style.autoHide, "col-lg-4 text-white border-left border-secondary")}>
       <h6 className={getClass(style.fontInherit, "my-2 mb-lg-3", flexCenter)}>
@@ -27,5 +27,3 @@ const FootContainerYiYan: SimpleElement = () => {
     </div>
   );
 };
-
-export default FootContainerYiYan;

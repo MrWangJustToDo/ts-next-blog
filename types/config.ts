@@ -1,10 +1,10 @@
 /* api */
-import { SagaStore } from "store";
+import { SagaStore } from "store/type";
 import { ServerResponse } from "http";
 import { IncomingMessage } from "http";
 import { Method } from "axios";
-import { BlogContentProps } from "./hook";
-import { CacheConfigProps, UserConfigProps } from "./server";
+import { CacheConfigProps, UserConfigProps } from "server/type";
+import { BlogProps } from "types";
 
 /* api */
 interface AccessType {
@@ -90,18 +90,21 @@ interface SessionReq extends IncomingMessage {
 }
 
 interface AutoDispatchTokenHandlerProps {
-  store: SagaStore;
   req: SessionReq;
   res: ServerResponse;
   [props: string]: any;
 }
 
 interface AutoDispatchTokenHandlerType {
-  (props: AutoDispatchTokenHandlerProps): Promise<any>;
+  (store: SagaStore): (props: AutoDispatchTokenHandlerProps) => Promise<any>;
+}
+
+interface WrapperDispatchHandlerType {
+  (props: AutoDispatchTokenHandlerProps & { store: SagaStore }): Promise<any>;
 }
 
 interface AutoDispatchTokenHandler {
-  (props: AutoDispatchTokenHandlerType): AutoDispatchTokenHandlerType;
+  (props: WrapperDispatchHandlerType): AutoDispatchTokenHandlerType;
 }
 
 export type { AutoDispatchTokenHandler, AutoDispatchTokenHandlerProps };
@@ -120,16 +123,18 @@ interface LoginType {
 
 export type { InputProps, LoginType };
 
-/* BlogOrigin */
-type BlogOriginProps = Array<{ name?: string; value: string }>;
-
-type BlogStateType = Array<{ fieldName: keyof BlogContentProps; name: string; value: string | BlogOriginProps }>;
-
-export type { BlogOriginProps, BlogStateType };
-
 /* manage */
 interface AddModuleType {
   input: InputProps;
 }
 
 export type { AddModuleType };
+
+/* publish */
+type BlogStateType = Array<{
+  fieldName: keyof Pick<BlogProps, "blogState" | "blogCommentState" | "blogPriseState">;
+  name: string;
+  value: string | Array<{ name: string; value: string }>;
+}>;
+
+export type { BlogStateType };

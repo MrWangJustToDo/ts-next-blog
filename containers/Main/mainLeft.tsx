@@ -1,9 +1,9 @@
-import MainLeftHead from "./mainLeftHead";
-import MainLeftFoot from "./mainLeftFoot";
-import MainLeftContent from "./mainLeftContent";
+import { MainLeftHead } from "./mainLeftHead";
+import { MainLeftFoot } from "./mainLeftFoot";
+import { MainLeftContent } from "./mainLeftContent";
 import { SimpleElement } from "types/components";
 
-const MainLeft: SimpleElement = () => {
+export const MainLeft: SimpleElement = () => {
   return (
     <div className="col-md-8 user-select-none">
       <div className="card">
@@ -14,5 +14,3 @@ const MainLeft: SimpleElement = () => {
     </div>
   );
 };
-
-export default MainLeft;

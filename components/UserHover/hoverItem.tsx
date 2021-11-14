@@ -1,5 +1,5 @@
-import Image from "components/Image";
-import LoadRender from "components/LoadRender";
+import { Image } from "components/Image";
+import { LoadRender } from "components/LoadRender";
 import { apiName } from "config/api";
 import { getUserProps, getUserState } from "config/hover";
 import { getCurrentAvatar } from "utils/data";
@@ -8,7 +8,7 @@ import { UserExProps, UserHoverItemType } from "types/components";
 
 import style from "./index.module.scss";
 
-const UserHoverItem: UserHoverItemType = (props) => {
+export const UserHoverItem: UserHoverItemType = (props) => {
   const { avatar, gender, username, userId } = props;
   return (
     <div className="card border-0">
@@ -48,5 +48,3 @@ let Loaded = (data: UserExProps) => {
     </div>
   );
 };
-
-export default UserHoverItem;

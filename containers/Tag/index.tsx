@@ -1,20 +1,20 @@
-import TagHead from "./tagHead";
-import TagFoot from "./tagFoot";
-import TagContent from "./tagContent";
-import LoadRender from "components/LoadRender";
+import { TagHead } from "./tagHead";
+import { TagFoot } from "./tagFoot";
+import { TagContent } from "./tagContent";
+import { LoadRender } from "components/LoadRender";
 import { useHome } from "hook/useHome";
 import { apiName } from "config/api";
-import { BlogContentProps } from "types/hook";
 import { SimpleElement } from "types/components";
+import { HomeProps } from "store/reducer/server/action/home";
 
-const Tag: SimpleElement = () => {
+export const Tag: SimpleElement = () => {
   const { blogs } = useHome();
 
   return (
     <>
       <TagHead />
       <div className="card mx-lg-4 mt-4">
-        <LoadRender<BlogContentProps[]>
+        <LoadRender<HomeProps>
           needUpdate
           needInitialData
           initialData={blogs}
@@ -32,5 +32,3 @@ const Tag: SimpleElement = () => {
     </>
   );
 };
-
-export default Tag;

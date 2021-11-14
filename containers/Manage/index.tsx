@@ -1,8 +1,7 @@
-import { ManageUserIdType } from "types/containers";
-import ManageLeft from "./manageLeft";
-import ManageRight from "./manageRight";
+import { ManageLeft } from "./manageLeft";
+import { ManageRight } from "./manageRight";
 
-const Manage: ManageUserIdType = ({ userId }) => {
+export const Manage = ({ userId }: { userId: string }) => {
   return (
     <div className="row px-lg-4 px-sm-2">
       <ManageLeft userId={userId} />
@@ -10,5 +9,3 @@ const Manage: ManageUserIdType = ({ userId }) => {
     </div>
   );
 };
-
-export default Manage;

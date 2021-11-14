@@ -1,14 +1,15 @@
 import { calendar } from "utils/time";
+import { Image } from "components/Image";
 import { getCurrentAvatar } from "utils/data";
 import { flexBetween, flexCenter, getClass } from "utils/dom";
-import { BlogContentType } from "types/containers";
+import { BlogHeadProps } from ".";
 
-const BlogHeadLeft: BlogContentType = ({ gender, avatar, username, blogModifyState, blogModifyDate, blogReadCount }) => {
+export const BlogHeadLeft = ({ gender, avatar, username, blogModifyState, blogModifyDate, blogReadCount }: BlogHeadProps) => {
   return (
     <ul className={getClass("list-unstyled text-truncate w-50 small overflow-auto m-0", flexBetween)} style={{ maxWidth: "240px" }}>
       <li className="small">
         <div className={getClass("text-secondary", flexCenter)}>
-          <img className="rounded-circle" src={getCurrentAvatar(avatar, gender)} alt={username} width="30" height="30" />
+          <Image className="rounded-circle" src={getCurrentAvatar(avatar, gender)} alt={username} width="30" height="30" />
           <span className="ml-2 text-info">{username}</span>
         </div>
       </li>
@@ -27,5 +28,3 @@ const BlogHeadLeft: BlogContentType = ({ gender, avatar, username, blogModifySta
     </ul>
   );
 };
-
-export default BlogHeadLeft;

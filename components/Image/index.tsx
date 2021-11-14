@@ -1,7 +1,7 @@
-import Image, { ImageProps } from "next/image";
+import OriginalImage, { ImageProps } from "next/image";
 
-const MyImage = (props: ImageProps) => {
-  return <Image {...props} />;
+const Image = (props: ImageProps) => {
+  return <OriginalImage alt="" {...props} />;
 };
 
-export default MyImage;
+export { Image };

@@ -2,19 +2,18 @@ import { useMemo, useRef } from "react";
 import { apiName } from "config/api";
 import { flexCenter, getClass } from "utils/dom";
 import { useInViewport } from "hook/useInView";
-import LoadRender from "components/LoadRender";
-import BlogContentPrimaryMessage from "./blogContentMessagePrimary";
-import { PrimaryMessageProps } from "types/components";
-import { BlogContentMessageType } from "types/containers";
+import { LoadRender } from "components/LoadRender";
+import { BlogContentPrimaryMessage } from "./blogContentMessagePrimary";
+import { BlogProps, PrimaryCommentProps, UserProps } from "types";
 
-const BlogContentMessage: BlogContentMessageType = ({ blogId }) => {
+export const BlogContentMessage = ({ blogId }: Pick<BlogProps, "blogId">) => {
   const childRef = useRef<JSX.Element | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
   const isInView = useInViewport({ ref });
   useMemo(() => {
     if (isInView) {
       childRef.current = childRef.current || (
-        <LoadRender<PrimaryMessageProps[]>
+        <LoadRender<Array<PrimaryCommentProps & UserProps>>
           token
           query={{ blogId }}
           revalidateOnMount={isInView}
@@ -25,7 +24,7 @@ const BlogContentMessage: BlogContentMessageType = ({ blogId }) => {
         />
       );
     }
-  }, [isInView]);
+  }, [blogId, isInView]);
   return (
     <li className="list-group-item">
       <div className="card" ref={ref}>
@@ -44,5 +43,3 @@ const BlogContentMessage: BlogContentMessageType = ({ blogId }) => {
     </li>
   );
 };
-
-export default BlogContentMessage;

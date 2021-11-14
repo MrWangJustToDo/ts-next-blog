@@ -1,8 +1,7 @@
-import Button from "components/Button";
+import { Button } from "components/Button";
 import { useRouter } from "next/dist/client/router";
-import { PublishSubmitType } from "types/containers";
 
-const PublishSubmit: PublishSubmitType = ({ submit }) => {
+export const PublishSubmit = ({ submit }: { submit: () => Promise<void> }) => {
   const router = useRouter();
 
   return (
@@ -12,5 +11,3 @@ const PublishSubmit: PublishSubmitType = ({ submit }) => {
     </div>
   );
 };
-
-export default PublishSubmit;

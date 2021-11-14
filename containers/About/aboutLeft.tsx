@@ -1,11 +1,11 @@
 import Slick from "react-slick";
 import { apiName } from "config/api";
 import { usePinch } from "hook/usePinch";
-import Image from "components/Image";
-import LoadRender from "components/LoadRender";
+import { Image } from "components/Image";
+import { LoadRender } from "components/LoadRender";
 import { SimpleElement } from "types/components";
 
-const AboutLeft: SimpleElement = () => {
+export const AboutLeft: SimpleElement = () => {
   return (
     <div className="col-md-8">
       <div className="border rounded">
@@ -19,7 +19,7 @@ const AboutLeft: SimpleElement = () => {
               ))}
             </Slick>
           )}
-          loading={() => <Image className="d-block rounded" src={process.env.NEXT_PUBLIC_ABOUT} width="100%" height="60%" layout="responsive" />}
+          loading={() => <Image className="d-block rounded" src={process.env.NEXT_PUBLIC_ABOUT} width="100%" height="60%" layout="responsive" alt="me" />}
         />
       </div>
     </div>
@@ -32,10 +32,8 @@ const ImgItem = ({ relativeUrl }: { relativeUrl: string }) => {
   return (
     <div className="d-block" ref={coverRef}>
       <div ref={pinchRef}>
-        <Image className="d-block rounded" key={relativeUrl} src={relativeUrl} width="100%" height="60%" layout="responsive" />
+        <Image className="d-block rounded" key={relativeUrl} src={relativeUrl} width="100%" height="60%" layout="responsive" alt={relativeUrl} />
       </div>
     </div>
   );
 };
-
-export default AboutLeft;

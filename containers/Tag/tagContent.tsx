@@ -1,15 +1,15 @@
-import LoadRender from "components/LoadRender";
+import { LoadRender } from "components/LoadRender";
 import { PrimaryMessage } from "components/BlogMessage";
 import { WithReadBlogItem as TagContentItem } from "components/BlogItem";
 import { useTag } from "hook/useTag";
 import { apiName } from "config/api";
 import { flexCenter, getClass } from "utils/dom";
-import { TagContentType } from "types/containers";
 import { PrimaryMessageProps } from "types/components";
+import { HomeProps } from "store/reducer/server/action/home";
 
 import style from "./index.module.scss";
 
-const TagContent: TagContentType = ({ blogs }) => {
+export const TagContent = ({ blogs }: { blogs: HomeProps }) => {
   const { currentPageBlogs } = useTag({ blogs, needInitTag: true });
 
   return (
@@ -43,5 +43,3 @@ const TagContent: TagContentType = ({ blogs }) => {
     </ul>
   );
 };
-
-export default TagContent;

@@ -1,7 +1,5 @@
 import { Database } from "sqlite";
-import { TagProps } from "types/containers";
-import { AuthorProps, BlogContentProps, TypeProps, UserProps } from "types/hook";
-import { ChildMessageProps, PrimaryMessageProps, UserExProps } from "types/components";
+import { AuthorProps, BlogProps, ChildCommentProps, HomeBlogProps, PrimaryCommentProps, ServerTagProps, TypeProps, UserProps, UsersExProps } from "types";
 
 // 添加博客信息
 const insertBlog = async ({
@@ -24,7 +22,7 @@ const insertBlog = async ({
   blogCommentState,
   typeId,
   tagId,
-}: BlogContentProps & { db: Database }) => {
+}: BlogProps & { db: Database }) => {
   return await db.run(
     "INSERT INTO blogs VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
     authorId,
@@ -64,7 +62,7 @@ const insertHome = async ({
   blogReadCount,
   typeId,
   tagId,
-}: BlogContentProps & { db: Database }) => {
+}: HomeBlogProps & { db: Database }) => {
   return await db.run(
     "INSERT INTO home VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
     authorId,
@@ -107,12 +105,12 @@ const insertType = async ({ db, typeId, typeState, typeContent, typeCount }: Typ
 };
 
 // 添加tag信息
-const insertTag = async ({ db, tagId, tagState, tagContent, tagCount }: TagProps & { db: Database }) => {
+const insertTag = async ({ db, tagId, tagState, tagContent, tagCount }: ServerTagProps & { db: Database }) => {
   return await db.run("INSERT INTO tag VALUES(?,?,?,?)", tagId, tagState, tagContent, tagCount);
 };
 
 // 添加用户扩展信息
-const insertUserEx = async ({ db, userId, collect, assent, publish, collectIds, assentIds }: UserExProps & { db: Database }) => {
+const insertUserEx = async ({ db, userId, collect, assent, publish, collectIds, assentIds }: UsersExProps & { db: Database }) => {
   return await db.run("INSERT INTO usersEx VALUES(?,?,?,?,?,?)", userId, collect, assent, publish, collectIds, assentIds);
 };
 
@@ -131,7 +129,7 @@ const insertPrimaryComment = async ({
   childCount,
   preview,
   isMd,
-}: PrimaryMessageProps & { db: Database }) => {
+}: PrimaryCommentProps & { db: Database }) => {
   return await db.run(
     "INSERT INTO primaryComment VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
     blogId,
@@ -165,7 +163,7 @@ const insertChildComment = async ({
   modifyDate,
   isMd,
   preview,
-}: ChildMessageProps & { db: Database }) => {
+}: ChildCommentProps & { db: Database }) => {
   return await db.run(
     "INSERT INTO childComment VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
     blogId,

@@ -1,19 +1,26 @@
-import { useCallback, useRef } from "react";
-import Loading from "components/Loading";
+import { RefObject, useCallback, useRef } from "react";
+import { Loading } from "components/Loading";
 import { apiName } from "config/api";
 import { usePinch } from "hook/usePinch";
 import { useAutoLoadRandomImg } from "hook/useAuto";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { actionHandler } from "utils/action";
 import { flexCenter, getClass } from "utils/dom";
-import { PublishImageModuleType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const PublishImageModule: PublishImageModuleType = ({ closeHandler, initialUrl, inputRef }) => {
+export const PublishImageModule = ({
+  closeHandler,
+  initialUrl,
+  inputRef,
+}: {
+  closeHandler: () => void;
+  initialUrl?: string;
+  inputRef: RefObject<HTMLInputElement>;
+}) => {
   const divRef = useRef<HTMLDivElement>(null);
 
-  const getInitUrl = useCallback(() => inputRef.current?.value, []);
+  const getInitUrl = useCallback(() => inputRef.current?.value, [inputRef]);
 
   const [ref, bool] = useAutoLoadRandomImg({ imgUrl: apiName.image, initUrl: initialUrl, getInitUrl });
 
@@ -22,7 +29,7 @@ const PublishImageModule: PublishImageModuleType = ({ closeHandler, initialUrl, 
   const clickCallback = useCallback(() => {
     actionHandler<HTMLInputElement, void>(inputRef.current, (input) => actionHandler<HTMLImageElement, void>(ref.current, (ele) => (input.value = ele.src)));
     closeHandler();
-  }, [closeHandler]);
+  }, [closeHandler, inputRef, ref]);
 
   usePinch({ forWardPinchRef: ref, forWardCoverRef: divRef });
 
@@ -44,5 +51,3 @@ const PublishImageModule: PublishImageModuleType = ({ closeHandler, initialUrl, 
     </div>
   );
 };
-
-export default PublishImageModule;

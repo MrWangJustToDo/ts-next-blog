@@ -1,13 +1,12 @@
-import Drop from "components/Drop";
-import Button from "components/Button";
-import LoadRender from "components/LoadRender";
+import { Drop } from "components/Drop";
+import { Button } from "components/Button";
+import { LoadRender } from "components/LoadRender";
 import { useSearch } from "hook/useManage";
 import { apiName } from "config/api";
-import { TypeProps } from "types/hook";
-import { TagProps } from "types/containers";
 import { DropItemProps, SimpleElement } from "types/components";
+import { ServerTagProps, TypeProps } from "types";
 
-const ManageSearch: SimpleElement = () => {
+export const ManageSearch: SimpleElement = () => {
   const [ref, search] = useSearch();
 
   return (
@@ -23,7 +22,7 @@ const ManageSearch: SimpleElement = () => {
             return <Drop<string> _style={{ zIndex: "3" }} fieldName="typeId" className="form-control m-2" placeHolder="选择分类" data={data} />;
           }}
         />
-        <LoadRender<TagProps[]>
+        <LoadRender<ServerTagProps[]>
           needUpdate
           needInitialData
           apiPath={apiName.tag}
@@ -37,5 +36,3 @@ const ManageSearch: SimpleElement = () => {
     </div>
   );
 };
-
-export default ManageSearch;

@@ -1,6 +1,4 @@
-import { SubmitType } from "types/containers";
-
-const LoginSubmit: SubmitType = ({ enabled }) => {
+export const LoginSubmit = ({ enabled }: { enabled: boolean }) => {
   return (
     <div className="form-row justify-content-around">
       <button type="submit" className="btn px-5 my-2 btn-info" disabled={!enabled}>
@@ -9,5 +7,3 @@ const LoginSubmit: SubmitType = ({ enabled }) => {
     </div>
   );
 };
-
-export default LoginSubmit;

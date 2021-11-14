@@ -9,9 +9,9 @@ import {
   insertUser,
   insertUserEx,
 } from "server/database/insert";
-import { autoRequestHandler, success } from "server/middleware/apiHandler";
+import { success, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
 
-const test_publishBlog = autoRequestHandler({
+const test_publishBlog = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertBlog({
       db: req.db!,
@@ -38,7 +38,7 @@ const test_publishBlog = autoRequestHandler({
   },
 });
 
-const test_registerUser = autoRequestHandler({
+const test_registerUser = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertUser({
       db: req.db!,
@@ -58,7 +58,7 @@ const test_registerUser = autoRequestHandler({
   },
 });
 
-const test_publishHome = autoRequestHandler({
+const test_publishHome = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertHome({
       db: req.db!,
@@ -74,34 +74,34 @@ const test_publishHome = autoRequestHandler({
       blogCollectCount: 1,
       blogReadCount: 1,
       typeId: "1",
-      tagId: "1" as any,
+      tagId: "1",
     });
     success({ res, resDate: { data: "ok" } });
   },
 });
 
-const test_insertUserEx = autoRequestHandler({
+const test_insertUserEx = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertUserEx({ db: req.db!, userId: "1", collect: 0, assent: 0, publish: 1, collectIds: "", assentIds: "" });
     success({ res, resDate: { data: "ok" } });
   },
 });
 
-const test_insertType = autoRequestHandler({
+const test_insertType = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertType({ db: req.db!, typeId: "1", typeState: 1, typeContent: "java", typeCount: 1 });
     success({ res, resDate: { data: "ok" } });
   },
 });
 
-const test_insertTag = autoRequestHandler({
+const test_insertTag = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertTag({ db: req.db!, tagId: "1", tagState: 1, tagContent: "前端", tagCount: 1 });
     success({ res, resDate: { data: "ok" } });
   },
 });
 
-const test_primaryComment = autoRequestHandler({
+const test_primaryComment = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertPrimaryComment({
       db: req.db!,
@@ -120,7 +120,7 @@ const test_primaryComment = autoRequestHandler({
   },
 });
 
-const test_childComment = autoRequestHandler({
+const test_childComment = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertChildComment({
       db: req.db!,
@@ -140,7 +140,7 @@ const test_childComment = autoRequestHandler({
   },
 });
 
-const test_author = autoRequestHandler({
+const test_author = wrapperMiddlewareRequest({
   requestHandler: async ({ req, res }) => {
     await insertAuthor({
       db: req.db!,

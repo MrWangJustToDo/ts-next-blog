@@ -1,21 +1,9 @@
-import createSagaMiddleware, { Task } from "redux-saga";
-import { createStore, applyMiddleware, compose, Store } from "redux";
+import createSagaMiddleware from "redux-saga";
+import { createStore, applyMiddleware, compose } from "redux";
 import { MakeStore, createWrapper } from "next-redux-wrapper";
-import rootReducer from "./reducer";
-import rootSaga from "./saga";
-import { apiName } from "config/api";
-import { actionName } from "config/action";
-
-// redux采用服务器端与客户端分离的方式
-
-export interface State {
-  server: { [T in apiName]: { data: any; error: Error | null | string | number; loading: boolean; loaded: boolean } };
-  client: { [K in actionName]: { data: any; error: Error | null | string | number; loading: boolean; loaded: boolean } };
-}
-
-export interface SagaStore extends Store {
-  sagaTask?: Task;
-}
+import { rootReducer } from "./reducer";
+import { rootSaga } from "./saga";
+import type { SagaStore } from "./type";
 
 export const makeStore: MakeStore<SagaStore> = () => {
   const devtools =

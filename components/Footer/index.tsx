@@ -1,19 +1,19 @@
 import { getClass, flexCenter } from "utils/dom";
-import FootContainerYiYan from "./footContainerYiYan";
-import FootContainerCardMe from "./footContainerCardMe";
-import FootContainerRecommend from "./footContainerRecommend";
-import FootContainerConnectionMe from "./footContainerContactMe";
+import { FootContainerYiYan } from "./footContainerYiYan";
+import { FootContainerCardMe } from "./footContainerCardMe";
+import { FootContainerRecommend } from "./footContainerRecommend";
+import { FootContainerContactMe } from "./footContainerContactMe";
 import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-const Footer: SimpleElement = () => {
+export const Footer: SimpleElement = () => {
   return (
     <footer id="footer" className={getClass(style.footFont, "bg-dark text-center user-select-none")}>
       <div className="container-md">
         <div className="row py-2 py-lg-4">
           <FootContainerCardMe />
-          <FootContainerConnectionMe />
+          <FootContainerContactMe />
           <FootContainerRecommend />
           <FootContainerYiYan />
         </div>
@@ -28,5 +28,3 @@ const Footer: SimpleElement = () => {
     </footer>
   );
 };
-
-export default Footer;

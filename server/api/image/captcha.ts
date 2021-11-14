@@ -1,9 +1,9 @@
 import svgCaptcha from "svg-captcha";
-import { success, autoRequestHandler } from "server/middleware/apiHandler";
+import { success, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
 
 // 获取验证码图片
-const getCaptchaAction = autoRequestHandler({
-  requestHandler: ({ req, res }) => {
+const getCaptchaAction = wrapperMiddlewareRequest({
+  requestHandler: async function getCaptchaAction({ req, res }) {
     const captcha = svgCaptcha.create({
       noise: 4,
       background: "#ffffff",
@@ -15,8 +15,8 @@ const getCaptchaAction = autoRequestHandler({
 });
 
 // 获取验证码明文
-const getCaptchaStrAction = autoRequestHandler({
-  requestHandler: ({ req, res }) => {
+const getCaptchaStrAction = wrapperMiddlewareRequest({
+  requestHandler: function getCaptchaStrAction({ req, res }) {
     success({ res, resDate: { data: req.session.captcha } });
   },
 });

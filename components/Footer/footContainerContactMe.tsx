@@ -1,11 +1,11 @@
 import { getClass, flexCenter } from "utils/dom";
 import { footContentLength, footContactMe } from "config/footer";
-import FootContainerContentItem from "./footContainerContentItem";
+import { FootContainerContentItem } from "./footContainerContentItem";
 import { FootContainerContactMeType } from "types/components";
 
 import style from "./index.module.scss";
 
-const FootContainerContactMe: FootContainerContactMeType = ({ length = footContentLength }) => {
+export const FootContainerContactMe: FootContainerContactMeType = ({ length = footContentLength }) => {
   return (
     <div className="col-4 col-lg-3 border-right border-secondary text-white">
       <h6 className={getClass(style.fontInherit, "my-2 mb-lg-3", flexCenter)}>
@@ -20,5 +20,3 @@ const FootContainerContactMe: FootContainerContactMeType = ({ length = footConte
     </div>
   );
 };
-
-export default FootContainerContactMe;

@@ -2,7 +2,7 @@ import { useArchive } from "hook/useArchive";
 import { flexBetween, getClass } from "utils/dom";
 import { SimpleElement } from "types/components";
 
-const ArchiveHead: SimpleElement = () => {
+export const ArchiveHead: SimpleElement = () => {
   const { allCount } = useArchive();
   return (
     <div className="card mx-lg-4">
@@ -17,5 +17,3 @@ const ArchiveHead: SimpleElement = () => {
     </div>
   );
 };
-
-export default ArchiveHead;

@@ -267,6 +267,4 @@ class PointerTracker {
   };
 }
 
-export { Pointer };
-
-export default PointerTracker;
+export { Pointer, PointerTracker };

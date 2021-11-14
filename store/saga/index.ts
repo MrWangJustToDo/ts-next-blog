@@ -1,10 +1,15 @@
 import { apiName } from "config/api";
 import { all, takeLatest } from "redux-saga/effects";
-import { serverAction } from "store/reducer/server/action";
-import sagaConfig from "./config";
+import { serverAction } from "store/reducer/server/share/action";
+import { getHomeData, getTagData, getTypeData, getBlogData } from "./action";
 
 function* rootSaga() {
-  yield all(Object.keys(sagaConfig).map((it) => takeLatest(serverAction.GETDATAACTION(it as apiName), sagaConfig[it])));
+  yield all([
+    takeLatest(serverAction.GETDATAACTION(apiName.home), getHomeData),
+    takeLatest(serverAction.GETDATAACTION(apiName.tag), getTagData),
+    takeLatest(serverAction.GETDATAACTION(apiName.type), getTypeData),
+    takeLatest(serverAction.GETDATAACTION(apiName.blog), getBlogData),
+  ]);
 }
 
-export default rootSaga;
+export { rootSaga };

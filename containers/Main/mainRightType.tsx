@@ -1,14 +1,13 @@
-import LoadRender from "components/LoadRender";
-import MainRightHead from "components/CardHead";
+import { LoadRender } from "components/LoadRender";
+import { CardHead as MainRightHead } from "components/CardHead";
 import { AnimationList } from "components/AnimationList";
-import MainRightTypeItem from "./mainRightTypeItem";
+import { MainRightTypeItem } from "./mainRightTypeItem";
 import { mainRightHeader } from "config/home";
 import { apiName } from "config/api";
 import { useType } from "hook/useType";
-import { TypeProps } from "types/hook";
-import { MainRightTypeType } from "types/containers";
+import { TypeProps } from "types";
 
-const MainRightType: MainRightTypeType = ({ index }) => {
+export const MainRightType = ({ index }: { index: number }) => {
   const { type, changeCurrentType } = useType({ needInitType: true });
 
   const { icon, content, hrefTo } = mainRightHeader[index];
@@ -36,5 +35,3 @@ const MainRightType: MainRightTypeType = ({ index }) => {
     </div>
   );
 };
-
-export default MainRightType;

@@ -1,8 +1,7 @@
-import Input from "components/Input";
+import { Input } from "components/Input";
 import { login } from "config/user";
-import { LoginInputType } from "types/containers";
 
-const LoginUsername: LoginInputType = ({ setState }) => {
+export const LoginUsername = ({ setState }: { setState: (p: boolean) => void }) => {
   return (
     <div className="form-group row align-items-center position-relative">
       <label htmlFor="username" className="col-sm-3 col-form-label">
@@ -12,5 +11,3 @@ const LoginUsername: LoginInputType = ({ setState }) => {
     </div>
   );
 };
-
-export default LoginUsername;

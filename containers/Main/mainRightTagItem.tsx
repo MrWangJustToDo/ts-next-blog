@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { Tag } from "components/Tag";
-import { MainRightTagItemType } from "types/containers";
 
-const MainRightTagItem: MainRightTagItemType = ({ tagName, tagCount, changeCurrentTag }) => {
+export const MainRightTagItem = ({ tagName, tagCount, changeCurrentTag }: { tagName: string; tagCount: number; changeCurrentTag: (p: string) => void }) => {
   const clickHandler = useCallback(() => changeCurrentTag(tagName), [tagName]);
 
   return (
@@ -14,5 +13,3 @@ const MainRightTagItem: MainRightTagItemType = ({ tagName, tagCount, changeCurre
     </Link>
   );
 };
-
-export default MainRightTagItem;

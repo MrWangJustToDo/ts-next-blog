@@ -1,11 +1,11 @@
 import { getClass, flexCenter } from "utils/dom";
 import { footContentLength, footRecommendContent } from "config/footer";
-import FootContainerContentItem from "./footContainerContentItem";
+import { FootContainerContentItem } from "./footContainerContentItem";
 import { FootContainerRecommendType } from "types/components";
 
 import style from "./index.module.scss";
 
-const FootContainerRecommend: FootContainerRecommendType = ({ length = footContentLength }) => {
+export const FootContainerRecommend: FootContainerRecommendType = ({ length = footContentLength }) => {
   return (
     <div className="col-4 col-lg-3 text-white">
       <h6 className={getClass(style.fontInherit, "my-2 mb-lg-3", flexCenter)}>
@@ -20,4 +20,3 @@ const FootContainerRecommend: FootContainerRecommendType = ({ length = footConte
     </div>
   );
 };
-export default FootContainerRecommend;

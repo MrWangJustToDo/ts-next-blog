@@ -1,13 +1,12 @@
 import Image from "next/image";
 import { getClass } from "utils/dom";
 import { usePinch } from "hook/usePinch";
-import { BlogContentImgType } from "types/containers";
 
 import style from "./index.module.scss";
 
-const BlogContentImg: BlogContentImgType = ({ src }) => {
+export const BlogContentImg = ({ src }: { src: string }) => {
   const [pinchRef, coverRef] = usePinch<HTMLDivElement, HTMLImageElement>();
-  
+
   return (
     <li className="list-group-item overflow-hidden">
       {/* <div className="card-body"> */}
@@ -21,5 +20,3 @@ const BlogContentImg: BlogContentImgType = ({ src }) => {
     </li>
   );
 };
-
-export default BlogContentImg;

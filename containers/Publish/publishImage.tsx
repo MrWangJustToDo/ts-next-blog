@@ -1,15 +1,18 @@
 import { RefObject, useCallback } from "react";
 import { getClass } from "utils/dom";
 import { useInputToImageModule } from "hook/useBlog";
-import PublishImageModule from "./publishImageModule";
-import { BlogContentType } from "types/containers";
+import { PublishImageModule } from "./publishImageModule";
+import { BlogProps } from "types";
 
 import style from "./index.module.scss";
 
-const PublishImage: BlogContentType = ({ blogImgLink }) => {
+export const PublishImage = ({ blogImgLink }: Partial<Pick<BlogProps, "blogImgLink">>) => {
   const body = useCallback<(ref: RefObject<HTMLInputElement>) => (closeHandler: () => void) => JSX.Element>(
-    (ref) => (closeHandler) => <PublishImageModule closeHandler={closeHandler} inputRef={ref} initialUrl={blogImgLink} />,
-    []
+    (ref) => (closeHandler) => {
+      const WithImage = <PublishImageModule closeHandler={closeHandler} inputRef={ref} initialUrl={blogImgLink} />;
+      return WithImage;
+    },
+    [blogImgLink]
   );
 
   const [inputRef, click] = useInputToImageModule({
@@ -33,5 +36,3 @@ const PublishImage: BlogContentType = ({ blogImgLink }) => {
     </div>
   );
 };
-
-export default PublishImage;

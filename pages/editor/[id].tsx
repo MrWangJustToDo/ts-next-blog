@@ -4,12 +4,13 @@ import { apiName } from "config/api";
 import { actionName } from "config/action";
 import { autoDispatchTokenHandler } from "config/ssr";
 import { animateFadeIn, getClass } from "utils/dom";
-import Editor from "containers/Editor";
-import { setDataSuccess_client } from "store/reducer/client/action";
-import { getDataAction_Server, getDataSuccess_Server } from "store/reducer/server/action";
-import { BlogContentType } from "types/containers";
+import { Editor } from "containers/Editor";
+import { setDataSuccess_client } from "store/reducer/client/share/action";
+import { getDataAction_Server, getDataSuccess_Server } from "store/reducer/server/share/action";
+import { MyNextComponent } from "pages/_app";
+import { BlogProps, ClientTagProps, TypeProps, UserProps } from "types";
 
-const EditorContent: BlogContentType & { title?: string } = (props) => {
+const EditorContent: MyNextComponent<BlogProps & TypeProps & ClientTagProps & UserProps> = (props) => {
   return (
     <div className={getClass("container-md my-5", animateFadeIn)}>
       <Editor {...props} />

@@ -1,22 +1,22 @@
 import { apiName } from "config/api";
-import LoadRender from "components/LoadRender";
-import DeleteTag from "./manageDeleteTagItem";
+import { LoadRender } from "components/LoadRender";
+import { ManageDeleteTagItem } from "./manageDeleteTagItem";
 import { SimpleElement } from "types/components";
-import { TagProps } from "types/containers";
+import { ServerTagProps } from "types";
 
-const ManageTag: SimpleElement = () => {
+export const ManageTag: SimpleElement = () => {
   return (
     <div className="card-body">
-      <LoadRender<TagProps[]>
+      <LoadRender<ServerTagProps[]>
         needUpdate
         needInitialData
         apiPath={apiName.tag}
         loaded={(data) => {
           return (
             <>
-              {data.map(({ tagCount, tagContent, tagId }) => (
+              {data.map(({ tagCount, tagContent, tagId, tagState }) => (
                 <div key={tagId} className="d-inline-block">
-                  <DeleteTag {...{ tagContent, tagCount, tagId }} />
+                  <ManageDeleteTagItem {...{ tagContent, tagCount, tagId, tagState }} />
                 </div>
               ))}
             </>
@@ -26,5 +26,3 @@ const ManageTag: SimpleElement = () => {
     </div>
   );
 };
-
-export default ManageTag;

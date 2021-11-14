@@ -1,4 +1,4 @@
-import AboutContainer from "containers/About";
+import { About as AboutContainer } from "containers/About";
 import { animateFadeIn, getClass } from "utils/dom";
 import { MyNextComponent } from "./_app";
 

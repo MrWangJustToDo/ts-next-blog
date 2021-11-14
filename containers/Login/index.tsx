@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { useState } from "react";
-import LoginUsername from "./loginUsername";
-import LoginPassword from "./loginPassword";
-import LoginCheckCode from "./loginCheckCode";
-import LoginSubmit from "./loginSubmit";
+import { LoginUsername } from "./loginUsername";
+import { LoginPassword } from "./loginPassword";
+import { LoginCheckCode } from "./loginCheckCode";
+import { LoginSubmit } from "./loginSubmit";
 import { useLogin } from "hook/useUser";
 import { flexCenter, getClass } from "utils/dom";
 import { SimpleElement } from "types/components";
 
 import style from "./index.module.scss";
 
-const Login: SimpleElement = () => {
+export const Login: SimpleElement = () => {
   const formRef = useLogin();
 
   const [username, setUsername] = useState<boolean>(false);
@@ -35,5 +35,3 @@ const Login: SimpleElement = () => {
     </div>
   );
 };
-
-export default Login;

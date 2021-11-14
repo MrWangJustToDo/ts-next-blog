@@ -4,33 +4,27 @@ import { log } from "utils/log";
 import { Cache } from "utils/cache";
 import { ServerError } from "server/utils/error";
 import { NextFunction, Request, Response } from "express";
-import {
-  ApiResponseData,
-  ApiResponseProps,
-  AutoRequestHandlerProps,
-  ErrorHandlerType,
-  RequestHandlerProps,
-  RequestHandlerType,
-  ExpressRequest,
-  AutoRequestHandlerMiddlewareProps,
-  MiddlewareRequestHandlerType,
-} from "types/server";
+import { ApiResponseProps, ExpressRequest, MiddlewareConfig, MiddlewareContext, MiddlewareFunction, RequestHandlerType } from "server/type";
 
 const cache = new Cache<string, any>();
 
 let currentResponseDate: null | any = null;
 
-const success = <T>({ res, statusCode = 200, resDate }: ApiResponseProps<T>): ApiResponseData<T> | void => {
+export const success = <T>({ res, statusCode = 200, resDate }: ApiResponseProps<T>): void => {
   // 缓存当前成功的请求数据
-  currentResponseDate = resDate;
+  if (resDate.data || resDate.last) {
+    currentResponseDate = resDate;
+  } else {
+    currentResponseDate = null;
+  }
   resDate.code = resDate.code || 0;
   resDate.state = resDate.state || "获取成功";
   resDate.time = new Date().toLocaleString();
   res.status(statusCode).json(resDate);
 };
 
-const fail = <T>({ res, statusCode = 404, resDate, methodName }: ApiResponseProps<T> & { methodName?: string }): void => {
-  if (methodName && process.env.NODE_ENV === "development") {
+export const fail = <T>({ res, statusCode = 404, resDate, methodName }: ApiResponseProps<T> & { methodName?: string }): void => {
+  if (process.env.NODE_ENV === "development" && methodName) {
     resDate["methodName"] = `method: ${methodName} 出现错误`;
   } else {
     delete resDate["methodName"];
@@ -41,51 +35,35 @@ const fail = <T>({ res, statusCode = 404, resDate, methodName }: ApiResponseProp
   res.status(statusCode).json(resDate);
 };
 
-const transformHandler = (requestHandler: RequestHandlerType) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    return await requestHandler({ req, res, next, cache });
-  };
-};
-
-const catchHandler = (requestHandler: RequestHandlerType, errorHandler?: ErrorHandlerType) => {
-  return async ({ req, res, next }: RequestHandlerProps) => {
-    try {
-      return await requestHandler({ req, res, next, cache });
-    } catch (e) {
-      log(e as Error, "error");
-      if (errorHandler && typeof errorHandler === "function") {
-        if (e instanceof ServerError) {
-          await errorHandler({ req, res, next, e, code: e.code, cache });
-        } else if (e instanceof Error) {
-          await errorHandler({ req, res, next, e, code: 404, cache });
-        }
-      } else {
-        fail({ res, resDate: { state: "访问失败", data: (e as Error).toString() } });
-      }
-    }
-  };
-};
-
-const catchMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
-  const { req, res, next, errorHandler } = ctx;
+export const catchMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
+  const { req, res, errorHandler } = ctx;
   try {
     await nextMiddleware();
   } catch (e) {
-    log(e as Error, "error");
+    log(new Error(`url: ${req.originalUrl}, method: ${req.method} error, ${(e as Error).message}`), "error");
+
     if (errorHandler && typeof errorHandler === "function") {
       if (e instanceof ServerError) {
-        await errorHandler({ req, res, next, e, code: e.code, cache });
+        await errorHandler({ ctx, req, res, e, code: e.code, cache });
       } else if (e instanceof Error) {
-        await errorHandler({ req, res, next, e, code: 404, cache });
+        await errorHandler({ ctx, req, res, e, code: 404, cache });
       }
     } else {
-      fail({ res, resDate: { state: "访问失败", data: (e as Error).toString() } });
+      const url = req.originalUrl;
+      const method = req.method;
+      const methodName = ctx.requestHandler.name;
+      fail({
+        res,
+        statusCode: e instanceof ServerError ? e.code : undefined,
+        resDate: { state: `url: ${url}, method: ${method} 访问失败`, data: (e as Error).message },
+        methodName,
+      });
     }
   }
 };
 
-const cacheMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
-  const { cacheConfig, cache, req, res, time } = ctx;
+const cacheMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
+  const { cacheConfig, cache, req, res } = ctx;
   const currentCacheConfig = assign({}, cacheConfig, req.config?.cache);
   const key = currentCacheConfig.cacheKey
     ? typeof currentCacheConfig.cacheKey === "function"
@@ -94,7 +72,9 @@ const cacheMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, ne
     : req.originalUrl;
 
   const needCache = currentCacheConfig.needCache;
-  const cacheTime = currentCacheConfig.cacheTime ? currentCacheConfig.cacheTime : time;
+  const needDeleteBeforeRequest = currentCacheConfig.needDeleteBeforeRequest;
+  const needDeleteAfterRequest = currentCacheConfig.needDeleteAfterRequest;
+  const cacheTime = currentCacheConfig.cacheTime;
   const needDelete = currentCacheConfig.needDelete;
   if (needDelete) {
     if (Array.isArray(needDelete)) {
@@ -123,29 +103,82 @@ const cacheMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, ne
       }
     }
   }
+  if (needDeleteBeforeRequest) {
+    if (Array.isArray(needDeleteBeforeRequest)) {
+      needDeleteBeforeRequest.forEach((item: string | (({ req }: { req: ExpressRequest }) => string | string[])) => {
+        if (typeof item === "function") {
+          const key = item({ req });
+          if (Array.isArray(key)) {
+            key.forEach((i) => cache.deleteRightNow(i));
+          } else {
+            cache.deleteRightNow(key);
+          }
+        } else {
+          cache.deleteRightNow(item);
+        }
+      });
+    } else if (typeof needDeleteBeforeRequest === "string") {
+      cache.deleteRightNow(needDeleteBeforeRequest);
+    } else if (needDeleteBeforeRequest === true) {
+      cache.deleteRightNow(key);
+    } else {
+      const key = needDeleteBeforeRequest({ req });
+      if (Array.isArray(key)) {
+        key.forEach((i) => cache.deleteRightNow(i));
+      } else {
+        cache.deleteRightNow(key);
+      }
+    }
+  }
   if (needCache) {
     const cacheValue = cache.get(key);
     if (cacheValue) {
       log(`get response data from cache. method: ${req.method}, url: ${req.originalUrl}, key: ${key}`, "normal");
       success({ res, resDate: cacheValue });
     } else {
-      const actionValue = await nextMiddleware();
-      const currentActionValue = actionValue || currentResponseDate;
-      if (!!currentActionValue) {
-        cache.set(key, currentActionValue, cacheTime);
+      await nextMiddleware();
+      if (!!currentResponseDate) {
+        cache.set(key, currentResponseDate, cacheTime);
       } else {
-        log(`nothing to return, so nothing to cache. method: ${req.method}, url: ${req.originalUrl}`, "warn");
+        log(`nothing to get, so nothing to cache. method: ${req.method}, url: ${req.originalUrl}`, "warn");
       }
     }
   } else {
     await nextMiddleware();
   }
+  if (needDeleteAfterRequest) {
+    if (Array.isArray(needDeleteAfterRequest)) {
+      needDeleteAfterRequest.forEach((item: string | (({ req }: { req: ExpressRequest }) => string | string[])) => {
+        if (typeof item === "function") {
+          const key = item({ req });
+          if (Array.isArray(key)) {
+            key.forEach((i) => cache.deleteRightNow(i));
+          } else {
+            cache.deleteRightNow(key);
+          }
+        } else {
+          cache.deleteRightNow(item);
+        }
+      });
+    } else if (typeof needDeleteAfterRequest === "string") {
+      cache.deleteRightNow(needDeleteAfterRequest);
+    } else if (needDeleteAfterRequest === true) {
+      cache.deleteRightNow(key);
+    } else {
+      const key = needDeleteAfterRequest({ req, cacheData: currentResponseDate });
+      if (Array.isArray(key)) {
+        key.forEach((i) => cache.deleteRightNow(i));
+      } else {
+        cache.deleteRightNow(key);
+      }
+    }
+  }
 };
 
-const checkCodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
-  const { req, checkCodeConfig, check } = ctx;
+const checkCodeMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
+  const { req, checkCodeConfig } = ctx;
   const currentCheckCodeConfig = assign({}, checkCodeConfig, req.config?.check);
-  const needCheck = currentCheckCodeConfig.needCheck ? currentCheckCodeConfig.needCheck : check;
+  const needCheck = currentCheckCodeConfig.needCheck;
   const fieldName = currentCheckCodeConfig.fieldName || "checkCode";
   const fromQuery = currentCheckCodeConfig.fromQuery;
   if (needCheck) {
@@ -170,7 +203,7 @@ const checkCodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps
   await nextMiddleware();
 };
 
-const checkParamsMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
+const checkParamsMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
   const { paramsConfig, req } = ctx;
   const currentCheckParamsConfig = assign({}, paramsConfig, req.config?.params);
   const currentFromQuery = currentCheckParamsConfig.fromQuery;
@@ -192,7 +225,7 @@ const checkParamsMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewarePro
   await nextMiddleware();
 };
 
-const decodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
+const decodeMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
   const { req, encodeConfig } = ctx;
   const currentEncodeConfig = encodeConfig || req.config?.encode;
   if (currentEncodeConfig) {
@@ -212,11 +245,11 @@ const decodeMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, n
   await nextMiddleware();
 };
 
-const userMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
-  const { userConfig, req, strict } = ctx;
+const userMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
+  const { userConfig, req } = ctx;
   const currentUserConfig = assign({}, userConfig, req.config?.user);
   const needCheck = currentUserConfig.needCheck;
-  const checkStrict = currentUserConfig.checkStrict ? currentUserConfig.checkStrict : strict;
+  const checkStrict = currentUserConfig.checkStrict;
   if (needCheck) {
     if (!req.user) {
       throw new ServerError("未登录，拒绝访问", 400);
@@ -232,17 +265,23 @@ const userMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nex
   }
 };
 
-const logMiddlewareHandler = async (ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => {
-  const url = ctx.req.url;
-  const method = ctx.req.method;
-  const key =  chalk.redBright("[time log] method: " + method + ", url: " + url + ', time');
+const logMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
+  const url = ctx.req.originalUrl;
+  const method = ctx.requestHandler.name;
+  const key = chalk.redBright("[time log] method: " + method + ", url: " + url + ", time");
   console.time(key);
   await nextMiddleware();
   console.timeEnd(key);
 };
 
-const compose = (...middleWares: ((ctx: AutoRequestHandlerMiddlewareProps, nextMiddleware: MiddlewareRequestHandlerType) => Promise<any | void>)[]) => {
-  return function (ctx: AutoRequestHandlerMiddlewareProps, next: RequestHandlerType) {
+// 默认请求的中间件函数，不执行下一个
+const runRequestMiddlewareHandler: MiddlewareFunction = async (ctx) => {
+  const { requestHandler, req, res, cache } = ctx;
+  await requestHandler({ req, res, cache });
+};
+
+export const compose = (...middleWares: MiddlewareFunction[]) => {
+  return function (ctx: MiddlewareContext, next: MiddlewareFunction | RequestHandlerType) {
     let runTime = 0;
     let index = -1;
     // 需要加上死循环判断
@@ -281,20 +320,24 @@ const composedHandler = compose(
   checkParamsMiddlewareHandler,
   checkCodeMiddlewareHandler,
   userMiddlewareHandler,
-  cacheMiddlewareHandler
+  cacheMiddlewareHandler,
+  runRequestMiddlewareHandler
 );
 
-const autoRequestHandler = (config: AutoRequestHandlerProps) => {
+export const wrapperMiddlewareRequest = function (config: MiddlewareConfig, composed: ReturnType<typeof compose> = composedHandler) {
   return async (req: Request, res: Response, next: NextFunction) => {
     // 每一个新的请求  需要清除原始的缓存数据
     currentResponseDate = null;
     const ctx = { ...config, req, res, next, cache };
     try {
-      return await composedHandler(ctx, ctx.requestHandler || next);
+      if (!ctx.goNext) {
+        return await composed(ctx, ctx.requestHandler);
+      } else {
+        await composed(ctx, ctx.requestHandler);
+        next();
+      }
     } catch (e) {
-      fail({ res, statusCode: 500, resDate: { data: (e as Error).toString(), methodName: "composedHandler" } });
+      fail({ res, statusCode: 500, resDate: { data: (e as Error).toString(), methodName: "composed" } });
     }
   };
 };
-
-export { success, fail, transformHandler, catchHandler, autoRequestHandler };

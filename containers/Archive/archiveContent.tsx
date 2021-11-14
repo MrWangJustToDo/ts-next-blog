@@ -2,11 +2,11 @@ import Link from "next/link";
 import { momentTo } from "utils/time";
 import { flexBetween, flexCenter, getClass } from "utils/dom";
 import { AnimationList } from "components/AnimationList";
-import { ArchiveContentType } from "types/containers";
+import { HomeProps } from "store/reducer/server/action/home";
 
 import style from "./index.module.scss";
 
-const ArchiveContent: ArchiveContentType = ({ year, blogProps }) => {
+export const ArchiveContent = ({ year, blogProps }: { year: string; blogProps: HomeProps }) => {
   return (
     <>
       <h3 className="text-center display-5 my-3">{year}</h3>
@@ -31,5 +31,3 @@ const ArchiveContent: ArchiveContentType = ({ year, blogProps }) => {
     </>
   );
 };
-
-export default ArchiveContent;

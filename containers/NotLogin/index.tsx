@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SimpleElement } from "types/components";
 
-const NotLogin: SimpleElement = () => {
+export const NotLogin: SimpleElement = () => {
   return (
     <div className="jumbotron my-3 small">
       <h1 className="display-4">访问错误！</h1>
@@ -16,5 +16,3 @@ const NotLogin: SimpleElement = () => {
     </div>
   );
 };
-
-export default NotLogin;

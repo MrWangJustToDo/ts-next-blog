@@ -3,7 +3,7 @@ import { WithReadBlogItem as MainLeftItem } from "components/BlogItem";
 import { AnimationList } from "components/AnimationList";
 import { SimpleElement } from "types/components";
 
-const MainLeftContent: SimpleElement = () => {
+export const MainLeftContent: SimpleElement = () => {
   const { currentPageBlogs } = useHome();
 
   return (
@@ -14,5 +14,3 @@ const MainLeftContent: SimpleElement = () => {
     </AnimationList>
   );
 };
-
-export default MainLeftContent;

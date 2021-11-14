@@ -44,6 +44,5 @@ nextApp.prepare().then(() => {
   app.all("*", (req, res) => {
     return handle(req, res);
   });
-
   http.createServer(app).listen(port, () => log(`=== app run on: http://localhost:${port} ===`, "warn"));
 });

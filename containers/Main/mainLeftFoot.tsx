@@ -1,12 +1,12 @@
-import PageFoot from "components/PageFoot";
+import { FootPage } from "components/PageFoot";
 import { useHome } from "hook/useHome";
 import { SimpleElement } from "types/components";
 
-const MainLeftFoot: SimpleElement = () => {
+export const MainLeftFoot: SimpleElement = () => {
   let { currentPage, increaseAble, decreaseAble, increasePage, decreasePage } = useHome();
 
   return (
-    <PageFoot
+    <FootPage
       className="border-0"
       page={currentPage}
       increaseAble={increaseAble}
@@ -16,5 +16,3 @@ const MainLeftFoot: SimpleElement = () => {
     />
   );
 };
-
-export default MainLeftFoot;

@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import { mark } from "utils/markdown";
 import { getClass } from "utils/dom";
-import { BlogContentType } from "types/containers";
+import { BlogProps } from "types";
 
 import style from "./index.module.scss";
 
-const BlogContentBody: BlogContentType = ({ blogTitle, blogContent }) => {
+export const BlogContentBody = ({ blogTitle, blogContent }: Pick<BlogProps, "blogTitle" | "blogContent">) => {
   const html = useMemo(() => mark.render(blogContent || ""), [blogContent]);
   return (
     <li className="list-group-item">
@@ -17,5 +17,3 @@ const BlogContentBody: BlogContentType = ({ blogTitle, blogContent }) => {
     </li>
   );
 };
-
-export default BlogContentBody;

@@ -1,14 +1,18 @@
 import { flexEnd, getClass } from "utils/dom";
-import Button from "components/Button";
+import { Button } from "components/Button";
 import { useDeleteModuleToSubmit } from "hook/useMessage";
+import { AutoRequestType } from "types/utils";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
-import { BlogContentDeleteModuleProps, BlogContentDeleteModuleType } from "types/containers";
 
-const BlogContentDeleteModule: BlogContentDeleteModuleType = <T extends PrimaryMessageProps | ChildMessageProps>({
+export const BlogContentDeleteModule = <T extends PrimaryMessageProps | ChildMessageProps>({
   props,
   request,
   closeHandler,
-}: BlogContentDeleteModuleProps<T>) => {
+}: {
+  props: T;
+  request: AutoRequestType;
+  closeHandler: () => void;
+}) => {
   const { formRef, loading } = useDeleteModuleToSubmit<T>({ props, request, closeHandler });
 
   return (
@@ -17,5 +21,3 @@ const BlogContentDeleteModule: BlogContentDeleteModuleType = <T extends PrimaryM
     </form>
   );
 };
-
-export default BlogContentDeleteModule;

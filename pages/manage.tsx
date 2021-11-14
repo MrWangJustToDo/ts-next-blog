@@ -1,12 +1,11 @@
 import { wrapper } from "store";
-import NotLogin from "containers/NotLogin";
-import ManageContent from "containers/Manage";
+import { MyNextComponent } from "./_app";
+import { NotLogin } from "containers/NotLogin";
+import { Manage as ManageContent } from "containers/Manage";
 import { autoDispatchTokenHandler } from "config/ssr";
 import { animateFadeIn, getClass } from "utils/dom";
 
-type ManageType = ((props: { isLogin: boolean; userId: string }) => JSX.Element) & { title?: string };
-
-const Manage: ManageType = ({ isLogin, userId }) => {
+const Manage: MyNextComponent<{ isLogin: boolean; userId: string }> = ({ isLogin, userId }) => {
   return <div className={getClass(animateFadeIn, "container-md my-5")}>{isLogin ? <ManageContent userId={userId} /> : <NotLogin />}</div>;
 };
 

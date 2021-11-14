@@ -1,6 +1,6 @@
 import { SimpleElement } from "types/components";
 
-const AboutRightAbout: SimpleElement = () => {
+export const AboutRightAbout: SimpleElement = () => {
   return (
     <li className="list-group-item">
       <div className="small">
@@ -17,5 +17,3 @@ const AboutRightAbout: SimpleElement = () => {
     </li>
   );
 };
-
-export default AboutRightAbout;

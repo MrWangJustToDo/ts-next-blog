@@ -1,6 +1,6 @@
 import { getRandom } from "utils/data";
 import { createRequest } from "utils/fetcher";
-import { success, fail, autoRequestHandler } from "server/middleware/apiHandler";
+import { success, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
 
 // 获取图片请求链接
 const getImagePath = () => {
@@ -13,25 +13,23 @@ const getImagePath = () => {
 };
 
 // 获取所有随机图片信息
-const getImagesAction = autoRequestHandler({
-  requestHandler: async ({ res }) => {
+const getImagesAction = wrapperMiddlewareRequest({
+  requestHandler: async function getImagesAction({ res }) {
     let { images } = await createRequest({ path: getImagePath() }).run();
     images = images.map((item: { [props: string]: string }) => {
       return { ...item, relativeUrl: `${process.env.BINGURL}${item.url}` };
     });
     success({ res, resDate: { data: images } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getImagesAction" } }),
 });
 
 // 获取随机图片信息
-const getRandomImageAction = autoRequestHandler({
-  requestHandler: async ({ res }) => {
+const getRandomImageAction = wrapperMiddlewareRequest({
+  requestHandler: async function getRandomImageAction({ res }) {
     const { images } = await createRequest({ path: getImagePath() }).run();
     const [{ relativeUrl }] = images.map((item: { [props: string]: string }) => ({ relativeUrl: `${process.env.BINGURL}${item.url}` }));
     success({ res, resDate: { data: relativeUrl } });
   },
-  errorHandler: ({ res, e, code = 500 }) => fail({ res, statusCode: code, resDate: { data: e.toString(), methodName: "getRandomImageAction" } }),
 });
 
 export { getImagesAction, getRandomImageAction };
