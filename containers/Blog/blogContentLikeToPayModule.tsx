@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { Image } from "components/Image";
 import { usePinch } from "hook/usePinch";
 
 export const BlogContentLikeToPayModule = ({ aliUrl, wChatUrl }: { aliUrl: string; wChatUrl: string }) => {
@@ -12,13 +11,13 @@ export const BlogContentLikeToPayModule = ({ aliUrl, wChatUrl }: { aliUrl: strin
         <div className="mr-4 card d-inline-block">
           <div className="card-header">微信打赏</div>
           <div ref={pinchRef1}>
-            <Image src={wChatUrl} width="130" alt="..." />
+            <img src={wChatUrl} width="130px" alt="..." />
           </div>
         </div>
         <div className="ml-4 card d-inline-block">
           <div className="card-header">支付宝打赏</div>
           <div ref={pinchRef2}>
-            <Image src={aliUrl} width="130" alt="..." />
+            <img src={aliUrl} width="130px" alt="..." />
           </div>
         </div>
       </div>

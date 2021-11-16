@@ -52,7 +52,7 @@ export const useAutoLogin: UseAutoLoginType = () => {
   useAutoActionHandler({
     timer: Boolean(userId),
     once: false,
-    rightNow: true,
+    rightNow: Boolean(userId) ? false : true,
     delayTime: 1000 * 60 * 10,
     action: autoLoginCallback,
   });

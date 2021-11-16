@@ -19,9 +19,10 @@ export let ModuleManager = ({ children }: { children: JSX.Element }) => {
     }),
     [state, overlay]
   );
+  const showLength = toast.filter((it) => it.showState).length;
   return (
     <>
-      <div id="page-toast" data-show={toast.length > 0}>
+      <div id="page-toast" data-show={showLength > 0} data-length={toast.length} data-showlength={showLength}>
         <div className="position-fixed" style={{ right: "10px", top: "15px", zIndex: 999 }}>
           {toast.map((props) => (
             <Toast key={props.currentTime?.getTime()} {...props} />

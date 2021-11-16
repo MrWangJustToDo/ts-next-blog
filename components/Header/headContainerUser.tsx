@@ -23,11 +23,14 @@ export const HeadContainerUser = () => {
     logout().then(hideDebounce);
   }, [logout, hideDebounce]);
 
-  const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>({
-    state: bool,
-    showClassName: "flipInX",
-    hideClassName: "flipOutX",
-  });
+  const { animateRef: ref } = useShowAndHideAnimate<HTMLDivElement>(
+    {
+      state: bool,
+      showClassName: "flipInX",
+      hideClassName: "flipOutX",
+    },
+    userId
+  );
 
   return userId ? (
     <div className={getClass("d-inline-block", style.headUser, bool ? style.headUserActive : "")}>

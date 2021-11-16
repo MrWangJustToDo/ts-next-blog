@@ -8,26 +8,25 @@ interface UseHeaderItemType {
   (props?: { needInitHead?: boolean }): { currentHeader: string; changeCurrentHeader: (headItem: string) => void };
 }
 
-const useAutoChangeHeader = (item: string, currentHeader: string, changeCurrentItem: Function, needChange: boolean) => {
-  useEffect(() => {
-    if (needChange && item !== currentHeader) {
-      changeCurrentItem(item);
-    }
-  }, [item, changeCurrentItem, currentHeader, needChange]);
-};
-
 const useHeaderItem: UseHeaderItemType = (props = {}) => {
   const { needInitHead = false } = props;
-  const { route } = useRouter();
+  const { asPath } = useRouter();
   const { state: currentHeader, dispatch } = useCurrentState((state) => state.client[actionName.currentHeader]["data"]);
   const ref = useRef<string>(currentHeader);
-  ref.current = route;
-  const changeCurrentHeader = useCallback<(props: string) => void>((headItem) => {
-    if (ref.current !== headItem) {
-      dispatch(setDataSuccess_client({ name: actionName.currentHeader, data: headItem }));
+  ref.current = currentHeader;
+  const changeCurrentHeader = useCallback<(props: string) => void>(
+    (headItem) => {
+      if (ref.current !== headItem) {
+        dispatch(setDataSuccess_client({ name: actionName.currentHeader, data: headItem }));
+      }
+    },
+    [dispatch]
+  );
+  useEffect(() => {
+    if (needInitHead && asPath !== ref.current) {
+      changeCurrentHeader(asPath);
     }
-  }, [dispatch]);
-  useAutoChangeHeader(route, currentHeader, changeCurrentHeader, needInitHead);
+  }, [asPath, changeCurrentHeader, needInitHead]);
   return { currentHeader, changeCurrentHeader };
 };
 
