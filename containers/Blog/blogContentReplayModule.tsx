@@ -15,8 +15,10 @@ export const BlogContentReplayModule = <T extends PrimaryMessageProps | ChildMes
   props,
   request,
   closeHandler,
+  toPrimary = 0,
 }: {
   props: T;
+  toPrimary?: number;
   request: AutoRequestType;
   closeHandler: () => void;
 }) => {
@@ -26,6 +28,7 @@ export const BlogContentReplayModule = <T extends PrimaryMessageProps | ChildMes
     isMd: Number(bool),
     props,
     request,
+    toPrimary,
     closeHandler,
   });
 

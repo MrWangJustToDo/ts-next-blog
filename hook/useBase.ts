@@ -44,7 +44,7 @@ export const useBasePage: UseBasePageType = <T>(props: UseBasePageProps<T> = {})
   const { state } = useCurrentState<Array<T> | StoreState>(selector ? selector : defaultSelector);
   const [currentPage, setCurrentPage] = useState(1);
   const allData = data || (state as Array<T>);
-  const allPage = useMemo(() => Math.ceil(allData!.length / pageLength), [allData, pageLength]);
+  const allPage = useMemo(() => Math.ceil(allData.length / pageLength), [allData, pageLength]);
   const increasePage = useCallback(() => setCurrentPage((lastPage) => lastPage + 1), []);
   const decreasePage = useCallback(() => setCurrentPage((lastPage) => lastPage - 1), []);
   const increaseAble = currentPage < allPage;

@@ -20,10 +20,14 @@ class ListNode<T, K> {
   }
 
   deleteItem(item: NodeItem<T, K>) {
+    const validate = this.checkInTheList(item);
+    if (!validate) {
+      return false;
+    }
     const pre = this.getPre(item);
     const next = this.getNext(item);
-    item!.next = undefined;
-    item!.previous = undefined;
+    item.next = undefined;
+    item.previous = undefined;
     if (!pre && !next) {
       // 前一个后一个都不存在，当前就只有一个链表项
       this.head = undefined;
@@ -40,6 +44,22 @@ class ListNode<T, K> {
       // 两边都有
       pre.next = next;
       next.previous = pre;
+    }
+    return true;
+  }
+
+  checkInTheList(item: NodeItem<T, K>) {
+    if (!this.head) {
+      return false;
+    }
+    let temp: NodeItem<T, K> | undefined = this.head;
+    while (temp && temp !== item) {
+      temp = temp.next;
+    }
+    if (temp) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -71,9 +91,7 @@ class ListNode<T, K> {
     return item;
   }
 
-  // for map attribute, useful for cache object
-
-  get(key: T): NodeItem<T, K> | undefined {
+  getNode(key: T): NodeItem<T, K> | undefined {
     let targetItem;
     let tempItem = this.foot;
     while (tempItem && tempItem.key !== key) {
@@ -85,18 +103,29 @@ class ListNode<T, K> {
     return targetItem;
   }
 
+  // for map attribute, useful for cache object
+
+  get(key: T): K | undefined {
+    const r = this.getNode(key);
+    return r?.value;
+  }
+
   has(key: T) {
     return !!this.get(key);
   }
 
   set(key: T, value: K) {
     this.add(key, value);
+    return this;
   }
 
   delete(key: T) {
-    const currentItem = this.get(key);
+    const currentItem = this.getNode(key);
     if (!!currentItem) {
-      this.deleteItem(currentItem);
+      const r = this.deleteItem(currentItem);
+      return r;
+    } else {
+      return false;
     }
   }
 }

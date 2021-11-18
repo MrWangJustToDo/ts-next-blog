@@ -163,9 +163,10 @@ const insertChildComment = async ({
   modifyDate,
   isMd,
   preview,
+  toPrimary,
 }: ChildCommentProps & { db: Database }) => {
   return await db.run(
-    "INSERT INTO childComment VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO childComment VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
     blogId,
     primaryCommentId,
     commentId,
@@ -178,7 +179,8 @@ const insertChildComment = async ({
     modifyState,
     modifyDate,
     isMd,
-    preview
+    preview,
+    toPrimary
   );
 };
 

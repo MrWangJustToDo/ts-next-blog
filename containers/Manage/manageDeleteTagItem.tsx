@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { mutate } from "swr";
 import { apiName } from "config/api";
 import { Tag as TagItem } from "components/Tag";
@@ -11,8 +11,8 @@ import { ServerTagProps } from "types";
 
 import style from "./index.module.scss";
 
-const ManageDeleteTagButton = ({ deleteItem, tagId }: { deleteItem: JSX.Element; tagId: string }) => {
-  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteTag, data: { deleteTag: tagId }, cache: false });
+const ManageDeleteTagButton = ({ deleteItem, tagId, tagContent }: { deleteItem: JSX.Element; tagId: string; tagContent: string }) => {
+  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteTag, data: { deleteTag: tagId, tagContent }, cache: false });
 
   const successHandler = useCallback(() => {
     const tagRequest = createRequest({ apiPath: apiName.tag });
@@ -29,16 +29,21 @@ const ManageDeleteTagButton = ({ deleteItem, tagId }: { deleteItem: JSX.Element;
     [request, successHandler]
   );
 
-  const click = useManageToDeleteModule({
-    body,
-    title: "确认删除",
-    deleteItem: (
+  const deleteItemWrapper = useMemo(
+    () => (
       <div className="text-center">
         <hr />
         {deleteItem}
         <hr />
       </div>
     ),
+    [deleteItem]
+  );
+
+  const click = useManageToDeleteModule({
+    body,
+    title: "确认删除",
+    deleteItem: deleteItemWrapper,
   });
 
   return (
@@ -51,10 +56,11 @@ const ManageDeleteTagButton = ({ deleteItem, tagId }: { deleteItem: JSX.Element;
 };
 
 export const ManageDeleteTagItem = ({ tagId, tagContent, tagCount }: ServerTagProps) => {
+  const item = <TagItem hoverAble={false} key={tagId} tagContent={tagContent} tagCount={tagCount} />;
   return (
     <div className="m-2 position-relative">
-      <TagItem hoverAble={false} key={tagId} tagContent={tagContent!} tagCount={tagCount!} />
-      <ManageDeleteTagButton deleteItem={<TagItem hoverAble={false} key={tagId} tagContent={tagContent!} tagCount={tagCount!} />} tagId={tagId!} />
+      {item}
+      <ManageDeleteTagButton deleteItem={item} tagId={tagId} tagContent={tagContent} />
     </div>
   );
 };

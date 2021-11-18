@@ -130,6 +130,7 @@ export interface ChildCommentProps {
   createDate: string;
   modifyState: number;
   modifyDate: string;
+  toPrimary: number;
   // childIds: string;
   // childCount: number;
   preview?: string;

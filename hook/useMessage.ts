@@ -65,6 +65,7 @@ interface UseMessageToModuleType {
 interface UseReplayModuleToSubmitProps<T> {
   props: T;
   isMd?: number;
+  toPrimary?: number;
   request: AutoRequestType;
   closeHandler: () => void;
 }
@@ -262,6 +263,7 @@ export const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
   request,
   isMd = 0,
   closeHandler,
+  toPrimary = 0,
 }: UseReplayModuleToSubmitProps<T>) => {
   const mdRef = useRef<number>(isMd);
   const pushFail = useFailToast();
@@ -307,6 +309,7 @@ export const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
               toUserId: props.fromUserId,
               commentId: getRandom(1000).toString(16),
               isMd: mdRef.current,
+              toPrimary,
             },
           });
           return requestPromise
@@ -324,7 +327,7 @@ export const useReplayModuleToSubmit: UseReplayModuleToSubmitType = <
         });
       }
     },
-    [pushFail, show, request, props, isChild, hide, flashData, pushSuccess]
+    [pushFail, show, request, props, isChild, toPrimary, hide, flashData, pushSuccess]
   );
 
   useAutoActionHandler<Event, void>({
@@ -459,54 +462,57 @@ export const useUpdateModuleToSubmit: UseUpdateModuleToSubmitType = <
     setTimeout(closeHandler, 0);
   }, [isChild, closeHandler, props]);
 
-  const submit = useCallback<(e?: Event) => void>((e) => {
-    e?.preventDefault();
-    if (stateRef.current.loading) {
-      return pushFail("加载中");
-    } else if (!stateRef.current.canSubmit) {
-      return pushFail("不能提交");
-    } else {
-      if (input1 && input1.current && (input1.current.value === props.content || input1.current.value === "")) {
-        return pushFail("输入的内容没有变化或者为空");
-      }
-      return actionHandler<HTMLFormElement, Promise<void>>(formRef.current, (ele) => {
-        show();
-        const requestPromise = props.isMd
-          ? request({
-              data: {
-                ...formSerialize(ele),
-                isMd: props.isMd,
-                preview: ele.querySelector("#editor_newContent_html")?.textContent,
-                isChild,
-                blogId: props.blogId,
-                commentId: props.commentId,
-                primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
-              },
+  const submit = useCallback<(e?: Event) => void>(
+    (e) => {
+      e?.preventDefault();
+      if (stateRef.current.loading) {
+        return pushFail("加载中");
+      } else if (!stateRef.current.canSubmit) {
+        return pushFail("不能提交");
+      } else {
+        if (input1 && input1.current && (input1.current.value === props.content || input1.current.value === "")) {
+          return pushFail("输入的内容没有变化或者为空");
+        }
+        return actionHandler<HTMLFormElement, Promise<void>>(formRef.current, (ele) => {
+          show();
+          const requestPromise = props.isMd
+            ? request({
+                data: {
+                  ...formSerialize(ele),
+                  isMd: props.isMd,
+                  preview: ele.querySelector("#editor_newContent_html")?.textContent,
+                  isChild,
+                  blogId: props.blogId,
+                  commentId: props.commentId,
+                  primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
+                },
+              })
+            : request({
+                data: {
+                  ...formSerialize(ele),
+                  isChild,
+                  blogId: props.blogId,
+                  commentId: props.commentId,
+                  primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
+                },
+              });
+          return requestPromise
+            .run<ApiRequestResult<string>>()
+            .then(({ code, data }) => {
+              if (code === 0) {
+                flashData();
+                return pushSuccess(`更新成功, old: ${props.content} --> new: ${input1?.current?.value}`);
+              } else {
+                return pushFail(`更新失败, ${data.toString()}`);
+              }
             })
-          : request({
-              data: {
-                ...formSerialize(ele),
-                isChild,
-                blogId: props.blogId,
-                commentId: props.commentId,
-                primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
-              },
-            });
-        return requestPromise
-          .run<ApiRequestResult<string>>()
-          .then(({ code, data }) => {
-            if (code === 0) {
-              flashData();
-              return pushSuccess(`更新成功, old: ${props.content} --> new: ${input1?.current?.value}`);
-            } else {
-              return pushFail(`更新失败, ${data.toString()}`);
-            }
-          })
-          .catch((e) => pushFail(`更新出错, ${e.toString()}`))
-          .finally(hide);
-      });
-    }
-  }, [flashData, hide, input1, isChild, props, pushFail, pushSuccess, request, show]);
+            .catch((e) => pushFail(`更新出错, ${e.toString()}`))
+            .finally(hide);
+        });
+      }
+    },
+    [flashData, hide, input1, isChild, props, pushFail, pushSuccess, request, show]
+  );
 
   useAutoActionHandler<Event, void>({
     action: submit,

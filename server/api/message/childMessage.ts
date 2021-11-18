@@ -12,7 +12,7 @@ export const getChildMessageByPrimaryIdAction = wrapperMiddlewareRequest({
   requestHandler: async function getChildMessageByPrimaryIdAction({ req, res }) {
     const { primaryCommentId } = req.query;
     const childMessage = await getChildByPrimaryId({ db: req.db!, primaryCommentId: primaryCommentId as string });
-    childMessage.sort(({ createDate: d1 }, { createDate: d2 }) => (new Date(d1).getTime() > new Date(d2).getTime() ? -1 : 1));
+    childMessage.sort(({ createDate: d1 }, { createDate: d2 }) => (new Date(d1).getTime() > new Date(d2).getTime() ? 1 : -1));
     success({ res, resDate: { data: childMessage } });
   },
   cacheConfig: { needCache: true },
@@ -21,7 +21,7 @@ export const getChildMessageByPrimaryIdAction = wrapperMiddlewareRequest({
 
 export const publishChildMessageByPrimaryIdAction = wrapperMiddlewareRequest({
   requestHandler: async function publishChildMessageByPrimaryIdAction({ req, res }) {
-    const { primaryCommentId, blogId, commentId, userId, toIp, toUserId, content, preview, isMd } = req.body;
+    const { primaryCommentId, blogId, commentId, userId, toIp, toUserId, content, preview, isMd, toPrimary } = req.body;
     if (!content || !content.length) {
       throw new ServerError("content内容为空", 401);
     }
@@ -45,6 +45,7 @@ export const publishChildMessageByPrimaryIdAction = wrapperMiddlewareRequest({
       modifyDate,
       isMd,
       preview,
+      toPrimary,
     });
     success({ res, resDate: { state: "回复留言成功", data: `时间：${createDate}` } });
   },

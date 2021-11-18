@@ -79,7 +79,7 @@ const BlogContentPrimaryMessageReplay = () => {
         const WithReplay = (
           <>
             <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
-            <BlogContentReplayModule request={request} closeHandler={closeHandler} props={props} />
+            <BlogContentReplayModule request={request} closeHandler={closeHandler} props={props} toPrimary={1} />
           </>
         );
         return WithReplay;

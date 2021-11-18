@@ -135,6 +135,7 @@ const test_childComment = wrapperMiddlewareRequest({
       createDate: new Date().toLocaleString(),
       modifyState: 0,
       modifyDate: new Date().toLocaleString(),
+      toPrimary: 1,
     });
     success({ res, resDate: { data: "ok" } });
   },

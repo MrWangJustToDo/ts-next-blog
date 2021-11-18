@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { mutate } from "swr";
 import { Type as TypeItem } from "components/Type";
 import { useUserRequest } from "hook/useUser";
@@ -11,8 +11,8 @@ import { TypeProps } from "types";
 
 import style from "./index.module.scss";
 
-const ManageDeleteTypeButton = ({ deleteItem, typeId }: { deleteItem: JSX.Element; typeId: string }) => {
-  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId }, cache: false });
+const ManageDeleteTypeButton = ({ deleteItem, typeId, typeContent }: { deleteItem: JSX.Element; typeId: string; typeContent: string }) => {
+  const request = useUserRequest({ method: "delete", apiPath: apiName.deleteType, data: { deleteType: typeId, typeContent }, cache: false });
 
   const successHandler = useCallback(() => {
     const typeRequest = createRequest({ apiPath: apiName.type });
@@ -29,16 +29,21 @@ const ManageDeleteTypeButton = ({ deleteItem, typeId }: { deleteItem: JSX.Elemen
     [request, successHandler]
   );
 
-  const click = useManageToDeleteModule({
-    body,
-    title: "确认删除",
-    deleteItem: (
+  const deleteItemWrapper = useMemo(
+    () => (
       <div className="text-center">
         <hr />
         {deleteItem}
         <hr />
       </div>
     ),
+    [deleteItem]
+  );
+
+  const click = useManageToDeleteModule({
+    body,
+    title: "确认删除",
+    deleteItem: deleteItemWrapper,
   });
 
   return (
@@ -51,10 +56,11 @@ const ManageDeleteTypeButton = ({ deleteItem, typeId }: { deleteItem: JSX.Elemen
 };
 
 export const ManageDeleteTypeItem = ({ typeId, typeContent, typeCount }: TypeProps) => {
+  const item = <TypeItem key={typeId} typeContent={typeContent} typeCount={typeCount} hoverAble={false} />;
   return (
     <div className="m-2 position-relative">
-      <TypeItem key={typeId} typeContent={typeContent!} typeCount={typeCount!} hoverAble={false} />
-      <ManageDeleteTypeButton deleteItem={<TypeItem key={typeId} typeContent={typeContent!} typeCount={typeCount!} hoverAble={false} />} typeId={typeId!} />
+      {item}
+      <ManageDeleteTypeButton deleteItem={item} typeId={typeId} typeContent={typeContent} />
     </div>
   );
 };
