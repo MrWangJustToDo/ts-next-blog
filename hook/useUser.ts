@@ -61,7 +61,18 @@ export const useAutoLogin: UseAutoLoginType = () => {
 export const useAutoGetIp = () => {
   const { dispatch, state } = useCurrentState((state) => state.client[actionName.currentUser]["data"]);
   const { country } = state as IpAddressProps;
-  const getIp = useMemo(() => createRequest({ header: { apiToken: true }, apiPath: apiName.ip, cache: false }), []);
+  const getIp = useMemo(
+    () =>
+      createRequest({
+        apiPath: apiName.thirdPath,
+        method: "GET",
+        cache: false,
+        query: {
+          path: process.env.NEXT_PUBLIC_IP_ADDRESS,
+        },
+      }),
+    []
+  );
   const autoGetIpCallback = useCallback(
     () =>
       getIp

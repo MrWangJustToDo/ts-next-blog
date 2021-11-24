@@ -60,7 +60,10 @@ export const Drop: DropType = <T extends ValueType>({
           <div className="m-1">{placeHolder}</div>
         )}
       </div>
-      <i className="ri-arrow-down-s-fill position-absolute" style={{ right: multiple ? "4px" : "12px" }} />
+      <i
+        className="ri-arrow-down-s-fill position-absolute"
+        style={{ right: multiple ? "4px" : "12px", transform: !bool ? "rotate(0deg)" : "rotate(180deg)", transition: "transform .3s" }}
+      />
       <DropContainer bool={bool} length={data.length} maxHeight={maxHeight}>
         {data.map(({ name, value }, idx) => (
           <DropItem<T> key={value} value={value} name={name} clickHandler={multiple ? switchItem : onlyOne} checkedIndex={indexArr} index={idx} />

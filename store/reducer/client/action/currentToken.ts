@@ -22,21 +22,21 @@ const tokenReducer: Reducer<CurrentState> = (state: CurrentState = initState, ac
 };
 
 const actionReducerMap: ReducerStateActionMapType<string> = {
-  [clientAction.SETDATALOADING(actionName.currentToken)]: (state, action) =>
+  [clientAction.SET_DATA_LOADING(actionName.currentToken)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = "";
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [clientAction.SETDATASUCESS(actionName.currentToken)]: (state, action) =>
+  [clientAction.SET_DATA_SUCCESS(actionName.currentToken)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = action.data || "";
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [clientAction.SETDATAFAIL(actionName.currentToken)]: (state, action) =>
+  [clientAction.SET_DATA_FAIL(actionName.currentToken)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = "";
       proxy.error = action.error;

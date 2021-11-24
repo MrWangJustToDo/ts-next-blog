@@ -18,21 +18,21 @@ const homePageReducer: Reducer<CurrentState> = (state: CurrentState = initState,
 };
 
 const actionReducerMap: ReducerStateActionMapType<number> = {
-  [clientAction.SETDATALOADING(actionName.currentHomePage)]: (state, action) =>
+  [clientAction.SET_DATA_LOADING(actionName.currentHomePage)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = 1;
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [clientAction.SETDATASUCESS(actionName.currentHomePage)]: (state, action) =>
+  [clientAction.SET_DATA_SUCCESS(actionName.currentHomePage)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = action.data || 1;
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [clientAction.SETDATAFAIL(actionName.currentHomePage)]: (state, action) =>
+  [clientAction.SET_DATA_FAIL(actionName.currentHomePage)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = 1;
       proxy.error = action.error;

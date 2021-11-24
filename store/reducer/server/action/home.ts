@@ -29,21 +29,21 @@ const homeReducer: Reducer<CurrentState> = (state: CurrentState = initState, act
 };
 
 const actionReducerMap: ReducerStateActionMapType<HomeProps> = {
-  [serverAction.GETDATALOADING(apiName.home)]: (state, action) =>
+  [serverAction.GET_DATA_LOADING(apiName.home)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = [];
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [serverAction.GETDATASUCESS(apiName.home)]: (state, action) =>
+  [serverAction.GET_DATA_SUCCESS(apiName.home)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = action.data || [];
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [serverAction.GETDATAFAIL(apiName.home)]: (state, action) =>
+  [serverAction.GET_DATA_FAIL(apiName.home)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = [];
       proxy.error = action.error;

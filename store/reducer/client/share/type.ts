@@ -2,10 +2,10 @@ import { ReducerStateAction } from "store/reducer/type";
 import { ClientReducerKey } from "../type";
 
 interface ClientActionType {
-  SETDATALOADING: (name: ClientReducerKey) => string;
-  SETDATAACTION: (name: ClientReducerKey) => string;
-  SETDATASUCESS: (name: ClientReducerKey) => string;
-  SETDATAFAIL: (name: ClientReducerKey) => string;
+  SET_DATA_LOADING: (name: ClientReducerKey) => string;
+  SET_DATA_ACTION: (name: ClientReducerKey) => string;
+  SET_DATA_SUCCESS: (name: ClientReducerKey) => string;
+  SET_DATA_FAIL: (name: ClientReducerKey) => string;
 }
 interface CreateClientActionProps<T> {
   name: ClientReducerKey;

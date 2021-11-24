@@ -19,21 +19,21 @@ const userReducer: Reducer<CurrentState> = (state: CurrentState = initState, act
 };
 
 const actionReducerMap: ReducerStateActionMapType<(UserProps & IpAddressProps) | {}> = {
-  [clientAction.SETDATALOADING(actionName.currentUser)]: (state, action) =>
+  [clientAction.SET_DATA_LOADING(actionName.currentUser)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [clientAction.SETDATASUCESS(actionName.currentUser)]: (state, action) =>
+  [clientAction.SET_DATA_SUCCESS(actionName.currentUser)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = action.data || {};
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [clientAction.SETDATAFAIL(actionName.currentUser)]: (state, action) =>
+  [clientAction.SET_DATA_FAIL(actionName.currentUser)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};
       proxy.error = action.error;

@@ -9,7 +9,7 @@ export const Head = ({ title = "Blog" }: { title?: string }) => {
       <meta name="theme-color" content="#000000" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="description" content="this is my next blog" />
-      <title>{title}</title>
+      <title>{title} | Blog</title>
       <link rel="icon" href="/favicon.ico" />
       {/* 字体图标 */}
       <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />

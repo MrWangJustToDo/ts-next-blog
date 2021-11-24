@@ -23,21 +23,21 @@ const blogIdReducer: Reducer<CurrentState> = (state: CurrentState = initState, a
 };
 
 const actionReducerMap: ReducerStateActionMapType<string> = {
-  [clientAction.SETDATALOADING(actionName.currentBlogId)]: (state, action) =>
+  [clientAction.SET_DATA_LOADING(actionName.currentBlogId)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = "";
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [clientAction.SETDATASUCESS(actionName.currentBlogId)]: (state, action) =>
+  [clientAction.SET_DATA_SUCCESS(actionName.currentBlogId)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = action.data || "";
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [clientAction.SETDATAFAIL(actionName.currentBlogId)]: (state, action) =>
+  [clientAction.SET_DATA_FAIL(actionName.currentBlogId)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = "";
       proxy.error = action.error;

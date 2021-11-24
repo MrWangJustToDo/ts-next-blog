@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { log } from "./log";
 import { delay } from "./delay";
-import { isBrowser } from "./env";
+// import { isBrowser } from "./env";
 import { PendingType, RemovePendingType } from "types/utils";
 
 const pending: Array<PendingType> = [];
@@ -40,12 +40,12 @@ const removePending: RemovePendingType = (config, isRequest = false) => {
 // 添加请求拦截器
 instance.interceptors.request.use(
   (request) => {
-    if (isBrowser) {
-      removePending(request, true);
-      request.cancelToken = new CancelToken((c) => {
-        pending.push({ url: request.url, method: request.method, params: request.params, data: request.data, cancel: c });
-      });
-    }
+    // if (isBrowser) {
+    removePending(request, true);
+    request.cancelToken = new CancelToken((c) => {
+      pending.push({ url: request.url, method: request.method, params: request.params, data: request.data, cancel: c });
+    });
+    // }
     return request;
   },
   (error) => {
@@ -56,12 +56,13 @@ instance.interceptors.request.use(
 // 添加响应拦截器
 instance.interceptors.response.use(
   (response) => {
-    if (isBrowser) {
-      removePending(response.config);
-    }
+    // if (isBrowser) {
+    removePending(response.config);
+    // }
     return response;
   },
   (error) => {
+    console.log(error);
     const response = error.response;
 
     const config = <AxiosRequestConfig & { __retryCount: number }>error.config;

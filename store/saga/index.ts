@@ -5,10 +5,10 @@ import { getHomeData, getTagData, getTypeData, getBlogData } from "./action";
 
 function* rootSaga() {
   yield all([
-    takeLatest(serverAction.GETDATAACTION(apiName.home), getHomeData),
-    takeLatest(serverAction.GETDATAACTION(apiName.tag), getTagData),
-    takeLatest(serverAction.GETDATAACTION(apiName.type), getTypeData),
-    takeLatest(serverAction.GETDATAACTION(apiName.blog), getBlogData),
+    takeLatest(serverAction.GET_DATA_ACTION(apiName.home), getHomeData),
+    takeLatest(serverAction.GET_DATA_ACTION(apiName.tag), getTagData),
+    takeLatest(serverAction.GET_DATA_ACTION(apiName.type), getTypeData),
+    takeLatest(serverAction.GET_DATA_ACTION(apiName.blog), getBlogData),
   ]);
 }
 

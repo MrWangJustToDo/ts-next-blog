@@ -26,21 +26,21 @@ const archiveReducer: Reducer<CurrentState> = (state: CurrentState = initState, 
 };
 
 const actionReducerMap: ReducerStateActionMapType<ArchiveProps> = {
-  [clientAction.SETDATALOADING(actionName.currentArchive)]: (state, action) =>
+  [clientAction.SET_DATA_LOADING(actionName.currentArchive)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [clientAction.SETDATASUCESS(actionName.currentArchive)]: (state, action) =>
+  [clientAction.SET_DATA_SUCCESS(actionName.currentArchive)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = action.data || {};
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [clientAction.SETDATAFAIL(actionName.currentArchive)]: (state, action) =>
+  [clientAction.SET_DATA_FAIL(actionName.currentArchive)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};
       proxy.error = action.error;

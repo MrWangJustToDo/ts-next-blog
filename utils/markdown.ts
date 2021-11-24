@@ -11,7 +11,8 @@ const mark = new Mark({
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        const transformValue = hljs.highlight(lang, str, true).value;
+        const transformValue = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
+        // const transformValue = hljs.highlight(lang, str, true).value;
         const transformArr = transformValue.split(/\n/).slice(0, -1);
         const minWidth = String(transformArr.length).length - 0.4;
         const html = transformArr.reduce(
@@ -64,7 +65,7 @@ const markNOLineNumber = new Mark({
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        const transformValue = hljs.highlight(lang, str, true).value;
+        const transformValue = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
         return `<pre class="rounded bg-dark"><code class="bg-dark hljs ${lang}">${transformValue}</code></pre>`;
       } catch (__) {}
     }

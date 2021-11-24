@@ -18,21 +18,21 @@ const headerReducer: Reducer<CurrentState> = (state: CurrentState = initState, a
 };
 
 const actionReducerMap: ReducerStateActionMapType<string> = {
-  [clientAction.SETDATALOADING(actionName.currentHeader)]: (state, action) =>
+  [clientAction.SET_DATA_LOADING(actionName.currentHeader)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = "";
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [clientAction.SETDATASUCESS(actionName.currentHeader)]: (state, action) =>
+  [clientAction.SET_DATA_SUCCESS(actionName.currentHeader)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = action.data || "";
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [clientAction.SETDATAFAIL(actionName.currentHeader)]: (state, action) =>
+  [clientAction.SET_DATA_FAIL(actionName.currentHeader)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = "";
       proxy.error = action.error;

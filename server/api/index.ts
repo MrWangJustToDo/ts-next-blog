@@ -5,12 +5,12 @@ import { typeHandler } from "./type";
 import { userHandler } from "./user";
 import { messageHandler } from "./message";
 import { blogHandler } from "./blog";
+import { thirdRequestHandler } from "./3rd";
 import { testHandler } from "./test";
 import { fail } from "server/middleware/apiHandler";
 import { Request, Response } from "express";
 
-
-const allHandler: {[props: string]: Function} = {
+const allHandler: { [props: string]: Function } = {
   ...imageHandler,
   ...homeHandler,
   ...tagHandler,
@@ -18,6 +18,7 @@ const allHandler: {[props: string]: Function} = {
   ...userHandler,
   ...blogHandler,
   ...messageHandler,
+  ...thirdRequestHandler,
   ...testHandler,
 };
 

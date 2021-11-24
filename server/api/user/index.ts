@@ -9,7 +9,6 @@ import {
   getUserByUserIdAction,
   getUserByUserNameAction,
   getAuthorByUserIdAction,
-  autoGetIp,
 } from "./user";
 
 const userHandler = {
@@ -21,7 +20,6 @@ const userHandler = {
   [apiName.userName]: getUserByUserNameAction,
   [apiName.userEx]: getUserExByUserIdAction,
   [apiName.author]: getAuthorByUserIdAction,
-  [apiName.ip]: autoGetIp,
 };
 
 export { userHandler };

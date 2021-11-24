@@ -19,9 +19,9 @@ export const Layout = ({ title, container = true, children }: { title?: string; 
       <ModuleManager>
         <div className={getClass("d-flex flex-column")} style={{ minWidth: "320px" }}>
           {container && <Header />}
-          <div className="position-relative" style={{ minHeight: "calc(100vh - 120px)", zIndex: 1 }}>
+          <main className="position-relative" style={{ minHeight: "calc(100vh - 120px)", zIndex: 1 }}>
             {children}
-          </div>
+          </main>
           {container && <Footer />}
         </div>
       </ModuleManager>

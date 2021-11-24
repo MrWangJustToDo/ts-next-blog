@@ -44,6 +44,7 @@ enum apiName {
   deleteTag = "deleteTag", // 删除Tag
   deleteType = "deleteType", // 删除Type
   deleteBlog = "deleteBlog", // 删除blog
+  thirdPath = "thirdPath", // 第三方api
   // test
   testTag = "testTag",
   testChild = "testChild",
@@ -103,6 +104,7 @@ const accessApi: AccessType = {
   [apiName.updateChildMessage]: { disable: false, token: true, method: "post" },
   [apiName.updatePrimaryMessage]: { disable: false, token: true, method: "post" },
   [apiName.publishBlog]: { disable: false, token: false, method: "post" },
+  [apiName.thirdPath]: { disable: false, token: false },
 };
 
 export { apiName, cacheApi, accessApi };

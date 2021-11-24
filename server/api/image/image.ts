@@ -6,7 +6,7 @@ import { success, wrapperMiddlewareRequest } from "server/middleware/apiHandler"
 const getImagePath = () => {
   const idx = String(getRandom(7));
   const n = String(getRandom(1, 7));
-  let requestUrl = String(process.env.BINGAPI);
+  let requestUrl = String(process.env.BING_API);
   requestUrl = requestUrl.replace("--n--", n);
   requestUrl = requestUrl.replace("--idx--", idx);
   return requestUrl;
@@ -17,7 +17,7 @@ const getImagesAction = wrapperMiddlewareRequest({
   requestHandler: async function getImagesAction({ res }) {
     let { images } = await createRequest({ path: getImagePath() }).run();
     images = images.map((item: { [props: string]: string }) => {
-      return { ...item, relativeUrl: `${process.env.BINGURL}${item.url}` };
+      return { ...item, relativeUrl: `${process.env.BING_URL}${item.url}` };
     });
     success({ res, resDate: { data: images } });
   },
@@ -27,7 +27,7 @@ const getImagesAction = wrapperMiddlewareRequest({
 const getRandomImageAction = wrapperMiddlewareRequest({
   requestHandler: async function getRandomImageAction({ res }) {
     const { images } = await createRequest({ path: getImagePath() }).run();
-    const [{ relativeUrl }] = images.map((item: { [props: string]: string }) => ({ relativeUrl: `${process.env.BINGURL}${item.url}` }));
+    const [{ relativeUrl }] = images.map((item: { [props: string]: string }) => ({ relativeUrl: `${process.env.BING_URL}${item.url}` }));
     success({ res, resDate: { data: relativeUrl } });
   },
 });

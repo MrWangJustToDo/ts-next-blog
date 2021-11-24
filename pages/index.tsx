@@ -15,7 +15,7 @@ const Home: MyNextComponent = () => {
   );
 };
 
-Home.title = "首页 | Blog";
+Home.title = "首页";
 
 export default Home;
 

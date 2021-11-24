@@ -1,9 +1,7 @@
 import { ServerError } from "server/utils/error";
-import { createRequest } from "utils/fetcher";
 import { insertUser } from "server/database/insert";
 import { getAuthorByUserId, getUserByUser, getUserByUserId, getUserByUserName, getUsersExByUserId } from "server/database/get";
 import { success, fail, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
-import type { IpAddressProps } from "types";
 
 // 用户登录请求
 export const loginAction = wrapperMiddlewareRequest({
@@ -35,16 +33,6 @@ export const autoLoginAction = wrapperMiddlewareRequest({
     } else {
       fail({ res, statusCode: 200, resDate: { state: "自动登录失败" } });
     }
-  },
-});
-
-export const autoGetIp = wrapperMiddlewareRequest({
-  requestHandler: async function autoGetIp({ req, res }) {
-    const request = createRequest({ path: process.env.NEXT_PUBLIC_IPADDRESS, header: req.headers, data: req.body });
-    await request
-      .run<IpAddressProps>()
-      .then((data) => success({ res, resDate: { data } }))
-      .catch((e) => fail({ res, resDate: { data: e.toString() } }));
   },
 });
 

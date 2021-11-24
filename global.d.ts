@@ -3,19 +3,19 @@ declare module NodeJS {
     browser: boolean;
   }
   interface ProcessEnv {
-    BINGURL: string;
-    BINGAPI: string;
+    BING_URL: string;
+    BING_API: string;
     DATABASE: string;
-    COOKIEPARSER: string;
+    COOKIE_PARSER: string;
     NEXT_PUBLIC_MAN: string;
     NEXT_PUBLIC_WOMEN: string;
     NEXT_PUBLIC_ABOUT: string;
     NEXT_PUBLIC_ADMIN: string;
-    NEXT_PUBLIC_ONESAY: string;
+    NEXT_PUBLIC_ONE_SAY: string;
     NEXT_PUBLIC_STRING: string;
-    NEXT_PUBLIC_APIHOST: string;
-    NEXT_PUBLIC_APITOKEN: string;
-    NEXT_PUBLIC_IPADDRESS: string;
+    NEXT_PUBLIC_API_HOST: string;
+    NEXT_PUBLIC_API_TOKEN: string;
+    NEXT_PUBLIC_IP_ADDRESS: string;
   }
 }
 

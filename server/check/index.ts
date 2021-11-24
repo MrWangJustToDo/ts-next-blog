@@ -10,7 +10,7 @@ export const generateToken = wrapperMiddlewareRequest(
         throw new ServerError("session not generate!", 500);
       }
       if (!req.cookies.apiToken || !req.session.apiToken || req.cookies.apiToken !== req.session.apiToken) {
-        const currentToken = process.env.NEXT_PUBLIC_APITOKEN + Math.random().toString(16).slice(2);
+        const currentToken = process.env.NEXT_PUBLIC_API_TOKEN + Math.random().toString(16).slice(2);
         req.session.apiToken = currentToken;
         res.cookie("apiToken", currentToken, { expires: new Date(Date.now() + 60 * 60000), encode: String });
       }
@@ -28,13 +28,13 @@ export const detectionToken = wrapperMiddlewareRequest(
       }
       const path = req.path.slice(1);
       if (accessApi[path]) {
-        const { disable = false, token = true, method = "get", config = {} } = accessApi[path];
+        const { disable = false, token = true, method, config = {} } = accessApi[path];
         // 挂载config
         req.config = config;
         if (disable) {
           throw new ServerError("路径不存在", 404);
         }
-        if (method.toLowerCase() !== req.method.toLowerCase()) {
+        if (method && method.toLowerCase() !== req.method.toLowerCase()) {
           throw new ServerError(`方法不支持: ${req.method.toLowerCase()}`, 405);
         }
         if (token && req.headers.apitoken !== req.session.apiToken) {

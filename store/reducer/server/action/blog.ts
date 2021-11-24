@@ -35,21 +35,21 @@ const blogReducer: Reducer<CurrentState> = (state: CurrentState = initState, act
 };
 
 const actionReducerMap: ReducerStateActionMapType<BlogContentObject> = {
-  [serverAction.GETDATALOADING(apiName.blog)]: (state, action) =>
+  [serverAction.GET_DATA_LOADING(apiName.blog)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [serverAction.GETDATASUCESS(apiName.blog)]: (state, action) =>
+  [serverAction.GET_DATA_SUCCESS(apiName.blog)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = { ...proxy.data, ...action.data } || {};
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [serverAction.GETDATAFAIL(apiName.blog)]: (state, action) =>
+  [serverAction.GET_DATA_FAIL(apiName.blog)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = {};
       proxy.error = action.error;

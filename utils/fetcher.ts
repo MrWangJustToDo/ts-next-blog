@@ -10,10 +10,6 @@ import { AutoRequestProps, AutoRequestType, CreateRequestType } from "types/util
 
 const cacheResult = new Cache<string, Promise<any>>(60000);
 
-if (isBrowser && process.env.NODE_ENV === "development") {
-  (window as any).__cache = cacheResult;
-}
-
 const autoParse = (params: string | any) => {
   if (typeof params === "string") {
     return JSON.parse(params);
@@ -77,11 +73,11 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
     });
   };
 
-  const cacheKey = transformPath({ path, apiPath, query: autoParse(query) });
+  let cacheKey: string | null = null;
 
   autoRequest.cache = cacheResult;
 
-  autoRequest.cacheKey = cacheKey;
+  autoRequest.cacheKey = "";
 
   autoRequest.deleteCache = () => autoRequest.cache.deleteRightNow(autoRequest.cacheKey);
 
@@ -96,11 +92,11 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
       }
     }
 
-    const currentMethod = method || "get";
-
     const currentHeader = header !== false && isBrowser ? getHeader(autoParse(header)) : autoParse(header);
 
     const currentData = data !== false ? (encode ? { encode: btoa(autoStringify(data)!) + process.env.NEXT_PUBLIC_STRING } : autoParse(data)) : undefined;
+
+    const currentMethod = method || currentData ? "POST" : "GET";
 
     const requestPromise: Promise<AxiosResponse<T>> = instance({
       method: currentMethod,
@@ -119,7 +115,20 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
     }
   };
 
+  Object.defineProperty(autoRequest, "cacheKey", {
+    get() {
+      if (cacheKey) return cacheKey;
+      cacheKey = transformPath({ path, apiPath, query: autoParse(query) });
+      return cacheKey;
+    },
+  });
+
   return autoRequest;
 };
+
+if (isBrowser && process.env.NODE_ENV === "development") {
+  (window as any).__cache = cacheResult;
+  (window as any).__request = createRequest;
+}
 
 export { createRequest, autoAssignParams, autoStringify };

@@ -30,21 +30,21 @@ const tagReducer: Reducer<CurrentState> = (state: CurrentState = initState, acti
 };
 
 const actionReducerMap: ReducerStateActionMapType<ServerTagProps[]> = {
-  [serverAction.GETDATALOADING(apiName.tag)]: (state, action) =>
+  [serverAction.GET_DATA_LOADING(apiName.tag)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = [];
       proxy.error = null;
       proxy.loading = action.loadingState || true;
       proxy.loaded = false;
     }),
-  [serverAction.GETDATASUCESS(apiName.tag)]: (state, action) =>
+  [serverAction.GET_DATA_SUCCESS(apiName.tag)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = action.data || [];
       proxy.error = null;
       proxy.loading = false;
       proxy.loaded = true;
     }),
-  [serverAction.GETDATAFAIL(apiName.tag)]: (state, action) =>
+  [serverAction.GET_DATA_FAIL(apiName.tag)]: (state, action) =>
     produce(state, (proxy) => {
       proxy.data = [];
       proxy.error = action.error;

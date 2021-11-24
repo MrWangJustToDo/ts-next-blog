@@ -4,9 +4,9 @@ import { SimpleElement, YiYanComponent } from "types/components";
 
 import style from "./index.module.scss";
 
-const Bquote: YiYanComponent = ({ hitokoto, from_who, from }) => {
+const YiYan: YiYanComponent = ({ hitokoto, from_who, from }) => {
   return (
-    <blockquote className={getClass(style.bquoteFont, "text-center m-0")}>
+    <blockquote className={getClass(style.yiYanFont, "text-center m-0")}>
       <p className="m-0">{hitokoto}</p>
       <footer className="blockquote-footer text-right">
         {from_who}
@@ -23,7 +23,7 @@ export const FootContainerYiYan: SimpleElement = () => {
         <i className="ri-pantone-line mr-2"></i>
         <div>一言</div>
       </h6>
-      <LoadRender path={process.env.NEXT_PUBLIC_ONESAY} loaded={Bquote} revalidateOnFocus={false} />
+      <LoadRender path={process.env.NEXT_PUBLIC_ONE_SAY} loaded={YiYan} revalidateOnFocus={false} />
     </div>
   );
 };
