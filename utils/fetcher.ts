@@ -73,6 +73,11 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
     });
   };
 
+  autoRequest.advance = (transform) => {
+    const newProps = transform(props);
+    return createRequest({ ...props, ...newProps });
+  };
+
   let cacheKey: string | null = null;
 
   autoRequest.cache = cacheResult;

@@ -97,11 +97,22 @@ const Render: RenderType = <T>({
 
   if (error) return loadError((error as Error).toString());
 
-  if (currentInitialData || currentData) {
+  if (currentInitialData) {
+    if (Array.isArray(currentInitialData) && currentInitialData.length > 0) {
+      cancel(cancelKey);
+      return loaded(currentInitialData, currentRequest);
+    }
+    if (typeof currentInitialData && Object.keys(currentInitialData).length) {
+      cancel(cancelKey);
+      return loaded(currentInitialData, currentRequest);
+    }
+  }
+
+  if (currentData && currentData !== currentInitialData) {
     // make page not flash if data loaded
     cancel(cancelKey);
 
-    return loaded(currentData ? currentData : currentInitialData, currentRequest);
+    return loaded(currentData, currentRequest);
   }
 
   return loadingEle;

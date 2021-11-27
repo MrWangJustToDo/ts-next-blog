@@ -4,7 +4,7 @@ import { log } from "utils/log";
 import { Cache } from "utils/cache";
 import { ServerError } from "server/utils/error";
 import { NextFunction, Request, Response } from "express";
-import { ApiResponseProps, ExpressRequest, MiddlewareConfig, MiddlewareContext, MiddlewareFunction, RequestHandlerType } from "server/type";
+import { ApiResponseProps, CacheConfigProps, ExpressRequest, MiddlewareConfig, MiddlewareContext, MiddlewareFunction, RequestHandlerType } from "server/type";
 
 const cache = new Cache<string, any>();
 
@@ -62,20 +62,7 @@ export const catchMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddle
   }
 };
 
-const cacheMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
-  const { cacheConfig, cache, req, res } = ctx;
-  const currentCacheConfig = assign({}, cacheConfig, req.config?.cache);
-  const key = currentCacheConfig.cacheKey
-    ? typeof currentCacheConfig.cacheKey === "function"
-      ? currentCacheConfig.cacheKey({ req })
-      : currentCacheConfig.cacheKey
-    : req.originalUrl;
-
-  const needCache = currentCacheConfig.needCache;
-  const needDeleteBeforeRequest = currentCacheConfig.needDeleteBeforeRequest;
-  const needDeleteAfterRequest = currentCacheConfig.needDeleteAfterRequest;
-  const cacheTime = currentCacheConfig.cacheTime;
-  const needDelete = currentCacheConfig.needDelete;
+const processNeedDelete = ({ needDelete, req, key }: { needDelete?: CacheConfigProps["needDelete"]; req: ExpressRequest; key: string }) => {
   if (needDelete) {
     if (Array.isArray(needDelete)) {
       needDelete.forEach((item: string | (({ req }: { req: ExpressRequest }) => string | string[])) => {
@@ -103,33 +90,24 @@ const cacheMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) =
       }
     }
   }
-  if (needDeleteBeforeRequest) {
-    if (Array.isArray(needDeleteBeforeRequest)) {
-      needDeleteBeforeRequest.forEach((item: string | (({ req }: { req: ExpressRequest }) => string | string[])) => {
-        if (typeof item === "function") {
-          const key = item({ req });
-          if (Array.isArray(key)) {
-            key.forEach((i) => cache.deleteRightNow(i));
-          } else {
-            cache.deleteRightNow(key);
-          }
-        } else {
-          cache.deleteRightNow(item);
-        }
-      });
-    } else if (typeof needDeleteBeforeRequest === "string") {
-      cache.deleteRightNow(needDeleteBeforeRequest);
-    } else if (needDeleteBeforeRequest === true) {
-      cache.deleteRightNow(key);
-    } else {
-      const key = needDeleteBeforeRequest({ req });
-      if (Array.isArray(key)) {
-        key.forEach((i) => cache.deleteRightNow(i));
-      } else {
-        cache.deleteRightNow(key);
-      }
-    }
-  }
+};
+
+const cacheMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
+  const { cacheConfig, cache, req, res } = ctx;
+  const currentCacheConfig = assign({}, cacheConfig, req.config?.cache);
+  const key = currentCacheConfig.cacheKey
+    ? typeof currentCacheConfig.cacheKey === "function"
+      ? currentCacheConfig.cacheKey({ req })
+      : currentCacheConfig.cacheKey
+    : req.originalUrl;
+
+  const needCache = currentCacheConfig.needCache;
+  const needDeleteBeforeRequest = currentCacheConfig.needDeleteBeforeRequest;
+  const needDeleteAfterRequest = currentCacheConfig.needDeleteAfterRequest;
+  const cacheTime = currentCacheConfig.cacheTime;
+  const needDelete = currentCacheConfig.needDelete;
+  processNeedDelete({ needDelete, req, key });
+  processNeedDelete({ needDelete: needDeleteBeforeRequest, req, key });
   if (needCache) {
     const cacheValue = cache.get(key);
     if (cacheValue) {
@@ -173,6 +151,7 @@ const cacheMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) =
       }
     }
   }
+  currentResponseDate = null;
 };
 
 const checkCodeMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) => {
@@ -313,7 +292,7 @@ export const compose = (...middleWares: MiddlewareFunction[]) => {
   };
 };
 
-const composedHandler = compose(
+const composedMiddleware = compose(
   logMiddlewareHandler,
   catchMiddlewareHandler,
   decodeMiddlewareHandler,
@@ -324,20 +303,19 @@ const composedHandler = compose(
   runRequestMiddlewareHandler
 );
 
-export const wrapperMiddlewareRequest = function (config: MiddlewareConfig, composed: ReturnType<typeof compose> = composedHandler) {
+export const wrapperMiddlewareRequest = function (config: MiddlewareConfig, composed: ReturnType<typeof compose> = composedMiddleware, goNext?: boolean) {
   return async (req: Request, res: Response, next: NextFunction) => {
     // 每一个新的请求  需要清除原始的缓存数据
     currentResponseDate = null;
     const ctx = { ...config, req, res, next, cache };
     try {
-      if (!ctx.goNext) {
-        return await composed(ctx, ctx.requestHandler);
-      } else {
-        await composed(ctx, ctx.requestHandler);
-        next();
-      }
+      await composed(ctx, ctx.requestHandler);
     } catch (e) {
       fail({ res, statusCode: 500, resDate: { data: (e as Error).toString(), methodName: "composed" } });
+    } finally {
+      if (ctx.goNext || goNext) {
+        next();
+      }
     }
   };
 };

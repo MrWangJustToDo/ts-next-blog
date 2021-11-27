@@ -84,7 +84,7 @@ const useArray: UseArrayType = <T>(init: T[]) => {
   const [array, setArray] = useState<T[]>(init);
   const pushItem = useCallback<(props: T) => void>((val) => setArray((last) => (last.push(val), last)), []);
   const dropItem = useCallback<(props: T) => void>((val) => setArray((last) => last.filter((item) => item !== val)), []);
-  const onlyOne = useCallback<(props: T) => void>((val) => setArray([val]), []);
+  const onlyOne = useCallback<(props: T) => void>((val) => setArray((last) => (last.includes(val) ? [] : [val])), []);
   const switchItem = useCallback<(props: T) => void>((val) => {
     setArray((last) => {
       let newArray = Object.assign([], last);

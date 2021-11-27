@@ -107,6 +107,7 @@ interface CreateRequestType {
 interface AutoRequestType {
   (props?: AutoRequestProps): AutoRequestType;
   run: <T>() => Promise<T>;
+  advance: (transform: (props: AutoRequestProps) => AutoRequestProps | void) => AutoRequestType;
   cache: Cache<string, any>;
   cacheKey: string;
   deleteCache: () => void;

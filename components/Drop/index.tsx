@@ -1,5 +1,5 @@
 import { useArray, useBool } from "hook/useData";
-import { flexCenter, getClass } from "utils/dom";
+import { animateFadeIn, flexCenter, getClass } from "utils/dom";
 import { DropItem } from "./dropItem";
 import { DropContainer } from "./dropContainer";
 import { DropSelectItem } from "./dropSelectItem";
@@ -57,7 +57,7 @@ export const Drop: DropType = <T extends ValueType>({
             />
           ))
         ) : (
-          <div className="m-1">{placeHolder}</div>
+          <div className={getClass("m-1", animateFadeIn)}>{placeHolder}</div>
         )}
       </div>
       <i

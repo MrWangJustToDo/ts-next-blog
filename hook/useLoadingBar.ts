@@ -12,7 +12,7 @@ interface UseLoadType {
   (props: LoadingBarProps): UseLoadReturn;
 }
 
-const useLoad: UseLoadType = ({ height = 1.5, present = 0, forwardRef }) => {
+export const useLoadingBar: UseLoadType = ({ height = 1.5, present = 0, forwardRef }) => {
   const ref = useRef<HTMLDivElement>(null);
   const targetRef = forwardRef || ref;
   const state = useRef<LoadingBarProps>({ present });
@@ -27,7 +27,7 @@ const useLoad: UseLoadType = ({ height = 1.5, present = 0, forwardRef }) => {
       const ele = targetRef.current;
       if (bool) {
         let count = 1;
-        let id: number = 0;
+        let id = 0;
         const start = () => {
           if (count > 0.00003) {
             count -= 0.000001;
@@ -55,5 +55,3 @@ const useLoad: UseLoadType = ({ height = 1.5, present = 0, forwardRef }) => {
 
   return { start: show, end: hide, ref: targetRef };
 };
-
-export default useLoad;

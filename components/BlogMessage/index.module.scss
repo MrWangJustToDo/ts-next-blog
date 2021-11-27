@@ -49,16 +49,3 @@
     margin-left: -20px;
   }
 }
-
-.messageHead {
-  position: relative;
-  &::after {
-    content: "";
-    position: absolute;
-    width: 20%;
-    bottom: -2px;
-    right: 2px;
-    height: 100%;
-    border-bottom: 1px solid #ccc;
-  }
-}

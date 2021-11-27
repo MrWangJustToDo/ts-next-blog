@@ -10,10 +10,10 @@ import { getDataAction_Server, getDataSuccess_Server } from "store/reducer/serve
 import { MyNextComponent } from "pages/_app";
 import { BlogProps, ClientTagProps, TypeProps, UserProps } from "types";
 
-const EditorContent: MyNextComponent<BlogProps & TypeProps & ClientTagProps & UserProps> = (props) => {
+const EditorContent: MyNextComponent<{ blogContent: BlogProps & TypeProps & ClientTagProps & UserProps }> = ({ blogContent }) => {
   return (
     <div className={getClass("container-md my-5", animateFadeIn)}>
-      <Editor {...props} />
+      <Editor {...blogContent} />
     </div>
   );
 };
@@ -33,7 +33,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     // wait saga end
     await store.sagaTask?.toPromise();
     store.dispatch(getDataSuccess_Server({ name: apiName.blog, data: { [id]: store.getState().server[apiName.blog]["data"][id] } }));
-    return { props: store.getState().server[apiName.blog]["data"][id] };
+    return { props: { blogContent: store.getState().server[apiName.blog]["data"][id] } };
   })
 );
 

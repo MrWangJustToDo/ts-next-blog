@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useState, useEffect, useRef, useMemo, RefObject } from "react";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import { getScrollBarSize } from "utils/action";
 import { useUpdate } from "./useBase";
 import { applyRootStyles, cleanupRootStyles } from "utils/dom";
 import { OverlayProps } from "types/components";
@@ -44,25 +43,15 @@ export const useOverlayOpen = (): UseOverlayOpenType => {
 };
 
 export const useBodyLock: UseBodyLockType = ({ ref }) => {
-  const [padding, setPadding] = useState<number>(0);
-
-  useEffect(() => {
-    if (padding === 0) {
-      setPadding(getScrollBarSize());
-    }
-  }, [padding]);
-
   useEffect(() => {
     if (ref.current) {
       const ele = ref.current;
       disableBodyScroll(ele);
-      document.body.style.paddingRight = `${padding}px`;
       return () => {
         enableBodyScroll(ele);
-        document.body.style.paddingRight = `0px`;
       };
     }
-  }, [padding, ref]);
+  }, [ref]);
 };
 
 export const usePrevious = <T>(state: T): T | undefined => {

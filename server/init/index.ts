@@ -1,7 +1,7 @@
-import e from "express";
+import type { Express } from "express";
 import { decodeURI, initDBConnect, initSession, initUser } from "./init";
 
-const init = (expressApp: e.Express) => {
+const init = (expressApp: Express) => {
   expressApp.use(decodeURI);
   expressApp.use(initDBConnect);
   expressApp.use(initSession);
