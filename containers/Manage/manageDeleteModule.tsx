@@ -5,15 +5,13 @@ import { AutoRequestType } from "types/utils";
 export const ManageDeleteModule = ({
   request,
   deleteItem,
-  closeHandler,
   successHandler,
 }: {
   request: AutoRequestType;
   deleteItem: JSX.Element;
-  closeHandler: () => void;
   successHandler: () => void;
 }) => {
-  const click = useDeleteRequest({ request, closeHandler, successHandler });
+  const click = useDeleteRequest({ request, successHandler });
 
   return (
     <div className="position-relative" style={{ minWidth: "250px" }}>

@@ -84,7 +84,10 @@ const createRequest: CreateRequestType = (props: AutoRequestProps = {}) => {
 
   autoRequest.cacheKey = "";
 
-  autoRequest.deleteCache = () => autoRequest.cache.deleteRightNow(autoRequest.cacheKey);
+  autoRequest.deleteCache = () => {
+    autoRequest.cache.deleteRightNow(autoRequest.cacheKey);
+    return autoRequest;
+  };
 
   autoRequest.run = <T>() => {
     const targetRelativePath = autoRequest.cacheKey;

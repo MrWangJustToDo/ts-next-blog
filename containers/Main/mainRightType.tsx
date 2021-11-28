@@ -25,7 +25,7 @@ export const MainRightType = ({ index }: { index: number }) => {
             loaded={(data) => (
               <AnimationList showClassName="fadeInUp">
                 {data.map(({ typeId, typeContent, typeCount }) => (
-                  <MainRightTypeItem key={typeId} typeName={typeContent!} typeCount={typeCount!} changeCurrentType={changeCurrentType} />
+                  <MainRightTypeItem key={typeId} typeName={typeContent} typeCount={typeCount} changeCurrentType={changeCurrentType} />
                 ))}
               </AnimationList>
             )}

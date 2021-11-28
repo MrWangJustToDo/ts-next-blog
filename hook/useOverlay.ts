@@ -8,21 +8,25 @@ interface UseOverlayOpenType {
   (props: OverlayProps): void;
 }
 interface UseOverlayPropsType {
-  (): { overlay: OverlayProps | null; open: UseOverlayOpenType };
+  (): { overlay: OverlayProps | null; open: UseOverlayOpenType; close: () => void };
 }
 interface UseBodyLockType {
   (props: { ref: RefObject<HTMLElement> }): void;
 }
 interface UseOverlayBodyType {
-  (props: { body: JSX.Element | ((handler: () => void) => JSX.Element); closeHandler?: () => void }): JSX.Element;
+  (props: { body: JSX.Element | ((handler: () => void) => JSX.Element); closeHandler: () => void }): JSX.Element;
 }
 
 export const OverlayOpenContext = createContext<UseOverlayOpenType>(() => {});
 
+export const OverlayCloseContext = createContext<() => void>(() => {});
+
 export const useOverlayProps: UseOverlayPropsType = () => {
   const [overlay, setOverlay] = useState<OverlayProps | null>(null);
+  const overlayRef = useRef(overlay);
   const forceUpdate = useUpdate();
   const clear = useCallback(() => setOverlay(null), []);
+  overlayRef.current = overlay;
   const open = useCallback(
     (props: OverlayProps) => {
       props.showState = true;
@@ -35,12 +39,18 @@ export const useOverlayProps: UseOverlayPropsType = () => {
     },
     [clear, forceUpdate]
   );
-  return { overlay, open };
+  const close = useCallback(() => {
+    const overlay = overlayRef.current;
+    if (overlay && overlay.closeHandler) {
+      overlay.closeHandler();
+    }
+  }, []);
+  return { overlay, open, close };
 };
 
-export const useOverlayOpen = (): UseOverlayOpenType => {
-  return useContext(OverlayOpenContext);
-};
+export const useOverlayOpen = () => useContext(OverlayOpenContext);
+
+export const useOverlayClose = () => useContext(OverlayCloseContext);
 
 export const useBodyLock: UseBodyLockType = ({ ref }) => {
   useEffect(() => {
@@ -87,7 +97,7 @@ export const useModalEffect = (isOpen: boolean, rootId?: string) => {
 export const useOverlayBody: UseOverlayBodyType = ({ body, closeHandler }) => {
   const bodyContent = useMemo(() => {
     if (typeof body === "function") {
-      return body(closeHandler!);
+      return body(closeHandler);
     } else {
       return body;
     }

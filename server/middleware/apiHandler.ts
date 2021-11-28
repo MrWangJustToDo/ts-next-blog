@@ -229,11 +229,12 @@ const userMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddleware) =>
   const currentUserConfig = assign({}, userConfig, req.config?.user);
   const needCheck = currentUserConfig.needCheck;
   const checkStrict = currentUserConfig.checkStrict;
+  const checkLogin = currentUserConfig.checkLogin;
   if (needCheck) {
     if (!req.user) {
       throw new ServerError("未登录，拒绝访问", 400);
     }
-    if (checkStrict) {
+    if (checkStrict || checkLogin) {
       if (req.user.userId !== req.query.userId) {
         throw new ServerError("登录用户与操作用户不一致", 401);
       }

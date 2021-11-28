@@ -11,7 +11,7 @@ export const MainRightTypeItem = ({
   typeCount: number;
   changeCurrentType: (t: string) => void;
 }) => {
-  const clickHandler = useCallback(() => changeCurrentType(typeName), [typeName]);
+  const clickHandler = useCallback(() => changeCurrentType(typeName), [changeCurrentType, typeName]);
 
   return (
     <Link href="/type">

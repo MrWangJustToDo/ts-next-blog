@@ -22,8 +22,10 @@ export const updateTableWithParam = async ({
     throw new ServerError(`更新${table}参数错误`, 400);
   }
   for (let key in set) {
-    Sql += ` ${key} = ?,`;
-    sqlParam.push(set[key]);
+    if (set[key] !== undefined) {
+      Sql += ` ${key} = ?,`;
+      sqlParam.push(set[key]);
+    }
   }
   Sql = Sql.slice(0, -1);
   const where = param.where;

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Input } from "components/Input";
 import { Button } from "components/Button";
 import { addModule } from "config/manage";
@@ -10,21 +10,14 @@ export const ManageAddModule = ({
   request,
   judgeApiName,
   fieldName,
-  successHandler,
-  closeHandler,
+  successCallback,
 }: {
   request: AutoRequestType;
   judgeApiName: apiName;
   fieldName: string;
-  closeHandler: () => void;
-  successHandler: () => void;
+  successCallback: () => void;
 }) => {
   const [bool, setBool] = useState<boolean>(false);
-
-  const successCallback = useCallback(() => {
-    successHandler();
-    closeHandler();
-  }, [closeHandler, successHandler]);
 
   const [ref, loading] = useAddRequest({
     request,

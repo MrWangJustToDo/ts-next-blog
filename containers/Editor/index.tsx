@@ -21,7 +21,7 @@ export const Editor = (props: BlogProps & UserProps & TypeProps & ClientTagProps
         <EditorEditor blogId={props.blogId} blogContent={props.blogContent} />
         <EditorTypeTag typeId={props.typeId} tagId={props.tagId} />
         <EditorImage blogImgLink={props.blogImgLink} />
-        <EditorState {...props} />
+        <EditorState blogState={props.blogState} blogPriseState={props.blogPriseState} blogCommentState={props.blogCommentState} />
         <EditorSubmit submit={submit} />
       </form>
     </div>

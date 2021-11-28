@@ -23,9 +23,9 @@ const BlogContentPrimaryMessageWithFeature = ({
   primaryUpdate,
 }: {
   messages: PrimaryMessageProps[];
-  primaryReplay: ReturnType<typeof BlogContentPrimaryMessageReplay>;
-  primaryDelete: ReturnType<typeof BlogContentPrimaryMessageDelete>;
-  primaryUpdate: ReturnType<typeof BlogContentPrimaryMessageUpdate>;
+  primaryReplay: ReturnType<typeof useBlogContentPrimaryMessageReplay>;
+  primaryDelete: ReturnType<typeof useBlogContentPrimaryMessageDelete>;
+  primaryUpdate: ReturnType<typeof useBlogContentPrimaryMessageUpdate>;
 }) => {
   const { userId } = useCurrentUser();
   const { currentPage, increaseAble, decreaseAble, increasePage, decreasePage, currentPageData } = useBasePage<PrimaryMessageProps>({
@@ -70,22 +70,18 @@ const BlogContentPrimaryMessageWithFeature = ({
   );
 };
 
-const BlogContentPrimaryMessageReplay = () => {
+const useBlogContentPrimaryMessageReplay = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.putChildMessage, cache: false });
 
-  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
-    ({ props }) =>
-      (closeHandler) => {
-        const WithReplay = (
-          <>
-            <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
-            <BlogContentReplayModule request={request} closeHandler={closeHandler} props={props} toPrimary={1} />
-          </>
-        );
-        return WithReplay;
-      },
-    []
-  );
+  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(({ props }) => {
+    const WithReplay = (
+      <>
+        <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+        <BlogContentReplayModule request={request} props={props} toPrimary={1} />
+      </>
+    );
+    return WithReplay;
+  }, [request]);
 
   const primaryReplay = useMessageToReplayModule<PrimaryMessageProps>({
     body,
@@ -95,44 +91,36 @@ const BlogContentPrimaryMessageReplay = () => {
   return primaryReplay;
 };
 
-const BlogContentPrimaryMessageDelete = () => {
+const useBlogContentPrimaryMessageDelete = () => {
   const request = useUserRequest({ method: "delete", apiPath: apiName.deletePrimaryMessage, cache: false, header: { apiToken: true } });
 
-  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
-    ({ props }) =>
-      (closeHandler) => {
-        const WithDelete = (
-          <>
-            <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
-            <BlogContentDeleteModule request={request} closeHandler={closeHandler} props={props} />
-          </>
-        );
-        return WithDelete;
-      },
-    []
-  );
+  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(({ props }) => {
+    const WithDelete = (
+      <>
+        <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+        <BlogContentDeleteModule request={request} props={props} />
+      </>
+    );
+    return WithDelete;
+  }, [request]);
 
   const primaryDelete = useMessageToDeleteModule<PrimaryMessageProps>({ body, className: style.deleteModule });
 
   return primaryDelete;
 };
 
-const BlogContentPrimaryMessageUpdate = () => {
+const useBlogContentPrimaryMessageUpdate = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.updatePrimaryMessage, cache: false, header: { apiToken: true } });
 
-  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(
-    ({ props }) =>
-      (closeHandler) => {
-        const WithUpdate = (
-          <>
-            <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
-            <BlogContentUpdateModule request={request} props={props} closeHandler={closeHandler} />
-          </>
-        );
-        return WithUpdate;
-      },
-    []
-  );
+  const body = useCallback<UseMessageToModuleBody<PrimaryMessageProps>>(({ props }) => {
+    const WithUpdate = (
+      <>
+        <PrimaryMessage {...props} withReplay={false} withDelete={false} withUpdate={false} withChildren={false} withHover={false} />
+        <BlogContentUpdateModule request={request} props={props} />
+      </>
+    );
+    return WithUpdate;
+  }, [request]);
 
   const primaryUpdate = useMessageToUpdateModule<PrimaryMessageProps>({ body, className: style.updateModule });
 
@@ -140,9 +128,9 @@ const BlogContentPrimaryMessageUpdate = () => {
 };
 
 export const BlogContentPrimaryMessage = ({ messages }: { messages: PrimaryMessageProps[] }) => {
-  const primaryReplay = BlogContentPrimaryMessageReplay();
-  const primaryDelete = BlogContentPrimaryMessageDelete();
-  const primaryUpdate = BlogContentPrimaryMessageUpdate();
+  const primaryReplay = useBlogContentPrimaryMessageReplay();
+  const primaryDelete = useBlogContentPrimaryMessageDelete();
+  const primaryUpdate = useBlogContentPrimaryMessageUpdate();
 
   return <BlogContentPrimaryMessageWithFeature messages={messages} primaryReplay={primaryReplay} primaryDelete={primaryDelete} primaryUpdate={primaryUpdate} />;
 };

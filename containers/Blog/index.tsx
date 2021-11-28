@@ -13,18 +13,18 @@ const BlogContentMessage = dynamic<{ blogId: string }>(() => import("./blogConte
 export const Blog = (props: BlogProps & UserProps & TypeProps & ClientTagProps) => {
   const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId, blogOriginState, blogPriseState, blogCommentState, userId } = props;
 
-  useUpdateBlogRead(blogId!);
+  useUpdateBlogRead(blogId);
 
   return (
     <div className="card user-select-none">
       <BlogHead {...props} />
       <ul className="list-group list-group-flush">
-        <BlogContentImg src={blogImgLink!} />
+        <BlogContentImg src={blogImgLink} />
         <BlogContentTypeAndTag typeContent={typeContent} tagContent={tagContent} blogOriginState={blogOriginState} />
         <BlogContentBody blogTitle={blogTitle} blogContent={blogContent} />
         <BlogContentLike blogPriseState={blogPriseState} userId={userId} />
-        {blogCommentState ? <BlogContentMessage blogId={blogId!} /> : null}
-        {blogCommentState ? <BlogContentMessagePut blogId={blogId!} /> : null}
+        {blogCommentState ? <BlogContentMessage blogId={blogId} /> : null}
+        {blogCommentState ? <BlogContentMessagePut blogId={blogId} /> : null}
       </ul>
     </div>
   );

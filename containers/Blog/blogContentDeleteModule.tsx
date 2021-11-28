@@ -4,16 +4,8 @@ import { useDeleteModuleToSubmit } from "hook/useMessage";
 import { AutoRequestType } from "types/utils";
 import { ChildMessageProps, PrimaryMessageProps } from "types/components";
 
-export const BlogContentDeleteModule = <T extends PrimaryMessageProps | ChildMessageProps>({
-  props,
-  request,
-  closeHandler,
-}: {
-  props: T;
-  request: AutoRequestType;
-  closeHandler: () => void;
-}) => {
-  const { formRef, loading } = useDeleteModuleToSubmit<T>({ props, request, closeHandler });
+export const BlogContentDeleteModule = <T extends PrimaryMessageProps | ChildMessageProps>({ props, request }: { props: T; request: AutoRequestType }) => {
+  const { formRef, loading } = useDeleteModuleToSubmit<T>({ props, request });
 
   return (
     <form className={getClass("row, px-3", flexEnd)} ref={formRef}>

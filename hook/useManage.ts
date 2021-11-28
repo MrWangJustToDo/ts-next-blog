@@ -9,7 +9,7 @@ import { actionHandler, judgeAction, loadingAction } from "utils/action";
 import { useBool } from "./useData";
 import { useCurrentState } from "./useBase";
 import { useCurrentUser } from "./useUser";
-import { useOverlayOpen } from "./useOverlay";
+import { useOverlayClose, useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
 import { useFailToast, useSuccessToast } from "./useToast";
 import { ApiRequestResult, AutoRequestType } from "types/utils";
@@ -22,7 +22,7 @@ interface UseSearchType {
 }
 interface UseManageToAddModuleProps {
   title: string;
-  body: (closeHandler: () => void) => JSX.Element;
+  body: JSX.Element;
   className?: string;
 }
 interface UseManageToAddModuleType {
@@ -47,7 +47,7 @@ interface UseJudgeInputType {
   (props: UseJudgeInputProps): [RefObject<HTMLInputElement>, boolean, boolean];
 }
 export interface UseManageToDeleteModuleBody {
-  ({ deleteItem }: { deleteItem: JSX.Element }): (closeHandler: () => void) => JSX.Element;
+  ({ deleteItem }: { deleteItem: JSX.Element }): JSX.Element;
 }
 interface UseManageToDeleteModuleProps {
   title: string;
@@ -59,7 +59,6 @@ interface UseManageToDeleteModuleType {
 }
 interface UseDeleteRequestProps {
   request: AutoRequestType;
-  closeHandler: () => void;
   successHandler: () => void;
 }
 interface UseDeleteRequestType {
@@ -85,18 +84,20 @@ const useSearch: UseSearchType = () => {
                 if (code === 0) {
                   if (Array.isArray(data)) {
                     dispatch(setDataSuccess_client({ name: actionName.currentResult, data }));
-                    return success(`搜索数据成功，一共${data.length}条数据`);
+                    success(`搜索数据成功，一共${data.length}条数据`);
                   }
                 }
+              } else {
+                fail("搜索结果数据错误");
               }
-              return fail("搜索结果数据错误");
             })
             .catch((e) => {
               dispatch(setDataFail_client({ name: actionName.currentResult, error: e }));
-              return fail(`搜索出错:${e.toString()}`);
+              fail(`搜索出错:${e.toString()}`);
             });
         } else {
-          return fail(`当前未登录`);
+          fail(`当前未登录`);
+          return Promise.resolve();
         }
       }),
     [dispatch, fail, success, userId]
@@ -113,6 +114,7 @@ const useManageToAddModule: UseManageToAddModuleType = ({ title, body, className
 const useAddRequest: UseAddRequestType = ({ request, successCallback }) => {
   const fail = useFailToast();
   const success = useSuccessToast();
+  const closeOverlay = useOverlayClose();
   const loadingRef = useRef<boolean>();
   const { bool, show, hide } = useBool();
   const ref = useRef<HTMLFormElement>(null);
@@ -125,24 +127,29 @@ const useAddRequest: UseAddRequestType = ({ request, successCallback }) => {
       if (loadingRef.current) {
         return fail("加载中，不能提交");
       } else {
-        actionHandler<HTMLFormElement, Promise<void>, Promise<void>>(
+        actionHandler<HTMLFormElement, Promise<void>, void>(
           ref.current,
           (ele) => {
             show();
-            return request({ data: { ...formSerialize(ele) } })
+            return request({ data: formSerialize(ele) })
               .run<ApiRequestResult<string>>()
               .then(({ code, data }) => {
                 if (code === 0) {
                   successCallback();
-                  return success(`添加tag成功，${data.toString()}`);
+                  closeOverlay();
+                  success(`添加tag成功，${data.toString()}`);
                 } else {
-                  return fail(`添加tag失败，请稍候尝试`);
+                  fail(`添加tag失败，请稍候尝试`);
                 }
               })
-              .catch((e) => fail(`添加tag出错，${e.toString()}`))
+              .catch((e) => {
+                fail(`添加tag出错，${e.toString()}`);
+              })
               .finally(hide);
           },
-          () => fail(`当前组件已经卸载`)
+          () => {
+            fail(`当前组件已经卸载`);
+          }
         );
       }
     },
@@ -185,7 +192,7 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
                   >(
                     judgeApiName,
                     (apiName) =>
-                      createRequest({ apiPath: apiName, method: "post", data: { [ele.name]: ele.value }, cache: false })
+                      createRequest({ apiPath: apiName, method: "post", data: { [ele.name]: ele.value }, query: { [ele.name]: ele.value }, cache: false })
                         .run<ApiRequestResult<string>>()
                         .then(({ code, data }) => {
                           if (code === 0) {
@@ -227,6 +234,7 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
         return true;
       }
     });
+    setState(false);
     // 取消上一个状态
     handleRef.current.needHandle.state = false;
     // 重新开始状态
@@ -246,9 +254,10 @@ const useManageToDeleteModule: UseManageToDeleteModuleType = ({ title, body, del
   return click;
 };
 
-const useDeleteRequest: UseDeleteRequestType = ({ request, closeHandler, successHandler }) => {
+const useDeleteRequest: UseDeleteRequestType = ({ request, successHandler }) => {
   const fail = useFailToast();
   const success = useSuccessToast();
+  const closeOverlay = useOverlayClose();
   const doRequest = useCallback(
     () =>
       request
@@ -256,14 +265,16 @@ const useDeleteRequest: UseDeleteRequestType = ({ request, closeHandler, success
         .then(({ code, data }) => {
           if (code === 0) {
             successHandler();
-            closeHandler();
-            return success("删除成功");
+            closeOverlay();
+            success("删除成功");
           } else {
-            return fail(`删除失败${data}`);
+            fail(`删除失败${data}`);
           }
         })
-        .catch((e) => fail(`删除出错：${e.toString()}`)),
-    [request, successHandler, closeHandler, success, fail]
+        .catch((e) => {
+          fail(`删除出错：${e.toString()}`);
+        }),
+    [request, successHandler, closeOverlay, success, fail]
   );
   return doRequest;
 };

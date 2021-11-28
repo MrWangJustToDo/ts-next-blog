@@ -61,6 +61,7 @@ export interface CheckParamsConfigProps {
 export interface UserConfigProps {
   needCheck?: boolean;
   checkStrict?: boolean;
+  checkLogin?: boolean;
 }
 export interface RequestHandlerProps<T = any> {
   req: ExpressRequest;

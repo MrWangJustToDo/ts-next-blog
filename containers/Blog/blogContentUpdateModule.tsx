@@ -10,17 +10,9 @@ import { ChildMessageProps, PrimaryMessageProps } from "types/components";
 
 import style from "./index.module.scss";
 
-export const BlogContentUpdateModule = <T extends PrimaryMessageProps | ChildMessageProps>({
-  props,
-  request,
-  closeHandler,
-}: {
-  props: T;
-  request: AutoRequestType;
-  closeHandler: () => void;
-}) => {
+export const BlogContentUpdateModule = <T extends PrimaryMessageProps | ChildMessageProps>({ props, request }: { props: T; request: AutoRequestType }) => {
   const imgRef = useAutoLoadCheckCodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
-  const { input1, input2, formRef, loading, canSubmit } = useUpdateModuleToSubmit<T, HTMLTextAreaElement, HTMLInputElement>({ request, props, closeHandler });
+  const { input1, input2, formRef, loading, canSubmit } = useUpdateModuleToSubmit<T, HTMLTextAreaElement, HTMLInputElement>({ request, props });
 
   return (
     <form ref={formRef}>

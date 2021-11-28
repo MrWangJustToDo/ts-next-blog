@@ -133,4 +133,21 @@ const pinchHelper = {
   createPoint: () => new DOMPoint(),
 };
 
-export { autoTransformData, getCurrentAvatar, formSerialize, getRandom, parseToString, pinchHelper };
+const transformFromFieldToBlog = (props: ReturnType<FormSerializeType>) => {
+  const {
+    blogOriginState: originalBlogOriginState,
+    tagId: originalTagId,
+    blogState: originalBlogState,
+    blogPriseState: originalBlogPriseState,
+    blogCommentState: originalBlogCommentState,
+    ...resProps
+  } = props;
+  const tagId = typeof originalTagId === "string" ? originalTagId.split(",") : originalTagId;
+  const blogState = Number(originalBlogState);
+  const blogOriginState = Number(originalBlogOriginState);
+  const blogPriseState = Number(originalBlogPriseState === "on");
+  const blogCommentState = Number(originalBlogCommentState === "on");
+  return { ...resProps, tagId, blogState, blogOriginState, blogPriseState, blogCommentState };
+};
+
+export { autoTransformData, getCurrentAvatar, formSerialize, getRandom, parseToString, pinchHelper, transformFromFieldToBlog };

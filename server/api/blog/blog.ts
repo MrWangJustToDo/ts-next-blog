@@ -14,7 +14,10 @@ export const getBlogByBlogIdAction = wrapperMiddlewareRequest({
     const data = await getBlogByBlogId({ db: req.db!!, blogId });
     success({ res, statusCode: 200, resDate: { data } });
   },
-  cacheConfig: { needCache: true },
+  cacheConfig: {
+    needCache: true,
+    cacheKey: ({ req }) => transformPath({ apiPath: apiName.blog, query: { blogId: req.query.blogId as string }, needPre: false }),
+  },
   paramsConfig: { fromQuery: ["blogId"] },
 });
 
@@ -97,7 +100,14 @@ export const publishBlogAction = wrapperMiddlewareRequest({
     success({ res, statusCode: 200, resDate: { state: "创建博客成功", data: `博客id：${blogIdStr}` } });
   },
   userConfig: { needCheck: true, checkStrict: true },
-  cacheConfig: { needDelete: [apiName.home, apiName.type, apiName.tag] },
+  cacheConfig: {
+    needDeleteAfterRequest: [
+      apiName.home,
+      apiName.type,
+      apiName.tag,
+      ({ req }) => transformPath({ apiPath: apiName.userHome, query: { userId: req.query.userId as string }, needPre: false }),
+    ],
+  },
   paramsConfig: {
     fromQuery: ["userId"],
     fromBody: [
@@ -262,6 +272,81 @@ export const updateBlogByBlogIdAction = wrapperMiddlewareRequest({
       apiName.tag,
       apiName.type,
       ({ req }) => transformPath({ apiPath: apiName.blog, query: { blogId: req.body.newProps.blogId }, needPre: false }),
+    ],
+  },
+  paramsConfig: { fromQuery: ["userId"], fromBody: ["oldProps", "newProps"] },
+});
+
+export const updateBlogByBlogIdAction_v2 = wrapperMiddlewareRequest({
+  requestHandler: async function updateBlogByBlogIdAction_v2({ req, res }) {
+    const now = new Date();
+    const { oldProps, newProps } = req.body;
+    // 更新type
+    if (oldProps.typeId !== newProps.typeId) {
+      // 获取type
+      const oldType = await getTypeByTypeId({ db: req.db!, typeId: oldProps.typeId });
+      // 获取type
+      const newType = await getTypeByTypeId({ db: req.db!, typeId: newProps.typeId });
+      if (!oldType) {
+        throw new ServerError(`oldType不合法, typeId: ${oldProps.typeId}`, 404);
+      }
+      if (!newType) {
+        throw new ServerError(`newType不合法, typeId: ${newProps.typeId}`, 404);
+      }
+      // 减少type
+      await updateTypeCountByTypeId({ db: req.db!, typeId: oldProps.typeId, count: oldType.typeCount - 1 });
+      // 增加type
+      await updateTypeCountByTypeId({ db: req.db!, typeId: newProps.typeId, count: newType.typeCount + 1 });
+    }
+    // 更新tag
+    if (oldProps.tagId && newProps.tagId) {
+      const deleteTagId = oldProps.tagId.filter((id: string) => newProps.tagId.every((_id: string) => _id !== id));
+      const addTagId = newProps.tagId.filter((id: string) => oldProps.tagId.every((_id: string) => _id !== id));
+      for (const id of deleteTagId) {
+        const tag = await getTagByTagId({ db: req.db!, tagId: id });
+        tag && (await updateTagCountByTagId({ db: req.db!, tagId: id, count: tag.tagCount - 1 }));
+      }
+      for (const id of addTagId) {
+        const tag = await getTagByTagId({ db: req.db!, tagId: id });
+        tag && (await updateTagCountByTagId({ db: req.db!, tagId: id, count: tag.tagCount + 1 }));
+      }
+    }
+    const { blogId, tagId, ...resProps } = newProps;
+    const rowTagId = tagId?.join(",");
+    await updateTableWithParam({
+      db: req.db!,
+      table: "blogs",
+      param: {
+        set: {
+          tagId: rowTagId,
+          blogModifyState: 1,
+          blogModifyDate: now.toLocaleString(),
+          ...resProps,
+        },
+        where: { blogId: { value: blogId } },
+      },
+    });
+    await updateTableWithParam({
+      db: req.db!,
+      table: "home",
+      param: {
+        set: {
+          tagId: rowTagId,
+          ...resProps,
+        },
+        where: { blogId: { value: blogId } },
+      },
+    });
+    success({ res, resDate: { state: "更新博客成功", data: `更新blog成功, id: ${blogId}` } });
+  },
+  userConfig: { needCheck: true, checkStrict: true },
+  cacheConfig: {
+    needDeleteAfterRequest: [
+      apiName.home,
+      apiName.tag,
+      apiName.type,
+      ({ req }) => transformPath({ apiPath: apiName.blog, query: { blogId: req.body.newProps.blogId }, needPre: false }),
+      ({ req }) => transformPath({ apiPath: apiName.userHome, query: { userId: req.body.userId }, needPre: false }),
     ],
   },
   paramsConfig: { fromQuery: ["userId"], fromBody: ["oldProps", "newProps"] },

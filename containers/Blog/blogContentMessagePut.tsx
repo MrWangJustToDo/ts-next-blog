@@ -47,14 +47,10 @@ export const BlogContentMessageTextArea = ({
 export const BlogContentMessagePut = ({ blogId }: Pick<BlogProps, "blogId">) => {
   const { bool, switchBoolDebounce, hide } = useBool();
 
-  const body = useCallback<UsePutToCheckCodeModuleBody>(
-    ({ request, requestCallback, blogId }) =>
-      (closeHandler) => {
-        const CheckCode = <BlogContentCheckCodeModule blogId={blogId} request={request} closeHandler={closeHandler} requestCallback={requestCallback} />;
-        return CheckCode;
-      },
-    []
-  );
+  const body = useCallback<UsePutToCheckCodeModuleBody>(({ request, requestCallback, blogId }) => {
+    const CheckCode = <BlogContentCheckCodeModule blogId={blogId} request={request} requestCallback={requestCallback} />;
+    return CheckCode;
+  }, []);
 
   const { formRef, textAreaRef, canSubmit } = usePutToCheckCodeModule({
     body,

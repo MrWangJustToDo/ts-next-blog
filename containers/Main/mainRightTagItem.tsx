@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Tag } from "components/Tag";
 
 export const MainRightTagItem = ({ tagName, tagCount, changeCurrentTag }: { tagName: string; tagCount: number; changeCurrentTag: (p: string) => void }) => {
-  const clickHandler = useCallback(() => changeCurrentTag(tagName), [tagName]);
+  const clickHandler = useCallback(() => changeCurrentTag(tagName), [changeCurrentTag, tagName]);
 
   return (
     <Link href="/tag">

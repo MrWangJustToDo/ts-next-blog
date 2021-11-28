@@ -1,4 +1,5 @@
 import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import isEqual from "lodash/isEqual";
 import { useRouter } from "next/dist/client/router";
 import tocbot from "tocbot";
 import { toCanvas } from "qrcode";
@@ -7,7 +8,7 @@ import { cancel, delay } from "utils/delay";
 import { actionHandler } from "utils/action";
 import { addIdForHeads } from "utils/markdown";
 import { createRequest } from "utils/fetcher";
-import { formSerialize, getRandom } from "utils/data";
+import { formSerialize, getRandom, transformFromFieldToBlog } from "utils/data";
 import { useCurrentUser } from "./useUser";
 import { useOverlayOpen } from "./useOverlay";
 import { useAutoActionHandler } from "./useAuto";
@@ -126,7 +127,6 @@ export const useEditor: UseEditorType = (id) => {
     const observer = new MutationObserver(function (mutationsList) {
       // 遍历出所有的MutationRecord对象
       mutationsList.forEach(function (mutation) {
-        console.log(mutation);
         if (mutation.attributeName === "class") {
           if ((mutation.target as HTMLDivElement).classList.contains("full")) {
             if (!isOverflowRef.current) {
@@ -194,7 +194,8 @@ export const usePublish: UsePublishType = ({ request, id }) => {
         ref.current,
         (ele) => {
           if (!userId) {
-            return fail("登录失效，请重新登录！");
+            fail("登录失效，请重新登录！");
+            return Promise.resolve();
           } else {
             const blogPreview = ele.querySelector(htmlId)?.textContent;
             return request({
@@ -205,15 +206,20 @@ export const usePublish: UsePublishType = ({ request, id }) => {
               .then(({ code, data }) => {
                 if (code === 0) {
                   delay(800, () => router.push("/"));
-                  return success(data.toString());
+                  success(data.toString());
                 } else {
-                  return fail(data.toString());
+                  fail(data.toString());
                 }
               })
-              .catch((e) => fail(e.toString()));
+              .catch((e) => {
+                fail(e.toString());
+              });
           }
         },
-        () => fail("form元素不存在...")
+        () => {
+          fail("form元素不存在...");
+          return Promise.resolve();
+        }
       ),
     [fail, htmlId, request, router, success, userId]
   );
@@ -241,19 +247,43 @@ export const useUpdateBlog: UsePublishType = ({ request, id }) => {
         ref.current,
         (ele) => {
           const blogPreview = ele.querySelector(htmlId)?.textContent;
-          return request({ data: { newProps: { ...formSerialize(ele), blogPreview, blogId: id } } })
+          return request({ data: { newProps: { ...transformFromFieldToBlog(formSerialize(ele)), blogPreview, blogId: id } } })
+            .advance(({ data }) => {
+              const { oldProps, newProps } = data as { oldProps: any; newProps: any };
+              const newOldProps: { [props: string]: any } = { blogId: oldProps.blogId };
+              const newNewProps: { [props: string]: any } = { blogId: newProps.blogId };
+              Object.keys(newProps).forEach((key) => {
+                if (!isEqual(oldProps[key], newProps[key])) {
+                  newOldProps[key] = oldProps[key];
+                  newNewProps[key] = newProps[key];
+                }
+              });
+              return { data: { oldProps: newOldProps, newProps: newNewProps }, apiPath: apiName.updateBlog_v2 };
+            })
             .run<ApiRequestResult<string>>()
             .then(({ data, code }) => {
               if (code === 0) {
+                request()
+                  .advance(() => ({ apiPath: apiName.userHome }))
+                  .deleteCache();
+                request()
+                  .advance(() => ({ apiPath: apiName.home, query: false }))
+                  .deleteCache();
                 delay(400, () => router.push("/"));
-                return success(data.toString());
+                success(data.toString());
               } else {
-                return fail(data.toString());
+                fail(data.toString());
               }
             })
-            .catch((e) => fail(e.toString()));
+            .catch((e) => {
+              fail(e.toString());
+              return Promise.resolve();
+            });
         },
-        () => fail(`组件已卸载`)
+        () => {
+          fail(`组件已卸载`);
+          return Promise.resolve();
+        }
       ),
     [htmlId, request, id, success, router, fail]
   );

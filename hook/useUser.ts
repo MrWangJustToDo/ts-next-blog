@@ -163,9 +163,10 @@ export const useLogout: UseLogoutType = () => {
 
 // 自动绑定当前用户的request
 export const useUserRequest: UseUserRequest = (props = {}) => {
-  const { method, data, path, apiPath, header, cache, cacheTime, encode } = props;
+  const { method, data, path, apiPath, header, cache = false, cacheTime, encode, query } = props;
   const stringData = autoStringify(data);
   const stringHeader = autoStringify(header);
+  const stringQuery = autoStringify(query);
   const user = useCurrentUser();
   return useMemo(
     () =>
@@ -176,10 +177,10 @@ export const useUserRequest: UseUserRequest = (props = {}) => {
         cache,
         apiPath,
         header: stringHeader,
-        query: { userId: user.userId! },
+        query: autoAssignParams(stringQuery, { userId: user.userId! }),
         cacheTime,
         encode,
       }),
-    [user.userId, stringData, path, apiPath, stringHeader, method, cache, cacheTime, encode]
+    [method, stringData, user.userId, path, cache, apiPath, stringHeader, stringQuery, cacheTime, encode]
   );
 };

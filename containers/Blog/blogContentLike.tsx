@@ -10,7 +10,7 @@ export const BlogContentLike = ({ userId, blogPriseState }: { userId: UserProps[
     body: (
       <LoadRender<AuthorProps>
         apiPath={apiName.author}
-        query={{ userId: userId! }}
+        query={{ userId: userId }}
         loaded={({ userAlipay, userWechat }) => <BlogContentLikeToPayModule aliUrl={userAlipay!} wChatUrl={userWechat!} />}
       />
     ),
@@ -24,12 +24,12 @@ export const BlogContentLike = ({ userId, blogPriseState }: { userId: UserProps[
           <span>点赞</span>
         </button>
         <button className="btn btn-sm btn-outline-danger mx-2 mx-md-5 rounded-pill" disabled>
-          <i className="ri-star-line align-middle mr-2"></i>
+          <i className="ri-star-line align-middle mr-2" />
           <span>收藏</span>
         </button>
         {blogPriseState ? (
           <button className="btn btn-sm btn-outline-danger mx-2 mx-md-5 rounded-pill" onClick={click}>
-            <i className="ri-award-line align-middle mr-2"></i>
+            <i className="ri-award-line align-middle mr-2" />
             <span>打赏</span>
           </button>
         ) : null}

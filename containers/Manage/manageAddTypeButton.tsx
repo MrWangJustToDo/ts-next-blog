@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { mutate } from "swr";
 import { apiName } from "config/api";
 import { ManageAddModule } from "./manageAddModule";
@@ -10,18 +10,13 @@ import { SimpleElement } from "types/components";
 export const ManageAddTypeButton: SimpleElement = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.addType, cache: false });
 
-  const successHandler = useCallback(() => {
+  const successCallback = useCallback(() => {
     const typeRequest = createRequest({ apiPath: apiName.type });
     typeRequest.deleteCache();
     mutate(typeRequest.cacheKey);
   }, []);
 
-  const body = useCallback<(p: () => void) => JSX.Element>(
-    (closeHandler) => (
-      <ManageAddModule fieldName="typeContent" request={request} judgeApiName={apiName.checkType} closeHandler={closeHandler} successHandler={successHandler} />
-    ),
-    [request, successHandler]
-  );
+  const body = useMemo(() => <ManageAddModule fieldName="typeContent" request={request} judgeApiName={apiName.checkType} successCallback={successCallback} />, [request, successCallback])
 
   const click = useManageToAddModule({
     body,

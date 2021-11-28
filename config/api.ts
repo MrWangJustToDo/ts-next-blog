@@ -11,7 +11,6 @@ enum apiName {
   type = "type", // 获取type页面数据apiName
   tag = "tag", // 获取tag页面数据apiName
   // 用户信息
-  ip = "ip",
   login = "login", // 登录
   author = "author",
   logout = "logout", // 登出
@@ -36,6 +35,7 @@ enum apiName {
   // 管理信息
   search = "search", // 搜索博客
   updateBlog = "updateBlog", // 更新博客信息
+  updateBlog_v2 = "updateBlog_v2", // v2版本
   publishBlog = "publishBlog", // 发布博客信息
   addTag = "addTag", // 添加tag
   addType = "addType", // 添加Type
@@ -57,13 +57,9 @@ enum apiName {
   testAuthor = "testAuthor",
 }
 
-// 需要暂存结果的路径
-const cacheApi = [apiName.home, apiName.userEx, apiName.user, apiName.type, apiName.tag, apiName.blog];
-
 // 响应配置
 const accessApi: AccessType = {
   // 用户信息
-  [apiName.ip]: { disable: false, method: "get", token: false },
   [apiName.autoLogin]: { disable: false, token: false },
   [apiName.login]: { disable: false, token: false, method: "post", config: { encode: true } },
   [apiName.logout]: { disable: false, token: false },
@@ -76,14 +72,14 @@ const accessApi: AccessType = {
   [apiName.captcha]: { disable: false, token: false },
   [apiName.captchaStr]: { disable: false, token: false },
   // 首页信息
-  [apiName.home]: { disable: false, token: false, config: { cache: { needCache: true } } },
+  [apiName.home]: { disable: false, token: false },
   [apiName.userHome]: { disable: false, token: false },
   [apiName.user]: { disable: false, token: false },
   [apiName.userEx]: { disable: false, token: false },
   [apiName.tag]: { disable: false, token: false },
   [apiName.type]: { disable: false, token: false },
   // 博客信息
-  [apiName.blog]: { disable: false, token: false, config: { cache: { needCache: true } } },
+  [apiName.blog]: { disable: false, token: false },
   [apiName.addBlogRead]: { disable: false, token: false, method: "post" },
   [apiName.childMessage]: { disable: false, token: false },
   [apiName.primaryMessage]: { disable: false, token: false },
@@ -100,11 +96,12 @@ const accessApi: AccessType = {
   [apiName.deleteBlog]: { disable: false, token: false, method: "delete" },
   [apiName.deleteChildMessage]: { disable: false, token: true, method: "delete" },
   [apiName.deletePrimaryMessage]: { disable: false, token: true, method: "delete" },
-  [apiName.updateBlog]: { disable: false, token: false, method: "post" },
+  [apiName.updateBlog]: { disable: true, token: false, method: "post" },
+  [apiName.updateBlog_v2]: { disable: false, token: true, method: "post" },
   [apiName.updateChildMessage]: { disable: false, token: true, method: "post" },
   [apiName.updatePrimaryMessage]: { disable: false, token: true, method: "post" },
   [apiName.publishBlog]: { disable: false, token: false, method: "post" },
   [apiName.thirdPath]: { disable: false, token: false },
 };
 
-export { apiName, cacheApi, accessApi };
+export { apiName, accessApi };

@@ -68,18 +68,21 @@ const Render: RenderType = <T>({
   needUpdate,
   apiPath,
 }: RenderProps<T>) => {
-  useUpdateProps("Render", {
-    currentRequest,
-    currentInitialData,
-    loading,
-    loadError,
-    delayTime,
-    revalidateOnMount,
-    revalidateOnFocus,
-    placeholder,
-    needUpdate,
-    apiPath,
-  });
+  if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useUpdateProps("Render", {
+      currentRequest,
+      currentInitialData,
+      loading,
+      loadError,
+      delayTime,
+      revalidateOnMount,
+      revalidateOnFocus,
+      placeholder,
+      needUpdate,
+      apiPath,
+    });
+  }
 
   const cancelKey = currentRequest.cacheKey + "-LoadRender";
   const loadingEle = useLoading({ loading, placeholder, delayTime, cancelKey });
@@ -160,6 +163,7 @@ export const LoadRender: LoadRenderType = <T>({
   );
 
   const { currentInitialData } = useCurrentInitialData({ initialData, apiPath, needInitialData });
+  
   const ref = useRef(currentInitialData);
 
   return Render<T>({

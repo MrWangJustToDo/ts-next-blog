@@ -14,13 +14,11 @@ import style from "./index.module.scss";
 export const BlogContentReplayModule = <T extends PrimaryMessageProps | ChildMessageProps>({
   props,
   request,
-  closeHandler,
   toPrimary = 0,
 }: {
   props: T;
   toPrimary?: number;
   request: AutoRequestType;
-  closeHandler: () => void;
 }) => {
   const { bool, switchBoolDebounce } = useBool();
   const imgRef = useAutoLoadCheckCodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
@@ -29,7 +27,6 @@ export const BlogContentReplayModule = <T extends PrimaryMessageProps | ChildMes
     props,
     request,
     toPrimary,
-    closeHandler,
   });
 
   return (

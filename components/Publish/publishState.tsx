@@ -3,7 +3,7 @@ import { CheckBox } from "components/CheckBox";
 import { blogState } from "config/publish";
 import { BlogProps } from "types";
 
-export const PublishState = (props: Partial<BlogProps>) => {
+export const PublishState = (props: Partial<Pick<BlogProps, "blogCommentState" | "blogPriseState" | "blogState">>) => {
   return (
     <>
       {blogState.map(({ fieldName, name, value }, idx) => {

@@ -83,7 +83,10 @@ export const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
 ) => {
   const actionStateRef = useRef<boolean>();
   actionStateRef.current = actionState;
-  useUpdateProps(componentName || "useAutoActionHandler", { action, timer, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps });
+  if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useUpdateProps(componentName || "useAutoActionHandler", { action, timer, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps });
+  }
   useEffect(() => {
     const currentRightNow = rightNow ? rightNow : typeof getRightNowState === "function" ? getRightNowState() : false;
     const currentAction = action || actionCallback;

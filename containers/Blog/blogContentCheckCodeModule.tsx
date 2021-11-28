@@ -9,16 +9,14 @@ import { AutoRequestType } from "types/utils";
 export const BlogContentCheckCodeModule = ({
   blogId,
   request,
-  closeHandler,
   requestCallback,
 }: {
   blogId: BlogProps["blogId"];
   request: AutoRequestType;
-  closeHandler: () => void;
   requestCallback: () => void;
 }) => {
   const imgRef = useAutoLoadCheckCodeImg({ imgUrl: apiName.captcha, strUrl: apiName.captchaStr });
-  const { formRef, inputRef, loading, canSubmit } = useCheckCodeModuleToSubmit({ request, closeHandler, requestCallback, blogId });
+  const { formRef, inputRef, loading, canSubmit } = useCheckCodeModuleToSubmit({ request, requestCallback, blogId });
 
   return (
     <form ref={formRef} className={getClass("row", flexCenter)}>

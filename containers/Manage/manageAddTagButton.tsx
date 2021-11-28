@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { mutate } from "swr";
 import { apiName } from "config/api";
 import { ManageAddModule } from "./manageAddModule";
@@ -10,17 +10,15 @@ import { SimpleElement } from "types/components";
 export const ManageAddTagButton: SimpleElement = () => {
   const request = useUserRequest({ method: "post", apiPath: apiName.addTag, cache: false });
 
-  const successHandler = useCallback(() => {
+  const successCallback = useCallback(() => {
     const tagRequest = createRequest({ apiPath: apiName.tag });
     tagRequest.deleteCache();
     mutate(tagRequest.cacheKey);
   }, []);
 
-  const body = useCallback<(p: () => void) => JSX.Element>(
-    (closeHandler) => (
-      <ManageAddModule fieldName="tagContent" request={request} judgeApiName={apiName.checkTag} closeHandler={closeHandler} successHandler={successHandler} />
-    ),
-    [request, successHandler]
+  const body = useMemo(
+    () => <ManageAddModule fieldName="tagContent" request={request} judgeApiName={apiName.checkTag} successCallback={successCallback} />,
+    [request, successCallback]
   );
 
   const click = useManageToAddModule({

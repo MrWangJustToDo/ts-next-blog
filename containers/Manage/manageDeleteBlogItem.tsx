@@ -28,11 +28,10 @@ export const ManageDeleteBlogItem = (props: HomeBlogProps & TypeProps & ClientTa
   }, [filter]);
 
   const body = useCallback<UseManageToDeleteModuleBody>(
-    ({ deleteItem }) =>
-      (closeHandler) => {
-        const WithDelete = <ManageDeleteModule deleteItem={deleteItem} request={request} closeHandler={closeHandler} successHandler={successHandler} />;
-        return WithDelete;
-      },
+    ({ deleteItem }) => {
+      const WithDelete = <ManageDeleteModule deleteItem={deleteItem} request={request} successHandler={successHandler} />;
+      return WithDelete;
+    },
     [request, successHandler]
   );
 

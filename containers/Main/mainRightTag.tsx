@@ -24,7 +24,7 @@ export const MainRightTag = ({ index }: { index: number }) => {
           loaded={(data) => (
             <AnimationList showClassName="bounceInDown">
               {data.map(({ tagId, tagContent, tagCount }) => (
-                <MainRightTagItem key={tagId} tagName={tagContent!} tagCount={tagCount!} changeCurrentTag={changeCurrentTag} />
+                <MainRightTagItem key={tagId} tagName={tagContent} tagCount={tagCount} changeCurrentTag={changeCurrentTag} />
               ))}
             </AnimationList>
           )}

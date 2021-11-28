@@ -90,7 +90,7 @@ interface AutoRequestProps {
   apiPath?: apiName;
   query?: QueryProps | string | false;
   header?: IncomingHttpHeaders | HeaderProps | string | false;
-  data?: object | string | false;
+  data?: string | false | { [props: string]: any };
   cache?: boolean;
   cacheTime?: number;
   encode?: boolean;
@@ -110,7 +110,7 @@ interface AutoRequestType {
   advance: (transform: (props: AutoRequestProps) => AutoRequestProps | void) => AutoRequestType;
   cache: Cache<string, any>;
   cacheKey: string;
-  deleteCache: () => void;
+  deleteCache: () => AutoRequestType;
 }
 
 export type { AutoRequestProps, ApiRequestResult, CreateRequestType, AutoRequestType };
