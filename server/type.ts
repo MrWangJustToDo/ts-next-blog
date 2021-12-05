@@ -88,6 +88,7 @@ export interface MiddlewareConfig {
   paramsConfig?: CheckParamsConfigProps;
   encodeConfig?: boolean;
   logConfig?: boolean;
+  hasError?: boolean;
   goNext?: boolean;
 }
 export type MiddlewareContext = MiddlewareConfig & {

@@ -40,6 +40,7 @@ export const catchMiddlewareHandler: MiddlewareFunction = async (ctx, nextMiddle
   try {
     await nextMiddleware();
   } catch (e) {
+    ctx.hasError = true;
     log(new Error(`url: ${req.originalUrl}, method: ${req.method} error, ${(e as Error).message}`), "error");
 
     if (errorHandler && typeof errorHandler === "function") {
@@ -281,7 +282,8 @@ export const compose = (...middleWares: MiddlewareFunction[]) => {
         try {
           return Promise.resolve(fn(ctx, () => dispatch(i + 1)));
         } catch (e) {
-          log("compose catch error", "error");
+          ctx.hasError = true;
+          log(`compose catch error: ${(e as Error).message}`, "error");
           return Promise.resolve(e);
         }
       } else {
@@ -304,6 +306,8 @@ const composedMiddleware = compose(
   runRequestMiddlewareHandler
 );
 
+export const defaultRunRequestMiddleware = runRequestMiddlewareHandler;
+
 export const wrapperMiddlewareRequest = function (config: MiddlewareConfig, composed: ReturnType<typeof compose> = composedMiddleware, goNext?: boolean) {
   return async (req: Request, res: Response, next: NextFunction) => {
     // 每一个新的请求  需要清除原始的缓存数据
@@ -311,12 +315,11 @@ export const wrapperMiddlewareRequest = function (config: MiddlewareConfig, comp
     const ctx = { ...config, req, res, next, cache };
     try {
       await composed(ctx, ctx.requestHandler);
-    } catch (e) {
-      fail({ res, statusCode: 500, resDate: { data: (e as Error).toString(), methodName: "composed" } });
-    } finally {
-      if (ctx.goNext || goNext) {
+      if ((ctx.goNext || goNext) && !ctx.hasError) {
         next();
       }
+    } catch (e) {
+      fail({ res, statusCode: 500, resDate: { data: (e as Error).toString(), methodName: "composed" } });
     }
   };
 };

@@ -1,7 +1,7 @@
 import { log } from "utils/log";
 import { accessApi } from "config/api";
 import { ServerError } from "server/utils/error";
-import { catchMiddlewareHandler, compose, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
+import { catchMiddlewareHandler, compose, defaultRunRequestMiddleware, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
 
 export const generateToken = wrapperMiddlewareRequest(
   {
@@ -17,7 +17,7 @@ export const generateToken = wrapperMiddlewareRequest(
     },
     goNext: true,
   },
-  compose(catchMiddlewareHandler)
+  compose(catchMiddlewareHandler, defaultRunRequestMiddleware)
 );
 
 export const detectionToken = wrapperMiddlewareRequest(
@@ -52,5 +52,5 @@ export const detectionToken = wrapperMiddlewareRequest(
     },
     goNext: true,
   },
-  compose(catchMiddlewareHandler)
+  compose(catchMiddlewareHandler, defaultRunRequestMiddleware)
 );

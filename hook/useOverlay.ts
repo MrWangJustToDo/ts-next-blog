@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useState, useEffect, useRef, useMemo, RefObject } from "react";
+import React, { createContext, useCallback, useContext, useState, useEffect, useRef, useMemo, RefObject } from "react";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { useUpdate } from "./useBase";
+import { log } from "utils/log";
 import { applyRootStyles, cleanupRootStyles } from "utils/dom";
 import { OverlayProps } from "types/components";
 
@@ -14,7 +15,7 @@ interface UseBodyLockType {
   (props: { ref: RefObject<HTMLElement> }): void;
 }
 interface UseOverlayBodyType {
-  (props: { body: JSX.Element | ((handler: () => void) => JSX.Element); closeHandler: () => void }): JSX.Element;
+  (props: { body: JSX.Element | ((handler: () => void) => JSX.Element); closeHandler?: () => void }): JSX.Element | React.ReactNode;
 }
 
 export const OverlayOpenContext = createContext<UseOverlayOpenType>(() => {});
@@ -97,6 +98,10 @@ export const useModalEffect = (isOpen: boolean, rootId?: string) => {
 export const useOverlayBody: UseOverlayBodyType = ({ body, closeHandler }) => {
   const bodyContent = useMemo(() => {
     if (typeof body === "function") {
+      if (!closeHandler) {
+        log("overlay body need closeHandler", "error");
+        return "";
+      }
       return body(closeHandler);
     } else {
       return body;

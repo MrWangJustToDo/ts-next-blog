@@ -1,7 +1,7 @@
 import * as sqlite from "sqlite";
 import sqlite3 from "sqlite3";
 import { getUserByUserId } from "server/database/get";
-import { catchMiddlewareHandler, compose, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
+import { catchMiddlewareHandler, compose, defaultRunRequestMiddleware, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
 
 let db: sqlite.Database;
 
@@ -20,7 +20,7 @@ const initDBConnect = wrapperMiddlewareRequest(
     },
     goNext: true,
   },
-  compose(catchMiddlewareHandler)
+  compose(catchMiddlewareHandler, defaultRunRequestMiddleware)
 );
 
 const initSession = wrapperMiddlewareRequest(
@@ -32,7 +32,7 @@ const initSession = wrapperMiddlewareRequest(
     },
     goNext: true,
   },
-  compose(catchMiddlewareHandler)
+  compose(catchMiddlewareHandler, defaultRunRequestMiddleware)
 );
 
 const decodeURI = wrapperMiddlewareRequest(
@@ -42,7 +42,7 @@ const decodeURI = wrapperMiddlewareRequest(
     },
     goNext: true,
   },
-  compose(catchMiddlewareHandler)
+  compose(catchMiddlewareHandler, defaultRunRequestMiddleware)
 );
 
 const initUser = wrapperMiddlewareRequest(
@@ -67,7 +67,7 @@ const initUser = wrapperMiddlewareRequest(
     },
     goNext: true,
   },
-  compose(catchMiddlewareHandler)
+  compose(catchMiddlewareHandler, defaultRunRequestMiddleware)
 );
 
 export { initDBConnect, initSession, initUser, decodeURI };
