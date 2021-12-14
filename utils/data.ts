@@ -24,12 +24,13 @@ const getCurrentAvatar: GetCurrentAvatar = (avatar, gender) => {
 };
 
 const formSerialize: FormSerializeType = (element: HTMLFormElement) => {
-  const re: { [props: string]: string | Array<string> } = {};
+  const re: { [props: string]: null | string | Array<string> } = {};
   const arr = ["button", "file", "reset", "submit"];
   if (element.localName === "form") {
     const inputs = Array.from<FormChild>(element.elements);
     inputs.forEach((item) => {
       if (item.name && item.type) {
+        re[item.name] = null;
         if (!arr.includes(item.type)) {
           if (item.type === "radio") {
             if ((item as HTMLInputElement).checked && item.value) {
@@ -124,7 +125,7 @@ const pinchHelper = {
   getAbsoluteValue: (value: string | number, max: number): number => {
     if (typeof value === "number") return value;
 
-    if (value.trimRight().endsWith("%")) {
+    if (value.trimEnd().endsWith("%")) {
       return (max * parseFloat(value)) / 100;
     }
     return parseFloat(value);

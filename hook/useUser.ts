@@ -121,7 +121,9 @@ export const useLogin: UseLoginType = () => {
               failToast(`登录失败：${data}`);
             }
           })
-          .catch((e) => failToast(`出现错误：${e.toString()}`));
+          .catch((e) => {
+            failToast(`出现错误：${e.toString()}`);
+          });
       });
     },
     addListenerCallback: (action) => actionHandler<HTMLFormElement, void>(ref.current, (ele) => ele.addEventListener("submit", action)),
@@ -149,13 +151,17 @@ export const useLogout: UseLogoutType = () => {
               successToast("登出成功，即将返回首页");
               return delay(400, () => router.push("/"));
             } else {
-              return failToast(`登出失败：${state}`);
+              failToast(`登出失败：${state}`);
             }
           })
-          .catch((e) => failToast(`出现错误：${e.toString()}`))
+          .catch((e) => {
+            failToast(`出现错误：${e.toString()}`);
+          })
       );
     } else {
-      return failToast(`当前未登录`);
+      return delay(10, () => {
+        failToast(`当前未登录`);
+      });
     }
   }, [dispatch, failToast, logoutRequest, router, successToast, user.userId]);
   return logoutCallback;

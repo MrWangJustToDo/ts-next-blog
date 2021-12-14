@@ -12,7 +12,7 @@ import { BlogProps, ClientTagProps, TypeProps, UserProps } from "types";
 export const Editor = (props: BlogProps & UserProps & TypeProps & ClientTagProps) => {
   const request = useUserRequest({ method: "post", apiPath: apiName.updateBlog, header: { apiToken: true }, data: { oldProps: props }, cache: false });
 
-  const [ref, submit] = useUpdateBlog({ request, id: props.blogId! });
+  const [ref, submit] = useUpdateBlog({ request, id: props.blogId });
 
   return (
     <div className="card mx-lg-4 border-0">

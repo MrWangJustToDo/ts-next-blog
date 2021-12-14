@@ -17,6 +17,7 @@
 }
 
 .iconTransform {
+  display: flex;
   position: relative;
   transition-duration: 0.3s;
   transition-property: transform;

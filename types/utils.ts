@@ -167,7 +167,7 @@ interface FormChild extends Element {
   disabled?: boolean;
 }
 interface FormSerializeType {
-  (element: HTMLFormElement): { [props: string]: string | string[] };
+  (element: HTMLFormElement): { [props: string]: null | string | string[] };
 }
 
 export type { ResultProps, AutoTransformDataType, GetCurrentAvatar, FormChild, FormSerializeType };

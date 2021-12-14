@@ -44,7 +44,7 @@
     "sqlite": "^4.0.19",
     "sqlite3": "^5.0.2",
     "svg-captcha": "^1.4.0",
-    "swr": "^1.0.1",
+    "swr": "^1.1.1",
     "tocbot": "^4.17.0"
   },
   "devDependencies": {
@@ -63,8 +63,8 @@
     "@types/react-redux": "^7.1.20",
     "@types/react-slick": "^0.23.4",
     "@types/react-transition-group": "^4.4.1",
-    "eslint": "<8.0.0",
-    "eslint-config-next": "12.0.4",
+    "eslint": "^8.4.1",
+    "eslint-config-next": "^12.0.7",
     "nodemon": "^2.0.15",
     "prettier": "^2.4.1",
     "sass": "^1.43.5",

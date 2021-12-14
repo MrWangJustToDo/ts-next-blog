@@ -15,7 +15,10 @@ export const getChildMessageByPrimaryIdAction = wrapperMiddlewareRequest({
     childMessage.sort(({ createDate: d1 }, { createDate: d2 }) => (new Date(d1).getTime() > new Date(d2).getTime() ? 1 : -1));
     success({ res, resDate: { data: childMessage } });
   },
-  cacheConfig: { needCache: true },
+  cacheConfig: {
+    needCache: true,
+    cacheKey: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.query.primaryCommentId as string }, needPre: false }),
+  },
   paramsConfig: { fromQuery: ["primaryCommentId"] },
 });
 
@@ -51,7 +54,8 @@ export const publishChildMessageByPrimaryIdAction = wrapperMiddlewareRequest({
   },
   checkCodeConfig: { needCheck: true },
   cacheConfig: {
-    needDelete: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
+    needDeleteAfterRequest: ({ req }) =>
+      transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
   },
   paramsConfig: { fromBody: ["primaryCommentId", "blogId", "commentId", "toIp", "content"] },
 });
@@ -72,7 +76,8 @@ export const deleteChildMessageByCommentIdAction = wrapperMiddlewareRequest({
     success({ res, resDate: { state: "删除成功", data: `删除成功, commentId: ${commentId}` } });
   },
   cacheConfig: {
-    needDelete: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
+    needDeleteAfterRequest: ({ req }) =>
+      transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
   },
   userConfig: { needCheck: true, checkStrict: true },
   paramsConfig: { fromQuery: ["userId"], fromBody: ["commentId", "isChild", "userId", "primaryCommentId"] },
@@ -125,7 +130,8 @@ export const updateChildMessageByCommentIdAction = wrapperMiddlewareRequest({
   checkCodeConfig: { needCheck: true },
   userConfig: { needCheck: true, checkStrict: true },
   cacheConfig: {
-    needDelete: ({ req }) => transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
+    needDeleteAfterRequest: ({ req }) =>
+      transformPath({ apiPath: apiName.childMessage, query: { primaryCommentId: req.body.primaryCommentId }, needPre: false }),
   },
   paramsConfig: { fromBody: ["isChild", "newContent", "commentId", "primaryCommentId"] },
 });

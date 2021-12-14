@@ -15,7 +15,10 @@ export const getPrimaryMessageByBlogIdAction = wrapperMiddlewareRequest({
     primaryMessages.sort(({ createDate: d1 }, { createDate: d2 }) => (new Date(d1).getTime() > new Date(d2).getTime() ? -1 : 1));
     success({ res, resDate: { state: "获取成功", data: primaryMessages } });
   },
-  cacheConfig: { needCache: true },
+  cacheConfig: {
+    needCache: true,
+    cacheKey: ({ req }) => transformPath({ apiPath: apiName.primaryMessage, query: { blogId: req.query.blogId as string }, needPre: false }),
+  },
   paramsConfig: { fromQuery: ["blogId"] },
 });
 
