@@ -1,8 +1,8 @@
 import { log } from "./log";
-import { Cancel, Delay, KeyMap, ResolveMap, TimeoutMap } from "types/utils";
+import { Cancel, Delay, KeyMap, RejectMap, TimeoutMap } from "types/utils";
 
 const timeoutMap: TimeoutMap = {};
-const resolveMap: ResolveMap = {};
+const rejectMap: RejectMap = {};
 const keyMap: KeyMap = {};
 let keyLength = 0;
 const maxKeyLength = 200;
@@ -11,16 +11,16 @@ const cancel: Cancel = (key) => {
   if (timeoutMap[key]) {
     const length = timeoutMap[key].length;
     timeoutMap[key] = timeoutMap[key].map((id) => id && clearTimeout(id)).slice(length);
-    resolveMap[key] = resolveMap[key].map((resolve) => resolve && resolve()).slice(length);
+    rejectMap[key] = rejectMap[key].map((reject) => reject && reject()).slice(length);
   }
   if (keyLength > maxKeyLength) {
     const keys = Object.keys(keyMap).sort((key1, key2) => (keyMap[key1] > keyMap[key2] ? 1 : -1));
     log(`start delete delay key, currentLength ${keyLength} over max length ${maxKeyLength}`, "normal");
     for (let keyItem of keys) {
-      if (keyItem !== key && !resolveMap[keyItem].length) {
+      if (keyItem !== key && !rejectMap[keyItem].length) {
         delete keyMap[keyItem];
         delete timeoutMap[keyItem];
-        delete resolveMap[keyItem];
+        delete rejectMap[keyItem];
         keyLength--;
       }
     }
@@ -30,28 +30,28 @@ const cancel: Cancel = (key) => {
 const delay: Delay = (time, action, key) => {
   if (key === undefined) {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(action && action());
-      }, time);
-    });
+      setTimeout(resolve, time);
+    }).then(() => action && action());
   } else {
     if (!(key in keyMap)) {
       keyMap[key] = 1;
       timeoutMap[key] = [];
-      resolveMap[key] = [];
+      rejectMap[key] = [];
       keyLength++;
     } else {
       keyMap[key]++;
     }
     cancel(key);
-    return new Promise((resolve) => {
-      resolveMap[key].push(resolve);
+    return new Promise<void>((resolve, reject) => {
+      rejectMap[key].push(reject);
       timeoutMap[key].push(
         setTimeout(() => {
-          resolve(action && action());
+          resolve();
         }, time)
       );
-    });
+    })
+      .then(() => action && action())
+      .catch(() => {});
   }
 };
 

@@ -13,14 +13,14 @@ interface Delay {
 interface TimeoutMap {
   [props: string]: Array<NodeJS.Timeout | void>;
 }
-interface ResolveMap {
+interface RejectMap {
   [props: string]: Array<(() => void) | void>;
 }
 interface KeyMap {
   [props: string]: number;
 }
 
-export type { Cancel, Delay, TimeoutMap, ResolveMap, KeyMap };
+export type { Cancel, Delay, TimeoutMap, RejectMap, KeyMap };
 
 /* action */
 interface JudgeActionProps<T> {

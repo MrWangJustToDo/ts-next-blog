@@ -217,6 +217,8 @@ export const usePinch: UsePinchType = <T extends HTMLElement, K extends HTMLElem
 
       if (scale > maxScale) return;
 
+      item.dataset.scale = scale.toString();
+
       if (matrix.current) {
         const target = matrix.current;
         if (scale === target.a && x === target.e && y === target.f) return;

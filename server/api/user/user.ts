@@ -2,6 +2,8 @@ import { ServerError } from "server/utils/error";
 import { insertUser } from "server/database/insert";
 import { getAuthorByUserId, getUserByUser, getUserByUserId, getUserByUserName, getUsersExByUserId } from "server/database/get";
 import { success, fail, wrapperMiddlewareRequest } from "server/middleware/apiHandler";
+import { transformPath } from "utils/path";
+import { apiName } from "config/api";
 
 // 用户登录请求
 export const loginAction = wrapperMiddlewareRequest({
@@ -62,7 +64,10 @@ export const getUserExByUserIdAction = wrapperMiddlewareRequest({
     const data = await getUsersExByUserId({ userId, db: req.db! });
     success({ res, resDate: { data } });
   },
-  cacheConfig: { needCache: true },
+  cacheConfig: {
+    needCache: true,
+    cacheKey: ({ req }) => transformPath({ needPre: false, apiPath: apiName.userEx, query: { userId: req.query.userId as string } }),
+  },
   paramsConfig: { fromQuery: ["userId"] },
 });
 
@@ -73,7 +78,10 @@ export const getUserByUserIdAction = wrapperMiddlewareRequest({
     const data = await getUserByUserId({ db: req.db!, userId });
     success({ res, resDate: { data } });
   },
-  cacheConfig: { needCache: true },
+  cacheConfig: {
+    needCache: true,
+    cacheKey: ({ req }) => transformPath({ needPre: false, apiPath: apiName.user, query: { userId: req.query.userId as string } }),
+  },
   paramsConfig: { fromQuery: ["userId"] },
 });
 
@@ -83,7 +91,10 @@ export const getUserByUserNameAction = wrapperMiddlewareRequest({
     const data = await getUserByUserName({ db: req.db!, userName: userName });
     success({ res, resDate: { data } });
   },
-  cacheConfig: { needCache: true },
+  cacheConfig: {
+    needCache: true,
+    cacheKey: ({ req }) => transformPath({ needPre: false, apiPath: apiName.userName, query: { userName: req.query.userName as string } }),
+  },
   paramsConfig: { fromQuery: ["userName"] },
 });
 
@@ -93,6 +104,9 @@ export const getAuthorByUserIdAction = wrapperMiddlewareRequest({
     const data = await getAuthorByUserId({ db: req.db!, userId: userId as string });
     success({ res, resDate: { data } });
   },
-  cacheConfig: { needCache: true },
+  cacheConfig: {
+    needCache: true,
+    cacheKey: ({ req }) => transformPath({ needPre: false, apiPath: apiName.author, query: { userId: req.query.userId as string } }),
+  },
   paramsConfig: { fromQuery: ["userId"] },
 });

@@ -37,15 +37,8 @@ export const transformPath: TransformPathType = ({ path, apiPath, query, needPre
     } else {
       currentPath += "&";
     }
-    for (let key in query) {
-      if (query[key] !== undefined) {
-        const targetParams = `${key}=${query[key]}`;
-        if (!currentPath.includes(targetParams)) {
-          currentPath += `${targetParams}&`;
-        }
-      }
-    }
-    currentPath = currentPath.slice(0, -1);
+    const queryObject = new URLSearchParams(query);
+    currentPath += queryObject.toString();
   }
   return currentPath;
 };

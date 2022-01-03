@@ -5,14 +5,13 @@ import { HomeBlogProps, UserProps } from "types";
 import { transformPath } from "utils/path";
 
 // 获取首页数据
-const homeCacheKey = transformPath({ apiPath: apiName.home, needPre: false });
 export const getHomeAction = wrapperMiddlewareRequest({
   requestHandler: async function getHomeAction({ req, res }) {
     const data = await getHome({ db: req.db! });
     data.sort(({ blogCreateDate: d1 }, { blogCreateDate: d2 }) => (new Date(d1!).getTime() > new Date(d2!).getTime() ? -1 : 1));
     success({ res, resDate: { data } });
   },
-  cacheConfig: { needCache: true, cacheKey: homeCacheKey },
+  cacheConfig: { needCache: true, cacheKey: transformPath({ apiPath: apiName.home, needPre: false }) },
 });
 
 // 根据指定参数获取blog

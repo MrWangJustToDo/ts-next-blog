@@ -1,6 +1,7 @@
 .cover {
   left: 0;
   top: 0;
+  z-index: 2;
   transition-property: background;
   transition-duration: 0.2s;
   &_active {

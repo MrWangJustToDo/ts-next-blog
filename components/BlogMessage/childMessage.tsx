@@ -66,19 +66,23 @@ const ChildMessage: ChildMessageType = (props) => {
             <>
               <span className="mx-1 align-middle">回复</span>
               {toUserName ? (
-                <LoadRender<UserProps>
-                  apiPath={apiName.userName}
-                  query={{ userName: toUserName }}
-                  loaded={(props) => {
-                    return (
-                      <div style={{ display: "inline-block", cursor: "pointer" }}>
-                        <UserHover {...props}>
-                          <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>@ {toUserName}</span>
-                        </UserHover>
-                      </div>
-                    );
-                  }}
-                />
+                withHover ? (
+                  <LoadRender<UserProps>
+                    apiPath={apiName.userName}
+                    query={{ userName: toUserName }}
+                    loaded={(props) => {
+                      return (
+                        <div style={{ display: "inline-block", cursor: "pointer" }}>
+                          <UserHover {...props}>
+                            <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>@ {toUserName}</span>
+                          </UserHover>
+                        </div>
+                      );
+                    }}
+                  />
+                ) : (
+                  <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>@ {toUserName}</span>
+                )
               ) : (
                 <span className={getClass("text-info px-2 rounded text-truncate align-middle", style.author)}>{toIp}</span>
               )}

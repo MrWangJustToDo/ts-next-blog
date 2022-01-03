@@ -315,11 +315,11 @@ export const wrapperMiddlewareRequest = function (config: MiddlewareConfig, comp
     const ctx = { ...config, req, res, next, cache };
     try {
       await composed(ctx, ctx.requestHandler);
-      if ((ctx.goNext || goNext) && !ctx.hasError) {
-        next();
-      }
     } catch (e) {
       fail({ res, statusCode: 500, resDate: { data: (e as Error).toString(), methodName: "composed" } });
+    }
+    if ((ctx.goNext || goNext) && !ctx.hasError) {
+      next();
     }
   };
 };

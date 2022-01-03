@@ -8,13 +8,12 @@ import { getType, getTypeByTypeContent, getTypeByTypeId } from "server/database/
 import { transformPath } from "utils/path";
 
 // 获取type数据
-const typeKey = transformPath({ apiPath: apiName.type, needPre: false });
 export const getTypeAction = wrapperMiddlewareRequest({
   requestHandler: async function getTypeAction({ req, res }) {
     const data = await getType({ db: req.db! });
     success({ res, resDate: { data } });
   },
-  cacheConfig: { needCache: true, cacheKey: typeKey },
+  cacheConfig: { needCache: true, cacheKey: transformPath({ apiPath: apiName.type, needPre: false }) },
 });
 
 // 判断当前type是否存在

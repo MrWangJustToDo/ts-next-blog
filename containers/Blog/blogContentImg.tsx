@@ -12,7 +12,7 @@ export const BlogContentImg = ({ src }: { src: string }) => {
       {/* <div className="card-body"> */}
       <div ref={coverRef} className={getClass("rounded overflow-hidden", style.imgHover)}>
         <div ref={pinchRef}>
-          <Image src={src} alt="blog" width="100%" height="50%" layout="responsive" />
+          <Image src={src} alt="blog" width="100%" height="50%" layout="responsive" priority />
           {/* <img ref={pinchRef} draggable="false" src={src} alt="blog" width="100%" height="50%" /> */}
         </div>
       </div>

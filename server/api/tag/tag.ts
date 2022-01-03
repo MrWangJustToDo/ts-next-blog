@@ -8,13 +8,12 @@ import { success, wrapperMiddlewareRequest } from "server/middleware/apiHandler"
 import { transformPath } from "utils/path";
 
 // 获取tag数据
-const tagKey = transformPath({ apiPath: apiName.tag, needPre: false });
 export const getTagAction = wrapperMiddlewareRequest({
   requestHandler: async function getTagAction({ req, res }) {
     const data = await getTag({ db: req.db! });
     success({ res, resDate: { data } });
   },
-  cacheConfig: { needCache: true, cacheKey: tagKey },
+  cacheConfig: { needCache: true, cacheKey: transformPath({ apiPath: apiName.tag, needPre: false }) },
 });
 
 // 判断当前tag是否存在

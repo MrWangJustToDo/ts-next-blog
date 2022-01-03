@@ -40,36 +40,43 @@ const loadingAction: LoadingActionType = <T extends HTMLElement>({ element, load
   element.parentElement?.append(span);
 };
 
-const getScrollBarSize = () => {
-  let cached = 0;
-  const inner = document.createElement("div");
-  inner.style.width = "100%";
-  inner.style.height = "200px";
-  const outer = document.createElement("div");
-  const outerStyle = outer.style;
-  outerStyle.position = "absolute";
-  outerStyle.top = "0";
-  outerStyle.left = "0";
-  outerStyle.pointerEvents = "none";
-  outerStyle.visibility = "hidden";
-  outerStyle.width = "200px";
-  outerStyle.height = "150px";
-  outerStyle.overflow = "hidden";
-  outer.appendChild(inner);
-  document.body.appendChild(outer);
-  const widthContained = inner.offsetWidth;
-  outer.style.overflow = "scroll";
-  let widthScroll = inner.offsetWidth;
+const generateGetScrollBarWidth = () => {
+  let width = 0;
+  let hasGet = false;
+  return () => {
+    if (hasGet) return width;
+    const inner = document.createElement("div");
+    inner.style.width = "100%";
+    inner.style.height = "200px";
+    const outer = document.createElement("div");
+    const outerStyle = outer.style;
+    outerStyle.position = "absolute";
+    outerStyle.top = "0";
+    outerStyle.left = "0";
+    outerStyle.pointerEvents = "none";
+    outerStyle.visibility = "hidden";
+    outerStyle.width = "200px";
+    outerStyle.height = "150px";
+    outerStyle.overflow = "hidden";
+    outer.appendChild(inner);
+    document.body.appendChild(outer);
+    const widthContained = inner.offsetWidth;
+    outer.style.overflow = "scroll";
+    let widthScroll = inner.offsetWidth;
 
-  if (widthContained === widthScroll) {
-    widthScroll = outer.clientWidth;
-  }
+    if (widthContained === widthScroll) {
+      widthScroll = outer.clientWidth;
+    }
 
-  document.body.removeChild(outer);
+    document.body.removeChild(outer);
 
-  cached = widthContained - widthScroll;
+    width = widthContained - widthScroll;
+    hasGet = true;
 
-  return cached;
+    return width;
+  };
 };
+
+const getScrollBarSize = generateGetScrollBarWidth();
 
 export { actionHandler, judgeAction, loadingAction, getScrollBarSize };
