@@ -5,7 +5,7 @@ import { DropContainer } from "./dropContainer";
 import { DropSelectItem } from "./dropSelectItem";
 import { DropProps, DropType, ValueType } from "types/components";
 
-import styleCss from "./index.module.scss";
+import style from "./index.module.scss";
 
 export const Drop: DropType = <T extends ValueType>({
   data = [],
@@ -24,7 +24,7 @@ export const Drop: DropType = <T extends ValueType>({
   return (
     <div
       onClick={switchBoolDebounce}
-      className={getClass("position-relative text-info border user-select-none", flexCenter, styleCss.drop, className)}
+      className={getClass("position-relative text-info border user-select-none", flexCenter, style.drop, className)}
       style={_style}
     >
       <input
@@ -42,7 +42,7 @@ export const Drop: DropType = <T extends ValueType>({
             ? data[indexArr[0]]?.value || "null"
             : ""
         }
-        data-show={bool}
+        data-multiple={multiple}
       />
       <div>
         {indexArr.length ? (

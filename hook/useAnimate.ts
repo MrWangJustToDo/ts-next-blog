@@ -1,6 +1,8 @@
-import { RefObject, useEffect, useLayoutEffect, useRef } from "react";
+import { RefObject, useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import memoize from "lodash/memoize";
 import { log } from "utils/log";
 import { delay } from "utils/delay";
+import { isServer } from "utils/env";
 import { animateCSS } from "utils/dom";
 import { actionHandler } from "utils/action";
 
@@ -17,48 +19,48 @@ interface UseShowAndHideAnimateProps<T> {
   startHide?: animateCallback;
   showDone?: animateCallback;
   hideDone?: animateCallback;
+  deps?: any[];
 }
 interface UseShowAndHideAnimateReturn<T> {
   animateRef: RefObject<T>;
 }
 interface UseShowAndHideAnimateType {
-  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>, ...deps: any[]): UseShowAndHideAnimateReturn<T>;
+  <T extends HTMLElement>(props: UseShowAndHideAnimateProps<T>): UseShowAndHideAnimateReturn<T>;
 }
 
-const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>(
-  {
-    state,
-    forWardRef,
-    getElement,
-    faster = true,
-    mode = "display",
-    showClassName = "fadeIn",
-    hideClassName = "fadeOut",
-    startHide,
-    startShow,
-    hideDone,
-    showDone,
-  }: UseShowAndHideAnimateProps<T>,
-  ...deps: any[]
-) => {
+const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>({
+  state,
+  forWardRef,
+  getElement,
+  faster = true,
+  mode = "display",
+  showClassName = "fadeIn",
+  hideClassName = "fadeOut",
+  startHide,
+  startShow,
+  hideDone,
+  showDone,
+  deps = [],
+}: UseShowAndHideAnimateProps<T>) => {
   const ref = useRef<T>(null);
   const currentRef = forWardRef ? forWardRef : ref;
   const callbackRef = useRef({ startHide, startShow, hideDone, showDone });
-  callbackRef.current.startHide = startHide;
-  callbackRef.current.startShow = startShow;
-  callbackRef.current.hideDone = hideDone;
-  callbackRef.current.showDone = showDone;
+  callbackRef.current = { startHide, startShow, hideDone, showDone };
 
-  const isServer = typeof window === "undefined" ? true : false;
   const useUniverseEffect = isServer ? useEffect : useLayoutEffect;
 
-  useUniverseEffect(() => {
+  const getCurrentElement = useCallback(() => {
     let element: T | null = null;
     if (currentRef.current) {
       element = currentRef.current;
     } else if (getElement) {
       element = getElement();
     }
+    return element;
+  }, [currentRef, getElement]);
+
+  useUniverseEffect(() => {
+    const element = getCurrentElement();
     actionHandler<T, void>(element, (ele) => {
       if (mode === "display") {
         ele.style.display = "none";
@@ -70,20 +72,13 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
 
   useEffect(() => {
     // init
-    let element: T | null = null;
-    if (currentRef.current) {
-      element = currentRef.current;
-    } else if (getElement) {
-      element = getElement();
-    }
+    const element = getCurrentElement();
     let needCancel = false;
-    const startHideCallback = callbackRef.current.startHide;
-    const hideDoneCallback = callbackRef.current.hideDone;
-    const startShowCallback = callbackRef.current.startShow;
-    const showDoneCallback = callbackRef.current.showDone;
+    const { startHide, startShow, hideDone, showDone } = callbackRef.current;
+    
     if (!state) {
       // hide
-      Promise.resolve(startHideCallback && startHideCallback())
+      Promise.resolve(startHide && startHide())
         .then(() =>
           delay<void>(0, () =>
             actionHandler<T, void | Promise<void>>(element, (ele) => {
@@ -104,10 +99,10 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
             })
           )
         )
-        .then(() => delay(0, () => hideDoneCallback && hideDoneCallback()));
+        .then(() => delay(0, () => hideDone && hideDone()));
     } else {
       // show
-      Promise.resolve(startShowCallback && startShowCallback())
+      Promise.resolve(startShow && startShow())
         .then(() =>
           delay<void>(0, () =>
             actionHandler<T, void>(element, (ele) => {
@@ -125,12 +120,13 @@ const useShowAndHideAnimate: UseShowAndHideAnimateType = <T extends HTMLElement>
           )
         )
         .then(() => actionHandler<T, Promise<void>>(element, (ele) => animateCSS({ element: ele, from: hideClassName, to: showClassName, faster })))
-        .then(() => delay(0, () => showDoneCallback && showDoneCallback()));
+        .then(() => delay(0, () => showDone && showDone()));
     }
 
     return () => {
       needCancel = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, getElement, faster, currentRef, mode, showClassName, hideClassName, ...deps]);
   return { animateRef: currentRef };
 };

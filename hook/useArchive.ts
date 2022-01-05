@@ -51,20 +51,18 @@ const useArchive: UseArchiveType = () => {
 };
 
 const useAutoLoadArchive: UseAutoLoadArchiveType = ({ canLoad, loadMore, breakPoint }) => {
-  useAutoActionHandler(
-    {
-      rightNow: true,
-      actionState: canLoad,
-      actionCallback: throttle(() => {
-        if (document.body.offsetHeight - (document.scrollingElement?.scrollTop || 0) < breakPoint) {
-          loadMore();
-        }
-      }, 1000),
-      addListenerCallback: (action) => window.addEventListener("scroll", action),
-      removeListenerCallback: (action) => window.removeEventListener("scroll", action),
-    },
-    breakPoint
-  );
+  useAutoActionHandler({
+    rightNow: true,
+    actionState: canLoad,
+    actionCallback: throttle(() => {
+      if (document.body.offsetHeight - (document.scrollingElement?.scrollTop || 0) < breakPoint) {
+        loadMore();
+      }
+    }, 1000),
+    addListenerCallback: (action) => window.addEventListener("scroll", action),
+    removeListenerCallback: (action) => window.removeEventListener("scroll", action),
+    deps: [breakPoint],
+  });
 };
 
 export { useArchive, useAutoLoadArchive };

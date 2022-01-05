@@ -11,7 +11,7 @@ import { deleteBlogByBlogId, deleteChildMessageByBlogId, deleteHomeByBlogId, del
 export const getBlogByBlogIdAction = wrapperMiddlewareRequest({
   requestHandler: async function getBlogByBlogIdAction({ req, res }) {
     const blogId = <string>req.query.blogId;
-    const data = await getBlogByBlogId({ db: req.db!!, blogId });
+    const data = await getBlogByBlogId({ db: req.db!, blogId });
     success({ res, statusCode: 200, resDate: { data } });
   },
   cacheConfig: {

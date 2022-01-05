@@ -1,4 +1,4 @@
-import React, { Children, Component, useCallback, useMemo, useRef, useState } from "react";
+import React, { Children, Component, ReactElement, useCallback, useMemo, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { AnimationListType, AnimationItemType } from "types/components";
@@ -21,19 +21,17 @@ const useGetElement = <T extends HTMLElement>(element: JSX.Element): [e: JSX.Ele
 const AnimationItem: AnimationItemType = ({ children, showState, showDone, showClassName, hideClassName, hideDone, faster }) => {
   const [currentChildren, getElement] = useGetElement<HTMLElement>(children as JSX.Element);
 
-  useShowAndHideAnimate(
-    {
-      mode: "opacity",
-      state: Boolean(showState),
-      faster,
-      getElement,
-      showDone,
-      hideDone,
-      hideClassName: hideClassName || "lightSpeedOutLeft",
-      showClassName: showClassName || "lightSpeedInLeft",
-    },
-    (children as any).key
-  );
+  useShowAndHideAnimate({
+    mode: "opacity",
+    state: Boolean(showState),
+    faster,
+    getElement,
+    showDone,
+    hideDone,
+    hideClassName: hideClassName || "lightSpeedOutLeft",
+    showClassName: showClassName || "lightSpeedInLeft",
+    deps: [(children as ReactElement).key],
+  });
 
   return currentChildren;
 };

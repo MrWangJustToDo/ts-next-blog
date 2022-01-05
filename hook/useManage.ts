@@ -243,8 +243,8 @@ const useJudgeInput: UseJudgeInputType = ({ option, forWardRef, judgeApiName, su
   const addListenerCallback = (action: () => void) => actionHandler<HTMLInputElement, void>(currentRef.current, (ele) => ele.addEventListener("input", action));
   const removeListenerCallback = (action: () => void) =>
     actionHandler<HTMLInputElement, void>(currentRef.current, (ele) => ele.removeEventListener("input", action));
-  useAutoActionHandler({ action: start, addListenerCallback: addListenerCallback, removeListenerCallback: removeListenerCallback });
-  useAutoActionHandler({ action: judge, addListenerCallback: addListenerCallback, removeListenerCallback: removeListenerCallback });
+  useAutoActionHandler({ action: start, addListenerCallback, removeListenerCallback });
+  useAutoActionHandler({ action: judge, addListenerCallback, removeListenerCallback });
   return [currentRef, state, loading];
 };
 

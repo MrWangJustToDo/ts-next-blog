@@ -23,6 +23,20 @@ const getCurrentAvatar: GetCurrentAvatar = (avatar, gender) => {
   }
 };
 
+/*
+{
+  from form field
+  blogCommentState: 0
+  blogContent: null
+  blogImgLink: "https://cn.bing.com/th?id=OHR.WesterheverLight_ZH-CN6827035695_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp"
+  blogOriginState: 0
+  blogPriseState: 0
+  blogState: 0
+  blogTitle: null
+  tagId: null
+  typeId: null
+}
+*/
 const formSerialize: FormSerializeType = (element: HTMLFormElement) => {
   const re: { [props: string]: null | string | Array<string> } = {};
   const arr = ["button", "file", "reset", "submit"];

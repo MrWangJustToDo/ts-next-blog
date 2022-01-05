@@ -110,22 +110,20 @@ export const useJudgeInputValue: UseJudgeInputValueType = <T extends MyInputELem
   const ref = useRef<T>(null);
   const [bool, setBool] = useState<boolean>(false);
   const targetRef = forWareRef || ref;
-  useAutoActionHandler(
-    {
-      rightNow: true,
-      actionCallback: () =>
-        actionHandler<T, void>(targetRef.current, (ele) => {
-          if (ele instanceof HTMLFormElement) {
-            log(`element not support autoJudge submit! ${ele}`, "error");
-          } else {
-            !!ele.value.trim().length ? setBool(true) : setBool(false);
-          }
-        }),
-      addListenerCallback: (action) => actionHandler<T, void>(targetRef.current, (ele) => ele.addEventListener("input", action)),
-      removeListenerCallback: (action) => actionHandler<T, void>(targetRef.current, (ele) => ele.removeEventListener("input", action)),
-    },
-    ...deps
-  );
+  useAutoActionHandler({
+    rightNow: true,
+    actionCallback: () =>
+      actionHandler<T, void>(targetRef.current, (ele) => {
+        if (ele instanceof HTMLFormElement) {
+          log(`element not support autoJudge submit! ${ele}`, "error");
+        } else {
+          !!ele.value.trim().length ? setBool(true) : setBool(false);
+        }
+      }),
+    addListenerCallback: (action) => actionHandler<T, void>(targetRef.current, (ele) => ele.addEventListener("input", action)),
+    removeListenerCallback: (action) => actionHandler<T, void>(targetRef.current, (ele) => ele.removeEventListener("input", action)),
+    deps,
+  });
   return { canSubmit: bool, ref };
 };
 
@@ -147,41 +145,39 @@ export const usePutToCheckCodeModule: UsePutToCheckCodeModuleType = ({
   mdRef.current = Number(isMd);
   submitRef.current = canSubmit;
 
-  useAutoActionHandler<Event, void>(
-    {
-      actionCallback: (e) => {
-        e?.preventDefault();
-        actionHandler<HTMLFormElement, void>(formRef.current, (ele) => {
-          if (submitRef.current) {
-            return open({
-              head: "验证码",
-              body: body({
-                request: request({ data: { ...formSerialize(ele), isMd: mdRef.current, preview: mdRef.current && ele.querySelector(htmlId)?.textContent } }),
-                requestCallback: () => {
-                  actionHandler<HTMLTextAreaElement, void>(textAreaRef?.current, (ele) => {
-                    ele.value = "";
-                  });
-                  submitCallback && submitCallback();
-                },
-                blogId,
-              }),
-              height: 60,
-              className,
-            });
-          } else {
-            return log("can not submit", "warn");
-          }
-        });
-      },
-      addListenerCallback: (action: (e: Event) => void) => {
-        actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.addEventListener("submit", action));
-      },
-      removeListenerCallback: (action: (e: Event) => void) => {
-        actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.removeEventListener("submit", action));
-      },
+  useAutoActionHandler<Event, void>({
+    actionCallback: (e) => {
+      e?.preventDefault();
+      actionHandler<HTMLFormElement, void>(formRef.current, (ele) => {
+        if (submitRef.current) {
+          return open({
+            head: "验证码",
+            body: body({
+              request: request({ data: { ...formSerialize(ele), isMd: mdRef.current, preview: mdRef.current && ele.querySelector(htmlId)?.textContent } }),
+              requestCallback: () => {
+                actionHandler<HTMLTextAreaElement, void>(textAreaRef?.current, (ele) => {
+                  ele.value = "";
+                });
+                submitCallback && submitCallback();
+              },
+              blogId,
+            }),
+            height: 60,
+            className,
+          });
+        } else {
+          return log("can not submit", "warn");
+        }
+      });
     },
-    blogId
-  );
+    addListenerCallback: (action: (e: Event) => void) => {
+      actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.addEventListener("submit", action));
+    },
+    removeListenerCallback: (action: (e: Event) => void) => {
+      actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.removeEventListener("submit", action));
+    },
+    deps: [blogId],
+  });
 
   return { formRef, textAreaRef, canSubmit };
 };
@@ -206,43 +202,41 @@ export const useCheckCodeModuleToSubmit: UseCheckCodeModuleToSubmitType = ({ blo
     setTimeout(closeOverlay, 0);
   }, [blogId, closeOverlay, requestCallback]);
 
-  useAutoActionHandler<Event, void>(
-    {
-      actionCallback: (e) => {
-        e?.preventDefault();
-        if (stateRef.current.loading) {
-          return pushFail("加载中");
-        } else if (!stateRef.current.canSubmit) {
-          return pushFail("不能提交");
-        } else {
-          return actionHandler<HTMLFormElement, Promise<void>>(formRef.current, (ele) => {
-            show();
-            return request({ data: { ...formSerialize(ele), commentId: getRandom(1000).toString(16) } })
-              .run<ApiRequestResult<string>>()
-              .then(({ code, data }) => {
-                if (code === 0) {
-                  flashData();
-                  pushSuccess("提交成功");
-                } else {
-                  pushFail(`提交失败: ${data.toString()}`);
-                }
-              })
-              .catch((e) => {
-                pushFail(`发生错误: ${e.toString()}`);
-              })
-              .finally(hide);
-          });
-        }
-      },
-      addListenerCallback: (action: (e: Event) => void) => {
-        actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.addEventListener("submit", action));
-      },
-      removeListenerCallback: (action: (e: Event) => void) => {
-        actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.removeEventListener("submit", action));
-      },
+  useAutoActionHandler<Event, void>({
+    actionCallback: (e) => {
+      e?.preventDefault();
+      if (stateRef.current.loading) {
+        return pushFail("加载中");
+      } else if (!stateRef.current.canSubmit) {
+        return pushFail("不能提交");
+      } else {
+        return actionHandler<HTMLFormElement, Promise<void>>(formRef.current, (ele) => {
+          show();
+          return request({ data: { ...formSerialize(ele), commentId: getRandom(1000).toString(16) } })
+            .run<ApiRequestResult<string>>()
+            .then(({ code, data }) => {
+              if (code === 0) {
+                flashData();
+                pushSuccess("提交成功");
+              } else {
+                pushFail(`提交失败: ${data.toString()}`);
+              }
+            })
+            .catch((e) => {
+              pushFail(`发生错误: ${e.toString()}`);
+            })
+            .finally(hide);
+        });
+      }
     },
-    request
-  );
+    addListenerCallback: (action: (e: Event) => void) => {
+      actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.addEventListener("submit", action));
+    },
+    removeListenerCallback: (action: (e: Event) => void) => {
+      actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.removeEventListener("submit", action));
+    },
+    deps: [request],
+  });
   return { formRef, inputRef, canSubmit, loading: bool };
 };
 
@@ -375,50 +369,46 @@ export const useDeleteModuleToSubmit: UseDeleteModuleToSubmitType = <T extends P
     setTimeout(closeOverlay, 0);
   }, [closeOverlay, isChild, props]);
 
-  useAutoActionHandler<Event, void>(
-    {
-      actionCallback: (e) => {
-        e?.preventDefault();
-        if (loadingRef.current) {
-          return pushFail("加载中");
-        } else {
-          return actionHandler<HTMLFormElement, Promise<void>>(formRef.current, () => {
-            show();
-            return request({
-              data: {
-                isChild,
-                blogId: props.blogId,
-                primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
-                commentId: props.commentId,
-              },
+  useAutoActionHandler<Event, void>({
+    actionCallback: (e) => {
+      e?.preventDefault();
+      if (loadingRef.current) {
+        return pushFail("加载中");
+      } else {
+        return actionHandler<HTMLFormElement, Promise<void>>(formRef.current, () => {
+          show();
+          return request({
+            data: {
+              isChild,
+              blogId: props.blogId,
+              primaryCommentId: isChild ? (props as ChildMessageProps).primaryCommentId : "",
+              commentId: props.commentId,
+            },
+          })
+            .run<ApiRequestResult<string>>()
+            .then(({ code, data }) => {
+              if (code === 0) {
+                flashData();
+                pushSuccess(`删除${isChild ? "子评论" : "主评论"}成功, commentId: ${props.commentId}`);
+              } else {
+                pushFail(`删除${isChild ? "子评论" : "主评论"}失败, commentId: ${props.commentId}, message: ${data.toString()}`);
+              }
             })
-              .run<ApiRequestResult<string>>()
-              .then(({ code, data }) => {
-                if (code === 0) {
-                  flashData();
-                  pushSuccess(`删除${isChild ? "子评论" : "主评论"}成功, commentId: ${props.commentId}`);
-                } else {
-                  pushFail(`删除${isChild ? "子评论" : "主评论"}失败, commentId: ${props.commentId}, message: ${data.toString()}`);
-                }
-              })
-              .catch((e) => {
-                pushFail(`删除${isChild ? "子评论" : "主评论"}出错, commentId: ${props.commentId}, error: ${e.toString()}`);
-              })
-              .finally(hide);
-          });
-        }
-      },
-      addListenerCallback: (action: (e: Event) => void) => {
-        actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.addEventListener("submit", action));
-      },
-      removeListenerCallback: (action: (e: Event) => void) => {
-        actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.removeEventListener("submit", action));
-      },
+            .catch((e) => {
+              pushFail(`删除${isChild ? "子评论" : "主评论"}出错, commentId: ${props.commentId}, error: ${e.toString()}`);
+            })
+            .finally(hide);
+        });
+      }
     },
-    request,
-    isChild,
-    props
-  );
+    addListenerCallback: (action: (e: Event) => void) => {
+      actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.addEventListener("submit", action));
+    },
+    removeListenerCallback: (action: (e: Event) => void) => {
+      actionHandler<HTMLFormElement, void>(formRef.current, (ele) => ele.removeEventListener("submit", action));
+    },
+    deps: [request, isChild, props],
+  });
 
   return { formRef, loading: bool };
 };

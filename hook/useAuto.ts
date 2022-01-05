@@ -22,11 +22,12 @@ interface UseAutoActionHandlerProps<T, K> {
   rightNow?: boolean; // 立即执行，for listener
   getRightNowState?: () => boolean;
   componentName?: string;
-  currentRef?: RefObject<K>;
+  forwardRef?: RefObject<K>;
   addListener?: (action: (e?: T) => void, ele?: K) => void; // 添加事件监听
   removeListener?: (action: (e?: T) => void, ele?: K) => void; // 移除事件监听
   addListenerCallback?: (action: (e?: T) => void, ele?: K) => void; // 添加事件监听  不需要useCallback
   removeListenerCallback?: (action: (e?: T) => void, ele?: K) => void; // 移除事件监听  不需要useCallback
+  deps?: any[];
 }
 interface UseAutoActionHandlerType {
   <T extends Event, K>(props: UseAutoActionHandlerProps<T, K>, ...deps: any[]): void;
@@ -62,30 +63,28 @@ interface UseAutoLoadRandomImgType {
   (props: UseAutoLoadRandomImgProps): [RefObject<HTMLImageElement>, boolean];
 }
 
-export const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
-  {
-    action,
-    actionCallback,
-    timer,
-    actionState = true,
-    once = true,
-    delayTime,
-    rightNow = false,
-    getRightNowState,
-    componentName,
-    currentRef,
-    addListener,
-    removeListener,
-    addListenerCallback,
-    removeListenerCallback,
-  }: UseAutoActionHandlerProps<T, K>,
-  ...deps: any[]
-) => {
+export const useAutoActionHandler: UseAutoActionHandlerType = <T, K>({
+  action,
+  actionCallback,
+  timer,
+  actionState = true,
+  once = true,
+  delayTime,
+  rightNow = false,
+  getRightNowState,
+  componentName,
+  forwardRef,
+  addListener,
+  removeListener,
+  addListenerCallback,
+  removeListenerCallback,
+  deps = [],
+}: UseAutoActionHandlerProps<T, K>) => {
   const actionStateRef = useRef<boolean>();
   actionStateRef.current = actionState;
   if (process.env.NODE_ENV === "development") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    useUpdateProps(componentName || "useAutoActionHandler", { action, timer, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps });
+    useUpdateProps(componentName || "useAutoActionHandler", { action, timer, once, delayTime, rightNow, addListener, removeListener, forwardRef, ...deps });
   }
   useEffect(() => {
     const currentRightNow = rightNow ? rightNow : typeof getRightNowState === "function" ? getRightNowState() : false;
@@ -93,21 +92,21 @@ export const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
     if (!currentAction) {
       throw new Error("autoAction need a action to handle");
     }
+    const actionCallbackWithState = (...props: any[]) => {
+      if (actionStateRef.current) currentAction.call(null, ...props);
+    };
     // 定时器
     if (timer) {
-      const actionCallback = () => {
-        if (actionStateRef.current) currentAction();
-      };
       if (delayTime === undefined) {
         log("timer delayTime not set ---> useAutoActionHandler", "warn");
         delayTime = 0;
       }
-      if (currentRightNow) actionCallback();
+      if (currentRightNow) actionCallbackWithState();
       if (once) {
-        const id = setTimeout(actionCallback, delayTime);
+        const id = setTimeout(actionCallbackWithState, delayTime);
         return () => clearTimeout(id);
       } else {
-        const id = setInterval(actionCallback, delayTime);
+        const id = setInterval(actionCallbackWithState, delayTime);
         return () => clearInterval(id);
       }
     } else if (addListener) {
@@ -115,70 +114,52 @@ export const useAutoActionHandler: UseAutoActionHandlerType = <T, K>(
       if (!removeListener) {
         throw new Error("every addListener need a removeListener! ---> useAutoActionHandler");
       } else {
-        if (actionStateRef.current) {
-          if (currentRightNow) currentAction();
-          if (currentRef?.current) {
-            const ele = currentRef.current;
-            addListener(currentAction, ele);
-            return () => removeListener(currentAction, ele);
-          } else {
-            addListener(currentAction);
-            return () => removeListener(currentAction);
-          }
-        }
+        if (currentRightNow) actionCallbackWithState();
+        const ele = forwardRef?.current || undefined;
+        addListener(actionCallbackWithState, ele);
+        return () => removeListener(actionCallbackWithState, ele);
       }
     } else if (addListenerCallback) {
       if (!removeListenerCallback) {
         throw new Error("every addListenerCallback need a removeListenerCallback! ---> useAutoActionHandler");
       } else {
-        if (actionStateRef.current) {
-          if (currentRightNow) currentAction();
-          if (currentRef?.current) {
-            const ele = currentRef.current;
-            addListenerCallback(currentAction, ele);
-            return () => removeListenerCallback(currentAction, ele);
-          } else {
-            addListenerCallback(currentAction);
-            return () => removeListenerCallback(currentAction);
-          }
-        }
+        if (currentRightNow) actionCallbackWithState();
+        const ele = forwardRef?.current || undefined;
+        addListenerCallback(actionCallbackWithState, ele);
+        return () => removeListenerCallback(actionCallbackWithState, ele);
       }
     } else if (currentRightNow) {
-      if (actionStateRef.current) {
-        currentAction();
-      }
+      actionCallbackWithState()
     }
-  }, [action, timer, once, delayTime, rightNow, addListener, removeListener, currentRef, ...deps]);
+  }, [action, timer, once, delayTime, rightNow, addListener, removeListener, forwardRef, ...deps]);
 };
 
 export const useAutoSetHeaderHeight: UseAutoSetHeaderHeightType = <T extends HTMLElement>(breakPoint: number = 1000) => {
   const ref = useRef<T>(null);
   const [bool, setBool] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(0);
-  useAutoActionHandler(
-    {
-      rightNow: true,
-      actionState: bool,
-      actionCallback: debounce(
-        () =>
-          actionHandler<T, void>(ref.current, (ele) => {
-            if (document.body.offsetWidth < breakPoint) {
-              setBool(false);
-              ele.style.height = "auto";
-              const allHeight = ele.offsetHeight;
-              ele.setAttribute("data-height", `${allHeight}px`);
-              setHeight(allHeight);
-              ele.style.height = "0px";
-            }
-          }),
-        300,
-        { leading: true }
-      ),
-      addListenerCallback: (action) => window.addEventListener("resize", action),
-      removeListenerCallback: (action) => window.removeEventListener("resize", action),
-    },
-    breakPoint
-  );
+  useAutoActionHandler({
+    rightNow: true,
+    actionState: bool,
+    actionCallback: debounce(
+      () =>
+        actionHandler<T, void>(ref.current, (ele) => {
+          if (document.body.offsetWidth < breakPoint) {
+            setBool(false);
+            ele.style.height = "auto";
+            const allHeight = ele.offsetHeight;
+            ele.setAttribute("data-height", `${allHeight}px`);
+            setHeight(allHeight);
+            ele.style.height = "0px";
+          }
+        }),
+      300,
+      { leading: true }
+    ),
+    addListenerCallback: (action) => window.addEventListener("resize", action),
+    removeListenerCallback: (action) => window.removeEventListener("resize", action),
+    deps: [breakPoint],
+  });
   return { ref, height };
 };
 
@@ -188,19 +169,17 @@ export const useAutoLoadCheckCodeImg: UseAutoLoadCheckCodeImgType = <T extends H
   state = true,
 }: UseAutoLoadCheckCodeImgProps) => {
   const ref = useRef<T>(null);
-  useAutoActionHandler(
-    {
-      rightNow: true,
-      actionCallback: debounce(
-        () => actionHandler<T, void>(ref.current, (ele) => loadImg({ imgUrl, strUrl, imgElement: ele, state })),
-        400,
-        { leading: true } // 立即执行一次
-      ),
-      addListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.addEventListener("click", action)),
-      removeListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
-    },
-    state
-  );
+  useAutoActionHandler({
+    rightNow: true,
+    actionCallback: debounce(
+      () => actionHandler<T, void>(ref.current, (ele) => loadImg({ imgUrl, strUrl, imgElement: ele, state })),
+      400,
+      { leading: true } // 立即执行一次
+    ),
+    addListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.addEventListener("click", action)),
+    removeListenerCallback: (action) => actionHandler<T, void>(ref.current, (ele) => ele.removeEventListener("click", action)),
+    deps: [state],
+  });
   return ref;
 };
 

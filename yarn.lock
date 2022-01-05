@@ -1487,6 +1487,11 @@ dayjs@^1.10.7:
   resolved "https://registry.nlark.com/dayjs/download/dayjs-1.10.7.tgz?cache=0&sync_timestamp=1631266519235&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fdayjs%2Fdownload%2Fdayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
   integrity sha1-LPX5Gt0oEWdIRAhmoKHSbzps5Gg=
 
+debounce@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.nlark.com/debounce/download/debounce-1.2.1.tgz#38881d8f4166a5c5848020c11827b834bcb3e0a5"
+  integrity sha1-OIgdj0FmpcWEgCDBGCe4NLyz4KU=
+
 debug@2, debug@2.6.9, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.npmmirror.com/debug/download/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -2283,20 +2288,22 @@ forwarded@0.2.0:
   resolved "https://registry.nlark.com/forwarded/download/forwarded-0.2.0.tgz?cache=0&sync_timestamp=1622503408398&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fforwarded%2Fdownload%2Fforwarded-0.2.0.tgz#2269936428aad4c15c7ebe9779a84bf0b2a81811"
   integrity sha1-ImmTZCiq1MFcfr6XeahL8LKoGBE=
 
-framer-motion@^5.3.0:
-  version "5.3.1"
-  resolved "https://registry.npmmirror.com/framer-motion/download/framer-motion-5.3.1.tgz#5588f904f16b20a617f112ee2b10573e7392c488"
-  integrity sha512-wBqW2eAoIxGcp6zhIPlzHq9b6FqWG3Xir6ovgg/HZgbKajGLfcfYRsQU6qri0U53Qov5QZwb7CkfMjl0UIxL4A==
+framer-motion@^5.5.5:
+  version "5.5.5"
+  resolved "https://registry.npmmirror.com/framer-motion/download/framer-motion-5.5.5.tgz#2cc9345e720ec1b93189ee76423799c72a3224b4"
+  integrity sha512-+LPAF5ddo02qKh+MK4h1ChwqUFvrLkK1NDWwrHy+MuCVmQDGgiFNHvwqOSklTDGkEtbio3dCOEDy23+ZyNAa9g==
   dependencies:
     framesync "6.0.1"
     hey-listen "^1.0.8"
-    popmotion "11.0.0"
+    popmotion "11.0.3"
+    react-merge-refs "^1.1.0"
+    react-use-measure "^2.1.1"
     style-value-types "5.0.0"
     tslib "^2.1.0"
   optionalDependencies:
     "@emotion/is-prop-valid" "^0.8.2"
 
-framesync@6.0.1, framesync@^6.0.1:
+framesync@6.0.1:
   version "6.0.1"
   resolved "https://registry.npmmirror.com/framesync/download/framesync-6.0.1.tgz?cache=0&sync_timestamp=1635475773136&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fframesync%2Fdownload%2Fframesync-6.0.1.tgz#5e32fc01f1c42b39c654c35b16440e07a25d6f20"
   integrity sha1-XjL8AfHEKznGVMNbFkQOB6JdbyA=
@@ -3211,10 +3218,10 @@ make-error@^1.1.1:
   resolved "https://registry.nlark.com/make-error/download/make-error-1.3.6.tgz#2eb2e37ea9b67c4891f684a1394799af484cf7a2"
   integrity sha1-LrLjfqm2fEiR9oShOUeZr0hM96I=
 
-markdown-it@^12.2.0:
-  version "12.2.0"
-  resolved "https://registry.nlark.com/markdown-it/download/markdown-it-12.2.0.tgz#091f720fd5db206f80de7a8d1f1a7035fd0d38db"
-  integrity sha1-CR9yD9XbIG+A3nqNHxpwNf0NONs=
+markdown-it@^12.3.0:
+  version "12.3.0"
+  resolved "https://registry.npmmirror.com/markdown-it/download/markdown-it-12.3.0.tgz#11490c61b412b8f41530319c005ecdcd4367171f"
+  integrity sha512-T345UZZ6ejQWTjG6PSEHplzNy5m4kF6zvUpHVDv8Snl/pEU0OxIK0jGg8YLVNwJvT8E0YJC7/2UvssJDk/wQCQ==
   dependencies:
     argparse "^2.0.1"
     entities "~2.1.0"
@@ -3942,12 +3949,12 @@ pngjs@^3.3.0:
   resolved "https://registry.npm.taobao.org/pngjs/download/pngjs-3.4.0.tgz?cache=0&sync_timestamp=1603551107900&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpngjs%2Fdownload%2Fpngjs-3.4.0.tgz#99ca7d725965fb655814eaf65f38f12bbdbf555f"
   integrity sha1-mcp9clll+2VYFOr2XzjxK72/VV8=
 
-popmotion@11.0.0:
-  version "11.0.0"
-  resolved "https://registry.npmmirror.com/popmotion/download/popmotion-11.0.0.tgz#910e2e7077d9aeba520db8744d40bb5354992212"
-  integrity sha1-kQ4ucHfZrrpSDbh0TUC7U1SZIhI=
+popmotion@11.0.3:
+  version "11.0.3"
+  resolved "https://registry.npmmirror.com/popmotion/download/popmotion-11.0.3.tgz#565c5f6590bbcddab7a33a074bb2ba97e24b0cc9"
+  integrity sha512-Y55FLdj3UxkR7Vl3s7Qr4e9m0onSnP8W7d/xQLsoJM40vs6UKHFdygs6SWryasTZYqugMjm3BepCF4CWXDiHgA==
   dependencies:
-    framesync "^6.0.1"
+    framesync "6.0.1"
     hey-listen "^1.0.8"
     style-value-types "5.0.0"
     tslib "^2.1.0"
@@ -4191,15 +4198,20 @@ react-is@^16.7.0, react-is@^16.8.1:
   resolved "https://registry.npmmirror.com/react-is/download/react-is-16.13.1.tgz?cache=0&sync_timestamp=1637338596901&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Freact-is%2Fdownload%2Freact-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
 
-react-markdown-editor-lite@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.npmmirror.com/react-markdown-editor-lite/download/react-markdown-editor-lite-1.3.1.tgz#32c6825404d674af898e3a4e70b846ffcb6782ad"
-  integrity sha1-MsaCVATWdK+JjjpOcLhG/8tngq0=
+react-markdown-editor-lite@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.npmmirror.com/react-markdown-editor-lite/download/react-markdown-editor-lite-1.3.2.tgz#734646ab619ac707fe9c366153cc0d323a376f59"
+  integrity sha512-pjtu+tpTjc2u4hauFozzbX7EQEnKCCfDCEAY4vnc0AXCPqdFwaoe7A/Fb3J8qwUIS1Ox5XVjeRWKt11FgrMdZA==
   dependencies:
     "@babel/runtime" "^7.6.2"
     classnames "^2.2.6"
     eventemitter3 "^4.0.0"
     uuid "^8.3.2"
+
+react-merge-refs@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.nlark.com/react-merge-refs/download/react-merge-refs-1.1.0.tgz#73d88b892c6c68cbb7a66e0800faa374f4c38b06"
+  integrity sha1-c9iLiSxsaMu3pm4IAPqjdPTDiwY=
 
 react-redux@^7.2.6:
   version "7.2.6"
@@ -4228,6 +4240,13 @@ react-slick@^0.28.1:
     json2mq "^0.2.0"
     lodash.debounce "^4.0.8"
     resize-observer-polyfill "^1.5.0"
+
+react-use-measure@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.npmmirror.com/react-use-measure/download/react-use-measure-2.1.1.tgz#5824537f4ee01c9469c45d5f7a8446177c6cc4ba"
+  integrity sha512-nocZhN26cproIiIduswYpV5y5lQpSQS1y/4KuvUCjSKmw7ZWIS/+g3aFnX3WdBkyuGUtTLif3UTqnLLhbDoQig==
+  dependencies:
+    debounce "^1.2.1"
 
 react@^17.0.2:
   version "17.0.2"
@@ -4657,9 +4676,9 @@ sqlite3@^5.0.2:
   optionalDependencies:
     node-gyp "3.x"
 
-sqlite@^4.0.19:
+sqlite@^4.0.23:
   version "4.0.23"
-  resolved "https://registry.npmmirror.com/sqlite/download/sqlite-4.0.23.tgz#ada09028b38e91883db08ac465d841e814d1bb00"
+  resolved "https://registry.nlark.com/sqlite/download/sqlite-4.0.23.tgz#ada09028b38e91883db08ac465d841e814d1bb00"
   integrity sha1-raCQKLOOkYg9sIrEZdhB6BTRuwA=
 
 sshpk@^1.7.0:
