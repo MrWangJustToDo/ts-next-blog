@@ -11,7 +11,7 @@ import shell from "highlight.js/lib/languages/shell";
 import xml from "highlight.js/lib/languages/xml";
 import sql from 'highlight.js/lib/languages/sql';
 // import "highlight.js/styles/monokai-sublime.css";
-import "highlight.js/styles/dracula.css";
+import "highlight.js/styles/github-dark.css";
 
 Hljs.registerLanguage("css", css);
 Hljs.registerLanguage("json", json);

@@ -1,5 +1,4 @@
 import { RefObject, useCallback, useEffect, useLayoutEffect, useRef } from "react";
-import memoize from "lodash/memoize";
 import { log } from "utils/log";
 import { delay } from "utils/delay";
 import { isServer } from "utils/env";
