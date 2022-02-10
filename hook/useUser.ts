@@ -178,12 +178,12 @@ export const useUserRequest: UseUserRequest = (props = {}) => {
     () =>
       createRequest({
         method,
-        data: autoAssignParams(stringData, { userId: user.userId! }),
+        data: autoAssignParams(stringData, { userId: user.userId }),
         path,
         cache,
         apiPath,
         header: stringHeader,
-        query: autoAssignParams(stringQuery, { userId: user.userId! }),
+        query: autoAssignParams(stringQuery, { userId: user.userId }),
         cacheTime,
         encode,
       }),

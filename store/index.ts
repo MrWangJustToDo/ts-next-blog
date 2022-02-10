@@ -9,7 +9,7 @@ export const makeStore: MakeStore<SagaStore> = () => {
   const devtools =
     typeof window !== "undefined" &&
     typeof window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ === "function" &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionsBlacklist: [] });
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionsDenylist: [] });
 
   const composeEnhancers = devtools || compose;
 
