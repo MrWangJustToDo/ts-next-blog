@@ -1,4 +1,4 @@
-import Slick from "react-slick";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { apiName } from "config/api";
 import { usePinch } from "hook/usePinch";
 import { Image } from "components/Image";
@@ -13,11 +13,13 @@ export const AboutLeft: SimpleElement = () => {
           token
           apiPath={apiName.allImage}
           loaded={(data) => (
-            <Slick dots infinite speed={500} slidesToShow={1} slidesToScroll={1} lazyLoad="ondemand" autoplay>
+            <Swiper spaceBetween={20} slidesPerView={1} loop>
               {[process.env.NEXT_PUBLIC_ABOUT].concat(data.map((it) => it.relativeUrl)).map((relativeUrl) => (
-                <ImgItem relativeUrl={relativeUrl} key={relativeUrl} />
+                <SwiperSlide key={relativeUrl}>
+                  <ImgItem relativeUrl={relativeUrl} />
+                </SwiperSlide>
               ))}
-            </Slick>
+            </Swiper>
           )}
           loading={() => <Image className="d-block rounded" src={process.env.NEXT_PUBLIC_ABOUT} width="100%" height="60%" layout="responsive" alt="me" />}
         />

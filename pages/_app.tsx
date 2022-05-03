@@ -4,6 +4,8 @@ import { AppProps } from "next/app";
 import { wrapper } from "store";
 import { Layout } from "components/Layout";
 
+import "swiper/swiper.scss";
+
 import "../styles/globals.css";
 
 type MyNextComponent<T = {}> = NextComponentType<{}, {}, T> & { container?: boolean; title?: string; routerIn?: string; routerOut?: string };

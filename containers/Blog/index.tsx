@@ -13,7 +13,7 @@ const BlogContentMessage = dynamic<{ blogId: string }>(() => import("./blogConte
 export const Blog = (props: BlogProps & UserProps & TypeProps & ClientTagProps) => {
   const { blogImgLink, typeContent, tagContent, blogTitle, blogContent, blogId, blogOriginState, blogPriseState, blogCommentState, userId } = props;
 
-  useUpdateBlogRead(blogId);
+  // useUpdateBlogRead(blogId);
 
   return (
     <div className="card user-select-none">
