@@ -13,7 +13,7 @@ export const AboutLeft: SimpleElement = () => {
           token
           apiPath={apiName.allImage}
           loaded={(data) => (
-            <Swiper spaceBetween={20} slidesPerView={1} loop>
+            <Swiper spaceBetween={20} slidesPerView={1} loop autoplay>
               {[process.env.NEXT_PUBLIC_ABOUT].concat(data.map((it) => it.relativeUrl)).map((relativeUrl) => (
                 <SwiperSlide key={relativeUrl}>
                   <ImgItem relativeUrl={relativeUrl} />
