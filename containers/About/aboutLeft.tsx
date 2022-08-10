@@ -1,4 +1,4 @@
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { apiName } from "config/api";
 import { usePinch } from "hook/usePinch";
 import { Image } from "components/Image";
@@ -13,13 +13,13 @@ export const AboutLeft: SimpleElement = () => {
           token
           apiPath={apiName.allImage}
           loaded={(data) => (
-            <Swiper spaceBetween={20} slidesPerView={1} loop autoplay>
+            <Splide >
               {[process.env.NEXT_PUBLIC_ABOUT].concat(data.map((it) => it.relativeUrl)).map((relativeUrl) => (
-                <SwiperSlide key={relativeUrl}>
+                <SplideSlide key={relativeUrl}>
                   <ImgItem relativeUrl={relativeUrl} />
-                </SwiperSlide>
+                </SplideSlide>
               ))}
-            </Swiper>
+            </Splide>
           )}
           loading={() => <Image className="d-block rounded" src={process.env.NEXT_PUBLIC_ABOUT} width="100%" height="60%" layout="responsive" alt="me" />}
         />

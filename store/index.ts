@@ -1,9 +1,10 @@
 import createSagaMiddleware from "redux-saga";
-import { createStore, applyMiddleware, compose } from "redux";
+import { legacy_createStore as createStore, applyMiddleware, compose } from "redux";
 import { MakeStore, createWrapper } from "next-redux-wrapper";
 import { rootReducer } from "./reducer";
 import { rootSaga } from "./saga";
 import type { SagaStore } from "./type";
+import { SagaManager } from "./saga/util";
 
 export const makeStore: MakeStore<SagaStore> = () => {
   const devtools =
@@ -20,7 +21,7 @@ export const makeStore: MakeStore<SagaStore> = () => {
   const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware))) as SagaStore;
 
   // 3: Run your sagas on server
-  store.sagaTask = sagaMiddleware.run(rootSaga);
+  store.sagaTask = SagaManager.startSagas(rootSaga, sagaMiddleware);
 
   // 4: now return the store:
   return store;

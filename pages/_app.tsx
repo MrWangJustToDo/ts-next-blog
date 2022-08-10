@@ -4,7 +4,9 @@ import { AppProps } from "next/app";
 import { wrapper } from "store";
 import { Layout } from "components/Layout";
 
-import "swiper/swiper.scss";
+import 'animate.css';
+
+import '@splidejs/react-splide/css';
 
 import "../styles/globals.css";
 

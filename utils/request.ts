@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, Method } from "axios";
 import { log } from "./log";
 import { delay } from "./delay";
 import { PendingType, RemovePendingType } from "types/utils";
@@ -41,7 +41,7 @@ instance.interceptors.request.use(
   (request) => {
     removePending(request, true);
     request.cancelToken = new CancelToken((c) => {
-      pending.push({ url: request.url, method: request.method, params: request.params, data: request.data, cancel: c });
+      pending.push({ url: request.url, method: request.method as Method, params: request.params, data: request.data, cancel: c });
     });
     return request;
   },

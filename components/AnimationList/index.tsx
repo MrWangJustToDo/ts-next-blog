@@ -1,9 +1,9 @@
-import React, { Children, Component, ReactElement, useCallback, useMemo, useRef, useState } from "react";
+import React, { Children, Component, ReactElement, ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
 import { useShowAndHideAnimate } from "hook/useAnimate";
 import { AnimationListType, AnimationItemType } from "types/components";
 
-class Empty extends Component {
+class Empty extends Component<{children: ReactNode}> {
   render() {
     const { children } = this.props;
     return children;
@@ -43,7 +43,7 @@ const AnimationList: AnimationListType = ({ children, showClassName, replace = f
       .map((_, i) => i === 0)
   );
   const showItem = useCallback(
-    (i) =>
+    (i: number) =>
       setShow((last) => {
         if (i < last.length) {
           const newArray = [...last];
